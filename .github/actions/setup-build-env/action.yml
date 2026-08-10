@@ -19,9 +19,24 @@ runs:
         target: aarch64-linux-android
         override: true
 
+    - name: Install ARM GNU toolchain
+      shell: bash
+      run: |
+        sudo apt-get update
+        ARM_GNU_TOOLCHAIN_VERSION=12.2.rel1
+        ARM_GNU_TOOLCHAIN_ARCHIVE=arm-gnu-toolchain-${ARM_GNU_TOOLCHAIN_VERSION}-x86_64-aarch64-none-elf.tar.xz
+        ARM_GNU_TOOLCHAIN_DIR=/opt/arm-gnu-toolchain/arm-gnu-toolchain-${ARM_GNU_TOOLCHAIN_VERSION}-x86_64-aarch64-none-elf
+        KPM_TOOLCHAIN_PREFIX=${ARM_GNU_TOOLCHAIN_DIR}/bin/aarch64-none-elf-
+        curl -L --fail --retry 3 --output /tmp/${ARM_GNU_TOOLCHAIN_ARCHIVE} https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_GNU_TOOLCHAIN_VERSION}/binrel/${ARM_GNU_TOOLCHAIN_ARCHIVE}
+        sudo mkdir -p /opt/arm-gnu-toolchain
+        sudo tar -xJf /tmp/${ARM_GNU_TOOLCHAIN_ARCHIVE} -C /opt/arm-gnu-toolchain
+        echo ${ARM_GNU_TOOLCHAIN_DIR}/bin >> "$GITHUB_PATH"
+        echo "KPM_TARGET_COMPILE=${KPM_TOOLCHAIN_PREFIX}" >> "$GITHUB_ENV"
+        ${KPM_TOOLCHAIN_PREFIX}gcc --version
+
     - name: Install cargo-ndk
       shell: bash
-      run: cargo install cargo-ndk
+      run: cargo install cargo-ndk --locked
 
     - name: Grant execute permission
       shell: bash

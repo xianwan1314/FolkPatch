@@ -2,4 +2,4 @@
 # 请填入服务端Token
 api.token=YOUR_SERVER_TOKEN_HERE
 # 请填入应用签名Hash (SHA-256)
-app.signature.hash=YOUR_APP_SIGNATURE_HASH_HERE
+app.signature.hash=11f9a7233ba8d7d9d7c51255f35f377c94c7b74110144d46db4d1353b0155ae8

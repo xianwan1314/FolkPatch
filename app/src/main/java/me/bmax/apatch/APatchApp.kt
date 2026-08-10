@@ -387,7 +387,7 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
             return
         }
 
-        if (!BuildConfig.DEBUG && !verifyAppSignature("qeultwLrVftfSxpnKnEzoWp7yuqUnN5DyBLvJsd96BI=")) {
+        if (!BuildConfig.DEBUG && !verifyAppSignature("EfmnIzuo19nXxRJV8183fJTHt0EQFE1G200TU7AVWug=")) {
             while (true) {
                 val intent = Intent(Intent.ACTION_DELETE)
                 intent.data = "package:$packageName".toUri()

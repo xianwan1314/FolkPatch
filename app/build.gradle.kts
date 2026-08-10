@@ -26,10 +26,16 @@ val androidMinSdkVersion: Int by rootProject.extra
 val androidTargetSdkVersion: Int by rootProject.extra
 val androidSourceCompatibility: JavaVersion by rootProject.extra
 val androidTargetCompatibility: JavaVersion by rootProject.extra
+val managerVersionBrand: String by rootProject.extra
+val managerVersionBaseName: String by rootProject.extra
 val managerVersionCode: Int by rootProject.extra
 val managerVersionName: String by rootProject.extra
 val branchName: String by rootProject.extra
 val kernelPatchVersion: String by rootProject.extra
+val kernelPatchRepoOwner: String by rootProject.extra
+val kernelPatchRepoName: String by rootProject.extra
+val kernelPatchReleaseBaseUrl =
+    "https://github.com/$kernelPatchRepoOwner/$kernelPatchRepoName/releases/download/$kernelPatchVersion"
 
 // Load keystore properties
 val keystoreProperties = Properties()
@@ -149,7 +155,7 @@ android {
         buildConfigField("String", "buildKPV", "\"$kernelPatchVersion\"")
         buildConfigField("boolean", "DEBUG_FAKE_ROOT", localProperties.getProperty("debug.fake_root", "false"))
 
-        base.archivesName = "FolkPatch_${managerVersionCode}_${managerVersionName}_on_${branchName}"
+        base.archivesName = "FolkPatch_${managerVersionBrand}_${managerVersionCode}_${managerVersionBaseName}_on_${branchName}"
 
         ndk.abiFilters.addAll(arrayOf("arm64-v8a"))
         externalNativeBuild {
@@ -278,6 +284,7 @@ fun isFileUpdated(url: String, localFile: File): Boolean {
 }
 
 fun downloadFile(url: String, destFile: File) {
+    destFile.parentFile?.mkdirs()
     URI.create(url).toURL().openStream().use { input ->
         destFile.outputStream().use { output ->
             input.copyTo(output)
@@ -310,7 +317,7 @@ fun downloadFileRetry(url: String, destFile: File, maxRetries: Int = 5) {
 
 registerDownloadTask(
     taskName = "downloadKpimg",
-    srcUrl = "https://github.com/LyraVoid/KernelPatch/releases/download/$kernelPatchVersion/kpimg-android",
+    srcUrl = "$kernelPatchReleaseBaseUrl/kpimg-android",
     destPath = "${project.projectDir}/src/main/assets/kpimg",
     project = project,
     version = kernelPatchVersion
@@ -318,7 +325,7 @@ registerDownloadTask(
 
 registerDownloadTask(
     taskName = "downloadKptools",
-    srcUrl = "https://github.com/LyraVoid/KernelPatch/releases/download/$kernelPatchVersion/kptools-android",
+    srcUrl = "$kernelPatchReleaseBaseUrl/kptools-android",
     destPath = "${project.projectDir}/libs/arm64-v8a/libkptools.so",
     project = project,
     version = kernelPatchVersion

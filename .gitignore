@@ -30,3 +30,5 @@ fpd/.cargo/
 # demo project
 demo
 KernelPatch
+winpatch/vendor/
+winpatch/target/
