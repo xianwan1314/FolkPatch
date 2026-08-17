@@ -33,7 +33,7 @@ fun fetchLatestGitHubReleaseTag(owner: String, repo: String): String? {
 }
 
 fun resolveKernelPatchVersion(owner: String, repo: String): String {
-    val fallbackVersion = "0.13.2"
+    val fallbackVersion = "0.13.4"
     val overriddenVersion = sequenceOf(
         providers.gradleProperty("kernelPatchVersion").orNull,
         System.getenv("KERNELPATCH_VERSION"),
@@ -92,7 +92,7 @@ fun getGitDescribe(): String {
 }
 
 fun getVersionCode(): Int {
-    return 115019
+    return 115020
 }
 
 fun getbranch(): String {
