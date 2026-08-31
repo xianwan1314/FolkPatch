@@ -72,6 +72,11 @@
     <string name="settings_clear_super_key_dialog">Você realmente deseja prosseguir?</string>
     <string name="settings_sucompat">Compatibilidade su legada</string>
     <string name="settings_sucompat_summary">Ativar compatibilidade su (para quando su não funciona)</string>
+    <string name="settings_selinux_hide">Ocultar modificação do SELinux (Teste)</string>
+    <string name="settings_selinux_hide_summary">Oculta as alterações do SELinux para não serem detectadas por processos do usuário (este recurso pode ser instável). O modo de segurança pode desativar este recurso.</string>
+    <string name="settings_selinux_hide_warning_title">Aviso</string>
+    <string name="settings_selinux_hide_warning_below_5_10">Este recurso só foi testado em kernels 5.10 ou superiores e pode ser instável em versões inferiores.</string>
+    <string name="settings_selinux_hide_warning_non_gki">Kernels não-GKI apresentam um risco maior e podem causar falha na inicialização. Certifique-se de que seus dados estão com backup.</string>
     <string name="settings_grid_working_card_hide_check">Ocultar ícone de status</string>
     <string name="settings_grid_working_card_hide_check_summary">Ocultar o ícone de confirmação ou aviso no cartão de status</string>
     <string name="settings_grid_working_card_hide_text">Ocultar texto de status</string>
@@ -234,6 +239,7 @@
     <string name="kpm_embedded">Embutido</string>
     <string name="kpm_loaded">Carregado</string>
     <string name="kpm_load_toast_succ">Carregado com sucesso</string>
+    <string name="kpm_install_toast_succ">Instalado com sucesso; entra em vigor após reiniciar</string>
     <string name="kpm_load_toast_failed">Falha ao carregar</string>
     <string name="kpm_unload_confirm">Descarregar módulo %s?</string>
     <string name="kpm_unload">Descarregar</string>
@@ -740,30 +746,7 @@ Aqui estão algumas possíveis razões para a falha de autenticação—verifiqu
     <string name="settings_video_volume">Volume do Vídeo</string>
     
     <!-- KPM AutoLoad Strings -->
-    <string name="kpm_autoload_title">Auto-Carregamento KPM</string>
-    <string name="kpm_autoload_enabled">Ativar auto-carregamento</string>
-    <string name="kpm_autoload_enabled_summary">Carregar módulos KPM automaticamente ao iniciar o dispositivo</string>
-    <string name="kpm_autoload_json_config">Configuração JSON</string>
-    <string name="kpm_autoload_json_label">JSON de Configuração</string>
-    <string name="kpm_autoload_json_placeholder">{
-  "enabled": true,
-  "kpmPaths": [
-    "/path/to/module1.kpm",
-    "/path/to/module2.kpm"
-  ]
-}</string>
-    <string name="kpm_autoload_json_error">Formato JSON inválido</string>
-    <string name="kpm_autoload_json_helper">Insira um JSON válido com array de caminhos de arquivos KPM</string>
-    <string name="kpm_autoload_save">Salvar Configuração</string>
-    <string name="kpm_autoload_save_confirm">Salvar configuração de auto-carregamento?</string>
-    <string name="kpm_autoload_save_success">Configuração salva com sucesso</string>
-    <string name="kpm_autoload_save_failed">Falha ao salvar configuração</string>
-    <string name="kpm_autoload_visual_mode">Modo Visual</string>
-    <string name="kpm_autoload_json_mode">Modo JSON</string>
-    <string name="kpm_autoload_add_kpm">Adicionar KPM</string>
-    <string name="kpm_autoload_remove_kpm">Remover</string>
-    <string name="kpm_autoload_edit_kpm">Editar</string>
-    <string name="kpm_autoload_edit_dialog_title">Editar KPM</string>    <string name="kpm_autoload_event_label">Evento:</string>    <string name="kpm_autoload_args_label">Argumentos:</string>    <string name="kpm_autoload_event_service">service</string>    <string name="kpm_autoload_event_post_fs_data">post-fs-data</string>
+    
     
     <!-- Module Backup/Restore Strings -->
     <string name="apm_copy_list_title">Copiar lista</string>
@@ -803,19 +786,7 @@ Aqui estão algumas possíveis razões para a falha de autenticação—verifiqu
     <string name="welcome_got_it">Comecar</string>
 
 
-    <string name="kpm_autoload_kpm_list_title">Módulos KPM</string>
-    <string name="kpm_autoload_no_kpm_added">Nenhum módulo KPM adicionado</string>
-    <string name="kpm_autoload_kpm_path">Caminho KPM</string>
-    <string name="kpm_autoload_file_not_found">Arquivo não encontrado</string>
-    <string name="kpm_autoload_select_kpm_file">Selecionar Arquivo KPM</string>
-    <string name="kpm_autoload_first_time_title">Sobre Auto-Carregamento KPM</string>
-    <string name="kpm_autoload_first_time_message">Este recurso permite carregar automaticamente todos os KPMs configurados de forma temporária na inicialização. Esta abordagem é mais conveniente do que embutir diretamente no kernel.
-
-Por exemplo, KPMs que impedem modificação de partição só podem ser usados temporariamente, pois embutir pode causar falhas no boot. Ou se você não quer modificar a partição BOOT, pode usar essa configuração para carregar módulos rapidamente.
-
-Por favor, certifique-se de fechar completamente o app e reabri-lo para que os comandos sejam executados. Geralmente, ele também carregará na inicialização do sistema. É normal que o gerenciador fique com tela preta por um período! Isso usa um método de carregamento em segundo plano, lembre-se de atualizar manualmente (arrastar para baixo) para verificar se os módulos foram carregados corretamente!</string>
-    <string name="kpm_autoload_first_time_confirm">Entendi</string>
-    <string name="kpm_autoload_do_not_show_again">Não mostrar novamente</string>
+    
 
     <!-- Hide Settings Strings -->
     <string name="home_hide_su_path">Ocultar caminho do executável su</string>
@@ -829,8 +800,6 @@ Por favor, certifique-se de fechar completamente o app e reabri-lo para que os c
     <string name="home_hide_mount_summary">Ocultar implementação de montagem no cartão de info</string>
     <string name="home_hide_fingerprint_summary">Ocultar fingerprint no cartão de info</string>
 
-    <string name="kpm_page_first_time_title">Aviso</string>
-    <string name="kpm_page_first_time_message">Módulos de kernel modificam diretamente a implementação de Boot. Diferente dos módulos de sistema, eles carecem de um bom mecanismo de recuperação. Se surgirem problemas, você só poderá corrigi-los entrando no Fastboot. Recomenda-se carregar o módulo primeiro para garantir que não há problemas antes de embuti-lo no Boot. Se um módulo só pode ser usado via carregamento, tente o recurso de auto-carregamento KPM. Se você não entende de módulos de kernel, por favor, não use este recurso!</string>
 
     <!-- Auto Backup Strings -->
     <string name="settings_auto_backup_module">Backup Automático de Módulos</string>
@@ -1385,4 +1354,7 @@ Por favor, certifique-se de fechar completamente o app e reabri-lo para que os c
     <string name="jailbreak">Jailbreak</string>
     <string name="jailbreak_triggered">Jailbreak acionado. Aguarde o root e, em seguida, reinicie em modo suave.</string>
     <string name="reboot_soft">Reinicialização suave</string>
+    <string name="kpm_installed">Instalado</string>
+    <string name="kpm_disabled">Desativado (entra em vigor após reiniciar)</string>
+    <string name="kpm_embedded_unload_invalid">Não é possível descarregar KPMs embutidos; eles continuarão ativos após reiniciar.</string>
 </resources>

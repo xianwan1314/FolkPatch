@@ -72,6 +72,11 @@
     <string name="settings_clear_super_key_dialog">هل تريد حقًا المتابعة؟</string>
     <string name="settings_sucompat">توافق su القديم</string>
     <string name="settings_sucompat_summary">تفعيل توافق su القديم (لحالات عدم عمل su)</string>
+    <string name="settings_selinux_hide">إخفاء تعديل SELinux (اختباري)</string>
+    <string name="settings_selinux_hide_summary">إخفاء تعديلات SELinux لمنع اكتشافها من قبل عمليات المستخدم (قد تكون هذه الميزة غير مستقرة). يمكن للوضع الآمن تعطيل هذه الميزة.</string>
+    <string name="settings_selinux_hide_warning_title">تحذير</string>
+    <string name="settings_selinux_hide_warning_below_5_10">تم اختبار هذه الميزة على نواة 5.10 وما فوق فقط وقد تكون غير مستقرة على إصدارات النواة الأقل.</string>
+    <string name="settings_selinux_hide_warning_non_gki">تحمل النوى غير GKI مخاطر أكبر وقد تؤدي إلى فشل الإقلاع. تأكد من عمل نسخة احتياطية لبياناتك.</string>
     <string name="settings_grid_working_card_hide_check">إخفاء أيقونة الحالة</string>
     <string name="settings_grid_working_card_hide_check_summary">إخفاء علامة الصح أو أيقونة التحذير في بطاقة الحالة</string>
     <string name="settings_grid_working_card_hide_text">إخفاء نص الحالة</string>
@@ -234,6 +239,7 @@
     <string name="kpm_embedded">مضمن</string>
     <string name="kpm_loaded">محمل</string>
     <string name="kpm_load_toast_succ">نجح التحميل</string>
+    <string name="kpm_install_toast_succ">تم التثبيت بنجاح؛ يسري بعد إعادة التشغيل</string>
     <string name="kpm_load_toast_failed">فشل التحميل</string>
     <string name="kpm_unload_confirm">إلغاء تحميل وحدة %s؟</string>
     <string name="kpm_unload">إلغاء التحميل</string>
@@ -735,30 +741,7 @@
     <string name="settings_video_volume">مستوى صوت الفيديو</string>
     
     <!-- KPM AutoLoad Strings -->
-    <string name="kpm_autoload_title">التحميل التلقائي لـ KPM</string>
-    <string name="kpm_autoload_enabled">تمكين التحميل التلقائي</string>
-    <string name="kpm_autoload_enabled_summary">تحميل وحدات KPM تلقائيًا عند بدء تشغيل الجهاز</string>
-    <string name="kpm_autoload_json_config">تكوين JSON</string>
-    <string name="kpm_autoload_json_label">تكوين JSON</string>
-<string name="kpm_autoload_json_placeholder">{
-  "enabled": true,
-  "kpmPaths": [
-    "/path/to/module1.kpm",
-    "/path/to/module2.kpm"
-  ]
-}</string>
-    <string name="kpm_autoload_json_error">تنسيق JSON غير صالح</string>
-    <string name="kpm_autoload_json_helper">أدخل JSON صالح مع مصفوفة من مسارات ملفات KPM</string>
-    <string name="kpm_autoload_save">حفظ التكوين</string>
-    <string name="kpm_autoload_save_confirm">حفظ تكوين التحميل التلقائي؟</string>
-    <string name="kpm_autoload_save_success">تم حفظ التكوين بنجاح</string>
-    <string name="kpm_autoload_save_failed">فشل حفظ التكوين</string>
-    <string name="kpm_autoload_visual_mode">الوضع المرئي</string>
-    <string name="kpm_autoload_json_mode">وضع JSON</string>
-    <string name="kpm_autoload_add_kpm">إضافة KPM</string>
-    <string name="kpm_autoload_remove_kpm">إزالة</string>
-    <string name="kpm_autoload_edit_kpm">Editar</string>
-    <string name="kpm_autoload_edit_dialog_title">Editar KPM</string>    <string name="kpm_autoload_event_label">Evento:</string>    <string name="kpm_autoload_args_label">Argumentos:</string>    <string name="kpm_autoload_event_service">service</string>    <string name="kpm_autoload_event_post_fs_data">post-fs-data</string>
+
     
     <!-- Module Backup/Restore Strings -->
     <string name="apm_copy_list_title">نسخ القائمة</string>
@@ -798,19 +781,7 @@
     <string name="welcome_got_it">ابدأ</string>
 
 
-    <string name="kpm_autoload_kpm_list_title">وحدات KPM</string>
-    <string name="kpm_autoload_no_kpm_added">لم تتم إضافة أي وحدات KPM</string>
-    <string name="kpm_autoload_kpm_path">مسار KPM</string>
-    <string name="kpm_autoload_file_not_found">لم يتم العثور على الملف</string>
-    <string name="kpm_autoload_select_kpm_file">تحديد ملف KPM</string>
-    <string name="kpm_autoload_first_time_title">حول التحميل التلقائي لـ KPM</string>
-    <string name="kpm_autoload_first_time_message">تتيح لك هذه الميزة تحميل جميع KPMs المكونة مؤقتًا عند الإقلاع. هذا النهج أكثر ملاءمة من التضمين مباشرة في النواة.
-
-على سبيل المثال، لا يمكن استخدام KPMs التي تمنع تعديل القسم إلا مؤقتًا، حيث قد يتسبب التضمين في فشل الإقلاع. أو إذا كنت لا ترغب في تعديل قسم BOOT، يمكنك استخدام هذا التكوين لتحميل الوحدات بسرعة.
-
-يرجى التأكد من إغلاق التطبيق بالكامل وإعادة فتحه لتنفيذ الأوامر. بشكل عام، سيتم تحميله أيضًا عند الإقلاع. من الطبيعي أن يكون لدى المدير شاشة سوداء لفترة من الوقت! يستخدم هذا طريقة تحميل خلفية خالصة، تذكر أن تسحب لأسفل يدويًا للتحديث والتحقق مما إذا كانت الوحدات قد تم تحميلها بشكل صحيح!</string>
-    <string name="kpm_autoload_first_time_confirm">فهمت</string>
-    <string name="kpm_autoload_do_not_show_again">لا تظهر مرة أخرى</string>
+    
 
     <!-- Hide Settings Strings -->
     <string name="home_hide_su_path">إخفاء مسار su القابل للتنفيذ</string>
@@ -824,8 +795,6 @@
     <string name="home_hide_mount_summary">إخفاء تنفيذ التثبيت في بطاقة المعلومات</string>
     <string name="home_hide_fingerprint_summary">إخفاء البصمة الرقمية في بطاقة المعلومات</string>
 
-    <string name="kpm_page_first_time_title">تحذير</string>
-    <string name="kpm_page_first_time_message">تعدل وحدات النواة مباشرة تنفيذ Boot. على عكس وحدات النظام، فإنها تفتقر إلى آلية استرداد جيدة. في حالة حدوث مشكلات، يمكنك إصلاحها فقط عن طريق الدخول إلى Fastboot. يوصى بتحميل الوحدة أولاً للتأكد من عدم وجود مشاكل قبل تضمينها في Boot. إذا كان لا يمكن استخدام الوحدة إلا عن طريق التحميل، فيمكنك تجربة ميزة تحميل وحدة KPM التلقائية. إذا كنت لا تفهم وحدات النواة، فالرجاء عدم استخدام هذه الميزة!</string>
     
     
     <!-- Auto Backup Strings -->
@@ -1372,4 +1341,7 @@
     <string name="jailbreak">كسر الحماية</string>
     <string name="jailbreak_triggered">تم تفعيل كسر الحماية. انتظر الحصول على صلاحيات الجذر ثم قم بإعادة تشغيل ناعمة.</string>
     <string name="reboot_soft">إعادة تشغيل ناعمة</string>
+    <string name="kpm_installed">مثبّت</string>
+    <string name="kpm_disabled">معطّل (يسري بعد إعادة التشغيل)</string>
+    <string name="kpm_embedded_unload_invalid">لا يمكن إلغاء تحميل وحدات KPM المضمّنة؛ ستظل فعّالة بعد إعادة التشغيل.</string>
 </resources>

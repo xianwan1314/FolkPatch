@@ -103,6 +103,7 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
         private const val NEED_REBOOT_FILE = "/dev/.need_reboot"
         const val GLOBAL_NAMESPACE_FILE = "/data/adb/.global_namespace_enable"
         const val SUCOMPAT_FILE = "/data/adb/ap/sucompat"
+        const val SELINUX_HIDE_FILE = APATCH_FOLDER + "selinux_hide"
         const val MAGIC_MOUNT_FILE = "/data/adb/.magic_mount_enable"
         const val HIDE_SERVICE_FILE = "/data/adb/.hide_service_enable"
         const val HIDE_BINARY_PATH = "/data/adb/fp/bin/fpd"
@@ -121,7 +122,8 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
         const val NETISOLATE_UIDS_FILE = "/data/adb/fp/netisolate/uids"
         const val JAILBREAK_FILE = APATCH_FOLDER + "jailbreak"
         const val JAILBREAK_KO_PATH = APATCH_FOLDER + "kernelpatch.ko"
-        const val KPMS_DIR = APATCH_FOLDER + "kpms/"
+        /** Persisted, file-backed KPMs. Each module lives in <id>/<id>.kpm. */
+        const val KPMS_DIR = APATCH_FOLDER + "kpm/"
 
         @Deprecated("Use SHA256 comparison instead")
         const val APATCH_VERSION_PATH = APATCH_FOLDER + "version"

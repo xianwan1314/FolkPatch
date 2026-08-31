@@ -63,7 +63,7 @@ project.ext.set(
 
 val androidMinSdkVersion by extra(26)
 val androidTargetSdkVersion by extra(36)
-val androidCompileSdkVersion by extra(36)
+val androidCompileSdkVersion by extra(37)
 val androidBuildToolsVersion by extra("36.1.0")
 val androidCompileNdkVersion by extra("30.0.15729638")
 val androidSourceCompatibility by extra(JavaVersion.VERSION_21)
@@ -92,7 +92,7 @@ fun getGitDescribe(): String {
 }
 
 fun getVersionCode(): Int {
-    return 115021
+    return 115030
 }
 
 fun getbranch(): String {

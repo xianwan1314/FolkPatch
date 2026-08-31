@@ -9,9 +9,7 @@ use notify::{
 use signal_hook::{consts::signal::*, iterator::Signals};
 use std::process::Stdio;
 use std::{
-    env,
-    ffi::CStr,
-    fs,
+    env, ffi::CStr, fs,
     os::unix::{fs::PermissionsExt, process::CommandExt},
     path::{Path, PathBuf},
     process::Command,
@@ -27,8 +25,14 @@ use crate::{
 };
 
 pub fn report_kernel(superkey: Option<String>, event: &str, state: &str) {
-    let args = vec![
-        superkey.unwrap_or_else(|| "su".to_string()),
+    let rc = supercall::report_kernel_event(&superkey, event, state);
+    if rc == 0 {
+        return;
+    }
+    warn!("direct kernel event {event}/{state} failed: {rc}; falling back to SUPERCMD");
+
+    let args = [
+        superkey.unwrap_or("su".to_string()),
         "event".to_string(),
         event.to_string(),
         state.to_string(),
@@ -47,11 +51,6 @@ fn setup_fp_directories() -> Result<()> {
     utils::ensure_dir_with_perms(
         Path::new("/data/adb/fp/bin"),
         Path::new("/data/adb/fp"),
-        0o755,
-    )?;
-    utils::ensure_dir_with_perms(
-        Path::new(defs::FP_KPMS_AUTOLOAD_DIR),
-        Path::new(defs::FP_KPMS_DIR),
         0o755,
     )?;
     Ok(())
@@ -204,8 +203,6 @@ pub fn on_post_data_fs(superkey: Option<String>) -> Result<()> {
     if let Err(e) = setup_fp_directories() {
         warn!("setup_fp_directories failed: {e}");
     }
-
-    supercall::autoload_kpm_modules(&superkey, "post-fs-data");
 
     init_load_su_path(&superkey);
     supercall::apply_sucompat(&superkey);
@@ -380,13 +377,6 @@ pub fn on_services(superkey: Option<String>) -> Result<()> {
         supercall::apply_uts_spoof(&superkey);
     }
 
-    if Path::new(defs::KPM_AUTOLOAD_RETRY_FILE).exists() {
-        info!("Retrying deferred KPM auto-load from services stage");
-        supercall::autoload_kpm_modules(&superkey, "post-fs-data");
-    }
-
-    supercall::autoload_kpm_modules(&superkey, "service");
-
     run_stage("service", superkey, false);
 
     Ok(())
@@ -438,12 +428,6 @@ pub fn on_boot_completed(superkey: Option<String>) -> Result<()> {
         supercall::apply_uts_spoof(&superkey);
     }
 
-    if Path::new(defs::KPM_AUTOLOAD_RETRY_FILE).exists() {
-        info!("Retrying deferred KPM auto-load from boot-completed stage");
-        supercall::autoload_kpm_modules(&superkey, "post-fs-data");
-        supercall::autoload_kpm_modules(&superkey, "service");
-    }
-
     exec_fpd_umount();
 
     run_uid_monitor();
@@ -487,10 +471,6 @@ pub fn on_manager_boot_completed(superkey: Option<String>) -> Result<()> {
         supercall::apply_netisolate(&superkey);
     }
 
-    info!("Manager boot fallback: retrying KPM auto-load");
-    supercall::autoload_kpm_modules(&superkey, "post-fs-data");
-    supercall::autoload_kpm_modules(&superkey, "service");
-
     if Path::new(defs::HIDE_SERVICE_FILE).exists() {
         info!("Manager boot fallback: retrying fpd -hide");
         exec_fpd_hide();
@@ -520,13 +500,11 @@ pub fn start_uid_listener() -> Result<()> {
     {
         let mutex_clone = mutex.clone();
         thread::spawn(move || {
-            let mut signals = Signals::new(&[SIGTERM, SIGINT, SIGPWR]).unwrap();
-            for sig in signals.forever() {
+            let mut signals = Signals::new([SIGTERM, SIGINT, SIGPWR]).unwrap();
+            if let Some(sig) = signals.forever().next() {
                 log::warn!("[shutdown] Caught signal {sig}, refreshing package list...");
-                let skey = CStr::from_bytes_with_nul(b"su\0")
-                    .expect("[shutdown_listener] CStr::from_bytes_with_nul failed");
-                refresh_ap_package_list(&skey, &mutex_clone);
-                break;
+                let skey = c"su";
+                refresh_ap_package_list(skey, &mutex_clone);
             }
         });
     }
@@ -562,9 +540,8 @@ pub fn start_uid_listener() -> Result<()> {
     while let Ok(delayed) = rx.recv() {
         if delayed {
             debounce = false;
-            let skey = CStr::from_bytes_with_nul(b"su\0")
-                .expect("[start_uid_listener] CStr::from_bytes_with_nul failed");
-            refresh_ap_package_list(&skey, &mutex);
+            let skey = c"su";
+            refresh_ap_package_list(skey, &mutex);
             report_kernel(None, "uid_listener", "package-list-updated");
         } else if !debounce {
             thread::sleep(Duration::from_secs(1));
