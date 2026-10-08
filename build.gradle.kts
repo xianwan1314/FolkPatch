@@ -114,7 +114,7 @@ fun getbranch(): String {
     return exec("git rev-parse --abbrev-ref HEAD", "unknown")
 }
 
-fun getVersionName(): String {
+fun getBaseVersionName(): String {
     val name = exec("git rev-parse --verify --short HEAD", "")
     return name.takeIf { it.isNotEmpty() }
         ?: error("Failed to determine git commit for versionName")
