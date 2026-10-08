@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_launcher_icon">런처 아이콘</string>
+    <string name="launcher_icon_style_anime">애니메</string>
+    <string name="launcher_icon_style_geometry">지오메트리</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">플로팅 하단 바 스타일</string>
+    <string name="settings_bottom_bar_standard">표준 하단 바</string>
+    <string name="settings_bottom_bar_drawer">서랍형 하단 바</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
@@ -63,6 +70,7 @@
     <string name="reboot_fastbootd">FastbootD로 다시 시작</string>
     <string name="about">정보</string>
     <string name="developer_and_maintainer">개발자 | 유지보수자</string>
+    <string name="developer_profile_picture">개발자 프로필 사진</string>
     <string name="settings_app_language">언어</string>
     <string name="system_default">시스템 기본값</string>
     <string name="settings_global_namespace_mode">전역 네임스페이스 모드</string>
@@ -179,6 +187,7 @@
     <string name="patch_item_skey">SuperKey</string>
     <string name="patch_custom_superkey">사용자 지정 SuperKey</string>
     <string name="patch_custom_superkey_summary">여전히 Root 및 커널 관리를 위해 SuperKey를 설정할 수 있으며, 관리자는 커널의 내장 서명으로 인증됩니다</string>
+    <string name="patch_custom_superkey_optional">선택 사항이며, 서명된 관리자는 일반적으로 사용자 지정 키가 필요하지 않습니다</string>
     <string name="patch_item_set_skey_label">SuperKey는 8~63자 사이여야 하며 숫자와 영문자를 포함해야 합니다. 특수 문자는 사용할 수 없습니다.</string>
     <string name="patch_confirm_superkey">SuperKey 확인</string>
     <string name="patch_skey_mismatch">SuperKey가 일치하지 않습니다</string>
@@ -664,6 +673,11 @@ KernelPatch는 boot 이미지를 패치해야 합니다.
     <string name="shizuku_log_copied">클립보드에 복사됨</string>
     <string name="shizuku_log_source_server">서버 로그</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">상세</string>
+    <string name="shizuku_log_level_debug">디버그</string>
+    <string name="shizuku_log_level_info">정보</string>
+    <string name="shizuku_log_level_warn">경고</string>
+    <string name="shizuku_log_level_error">오류</string>
     <string name="shizuku_log_search_hint">로그 검색</string>
 <!-- Umount Service -->
     <string name="settings_umount_service">Umount Service</string>
@@ -720,6 +734,9 @@ KernelPatch는 boot 이미지를 패치해야 합니다.
 
     
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">앱 기본값</string>
+    <string name="settings_font_mode_system">시스템 기본값</string>
+    <string name="settings_font_mode_custom">사용자 지정</string>
     <string name="settings_custom_font">사용자 지정 글꼴</string>
     <string name="settings_select_font_file">글꼴 파일 선택</string>
     <string name="settings_custom_font_enabled">사용자 지정 글꼴 활성화됨</string>
@@ -745,8 +762,6 @@ KernelPatch는 boot 이미지를 패치해야 합니다.
     <string name="settings_clear_background">배경 지우기</string>
     <string name="settings_clear_background_confirm">배경 이미지를 지울까요?</string>
 
-    <string name="settings_alt_icon">대체 아이콘</string>
-    <string name="alt_icon_summary">대체 런처 아이콘을 사용합니다.</string>
 
     <!-- Video Background Settings -->
     <string name="settings_video_background">비디오 배경</string>
@@ -921,6 +936,42 @@ KernelPatch는 boot 이미지를 패치해야 합니다.
     <string name="module">모듈</string>
     <string name="settings_category_appearance">디스플레이</string>
     <string name="settings_category_behavior">작동</string>
+    <string name="profile_edit_title">프로필 편집</string>
+    <string name="profile_nickname_label">닉네임</string>
+    <string name="profile_signature_label">서명</string>
+    <string name="profile_choose_avatar">아바타 선택</string>
+    <string name="profile_avatar_default">기본 아바타</string>
+    <string name="profile_avatar_custom">사용자 지정 아바타</string>
+    <string name="profile_avatar_opacity">아바타 불투명도</string>
+    <string name="profile_avatar_source_title">아바타 소스 선택</string>
+    <string name="profile_avatar_source_local">기기에서 선택</string>
+    <string name="profile_avatar_source_qq">QQ 아바타</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">QQ 번호</string>
+    <string name="profile_avatar_gravatar_hint">이메일</string>
+    <string name="profile_avatar_fetch_failed">아바타를 가져오지 못했습니다</string>
+    <string name="profile_crop_avatar">아바타 자르기</string>
+    <string name="profile_restore_default">기본값으로 복원</string>
+    <string name="settings_section_general_basics">언어 및 업데이트</string>
+    <string name="settings_section_general_interface">인터페이스 및 모션</string>
+    <string name="settings_section_general_root">Root 동작</string>
+    <string name="settings_section_general_mount">시스템 및 마운트</string>
+    <string name="settings_section_general_identity">앱 아이덴티티</string>
+    <string name="settings_section_general_maintenance">유지 관리</string>
+    <string name="settings_section_behavior_display">홈 화면 표시</string>
+    <string name="settings_section_behavior_actions">동작 및 설치</string>
+    <string name="settings_section_function_hide">숨기기 및 격리</string>
+    <string name="settings_section_function_root">Root 기능</string>
+    <string name="settings_section_function_mount">마운트 및 언마운트</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">인증</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">로컬 백업</string>
+    <string name="settings_section_backup_cloud">클라우드 백업</string>
+    <string name="settings_section_module_display">모듈 표시</string>
+    <string name="settings_section_module_update">업데이트 및 설치</string>
+    <string name="settings_section_multimedia_music">배경 음악</string>
+    <string name="settings_section_multimedia_sound">사운드 및 진동</string>
     
     <!-- Appearance Sub-Categories -->
     <string name="settings_appearance_font">글꼴 설정</string>
@@ -1218,6 +1269,8 @@ KernelPatch는 boot 이미지를 패치해야 합니다.
     <string name="script_library_log_save_failed">로그 저장 실패: %s</string>
     <string name="settings_predictive_back">예측 백 제스처</string>
     <string name="settings_predictive_back_summary">Android 14+ 예측 백 제스처 애니메이션 활성화</string>
+    <string name="settings_expressive_motion">표현형 모션</string>
+    <string name="settings_expressive_motion_summary">Material 3 Expressive 모션 곡선을 사용합니다</string>
 
     <string name="home_device_status_battery_charging">충전 중</string>
     <string name="home_device_status_cpu_temp">CPU 온도</string>
@@ -1307,6 +1360,11 @@ KernelPatch는 boot 이미지를 패치해야 합니다.
     <string name="color_style_monochrome">모노크롬</string>
     <string name="color_style_neutral">중립</string>
     <string name="color_style_fidelity">충실도</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">대비</string>
+    <string name="color_contrast_standard">표준</string>
+    <string name="color_contrast_medium">중간</string>
+    <string name="color_contrast_high">높음</string>
     <string name="settings_focus_card_background">FocusUI 카드 배경</string>
     <string name="settings_focus_card_background_enabled">FocusUI 카드 배경 활성화됨; 카드를 길게 눌러 배경 관리</string>
     <string name="settings_focus_card_background_summary">FocusUI 카드 배경 및 길게 눌러 배경 관리 활성화</string>
@@ -1370,4 +1428,33 @@ KernelPatch는 boot 이미지를 패치해야 합니다.
     <string name="kpm_installed">설치됨</string>
     <string name="kpm_disabled">사용 중지됨 (재부팅 후 적용)</string>
     <string name="kpm_embedded_unload_invalid">임베드된 KPM은 언로드할 수 없으며 재부팅 후에도 활성 상태로 유지됩니다.</string>
+    <string name="settings_faq">자주 묻는 질문</string>
+    <string name="settings_bug_feedback">버그 신고</string>
+    <string name="settings_clear_cache">캐시 지우기</string>
+    <string name="settings_disclaimer">면책 조항</string>
+    <string name="settings_disclaimer_message">기기를 루팅하면 시스템 업데이트, 서드파티 모듈 또는 기타 외부 요인으로 인해 예상치 못한 위험과 손실이 발생할 수 있으며, 이는 사용자 본인이 감수해야 합니다. 충분히 이해한 후 계속 사용하세요.</string>
+    <string name="theme_store_subtitle">커뮤니티 테마를 찾아 적용하세요</string>
+    <string name="script_library_subtitle">로컬 스크립트 실행 및 관리</string>
+    <string name="plugin_subtitle">FolkPatch의 기능을 확장</string>
+    <string name="my_themes_subtitle">저장한 테마</string>
+    <string name="apm_api_marketplace_subtitle">커뮤니티 공유 API 둘러보기</string>
+    <string name="theme_download_paused">일시중지됨</string>
+    <string name="settings_wallpaper_gallery">배경화면 갤러리</string>
+    <string name="wallpaper_device_phone">휴대폰</string>
+    <string name="wallpaper_device_tablet">태블릿</string>
+    <string name="wallpaper_layout_waterfall">폭포수</string>
+    <string name="wallpaper_layout_stack">스택</string>
+    <string name="wallpaper_device_mixed">혼합</string>
+    <string name="wallpaper_display_options">표시 옵션</string>
+    <string name="wallpaper_display_layout">레이아웃</string>
+    <string name="wallpaper_download">다운로드</string>
+    <string name="wallpaper_cancel">취소</string>
+    <string name="wallpaper_saved">저장됨</string>
+    <string name="wallpaper_download_failed">다운로드 실패</string>
+    <string name="wallpaper_loading">배경화면 불러오는 중</string>
+    <string name="wallpaper_empty">배경화면 없음</string>
+    <string name="wallpaper_retry">다시 시도</string>
+    <string name="wallpaper_preview">미리보기</string>
+    <string name="wallpaper_set_background">배경으로 설정</string>
+    <string name="wallpaper_background_set">배경 업데이트됨</string>
 </resources>

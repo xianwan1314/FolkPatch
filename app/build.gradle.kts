@@ -85,10 +85,10 @@ android {
             storePassword = keystoreProperties.getProperty("KEYSTORE_PASSWORD") ?: "android"
             keyAlias = keystoreProperties.getProperty("KEY_ALIAS") ?: "androiddebugkey"
             keyPassword = keystoreProperties.getProperty("KEY_PASSWORD") ?: "android"
-            enableV1Signing = true
+            enableV1Signing = false
             enableV2Signing = true
-            enableV3Signing = true
-            enableV4Signing = true
+            enableV3Signing = false
+            enableV4Signing = false
         }
     }
 
@@ -247,14 +247,33 @@ kotlin {
     }
 }
 
+// -PkernelPatchArtifacts=/absolute/path/to/artifacts packages nonempty local
+// kpimg-android and kptools-android. Omit it to restore published binaries.
+// This override applies to Boot-mode assets; jailbreak KO downloads are separate.
 fun registerDownloadTask(
-    taskName: String, srcUrl: String, destPath: String, project: Project, version: String? = null
+    taskName: String, srcUrl: String, destPath: String, project: Project, version: String? = null,
+    localArtifact: String? = null
 ) {
+    // Resolve project-relative paths during configuration, before task execution.
+    val localDir = project.providers.gradleProperty("kernelPatchArtifacts").orNull
+    val localSource = if (localDir != null && localArtifact != null) {
+        File(project.file(localDir), localArtifact)
+    } else {
+        null
+    }
     project.tasks.register(taskName) {
         val destFile = File(destPath)
         val versionFile = File("$destPath.version")
 
         doLast {
+            if (localSource != null) {
+                val source = localSource
+                check(source.isFile && source.length() > 0) { "Missing local KernelPatch artifact: $source" }
+                destFile.parentFile.mkdirs()
+                source.copyTo(destFile, overwrite = true)
+                versionFile.writeText("local")
+                return@doLast
+            }
             var forceDownload = false
             if (version != null) {
                 if (!versionFile.exists() || versionFile.readText().trim() != version) {
@@ -262,9 +281,9 @@ fun registerDownloadTask(
                 }
             }
 
-            if (!destFile.exists() || forceDownload || isFileUpdated(srcUrl, destFile)) {
+            if (!destFile.exists() || forceDownload || ArtifactDownload.isFileUpdated(srcUrl, destFile)) {
                 println(" - Downloading $srcUrl to ${destFile.absolutePath}")
-                downloadFile(srcUrl, destFile)
+                ArtifactDownload.downloadFile(srcUrl, destFile)
                 if (version != null) {
                     versionFile.writeText(version)
                 }
@@ -276,17 +295,19 @@ fun registerDownloadTask(
     }
 }
 
-fun isFileUpdated(url: String, localFile: File): Boolean {
-    val connection = URI.create(url).toURL().openConnection()
-    val remoteLastModified = connection.getHeaderFieldDate("Last-Modified", 0L)
-    return remoteLastModified > localFile.lastModified()
-}
+// Task actions call a standalone helper rather than capturing the Gradle script.
+object ArtifactDownload {
+    fun isFileUpdated(url: String, localFile: File): Boolean {
+        val connection = URI.create(url).toURL().openConnection()
+        val remoteLastModified = connection.getHeaderFieldDate("Last-Modified", 0L)
+        return remoteLastModified > localFile.lastModified()
+    }
 
-fun downloadFile(url: String, destFile: File) {
-    destFile.parentFile?.mkdirs()
-    URI.create(url).toURL().openStream().use { input ->
-        destFile.outputStream().use { output ->
-            input.copyTo(output)
+    fun downloadFile(url: String, destFile: File) {
+        URI.create(url).toURL().openStream().use { input ->
+            destFile.outputStream().use { output ->
+                input.copyTo(output)
+            }
         }
     }
 }
@@ -319,7 +340,8 @@ registerDownloadTask(
     srcUrl = "$kernelPatchReleaseBaseUrl/kpimg-android",
     destPath = "${project.projectDir}/src/main/assets/kpimg",
     project = project,
-    version = kernelPatchVersion
+    version = kernelPatchVersion,
+    localArtifact = "kpimg-android"
 )
 
 registerDownloadTask(
@@ -327,7 +349,8 @@ registerDownloadTask(
     srcUrl = "$kernelPatchReleaseBaseUrl/kptools-android",
     destPath = "${project.projectDir}/libs/arm64-v8a/libkptools.so",
     project = project,
-    version = kernelPatchVersion
+    version = kernelPatchVersion,
+    localArtifact = "kptools-android"
 )
 
 // Compat kp version less than 0.10.7
@@ -408,7 +431,7 @@ tasks.register<Exec>("cargoBuild") {
     args("ndk", "-t", "arm64-v8a", "build", "--release")
     workingDir("${project.rootDir}/apd")
     environment("APATCH_VERSION_CODE", "${managerVersionCode}")
-    environment("APATCH_VERSION_NAME", "${managerVersionCode}-Matsuzaka-yuki")
+    environment("APATCH_VERSION_NAME", managerVersionName)
 }
 
 tasks.register<Copy>("buildApd") {
@@ -449,6 +472,9 @@ ksp {
 }
 
 dependencies {
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:ui"))
+
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.splashscreen)
@@ -466,6 +492,8 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+
+    testImplementation(libs.junit)
 
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)

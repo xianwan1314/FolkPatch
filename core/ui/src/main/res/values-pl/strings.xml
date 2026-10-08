@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_action_search">Szukaj</string>
+    <string name="core_action_clear">Wyczyść</string>
+    <string name="core_action_back">Wstecz</string>
+    <string name="core_action_close">Zamknij</string>
+    <string name="core_action_more">Więcej</string>
+    <string name="core_action_refresh">Odśwież</string>
+    <string name="core_action_filter">Filtruj</string>
+    <string name="core_action_save">Zapisz</string>
+    <string name="core_action_send">Wyślij</string>
+    <string name="core_action_download">Pobierz</string>
+    <string name="core_action_config">Konfiguracja</string>
+    <string name="core_action_delete">Usuń</string>
+    <string name="core_state_busy">Zajęte</string>
+</resources>

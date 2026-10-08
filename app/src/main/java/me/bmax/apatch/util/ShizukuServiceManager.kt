@@ -30,12 +30,18 @@ object ShizukuServiceManager {
 
     /** server 入口类 */
     private const val SERVER_CLASS = "rikka.shizuku.server.ShizukuService"
+    // Kept off the shell's user_de dir: the elevated `su` namespace cannot always
+    // resolve it, which made the root launch candidate fail its redirect.
+    private const val SERVER_START_LOG = "/data/local/tmp/shizuku_start.log"
     private const val FLAG_ALLOWED = 1 shl 1
     private const val FLAG_DENIED = 1 shl 2
     private const val MASK_PERMISSION = FLAG_ALLOWED or FLAG_DENIED
 
     /** 防并发启动：快速反复拨动开关时避免重复拉起多个 server */
     private val startLock = Any()
+
+    private const val SERVER_START_TIMEOUT_MS = 10_000L
+    private const val SERVER_POLL_INTERVAL_MS = 200L
 
     fun isEnabled(): Boolean =
         APApplication.sharedPreferences.getBoolean(PREF_SHIZUKU_ENABLED, false)
@@ -44,31 +50,23 @@ object ShizukuServiceManager {
         APApplication.sharedPreferences.edit().putBoolean(PREF_SHIZUKU_ENABLED, enabled).apply()
     }
 
-    /**
-     * Shizuku Server 是否正在运行。
-     * 优先使用 Shizuku API（无需 root，本应用作为 Manager 会被推送 Binder），
-     * 未连接时回退到 root 进程检查。
-     */
+    /** Shizuku Server 是否已建立可用 Binder。仅检查进程会把卡死进程误判为可用。 */
     fun isServerRunning(): Boolean {
         return try {
-            if (Shizuku.pingBinder()) {
-                true
-            } else {
-                checkServerProcess()
-            }
+            Shizuku.pingBinder()
         } catch (t: Throwable) {
-            checkServerProcess()
+            false
         }
     }
 
-    /** 通过 root 检查 shizuku_server 进程是否存活 */
-    private fun checkServerProcess(): Boolean {
+    /** 通过 root 检查 shizuku_server 进程是否存活。 */
+    private fun isServerProcessAlive(): Boolean {
         return try {
             val out = ArrayList<String>()
             val err = ArrayList<String>()
             val result = getRootShell()
                 .newJob()
-                .add("pidof $SERVER_PROCESS_NAME || ps -A | grep $SERVER_PROCESS_NAME | grep -v grep")
+                .add("/system/bin/pidof $SERVER_PROCESS_NAME")
                 .to(out, err)
                 .exec()
             result.isSuccess && out.isNotEmpty()
@@ -76,6 +74,26 @@ object ShizukuServiceManager {
             Log.e(TAG, "checkServerProcess failed", t)
             false
         }
+    }
+
+    private fun killServerProcess() {
+        try {
+            getRootShell().newJob()
+                .add("kill -9 \$(/system/bin/pidof $SERVER_PROCESS_NAME) 2>/dev/null || true")
+                .exec()
+            Thread.sleep(200L)
+        } catch (t: Throwable) {
+            Log.w(TAG, "killServerProcess failed", t)
+        }
+    }
+
+    private fun waitForBinder(timeoutMs: Long): Boolean {
+        val deadline = System.currentTimeMillis() + timeoutMs
+        do {
+            if (isServerRunning()) return true
+            Thread.sleep(SERVER_POLL_INTERVAL_MS)
+        } while (System.currentTimeMillis() < deadline)
+        return isServerRunning()
     }
 
     /**
@@ -101,6 +119,9 @@ object ShizukuServiceManager {
                 Log.e(TAG, "start failed: root not available")
                 return false
             }
+            // A process with no usable binder is a failed or stuck previous
+            // launch. Remove it before trying the next launch strategy.
+            killServerProcess()
             // 部署降权工具 fpdrop。失败不阻塞启动：server 端在 fpdrop 缺失时会
             // 降级为直接以当前身份执行命令，功能可用（仅分权不生效）。
             if (!ensureFpDrop()) {
@@ -113,47 +134,57 @@ object ShizukuServiceManager {
             }
             // app_process needs the extracted native library directory, not an APK-relative path.
             val libraryPath = context.applicationInfo.nativeLibraryDir
-            val inner = "nohup env CLASSPATH=\"$apkPath\" app_process " +
+            val inner = "/system/bin/setsid -d /system/bin/env CLASSPATH=\"$apkPath\" /system/bin/app_process " +
                 "-Djava.class.path=\"$apkPath\" " +
                 "-Dshizuku.library.path=\"$libraryPath\" " +
                 "/system/bin --nice-name=$SERVER_PROCESS_NAME $SERVER_CLASS " +
-                ">/dev/null 2>&1 &"
+                ">$SERVER_START_LOG 2>&1 </dev/null &"
             // 不同 su 实现/版本的降权语法存在差异，逐一尝试。
             // 首选以 root (uid 0) 启动 server：与官方 Shizuku root 模式一致，
             // 使通过 Shizuku 执行的命令具备 root 权限（可读取 /data 等受保护目录）。
             // root 启动的 app_process 直接处于全局 mount namespace，config 读写正常。
             // 降级到 shell (uid 2000) 时用 -M 进入全局 namespace 以保证 config 可写。
             val candidates = arrayOf(
-                "su -c '$inner'",
-                "su -M 2000 -c '$inner'",
-                "su 2000 -M -c '$inner'",
-                "su 2000 -c '$inner'",
-                "su - 2000 -c '$inner'",
+                "/system/bin/su -c '$inner'",
+                "/system/bin/su 2000 -M -c '$inner'",
+                "/system/bin/su -M 2000 -c '$inner'",
+                "/system/bin/su 2000 -c '$inner'",
+                "/system/bin/su - 2000 -c '$inner'",
             )
-            var launched = false
             for (cmd in candidates) {
                 try {
-                    val result = getRootShell().newJob().add(cmd).exec()
-                    if (result.isSuccess) {
-                        launched = true
-                        break
+                    getRootShell().newJob()
+                        .add("/system/bin/rm -f $SERVER_START_LOG")
+                        .exec()
+                    val out = ArrayList<String>()
+                    val err = ArrayList<String>()
+                    val result = getRootShell().newJob().add(cmd).to(out, err).exec()
+                    if (!result.isSuccess) {
+                        Log.w(
+                            TAG,
+                            "start command failed: out=${out.joinToString()} err=${err.joinToString()}",
+                        )
+                        continue
                     }
-                    Log.w(TAG, "start command failed: ${result.err.joinToString()}")
+                    if (waitForBinder(SERVER_START_TIMEOUT_MS)) {
+                        return true
+                    }
+                    Log.w(
+                        TAG,
+                        "start command did not produce a usable binder: " +
+                            "out=${out.joinToString()} err=${err.joinToString()} cmd=$cmd",
+                    )
+                    killServerProcess()
                 } catch (t: Throwable) {
                     Log.w(TAG, "start command crashed: $cmd", t)
+                    killServerProcess()
                 }
             }
-            if (!launched) return false
-
-            // 等待 server binder 就绪（最长 10 秒，轮询更细以尽早返回）
-            repeat(50) {
-                Thread.sleep(200L)
-                if (isServerRunning()) return true
-            }
-            Log.e(TAG, "start timed out waiting for server binder")
+            Log.e(TAG, "start failed: no launch strategy produced a usable binder")
             false
         } catch (t: Throwable) {
             Log.e(TAG, "start failed", t)
+            killServerProcess()
             false
         }
     }
@@ -226,7 +257,7 @@ object ShizukuServiceManager {
             }
             // 2. 兜底：pidof 精确匹配进程名后 kill -9
             getRootShell().newJob()
-                .add("kill -9 \\$(pidof $SERVER_PROCESS_NAME) 2>/dev/null || true")
+                .add("kill -9 \$(/system/bin/pidof $SERVER_PROCESS_NAME) 2>/dev/null || true")
                 .exec()
             waitStopped()
         } catch (t: Throwable) {
@@ -239,15 +270,15 @@ object ShizukuServiceManager {
     private fun waitStopped(): Boolean {
         repeat(20) {
             Thread.sleep(250L)
-            if (!isServerRunning()) return true
+            if (!isServerRunning() && !isServerProcessAlive()) return true
         }
         Log.w(TAG, "stop timed out waiting for server to exit")
         return false
     }
 
     /** Returns Shizuku-compatible applications exposed by the embedded server. */
-    fun getApplications(): List<PackageInfo> {
-        if (!Shizuku.pingBinder()) return emptyList()
+    fun getApplications(): List<PackageInfo>? {
+        if (!isServerRunning()) return null
         val data = Parcel.obtain()
         val reply = Parcel.obtain()
         return try {
@@ -259,17 +290,26 @@ object ShizukuServiceManager {
             (ParcelableListSlice.CREATOR.createFromParcel(reply) as ParcelableListSlice<PackageInfo>).list.orEmpty()
         } catch (t: Throwable) {
             Log.e(TAG, "getApplications failed", t)
-            emptyList()
+            null
         } finally {
             reply.recycle()
             data.recycle()
         }
     }
 
-    fun isAllowed(uid: Int): Boolean =
-        (Shizuku.getFlagsForUid(uid, MASK_PERMISSION) and FLAG_ALLOWED) != 0
+    fun isAllowed(uid: Int): Boolean {
+        return try {
+            (Shizuku.getFlagsForUid(uid, MASK_PERMISSION) and FLAG_ALLOWED) != 0
+        } catch (t: Throwable) {
+            Log.e(TAG, "isAllowed failed for uid $uid", t)
+            false
+        }
+    }
 
     fun setAllowed(uid: Int, allowed: Boolean) {
+        if (!isServerRunning()) {
+            throw IllegalStateException("Shizuku service is not running")
+        }
         Shizuku.updateFlagsForUid(uid, MASK_PERMISSION, if (allowed) FLAG_ALLOWED else 0)
     }
 
@@ -374,7 +414,11 @@ object ShizukuServiceManager {
             val out = ArrayList<String>()
             val err = ArrayList<String>()
             getRootShell().newJob()
-                .add("cat $SERVER_LOG_FILE_BACKUP 2>/dev/null; cat $SERVER_LOG_FILE 2>/dev/null")
+                .add(
+                    "cat $SERVER_START_LOG 2>/dev/null; " +
+                        "cat $SERVER_LOG_FILE_BACKUP 2>/dev/null; " +
+                        "cat $SERVER_LOG_FILE 2>/dev/null"
+                )
                 .to(out, err)
                 .exec()
             out.joinToString("\n")

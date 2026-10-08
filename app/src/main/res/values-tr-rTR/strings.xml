@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_launcher_icon">Launcher Simgesi</string>
+    <string name="launcher_icon_style_anime">Anime</string>
+    <string name="launcher_icon_style_geometry">Geometrik</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">Kayan alt çubuk stili</string>
+    <string name="settings_bottom_bar_standard">Standart alt çubuk</string>
+    <string name="settings_bottom_bar_drawer">Çekmece alt çubuk</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
@@ -63,6 +70,7 @@
     <string name="reboot_fastbootd">FastbootD Moduna Yeniden Başlat</string>
     <string name="about">Hakkında</string>
     <string name="developer_and_maintainer">Geliştirici | Bakımcı</string>
+    <string name="developer_profile_picture">Geliştirici profil resmi</string>
     <string name="settings_app_language">Dil</string>
     <string name="system_default">Sistem varsayılanı</string>
     <string name="settings_global_namespace_mode">Global ad alanı modu</string>
@@ -176,6 +184,7 @@
     <string name="patch_item_skey">SuperKey</string>
     <string name="patch_custom_superkey">Özel SuperKey</string>
     <string name="patch_custom_superkey_summary">Hâlâ root ve kernel yönetimi için SuperKey kullanabilirsiniz, yönetici çekirdek tarafından yerleşik imza ile yetkilendirilmiştir</string>
+    <string name="patch_custom_superkey_optional">İsteğe bağlı; imzalı yönetici normalde özel anahtar gerektirmez</string>
     <string name="patch_item_set_skey_label">SuperKey 8-63 karakter uzunluğunda olmalı; rakam ve harf içermeli, özel karakter içermemelidir.</string>
     <string name="patch_confirm_superkey">SuperKey Onayla</string>
     <string name="patch_skey_mismatch">SuperKey eşleşmiyor</string>
@@ -657,6 +666,11 @@ Bol şans! Ayrıca, aşağıdaki belge butonuna tıklamak kesinlikle doğru!</st
     <string name="shizuku_log_copied">Panoya kopyalandı</string>
     <string name="shizuku_log_source_server">Sunucu günlüğü</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">Ayrıntılı</string>
+    <string name="shizuku_log_level_debug">Hata ayıklama</string>
+    <string name="shizuku_log_level_info">Bilgi</string>
+    <string name="shizuku_log_level_warn">Uyarı</string>
+    <string name="shizuku_log_level_error">Hata</string>
     <string name="shizuku_log_search_hint">Günlüklerde ara</string>
 <string name="settings_app_title">Uygulama Başlığı</string>
     <string name="app_title_custom">Özel</string>
@@ -700,6 +714,9 @@ Bol şans! Ayrıca, aşağıdaki belge butonuna tıklamak kesinlikle doğru!</st
     <string name="settings_title_image_offset_x">Yatay Konum</string>
 
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">Uygulama varsayılanı</string>
+    <string name="settings_font_mode_system">Sistem varsayılanı</string>
+    <string name="settings_font_mode_custom">Özel</string>
     <string name="settings_custom_font">Özel Yazı Tipi</string>
     <string name="settings_select_font_file">Yazı Tipi Dosyası Seç</string>
     <string name="settings_custom_font_enabled">Özel Yazı Tipi Etkin</string>
@@ -725,8 +742,6 @@ Bol şans! Ayrıca, aşağıdaki belge butonuna tıklamak kesinlikle doğru!</st
     <string name="settings_clear_background">Arka Planı Temizle</string>
     <string name="settings_clear_background_confirm">Arka plan görselini temizlemek istediğinize emin misiniz?</string>
 
-    <string name="settings_alt_icon">Alternatif Simge</string>
-    <string name="alt_icon_summary">Alternatif launcher simgesini kullan</string>
 
     <!-- Video Background Settings -->
     <string name="settings_video_background">Video Arka Plan</string>
@@ -947,6 +962,42 @@ Bol şans! Ayrıca, aşağıdaki belge butonuna tıklamak kesinlikle doğru!</st
     <string name="settings_discrete_slider">Kademeli Kaydırıcı</string>
     <string name="settings_discrete_slider_desc">Kaydırıcı yolunda işaret çizgilerini göster</string>
     <string name="settings_category_behavior">Davranış</string>
+    <string name="profile_edit_title">Profili düzenle</string>
+    <string name="profile_nickname_label">Takma ad</string>
+    <string name="profile_signature_label">İmza</string>
+    <string name="profile_choose_avatar">Avatar seç</string>
+    <string name="profile_avatar_default">Varsayılan avatar</string>
+    <string name="profile_avatar_custom">Özel avatar</string>
+    <string name="profile_avatar_opacity">Avatar opaklığı</string>
+    <string name="profile_avatar_source_title">Avatar kaynağını seç</string>
+    <string name="profile_avatar_source_local">Cihazdan seç</string>
+    <string name="profile_avatar_source_qq">QQ avatarı</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">QQ numarası</string>
+    <string name="profile_avatar_gravatar_hint">E-posta</string>
+    <string name="profile_avatar_fetch_failed">Avatar alınamadı</string>
+    <string name="profile_crop_avatar">Avatarı kırp</string>
+    <string name="profile_restore_default">Varsayılana dön</string>
+    <string name="settings_section_general_basics">Dil ve Güncellemeler</string>
+    <string name="settings_section_general_interface">Arayüz ve Animasyon</string>
+    <string name="settings_section_general_root">Root Davranışı</string>
+    <string name="settings_section_general_mount">Sistem ve Bağlama</string>
+    <string name="settings_section_general_identity">Uygulama Kimliği</string>
+    <string name="settings_section_general_maintenance">Bakım</string>
+    <string name="settings_section_behavior_display">Ana Ekran Görünümü</string>
+    <string name="settings_section_behavior_actions">İşlemler ve Kurulum</string>
+    <string name="settings_section_function_hide">Gizle ve Yalıt</string>
+    <string name="settings_section_function_root">Root Özellikleri</string>
+    <string name="settings_section_function_mount">Bağla ve Ayır</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">Kimlik Doğrulama</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">Yerel Yedek</string>
+    <string name="settings_section_backup_cloud">Bulut Yedek</string>
+    <string name="settings_section_module_display">Modül Görünümü</string>
+    <string name="settings_section_module_update">Güncellemeler ve Kurulum</string>
+    <string name="settings_section_multimedia_music">Arka Plan Müziği</string>
+    <string name="settings_section_multimedia_sound">Ses ve Titreşim</string>
     <string name="settings_category_function">Fonksiyon</string>
     <string name="settings_category_module">Modüller</string>
     <string name="settings_category_security">Güvenlik</string>
@@ -1203,6 +1254,8 @@ Bol şans! Ayrıca, aşağıdaki belge butonuna tıklamak kesinlikle doğru!</st
     <string name="theme_download_finalizing">Tamamlanıyor...</string>
     <string name="settings_predictive_back">Tahmin Edici Geri Hareketi</string>
     <string name="settings_predictive_back_summary">Android 14+ tahmin edici geri hareketi animasyonunu etkinleştir</string>
+    <string name="settings_expressive_motion">İfade edici hareket</string>
+    <string name="settings_expressive_motion_summary">Material 3 Expressive hareket eğrilerini kullan</string>
 
     <string name="home_device_status_battery_charging">Şarj Oluyor</string>
     <string name="home_device_status_cpu_temp">CPU Sıcaklığı</string>
@@ -1292,6 +1345,11 @@ Bol şans! Ayrıca, aşağıdaki belge butonuna tıklamak kesinlikle doğru!</st
     <string name="color_style_monochrome">Tek Renk</string>
     <string name="color_style_neutral">Nötr</string>
     <string name="color_style_fidelity">Sadakat</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">Kontrast</string>
+    <string name="color_contrast_standard">Standart</string>
+    <string name="color_contrast_medium">Orta</string>
+    <string name="color_contrast_high">Yüksek</string>
     <string name="settings_focus_card_background">FocusUI Kart Duvar Kağıdı</string>
     <string name="settings_focus_card_background_enabled">FocusUI kart duvar kağıtları etkin; bir kartı yönetmek için uzun basın</string>
     <string name="settings_focus_card_background_summary">FocusUI kart duvar kağıtlarını ve uzun basarak duvar kağıdı yönetimini etkinleştir</string>
@@ -1352,4 +1410,33 @@ Bol şans! Ayrıca, aşağıdaki belge butonuna tıklamak kesinlikle doğru!</st
     <string name="jailbreak">Jailbreak</string>
     <string name="jailbreak_triggered">Jailbreak tetiklendi. Root bekleyin, ardından yumuşak yeniden başlatma yapın.</string>
     <string name="reboot_soft">Yumuşak yeniden başlatma</string>
+    <string name="settings_faq">Sık sorulan sorular</string>
+    <string name="settings_bug_feedback">Hata bildir</string>
+    <string name="settings_clear_cache">Önbelleği temizle</string>
+    <string name="settings_disclaimer">Sorumluluk reddi</string>
+    <string name="settings_disclaimer_message">Cihazı root ettikten sonra sistem güncellemeleri, üçüncü taraf modüller veya diğer dış etkenler öngörülemeyen risk ve kayıplara yol açabilir; bunları kendiniz üstlenmeniz gerekir. Lütfen riskleri tam olarak anladıktan sonra devam edin.</string>
+    <string name="theme_store_subtitle">Topluluk temalarını keşfedin ve uygulayın</string>
+    <string name="script_library_subtitle">Yerel betikleri çalıştırın ve yönetin</string>
+    <string name="plugin_subtitle">FolkPatch yeteneklerini genişletin</string>
+    <string name="my_themes_subtitle">Kaydettiğiniz temalar</string>
+    <string name="apm_api_marketplace_subtitle">Topluluk API\'lerine göz atın</string>
+    <string name="theme_download_paused">Duraklatıldı</string>
+    <string name="settings_wallpaper_gallery">Duvar kağıdı galerisi</string>
+    <string name="wallpaper_device_phone">Telefon</string>
+    <string name="wallpaper_device_tablet">Tablet</string>
+    <string name="wallpaper_layout_waterfall">Şelale</string>
+    <string name="wallpaper_layout_stack">Yığın</string>
+    <string name="wallpaper_device_mixed">Karışık</string>
+    <string name="wallpaper_display_options">Görünüm seçenekleri</string>
+    <string name="wallpaper_display_layout">Düzen</string>
+    <string name="wallpaper_download">İndir</string>
+    <string name="wallpaper_cancel">İptal</string>
+    <string name="wallpaper_saved">Kaydedildi</string>
+    <string name="wallpaper_download_failed">İndirme başarısız</string>
+    <string name="wallpaper_loading">Duvar kağıtları yükleniyor</string>
+    <string name="wallpaper_empty">Duvar kağıdı yok</string>
+    <string name="wallpaper_retry">Yeniden dene</string>
+    <string name="wallpaper_preview">Önizleme</string>
+    <string name="wallpaper_set_background">Arka plan olarak ayarla</string>
+    <string name="wallpaper_background_set">Arka plan güncellendi</string>
 </resources>

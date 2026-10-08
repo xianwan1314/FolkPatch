@@ -394,6 +394,16 @@ fn do_magic_mount<P: AsRef<Path>, WP: AsRef<Path>>(
                     work_dir_path.display()
                 );
                 mount_bind(module_path, target_path)?;
+                if !has_tmpfs {
+                    // A module file mounted straight onto its real path must not
+                    // keep the source mount's propagation: the bind clone is
+                    // otherwise a member of the source's peer group, so both this
+                    // mount and a later unmount of it would propagate to every
+                    // peer in other namespaces. Same treatment the tmpfs below
+                    // `move_tmpfs_to_target` gets.
+                    mount_change(target_path, MountPropagationFlags::PRIVATE)
+                        .context("make module file mount private")?;
+                }
             } else {
                 bail!("cannot mount root file {}!", path.display());
             }
@@ -452,14 +462,7 @@ fn do_magic_mount<P: AsRef<Path>, WP: AsRef<Path>>(
 fn mount_tmp(mount_source: &str) -> Result<()> {
     let tmp_dir = PathBuf::from("/debug_ramdisk");
     log::info!("mount_dir: {}", tmp_dir.display());
-    mount(
-        mount_source,
-        &tmp_dir,
-        "tmpfs",
-        MountFlags::empty(),
-        None,
-    )
-    .context("mount tmp")?;
+    mount(mount_source, &tmp_dir, "tmpfs", MountFlags::empty(), None).context("mount tmp")?;
     mount_change(&tmp_dir, MountPropagationFlags::PRIVATE).context("make tmp private")?;
     Ok(())
 }
@@ -473,14 +476,7 @@ pub fn magic_mount(mount_source: &str) -> Result<()> {
             mount_tmp(mount_source)?;
         }
         ensure_dir_exists(&tmp_dir)?;
-        mount(
-            mount_source,
-            &tmp_dir,
-            "tmpfs",
-            MountFlags::empty(),
-            None,
-        )
-        .context("mount tmp")?;
+        mount(mount_source, &tmp_dir, "tmpfs", MountFlags::empty(), None).context("mount tmp")?;
         mount_change(&tmp_dir, MountPropagationFlags::PRIVATE).context("make tmp private")?;
         let result = do_magic_mount("/", &tmp_dir, root, false);
         if let Err(e) = unmount(&tmp_dir, UnmountFlags::DETACH) {
@@ -493,3 +489,7 @@ pub fn magic_mount(mount_source: &str) -> Result<()> {
         Ok(())
     }
 }
+
+#[cfg(test)]
+#[path = "magic_mount_tests.rs"]
+mod tests;

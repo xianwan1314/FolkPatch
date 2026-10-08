@@ -9,30 +9,51 @@ pub const AP_RC_PATH: &str = concatcp!(WORKING_DIR, ".aprc");
 pub const GLOBAL_NAMESPACE_FILE: &str = concatcp!(ADB_DIR, ".global_namespace_enable");
 pub const MAGIC_MOUNT_FILE: &str = concatcp!(ADB_DIR, ".magic_mount_enable");
 pub const SUCOMPAT_FILE: &str = concatcp!(WORKING_DIR, "sucompat");
-pub const HIDE_SERVICE_FILE: &str = concatcp!(ADB_DIR, ".hide_service_enable");
-pub const HIDE_BINARY_PATH: &str = concatcp!(ADB_DIR, "fp/bin/fpd");
-pub const UMOUNT_SERVICE_FILE: &str = concatcp!(ADB_DIR, ".umount_service_enable");
-pub const UMOUNT_BINARY_PATH: &str = concatcp!(ADB_DIR, "fp/bin/fpd");
-pub const UTS_SPOOF_ENABLE_FILE: &str = concatcp!(ADB_DIR, ".uts_spoof_enable");
-pub const UTS_SPOOF_CONFIG_FILE: &str = concatcp!(ADB_DIR, ".uts_spoof_config");
-pub const UTS_SPOOF_BOOT_PENDING: &str = concatcp!(ADB_DIR, ".uts_spoof_boot_pending");
-pub const UTS_SPOOF_RETRY_FILE: &str = concatcp!(ADB_DIR, ".uts_spoof_retry");
+pub const HIDE_SERVICE_FILE: &str = concatcp!(WORKING_DIR, "hide_service");
+pub const HIDE_BINARY_PATH: &str = concatcp!(BINARY_DIR, "fpd");
+pub const UMOUNT_SERVICE_FILE: &str = concatcp!(WORKING_DIR, "umount_service");
+pub const UMOUNT_PATH_FILE: &str = concatcp!(WORKING_DIR, "UmountPATH");
+pub const UTS_SPOOF_ENABLE_FILE: &str = concatcp!(WORKING_DIR, "uts_enable");
+pub const UTS_SPOOF_CONFIG_FILE: &str = concatcp!(WORKING_DIR, "uts_config");
+pub const UTS_SPOOF_BOOT_PENDING: &str = concatcp!(WORKING_DIR, "uts_pending");
+pub const UTS_SPOOF_RETRY_FILE: &str = concatcp!(WORKING_DIR, "uts_retry");
 pub const DAEMON_PATH: &str = concatcp!(ADB_DIR, "apd");
 pub const AUTO_EXCLUDE_KNOWN_PACKAGES_FILE: &str =
     concatcp!(WORKING_DIR, "auto_exclude_known_packages");
 pub const MANAGER_PACKAGE_FILE: &str = concatcp!(WORKING_DIR, "manager_package");
 
-pub const PATHHIDE_DIR: &str = concatcp!(ADB_DIR, "fp/pathhide/");
-pub const PATHHIDE_ENABLE_FILE: &str = concatcp!(ADB_DIR, "fp/pathhide/enabled");
-pub const PATHHIDE_PATHS_FILE: &str = concatcp!(ADB_DIR, "fp/pathhide/paths");
-pub const PATHHIDE_UIDS_FILE: &str = concatcp!(ADB_DIR, "fp/pathhide/uids");
-pub const PATHHIDE_UID_MODE_FILE: &str = concatcp!(ADB_DIR, "fp/pathhide/uid_mode");
-pub const PATHHIDE_FILTER_SYSTEM_FILE: &str = concatcp!(ADB_DIR, "fp/pathhide/filter_system");
-pub const PATHHIDE_RETRY_FILE: &str = concatcp!(ADB_DIR, "fp/pathhide/retry");
+pub const PATHHIDE_DIR: &str = concatcp!(WORKING_DIR, "pathhide/");
+pub const PATHHIDE_ENABLE_FILE: &str = concatcp!(PATHHIDE_DIR, "enabled");
+pub const PATHHIDE_PATHS_FILE: &str = concatcp!(PATHHIDE_DIR, "paths");
+pub const PATHHIDE_UIDS_FILE: &str = concatcp!(PATHHIDE_DIR, "uids");
+pub const PATHHIDE_UID_MODE_FILE: &str = concatcp!(PATHHIDE_DIR, "uid_mode");
+pub const PATHHIDE_FILTER_SYSTEM_FILE: &str = concatcp!(PATHHIDE_DIR, "filter_system");
+pub const PATHHIDE_RETRY_FILE: &str = concatcp!(PATHHIDE_DIR, "retry");
 
-pub const NETISOLATE_DIR: &str = concatcp!(ADB_DIR, "fp/netisolate/");
-pub const NETISOLATE_ENABLE_FILE: &str = concatcp!(ADB_DIR, "fp/netisolate/enabled");
-pub const NETISOLATE_UIDS_FILE: &str = concatcp!(ADB_DIR, "fp/netisolate/uids");
+pub const NETISOLATE_DIR: &str = concatcp!(WORKING_DIR, "netisolate/");
+pub const NETISOLATE_ENABLE_FILE: &str = concatcp!(NETISOLATE_DIR, "enabled");
+pub const NETISOLATE_UIDS_FILE: &str = concatcp!(NETISOLATE_DIR, "uids");
+
+// Compatibility for files written by earlier FolkPatch builds.
+pub const LEGACY_HIDE_SERVICE_FILE: &str = concatcp!(ADB_DIR, ".hide_service_enable");
+pub const LEGACY_UMOUNT_SERVICE_FILE: &str = concatcp!(ADB_DIR, ".umount_service_enable");
+pub const LEGACY_FPD_PATH: &str = concatcp!(ADB_DIR, "fp/bin/fpd");
+pub const LEGACY_UMOUNT_PATH_FILE: &str = concatcp!(ADB_DIR, "fp/UmountPATH");
+pub const LEGACY_UTS_SPOOF_ENABLE_FILE: &str = concatcp!(ADB_DIR, ".uts_spoof_enable");
+pub const LEGACY_UTS_SPOOF_CONFIG_FILE: &str = concatcp!(ADB_DIR, ".uts_spoof_config");
+pub const LEGACY_UTS_SPOOF_BOOT_PENDING: &str = concatcp!(ADB_DIR, ".uts_spoof_boot_pending");
+pub const LEGACY_UTS_SPOOF_RETRY_FILE: &str = concatcp!(ADB_DIR, ".uts_spoof_retry");
+pub const LEGACY_PATHHIDE_DIR: &str = concatcp!(ADB_DIR, "fp/pathhide/");
+pub const LEGACY_PATHHIDE_ENABLE_FILE: &str = concatcp!(LEGACY_PATHHIDE_DIR, "enabled");
+pub const LEGACY_PATHHIDE_PATHS_FILE: &str = concatcp!(LEGACY_PATHHIDE_DIR, "paths");
+pub const LEGACY_PATHHIDE_UIDS_FILE: &str = concatcp!(LEGACY_PATHHIDE_DIR, "uids");
+pub const LEGACY_PATHHIDE_UID_MODE_FILE: &str = concatcp!(LEGACY_PATHHIDE_DIR, "uid_mode");
+pub const LEGACY_PATHHIDE_FILTER_SYSTEM_FILE: &str =
+    concatcp!(LEGACY_PATHHIDE_DIR, "filter_system");
+pub const LEGACY_PATHHIDE_RETRY_FILE: &str = concatcp!(LEGACY_PATHHIDE_DIR, "retry");
+pub const LEGACY_NETISOLATE_DIR: &str = concatcp!(ADB_DIR, "fp/netisolate/");
+pub const LEGACY_NETISOLATE_ENABLE_FILE: &str = concatcp!(LEGACY_NETISOLATE_DIR, "enabled");
+pub const LEGACY_NETISOLATE_UIDS_FILE: &str = concatcp!(LEGACY_NETISOLATE_DIR, "uids");
 
 pub const MODULE_DIR: &str = concatcp!(ADB_DIR, "modules/");
 pub const PLUGIN_DIR: &str = concatcp!(ADB_DIR, "plugins/");

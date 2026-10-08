@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="launcher_icon_style_anime">Anime</string>
+    <string name="launcher_icon_style_geometry">Geométrico</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">Estilo da barra inferior flutuante</string>
+    <string name="settings_bottom_bar_standard">Barra inferior padrão</string>
+    <string name="settings_bottom_bar_drawer">Barra inferior de gaveta</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
@@ -65,6 +71,7 @@
     <string name="reboot_fastbootd">Reiniciar em modo FastbootD</string>
     <string name="about">Sobre</string>
     <string name="developer_and_maintainer">Desenvolvedor | Mantenedor</string>
+    <string name="developer_profile_picture">Foto de perfil do desenvolvedor</string>
     <string name="settings_app_language">Idioma</string>
     <string name="system_default">Padrão do sistema</string>
     <string name="settings_global_namespace_mode">Modo Namespace Global</string>
@@ -202,6 +209,7 @@
     <string name="patch_item_skey">SuperKey</string>
     <string name="patch_custom_superkey">SuperKey personalizado</string>
     <string name="patch_custom_superkey_summary">Você ainda pode definir um SuperKey para gerenciar o Root e o kernel, o gerenciador já está autorizado pela assinatura integrada do kernel</string>
+    <string name="patch_custom_superkey_optional">Opcional; o gerenciador assinado normalmente não precisa de uma chave personalizada</string>
     <string name="patch_item_set_skey_label">A SuperKey deve ter de 8 a 63 caracteres e incluir números e letras, mas sem caracteres especiais.</string>
     <string name="patch_confirm_superkey">Confirmar SuperKey</string>
     <string name="patch_skey_mismatch">SuperKey não confere</string>
@@ -612,8 +620,6 @@ Aqui estão algumas possíveis razões para a falha de autenticação—verifiqu
     <string name="dpi_apply_settings">Aplicar</string>
     <string name="dpi_confirm_title">Confirmar alteração de DPI</string>
     <string name="dpi_confirm_message">Alterar DPI do app de %1$s para %2$s?</string>
-    <string name="settings_alt_icon">Ícone alternativo</string>
-    <string name="alt_icon_summary">Usar ícone alternativo do lançador</string>
     <string name="settings_magic_mount">Folk Mount API</string>
     <string name="settings_magic_mount_summary">Ativar o sistema de montagem de módulos integrado</string>
     <string name="settings_new_app_profile_enabled">Autorização automática de novos apps</string>
@@ -666,6 +672,11 @@ Aqui estão algumas possíveis razões para a falha de autenticação—verifiqu
     <string name="shizuku_log_copied">Copiado para a área de transferência</string>
     <string name="shizuku_log_source_server">Log do servidor</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">Detalhado</string>
+    <string name="shizuku_log_level_debug">Depuração</string>
+    <string name="shizuku_log_level_info">Informação</string>
+    <string name="shizuku_log_level_warn">Aviso</string>
+    <string name="shizuku_log_level_error">Erro</string>
     <string name="shizuku_log_search_hint">Pesquisar logs</string>
 <string name="settings_app_title">Título do App</string>
     <string name="app_title_custom">Personalizado</string>
@@ -708,6 +719,9 @@ Aqui estão algumas possíveis razões para a falha de autenticação—verifiqu
     <string name="settings_title_image_offset_x">Posição Horizontal</string>
 
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">Padrão do app</string>
+    <string name="settings_font_mode_system">Padrão do sistema</string>
+    <string name="settings_font_mode_custom">Personalizada</string>
     <string name="settings_custom_font">Fonte Personalizada</string>
     <string name="settings_select_font_file">Selecionar Arquivo de Fonte</string>
     <string name="settings_custom_font_enabled">Fonte Personalizada Ativa</string>
@@ -945,6 +959,42 @@ Aqui estão algumas possíveis razões para a falha de autenticação—verifiqu
     <string name="settings_discrete_slider">Controle deslizante discreto</string>
     <string name="settings_discrete_slider_desc">Mostrar marcas na trilha do controle deslizante</string>
     <string name="settings_category_behavior">Comportamento</string>
+    <string name="profile_edit_title">Editar perfil</string>
+    <string name="profile_nickname_label">Apelido</string>
+    <string name="profile_signature_label">Assinatura</string>
+    <string name="profile_choose_avatar">Escolher avatar</string>
+    <string name="profile_avatar_default">Avatar padrão</string>
+    <string name="profile_avatar_custom">Avatar personalizado</string>
+    <string name="profile_avatar_opacity">Opacidade do avatar</string>
+    <string name="profile_avatar_source_title">Escolher origem do avatar</string>
+    <string name="profile_avatar_source_local">Escolher do dispositivo</string>
+    <string name="profile_avatar_source_qq">Avatar do QQ</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">Número do QQ</string>
+    <string name="profile_avatar_gravatar_hint">E-mail</string>
+    <string name="profile_avatar_fetch_failed">Não foi possível obter o avatar</string>
+    <string name="profile_crop_avatar">Recortar avatar</string>
+    <string name="profile_restore_default">Restaurar padrão</string>
+    <string name="settings_section_general_basics">Idioma e atualizações</string>
+    <string name="settings_section_general_interface">Interface e animação</string>
+    <string name="settings_section_general_root">Comportamento do Root</string>
+    <string name="settings_section_general_mount">Sistema e montagem</string>
+    <string name="settings_section_general_identity">Identidade do app</string>
+    <string name="settings_section_general_maintenance">Manutenção</string>
+    <string name="settings_section_behavior_display">Tela inicial</string>
+    <string name="settings_section_behavior_actions">Ações e instalação</string>
+    <string name="settings_section_function_hide">Ocultar e isolar</string>
+    <string name="settings_section_function_root">Recursos do Root</string>
+    <string name="settings_section_function_mount">Montar e desmontar</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">Autenticação</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">Backup local</string>
+    <string name="settings_section_backup_cloud">Backup na nuvem</string>
+    <string name="settings_section_module_display">Exibição de módulos</string>
+    <string name="settings_section_module_update">Atualizações e instalação</string>
+    <string name="settings_section_multimedia_music">Música de fundo</string>
+    <string name="settings_section_multimedia_sound">Som e vibração</string>
     <string name="settings_category_function">Função</string>
     <string name="settings_use_legacy_su_page">Autorização de superusuário de página única</string>
     <string name="settings_use_legacy_su_page_summary">Página de superusuário alterada para design de autorização de página única</string>
@@ -1205,6 +1255,8 @@ Aqui estão algumas possíveis razões para a falha de autenticação—verifiqu
     <string name="theme_download_finalizing">Finalizando...</string>
     <string name="settings_predictive_back">Gesto de voltar preditivo</string>
     <string name="settings_predictive_back_summary">Ativar animação do gesto de voltar preditivo do Android 14+</string>
+    <string name="settings_expressive_motion">Movimento expressivo</string>
+    <string name="settings_expressive_motion_summary">Usar as curvas de movimento do Material 3 Expressive</string>
 
     <string name="home_device_status_battery_charging">Carregando</string>
     <string name="home_device_status_cpu_temp">Temp. CPU</string>
@@ -1294,6 +1346,11 @@ Aqui estão algumas possíveis razões para a falha de autenticação—verifiqu
     <string name="color_style_monochrome">Monocromático</string>
     <string name="color_style_neutral">Neutro</string>
     <string name="color_style_fidelity">Fidelidade</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">Contraste</string>
+    <string name="color_contrast_standard">Padrão</string>
+    <string name="color_contrast_medium">Médio</string>
+    <string name="color_contrast_high">Alto</string>
     <string name="settings_focus_card_background">Papel de parede do cartão FocusUI</string>
     <string name="settings_focus_card_background_enabled">Papéis de parede do cartão FocusUI ativados; pressione longamente um cartão para gerenciar seu papel de parede</string>
     <string name="settings_focus_card_background_summary">Ativar papéis de parede do cartão FocusUI e gerenciamento por pressão longa</string>
@@ -1357,4 +1414,33 @@ Aqui estão algumas possíveis razões para a falha de autenticação—verifiqu
     <string name="kpm_installed">Instalado</string>
     <string name="kpm_disabled">Desativado (entra em vigor após reiniciar)</string>
     <string name="kpm_embedded_unload_invalid">Não é possível descarregar KPMs embutidos; eles continuarão ativos após reiniciar.</string>
+    <string name="settings_faq">Perguntas frequentes</string>
+    <string name="settings_bug_feedback">Relatar bug</string>
+    <string name="settings_clear_cache">Limpar cache</string>
+    <string name="settings_disclaimer">Isenção de responsabilidade</string>
+    <string name="settings_disclaimer_message">Após obter root no dispositivo, atualizações do sistema, módulos de terceiros ou outros fatores externos podem causar riscos e perdas imprevistas, que você assume por conta própria. Continue apenas depois de entender bem os riscos.</string>
+    <string name="theme_store_subtitle">Descubra e aplique temas da comunidade</string>
+    <string name="script_library_subtitle">Execute e gerencie scripts locais</string>
+    <string name="plugin_subtitle">Amplie o que o FolkPatch pode fazer</string>
+    <string name="my_themes_subtitle">Temas que você salvou</string>
+    <string name="apm_api_marketplace_subtitle">Navegue pelas APIs compartilhadas pela comunidade</string>
+    <string name="theme_download_paused">Pausado</string>
+    <string name="settings_wallpaper_gallery">Galeria de papéis de parede</string>
+    <string name="wallpaper_device_phone">Celular</string>
+    <string name="wallpaper_device_tablet">Tablet</string>
+    <string name="wallpaper_layout_waterfall">Cascata</string>
+    <string name="wallpaper_layout_stack">Empilhado</string>
+    <string name="wallpaper_device_mixed">Misto</string>
+    <string name="wallpaper_display_options">Opções de exibição</string>
+    <string name="wallpaper_display_layout">Layout</string>
+    <string name="wallpaper_download">Baixar</string>
+    <string name="wallpaper_cancel">Cancelar</string>
+    <string name="wallpaper_saved">Salvo</string>
+    <string name="wallpaper_download_failed">Falha no download</string>
+    <string name="wallpaper_loading">Carregando papéis de parede</string>
+    <string name="wallpaper_empty">Nenhum papel de parede</string>
+    <string name="wallpaper_retry">Tentar novamente</string>
+    <string name="wallpaper_preview">Prévia</string>
+    <string name="wallpaper_set_background">Definir como plano de fundo</string>
+    <string name="wallpaper_background_set">Plano de fundo atualizado</string>
 </resources>

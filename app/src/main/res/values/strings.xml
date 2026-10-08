@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="launcher_icon_style_anime">Anime</string>
+    <string name="launcher_icon_style_geometry">Geometry</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">Floating Bottom Bar Style</string>
+    <string name="settings_bottom_bar_standard">Standard Bottom Bar</string>
+    <string name="settings_bottom_bar_drawer">Drawer Bottom Bar</string>
     <string name="app_name" translatable="false">FolkPatch</string>
+    <string name="debug_build_banner" translatable="false">DEBUG</string>
     <string name="app_name_fpatch">FPatch</string>
 
     <string name="desktop_app_name">Desktop App Name</string>
@@ -65,6 +72,7 @@
     <string name="reboot_edl_confirm">Reboot into EDL (Emergency Download) mode? The screen will stay black and the device can only be recovered with a deep flash tool.</string>
     <string name="about">About</string>
     <string name="developer_and_maintainer">Developer | Maintainer</string>
+    <string name="developer_profile_picture">Developer profile picture</string>
     <string name="settings_app_language">Language</string>
     <string name="system_default">System default</string>
     <string name="settings_global_namespace_mode">Global namespace mode</string>
@@ -181,6 +189,7 @@
     <string name="patch_item_skey">SuperKey</string>
     <string name="patch_custom_superkey">Custom SuperKey</string>
     <string name="patch_custom_superkey_summary">still can use superkey manager root, now we are verify manager signature by kernel</string>
+    <string name="patch_custom_superkey_optional">Optional; the signed manager normally needs no custom key</string>
     <string name="patch_item_set_skey_label">The SuperKey should be 8-63 characters long and include numbers and letters, but no special characters.</string>
     <string name="patch_confirm_superkey">Confirm SuperKey</string>
     <string name="patch_skey_mismatch">SuperKey does not match</string>
@@ -670,6 +679,11 @@ Here are some possible reasons for authentication failure—please check which o
     <string name="shizuku_log_copied">Copied to clipboard</string>
     <string name="shizuku_log_source_server">Server log</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">Verbose</string>
+    <string name="shizuku_log_level_debug">Debug</string>
+    <string name="shizuku_log_level_info">Info</string>
+    <string name="shizuku_log_level_warn">Warn</string>
+    <string name="shizuku_log_level_error">Error</string>
     <string name="shizuku_log_search_hint">Search logs</string>
     <string name="shizuku_permission_title">Allow %1$s to use Shizuku?</string>
     <string name="shizuku_permission_message">The app will be able to call system APIs with root privileges through Shizuku.</string>
@@ -778,6 +792,9 @@ Here are some possible reasons for authentication failure—please check which o
 
     
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">App default</string>
+    <string name="settings_font_mode_system">System default</string>
+    <string name="settings_font_mode_custom">Custom</string>
     <string name="settings_custom_font">Custom Font</string>
     <string name="settings_select_font_file">Select Font File</string>
     <string name="settings_custom_font_enabled">Custom Font Enabled</string>
@@ -803,8 +820,6 @@ Here are some possible reasons for authentication failure—please check which o
     <string name="settings_clear_background">Clear Background</string>
     <string name="settings_clear_background_confirm">Are you sure you want to clear the background image?</string>
 
-    <string name="settings_alt_icon">Alternate Icon</string>
-    <string name="alt_icon_summary">Use alternate launcher icon</string>
 
     <!-- Video Background Settings -->
     <string name="settings_video_background">Video Background</string>
@@ -1029,6 +1044,42 @@ Here are some possible reasons for authentication failure—please check which o
     <string name="module">Modules</string>
     <string name="settings_category_appearance">Appearance</string>
     <string name="settings_category_behavior">Behavior</string>
+    <string name="settings_section_general_basics">Language &amp; Updates</string>
+    <string name="profile_edit_title">Edit profile</string>
+    <string name="profile_nickname_label">Nickname</string>
+    <string name="profile_signature_label">Signature</string>
+    <string name="profile_choose_avatar">Choose avatar</string>
+    <string name="profile_avatar_default">Default avatar</string>
+    <string name="profile_avatar_custom">Custom avatar</string>
+    <string name="profile_avatar_opacity">Avatar opacity</string>
+    <string name="profile_avatar_source_title">Choose avatar source</string>
+    <string name="profile_avatar_source_local">Choose from device</string>
+    <string name="profile_avatar_source_qq">QQ avatar</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">QQ number</string>
+    <string name="profile_avatar_gravatar_hint">Email</string>
+    <string name="profile_avatar_fetch_failed">Couldn\'t fetch the avatar</string>
+    <string name="profile_crop_avatar">Crop avatar</string>
+    <string name="profile_restore_default">Restore defaults</string>
+    <string name="settings_section_general_interface">Interface &amp; Motion</string>
+    <string name="settings_section_general_root">Root Behavior</string>
+    <string name="settings_section_general_mount">System &amp; Mount</string>
+    <string name="settings_section_general_identity">App Identity</string>
+    <string name="settings_section_general_maintenance">Maintenance</string>
+    <string name="settings_section_behavior_display">Home Display</string>
+    <string name="settings_section_behavior_actions">Actions &amp; Install</string>
+    <string name="settings_section_function_hide">Hide &amp; Isolate</string>
+    <string name="settings_section_function_root">Root Features</string>
+    <string name="settings_section_function_mount">Mount &amp; Umount</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">Authentication</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">Local Backup</string>
+    <string name="settings_section_backup_cloud">Cloud Backup</string>
+    <string name="settings_section_module_display">Module Display</string>
+    <string name="settings_section_module_update">Updates &amp; Install</string>
+    <string name="settings_section_multimedia_music">Background Music</string>
+    <string name="settings_section_multimedia_sound">Sound &amp; Vibration</string>
     
     <!-- Appearance Sub-Categories -->
     <string name="settings_appearance_font">Font Settings</string>
@@ -1335,6 +1386,8 @@ Here are some possible reasons for authentication failure—please check which o
     <string name="script_library_log_save_failed">Failed to save log: %s</string>
     <string name="settings_predictive_back">Predictive Back Gesture</string>
     <string name="settings_predictive_back_summary">Enable the Android 14+ predictive back gesture animation</string>
+    <string name="settings_expressive_motion">Expressive motion</string>
+    <string name="settings_expressive_motion_summary">Use the Material 3 Expressive motion curves</string>
 
     <string name="app_title_superroot">SuperRoot</string>
     <string name="backup_failed">Backup failed: %s</string>
@@ -1402,6 +1455,11 @@ Here are some possible reasons for authentication failure—please check which o
     <string name="color_style_monochrome">Monochrome</string>
     <string name="color_style_neutral">Neutral</string>
     <string name="color_style_fidelity">Fidelity</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">Contrast</string>
+    <string name="color_contrast_standard">Standard</string>
+    <string name="color_contrast_medium">Medium</string>
+    <string name="color_contrast_high">High</string>
     <string name="settings_jailbreak_mode">Jailbreak mode</string>
     <string name="settings_jailbreak_mode_summary">"Load the KernelPatch module on a stock kernel. Patching is not allowed in this mode."</string>
     <string name="settings_jailbreak_soft_reboot">Soft reboot</string>
@@ -1414,4 +1472,33 @@ Here are some possible reasons for authentication failure—please check which o
     <string name="jailbreak">Jailbreak</string>
     <string name="jailbreak_triggered">Jailbreak triggered. Wait for root, then soft reboot.</string>
     <string name="reboot_soft">Soft reboot</string>
+    <string name="settings_faq">FAQ</string>
+    <string name="settings_bug_feedback">Bug report</string>
+    <string name="settings_clear_cache">Clear cache</string>
+    <string name="settings_disclaimer">Disclaimer</string>
+    <string name="settings_disclaimer_message">Rooting your device may carry risks from system updates, third-party modules, or other external causes. You are responsible for any resulting damage or loss. Please continue only if you understand the risks.</string>
+    <string name="theme_store_subtitle">Discover and apply community themes</string>
+    <string name="script_library_subtitle">Run and manage local scripts</string>
+    <string name="plugin_subtitle">Extend what FolkPatch can do</string>
+    <string name="my_themes_subtitle">Themes you have saved</string>
+    <string name="apm_api_marketplace_subtitle">Browse community-shared APIs</string>
+    <string name="theme_download_paused">Paused</string>
+    <string name="settings_wallpaper_gallery">Wallpaper Gallery</string>
+    <string name="wallpaper_device_phone">Phone</string>
+    <string name="wallpaper_device_tablet">Tablet</string>
+    <string name="wallpaper_layout_waterfall">Waterfall</string>
+    <string name="wallpaper_layout_stack">Stack</string>
+    <string name="wallpaper_device_mixed">Mixed</string>
+    <string name="wallpaper_display_options">Display options</string>
+    <string name="wallpaper_display_layout">Layout</string>
+    <string name="wallpaper_download">Download</string>
+    <string name="wallpaper_cancel">Cancel</string>
+    <string name="wallpaper_saved">Saved</string>
+    <string name="wallpaper_download_failed">Download failed</string>
+    <string name="wallpaper_loading">Loading wallpapers</string>
+    <string name="wallpaper_empty">No wallpapers</string>
+    <string name="wallpaper_retry">Retry</string>
+    <string name="wallpaper_preview">Preview</string>
+    <string name="wallpaper_set_background">Set as background</string>
+    <string name="wallpaper_background_set">Background updated</string>
 </resources>

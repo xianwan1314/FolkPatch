@@ -1,27 +1,44 @@
 package me.bmax.apatch.ui.screen.settings.appearance
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.edit
 import kotlinx.coroutines.launch
+import me.bmax.apatch.ui.component.folk.FolkAlertDialog
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.ExpressiveCard
 import me.bmax.apatch.ui.component.LoadingDialogHandle
-import me.bmax.apatch.ui.component.SplicedColumnGroup
 import me.bmax.apatch.ui.component.rememberConfirmDialog
 import me.bmax.apatch.ui.theme.ThemeManager
+import me.bmax.apatch.ui.component.folk.FolkSettingsSectionGroup
+import me.bmax.apatch.ui.component.folk.FolkSliderPreference
+import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
+import me.bmax.apatch.ui.component.folk.FolkValuePreference
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material3.Surface
+import androidx.compose.material3.RadioButton
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import me.bmax.apatch.ui.component.folk.folkPressScale
+import me.bmax.apatch.ui.theme.tokens.ContinuousCornerShape
+import me.bmax.apatch.ui.theme.tokens.FolkShape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,27 +57,14 @@ fun AppearanceThemeSection(
     val scope = rememberCoroutineScope()
     val prefs = APApplication.sharedPreferences
 
-    SplicedColumnGroup(title = stringResource(R.string.settings_appearance_theme), flat = flat, highlightKey = highlightKey) {
+    FolkSettingsSectionGroup(title = stringResource(R.string.settings_appearance_theme), flat = flat, highlightKey = highlightKey) {
         item(key = "appearance_theme_store") {
-            ExpressiveCard(flat = flat, onClick = { onNavigateToThemeStore() }) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(imageVector = Icons.Filled.Store, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
-                    Spacer(Modifier.width(16.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(text = stringResource(id = R.string.theme_store_title), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
-                        if (themeStoreMode == "compat") {
-                            Text(
-                                text = stringResource(R.string.theme_mode_compat_desc),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-            }
+            FolkValuePreference(
+                icon = Icons.Outlined.Store,
+                title = stringResource(id = R.string.theme_store_title),
+                summary = if (themeStoreMode == "compat") stringResource(R.string.theme_mode_compat_desc) else null,
+                onClick = { onNavigateToThemeStore() },
+            )
         }
 
         item(key = "appearance_theme_store_mode") {
@@ -69,102 +73,104 @@ fun AppearanceThemeSection(
                 else -> stringResource(R.string.theme_mode_builtin)
             }
             val showModeSwitchDialog = remember { mutableStateOf(false) }
-            ExpressiveCard(flat = flat, onClick = { showModeSwitchDialog.value = true }) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(imageVector = Icons.Filled.Tune, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
-                    Spacer(Modifier.width(16.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = stringResource(R.string.settings_theme_mode),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = stringResource(R.string.theme_mode_current, modeName),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
+            FolkValuePreference(
+                icon = Icons.Outlined.Tune,
+                title = stringResource(R.string.settings_theme_mode),
+                summary = stringResource(R.string.theme_mode_current, modeName),
+                onClick = { showModeSwitchDialog.value = true },
+            )
 
             if (showModeSwitchDialog.value) {
-                BasicAlertDialog(
+                FolkAlertDialog(
                     onDismissRequest = { showModeSwitchDialog.value = false },
-                    properties = DialogProperties(usePlatformDefaultWidth = false)
+                    width = 320.dp,
+                    blurBehind = false,
                 ) {
-                    Surface(
-                        shape = RoundedCornerShape(30.dp),
-                        color = AlertDialogDefaults.containerColor,
-                        tonalElevation = AlertDialogDefaults.TonalElevation,
-                        modifier = Modifier.width(320.dp)
-                    ) {
-                        Column(modifier = Modifier.padding(24.dp)) {
-                            Text(
-                                text = stringResource(R.string.theme_mode_switch_title),
-                                style = MaterialTheme.typography.titleLarge,
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-                            Text(
-                                text = stringResource(R.string.theme_mode_switch_msg),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(bottom = 16.dp)
-                            )
+                    Column(modifier = Modifier.padding(24.dp)) {
+                        Text(
+                            text = stringResource(R.string.theme_mode_switch_title),
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Text(
+                            text = stringResource(R.string.theme_mode_switch_msg),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
 
-                            val builtinLabel = stringResource(R.string.theme_mode_builtin_label)
-                            val compatLabel = stringResource(R.string.theme_mode_compat_label)
-                            listOf("builtin" to builtinLabel, "compat" to compatLabel).forEach { (mode, label) ->
-                                Surface(
-                                    onClick = {
-                                        prefs.edit { putString("theme_mode", mode) }
-                                        onThemeStoreModeChanged?.invoke(mode)
-                                        showModeSwitchDialog.value = false
-                                        scope.launch {
-                                            snackBarHost.showSnackbar(
-                                                context.getString(R.string.theme_mode_switched, label)
-                                            )
-                                        }
-                                    },
-                                    shape = RoundedCornerShape(12.dp),
-                                    color = if (themeStoreMode == mode) MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f) else Color.Transparent,
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Row(
-                                        modifier = Modifier.padding(12.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        RadioButton(
-                                            selected = themeStoreMode == mode,
-                                            onClick = null
-                                        )
-                                        Spacer(Modifier.width(12.dp))
-                                        Column(modifier = Modifier.weight(1f)) {
-                                            Text(
-                                                label,
-                                                style = MaterialTheme.typography.titleMedium
-                                            )
-                                            Text(
-                                                if (mode == "compat") stringResource(R.string.theme_mode_compat_desc)
-                                                else stringResource(R.string.theme_mode_builtin_desc),
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                                            )
-                                        }
-                                    }
-                                }
-                                Spacer(Modifier.height(8.dp))
-                            }
-
-                            TextButton(
-                                onClick = { showModeSwitchDialog.value = false },
-                                modifier = Modifier.align(Alignment.End)
+                        val builtinLabel = stringResource(R.string.theme_mode_builtin_label)
+                        val compatLabel = stringResource(R.string.theme_mode_compat_label)
+                        listOf("builtin" to builtinLabel, "compat" to compatLabel).forEach { (mode, label) ->
+                            val modeInteractionSource = remember { MutableInteractionSource() }
+                            val modeHaptics = LocalHapticFeedback.current
+                            Surface(
+                                shape = FolkShape.Corner12,
+                                color = if (themeStoreMode == mode) {
+                                    MaterialTheme.colorScheme.secondaryContainer
+                                } else {
+                                    Color.Transparent
+                                },
+                                contentColor = if (themeStoreMode == mode) {
+                                    MaterialTheme.colorScheme.onSecondaryContainer
+                                } else {
+                                    MaterialTheme.colorScheme.onSurface
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .folkPressScale(modeInteractionSource, true)
+                                    .selectable(
+                                        selected = themeStoreMode == mode,
+                                        interactionSource = modeInteractionSource,
+                                        indication = null,
+                                        role = Role.RadioButton,
+                                        onClick = {
+                                            modeHaptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                            prefs.edit { putString("theme_mode", mode) }
+                                            onThemeStoreModeChanged?.invoke(mode)
+                                            showModeSwitchDialog.value = false
+                                            scope.launch {
+                                                snackBarHost.showSnackbar(
+                                                    context.getString(R.string.theme_mode_switched, label)
+                                                )
+                                            }
+                                        },
+                                    ),
                             ) {
-                                Text(stringResource(android.R.string.cancel))
+                                Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            label,
+                                            style = MaterialTheme.typography.titleMedium,
+                                            color = if (themeStoreMode == mode) {
+                                                MaterialTheme.colorScheme.onSecondaryContainer
+                                            } else {
+                                                MaterialTheme.colorScheme.onSurface
+                                            }
+                                        )
+                                        Text(
+                                            if (mode == "compat") stringResource(R.string.theme_mode_compat_desc)
+                                            else stringResource(R.string.theme_mode_builtin_desc),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = if (themeStoreMode == mode) {
+                                                MaterialTheme.colorScheme.onSecondaryContainer
+                                            } else {
+                                                MaterialTheme.colorScheme.onSurfaceVariant
+                                            }
+                                        )
+                                    }
+                                    Spacer(Modifier.width(12.dp))
+                                    RadioButton(selected = themeStoreMode == mode, onClick = null)
+                                }
                             }
+                            Spacer(Modifier.height(8.dp))
+                        }
+
+                        TextButton(
+                            onClick = { showModeSwitchDialog.value = false },
+                            modifier = Modifier.align(Alignment.End)
+                        ) {
+                            Text(stringResource(android.R.string.cancel))
                         }
                     }
                 }
@@ -172,29 +178,19 @@ fun AppearanceThemeSection(
         }
 
         item(key = "appearance_save_theme") {
-            ExpressiveCard(flat = flat, onClick = { showExportDialog.value = true }) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(imageVector = Icons.Filled.FileDownload, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
-                    Spacer(Modifier.width(16.dp))
-                    Text(text = stringResource(id = R.string.settings_save_theme), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
-                }
-            }
+            FolkValuePreference(
+                icon = Icons.Outlined.FileDownload,
+                title = stringResource(id = R.string.settings_save_theme),
+                onClick = { showExportDialog.value = true },
+            )
         }
 
         item(key = "appearance_import_theme") {
-            ExpressiveCard(flat = flat, onClick = { showFilePicker.value = true }) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(imageVector = Icons.Filled.FileUpload, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
-                    Spacer(Modifier.width(16.dp))
-                    Text(text = stringResource(id = R.string.settings_import_theme), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
-                }
-            }
+            FolkValuePreference(
+                icon = Icons.Outlined.FileUpload,
+                title = stringResource(id = R.string.settings_import_theme),
+                onClick = { showFilePicker.value = true },
+            )
         }
 
         item(key = "appearance_reset_theme") {
@@ -212,24 +208,15 @@ fun AppearanceThemeSection(
             )
             val resetThemeTitle = stringResource(id = R.string.settings_reset_theme)
             val resetThemeConfirm = context.getString(R.string.settings_reset_theme_confirm)
-            ExpressiveCard(
-                flat = flat,
-                onClick = {
-                    resetThemeDialog.showConfirm(
+            FolkValuePreference(
+                icon = Icons.Outlined.RestartAlt,
+                title = resetThemeTitle,
+                onClick = {                    resetThemeDialog.showConfirm(
                         title = resetThemeTitle,
                         content = resetThemeConfirm,
                     )
-                }
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(imageVector = Icons.Filled.RestartAlt, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
-                    Spacer(Modifier.width(16.dp))
-                    Text(text = resetThemeTitle, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
-                }
-            }
+                },
+            )
         }
     }
 }

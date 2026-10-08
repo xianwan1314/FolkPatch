@@ -13,8 +13,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.SplicedColumnGroup
-import me.bmax.apatch.ui.component.ToggleSettingCard
+import me.bmax.apatch.ui.component.folk.FolkSettingsGroup
+import me.bmax.apatch.ui.component.folk.FolkSettingsSection
+import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
+import androidx.compose.material.icons.outlined.*
 
 @Composable
 fun ModuleSettingsContent(
@@ -57,117 +59,119 @@ fun ModuleSettingsContent(
     var splicedCardGroup by remember { mutableStateOf(prefs.getBoolean("spliced_card_group", true)) }
     var showKpmStatusBadge by remember { mutableStateOf(prefs.getBoolean("show_kpm_status_badge", true)) }
 
-    SplicedColumnGroup(flat = flat, highlightKey = highlightKey) {
-        item(key = "module_disable_update") {
-            ToggleSettingCard(
-                icon = Icons.Filled.Update,
-                flat = flat,
-                title = disableModuleUpdateCheckTitle,
-                description = disableModuleUpdateCheckSummary,
-                checked = disableModuleUpdateCheck,
-                onCheckedChange = {
-                    disableModuleUpdateCheck = it
-                    prefs.edit().putBoolean("disable_module_update_check", it).apply()
-                }
-            )
-        }
+    FolkSettingsSection(title = stringResource(R.string.settings_section_module_display)) {
+        FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+            item(key = "module_more_info") {
+                FolkSwitchPreference(
+                    icon = Icons.Outlined.Info,
+                    title = moreInfoTitle,
+                    summary = moreInfoSummary,
+                    checked = showMoreModuleInfo,
+                    onCheckedChange = {
+                        showMoreModuleInfo = it
+                        prefs.edit().putBoolean("show_more_module_info", it).apply()
+                    },
+                )
+            }
 
-        item(key = "module_more_info") {
-            ToggleSettingCard(
-                icon = Icons.Filled.Info,
-                flat = flat,
-                title = moreInfoTitle,
-                description = moreInfoSummary,
-                checked = showMoreModuleInfo,
-                onCheckedChange = {
-                    showMoreModuleInfo = it
-                    prefs.edit().putBoolean("show_more_module_info", it).apply()
-                }
-            )
-        }
+            item(key = "module_sort_opt") {
+                FolkSwitchPreference(
+                    icon = Icons.Outlined.Sort,
+                    title = moduleSortOptimizationTitle,
+                    summary = moduleSortOptimizationSummary,
+                    checked = moduleSortOptimization,
+                    onCheckedChange = {
+                        moduleSortOptimization = it
+                        prefs.edit().putBoolean("module_sort_optimization", it).apply()
+                    },
+                )
+            }
 
-        item(key = "module_sort_opt") {
-            ToggleSettingCard(
-                icon = Icons.Filled.Sort,
-                flat = flat,
-                title = moduleSortOptimizationTitle,
-                description = moduleSortOptimizationSummary,
-                checked = moduleSortOptimization,
-                onCheckedChange = {
-                    moduleSortOptimization = it
-                    prefs.edit().putBoolean("module_sort_optimization", it).apply()
-                }
-            )
-        }
+            item(key = "module_fold_system") {
+                FolkSwitchPreference(
+                    icon = Icons.Outlined.Folder,
+                    title = foldSystemModuleTitle,
+                    summary = foldSystemModuleSummary,
+                    checked = foldSystemModule,
+                    onCheckedChange = {
+                        foldSystemModule = it
+                        prefs.edit().putBoolean("fold_system_module", it).apply()
+                    },
+                )
+            }
 
-        item(key = "module_fold_system") {
-            ToggleSettingCard(
-                icon = Icons.Filled.Folder,
-                flat = flat,
-                title = foldSystemModuleTitle,
-                description = foldSystemModuleSummary,
-                checked = foldSystemModule,
-                onCheckedChange = {
-                    foldSystemModule = it
-                    prefs.edit().putBoolean("fold_system_module", it).apply()
-                }
-            )
+            item(key = "module_kpm_status_badge") {
+                FolkSwitchPreference(
+                    icon = Icons.Outlined.Archive,
+                    title = showKpmStatusBadgeTitle,
+                    summary = showKpmStatusBadgeSummary,
+                    checked = showKpmStatusBadge,
+                    onCheckedChange = {
+                        showKpmStatusBadge = it
+                        prefs.edit().putBoolean("show_kpm_status_badge", it).apply()
+                    },
+                )
+            }
         }
+    }
 
-        item(key = "module_batch_install") {
-            ToggleSettingCard(
-                icon = Icons.Filled.Download,
-                flat = flat,
-                title = apmBatchInstallFullProcessTitle,
-                description = apmBatchInstallFullProcessSummary,
-                checked = apmBatchInstallFullProcess,
-                onCheckedChange = {
-                    apmBatchInstallFullProcess = it
-                    prefs.edit().putBoolean("apm_batch_install_full_process", it).apply()
-                }
-            )
+    FolkSettingsSection(title = stringResource(R.string.settings_section_module_update)) {
+        FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+            item(key = "module_disable_update") {
+                FolkSwitchPreference(
+                    icon = Icons.Outlined.Update,
+                    title = disableModuleUpdateCheckTitle,
+                    summary = disableModuleUpdateCheckSummary,
+                    checked = disableModuleUpdateCheck,
+                    onCheckedChange = {
+                        disableModuleUpdateCheck = it
+                        prefs.edit().putBoolean("disable_module_update_check", it).apply()
+                    },
+                )
+            }
+
+            item(key = "module_batch_install") {
+                FolkSwitchPreference(
+                    icon = Icons.Outlined.Download,
+                    title = apmBatchInstallFullProcessTitle,
+                    summary = apmBatchInstallFullProcessSummary,
+                    checked = apmBatchInstallFullProcess,
+                    onCheckedChange = {
+                        apmBatchInstallFullProcess = it
+                        prefs.edit().putBoolean("apm_batch_install_full_process", it).apply()
+                    },
+                )
+            }
         }
+    }
 
-        item(key = "module_simple_list") {
-            ToggleSettingCard(
-                icon = Icons.Filled.Dock,
-                flat = flat,
-                title = simpleListBottomBarTitle,
-                description = simpleListBottomBarSummary,
-                checked = simpleListBottomBar,
-                onCheckedChange = {
-                    simpleListBottomBar = it
-                    prefs.edit().putBoolean("simple_list_bottom_bar", it).apply()
-                }
-            )
-        }
+    FolkSettingsSection(title = stringResource(R.string.settings_section_general_interface)) {
+        FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+            item(key = "module_simple_list") {
+                FolkSwitchPreference(
+                    icon = Icons.Outlined.Dock,
+                    title = simpleListBottomBarTitle,
+                    summary = simpleListBottomBarSummary,
+                    checked = simpleListBottomBar,
+                    onCheckedChange = {
+                        simpleListBottomBar = it
+                        prefs.edit().putBoolean("simple_list_bottom_bar", it).apply()
+                    },
+                )
+            }
 
-        item(key = "module_spliced_card") {
-            ToggleSettingCard(
-                icon = Icons.Filled.ViewAgenda,
-                flat = flat,
-                title = splicedCardGroupTitle,
-                description = splicedCardGroupSummary,
-                checked = splicedCardGroup,
-                onCheckedChange = {
-                    splicedCardGroup = it
-                    prefs.edit().putBoolean("spliced_card_group", it).apply()
-                }
-            )
-        }
-
-        item(key = "module_kpm_status_badge") {
-            ToggleSettingCard(
-                icon = Icons.Filled.Archive,
-                flat = flat,
-                title = showKpmStatusBadgeTitle,
-                description = showKpmStatusBadgeSummary,
-                checked = showKpmStatusBadge,
-                onCheckedChange = {
-                    showKpmStatusBadge = it
-                    prefs.edit().putBoolean("show_kpm_status_badge", it).apply()
-                }
-            )
+            item(key = "module_spliced_card") {
+                FolkSwitchPreference(
+                    icon = Icons.Outlined.ViewAgenda,
+                    title = splicedCardGroupTitle,
+                    summary = splicedCardGroupSummary,
+                    checked = splicedCardGroup,
+                    onCheckedChange = {
+                        splicedCardGroup = it
+                        prefs.edit().putBoolean("spliced_card_group", it).apply()
+                    },
+                )
+            }
         }
     }
 }

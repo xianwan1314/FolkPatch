@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_launcher_icon">ランチャーアイコン</string>
+    <string name="launcher_icon_style_anime">アニメ</string>
+    <string name="launcher_icon_style_geometry">ジオメトリ</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">フローティングボトムバーのスタイル</string>
+    <string name="settings_bottom_bar_standard">標準ボトムバー</string>
+    <string name="settings_bottom_bar_drawer">ドロワーボトムバー</string>
     <string name="app_name_fpatch">FPatch</string>
     <string name="desktop_app_name">デスクトップのアプリ名</string>
     <string name="home">ホーム</string>
@@ -55,6 +62,7 @@
     <string name="reboot_fastbootd">FastbootD で再起動</string>
     <string name="about">アプリについて</string>
     <string name="developer_and_maintainer">開発者 | メンテナ</string>
+    <string name="developer_profile_picture">開発者のプロフィール画像</string>
     <string name="settings_app_language">言語</string>
     <string name="system_default">システムのデフォルト</string>
     <string name="settings_global_namespace_mode">グローバル名前空間モード</string>
@@ -158,6 +166,7 @@
     <string name="patch_item_skey">SuperKey</string>
     <string name="patch_custom_superkey">カスタム SuperKey</string>
     <string name="patch_custom_superkey_summary">Root とカーネルの管理に SuperKey を引き続き使用できます。マネージャーはカーネルの組み込み署名で認証されています</string>
+    <string name="patch_custom_superkey_optional">任意；署名済みマネージャーは通常、カスタムキーを必要としません</string>
     <string name="patch_item_set_skey_label">SuperKey の長さは 8～63 文字で、数字と文字を含めることができますが、特殊文字を含めることはできません。</string>
     <string name="patch_confirm_superkey">SuperKey を確認</string>
     <string name="patch_skey_mismatch">SuperKey が一致しません</string>
@@ -612,6 +621,11 @@ KernelPatch は boot イメージをパッチする必要があります。
     <string name="shizuku_log_copied">クリップボードにコピーしました</string>
     <string name="shizuku_log_source_server">サーバーログ</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">詳細</string>
+    <string name="shizuku_log_level_debug">デバッグ</string>
+    <string name="shizuku_log_level_info">情報</string>
+    <string name="shizuku_log_level_warn">警告</string>
+    <string name="shizuku_log_level_error">エラー</string>
     <string name="shizuku_log_search_hint">ログを検索</string>
 <!-- Umount Service -->
     <string name="settings_umount_service">Umount Service</string>
@@ -665,6 +679,9 @@ KernelPatch は boot イメージをパッチする必要があります。
     <string name="settings_title_image_dim">背景を暗くする</string>
     <string name="settings_title_image_offset_x">水平の位置</string>
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">アプリのデフォルト</string>
+    <string name="settings_font_mode_system">システムのデフォルト</string>
+    <string name="settings_font_mode_custom">カスタム</string>
     <string name="settings_custom_font">カスタムフォント</string>
     <string name="settings_select_font_file">フォントファイルを選択</string>
     <string name="settings_custom_font_enabled">カスタムフォントが有効化されています</string>
@@ -689,8 +706,6 @@ KernelPatch は boot イメージをパッチする必要があります。
     <string name="settings_background_image_cleared">背景画像を消去しました</string>
     <string name="settings_clear_background">背景を消去</string>
     <string name="settings_clear_background_confirm">背景画像を消去してもよろしいですか？</string>
-    <string name="settings_alt_icon">代替アイコン</string>
-    <string name="alt_icon_summary">代替アイコンをランチャーに使用します。</string>
     <!-- Video Background Settings -->
     <string name="settings_video_background">動画の背景</string>
     <string name="settings_video_background_summary">動画を背景として使用します。</string>
@@ -898,6 +913,42 @@ KernelPatch は boot イメージをパッチする必要があります。
     <string name="settings_discrete_slider">区分スライダー</string>
     <string name="settings_discrete_slider_desc">スライダートラックに目盛りを表示</string>
     <string name="settings_category_behavior">動作</string>
+    <string name="profile_edit_title">プロフィールを編集</string>
+    <string name="profile_nickname_label">ニックネーム</string>
+    <string name="profile_signature_label">署名</string>
+    <string name="profile_choose_avatar">アイコンを選択</string>
+    <string name="profile_avatar_default">デフォルトのアバター</string>
+    <string name="profile_avatar_custom">カスタムアバター</string>
+    <string name="profile_avatar_opacity">アバターの不透明度</string>
+    <string name="profile_avatar_source_title">アバターのソースを選択</string>
+    <string name="profile_avatar_source_local">デバイスから選択</string>
+    <string name="profile_avatar_source_qq">QQ アバター</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">QQ 番号</string>
+    <string name="profile_avatar_gravatar_hint">メールアドレス</string>
+    <string name="profile_avatar_fetch_failed">アバターを取得できませんでした</string>
+    <string name="profile_crop_avatar">アイコンを切り抜き</string>
+    <string name="profile_restore_default">初期設定に戻す</string>
+    <string name="settings_section_general_basics">言語とアップデート</string>
+    <string name="settings_section_general_interface">画面とアニメーション</string>
+    <string name="settings_section_general_root">Root の動作</string>
+    <string name="settings_section_general_mount">システムとマウント</string>
+    <string name="settings_section_general_identity">アプリ名</string>
+    <string name="settings_section_general_maintenance">メンテナンス</string>
+    <string name="settings_section_behavior_display">ホーム画面の表示</string>
+    <string name="settings_section_behavior_actions">操作とインストール</string>
+    <string name="settings_section_function_hide">隠蔽と隔離</string>
+    <string name="settings_section_function_root">Root 機能</string>
+    <string name="settings_section_function_mount">マウントとアンマウント</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">認証</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">ローカルバックアップ</string>
+    <string name="settings_section_backup_cloud">クラウドバックアップ</string>
+    <string name="settings_section_module_display">モジュール表示</string>
+    <string name="settings_section_module_update">更新とインストール</string>
+    <string name="settings_section_multimedia_music">BGM</string>
+    <string name="settings_section_multimedia_sound">効果音と振動</string>
     <string name="settings_category_function">機能</string>
     <string name="settings_category_module">モジュール</string>
     <string name="settings_category_security">セキュリティ</string>
@@ -1127,6 +1178,8 @@ KernelPatch は boot イメージをパッチする必要があります。
     <string name="script_library_log_save_failed">ログの保存に失敗: %s</string>
     <string name="settings_predictive_back">予測バックジェスチャー</string>
     <string name="settings_predictive_back_summary">Android 14+ の予測バックジェスチャーアニメーションを有効にする</string>
+    <string name="settings_expressive_motion">表現豊かなモーション</string>
+    <string name="settings_expressive_motion_summary">Material 3 Expressive のモーションカーブを使用します</string>
 
     <string name="home_device_status_battery_charging">充電中</string>
     <string name="home_device_status_cpu_temp">CPU 温度</string>
@@ -1216,6 +1269,11 @@ KernelPatch は boot イメージをパッチする必要があります。
     <string name="color_style_monochrome">モノクローム</string>
     <string name="color_style_neutral">ニュートラル</string>
     <string name="color_style_fidelity">フィデリティ</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">コントラスト</string>
+    <string name="color_contrast_standard">標準</string>
+    <string name="color_contrast_medium">中</string>
+    <string name="color_contrast_high">高</string>
     <string name="settings_focus_card_background">FocusUI カード壁紙</string>
     <string name="settings_focus_card_background_enabled">FocusUI カード壁紙が有効になりました。カードを長押しして壁紙を管理</string>
     <string name="settings_focus_card_background_summary">FocusUI カード壁紙と長押し壁紙管理を有効化</string>
@@ -1279,4 +1337,33 @@ KernelPatch は boot イメージをパッチする必要があります。
     <string name="kpm_installed">インストール済み</string>
     <string name="kpm_disabled">無効（再起動後に反映）</string>
     <string name="kpm_embedded_unload_invalid">埋め込み KPM はアンロードできません。再起動後も有効です。</string>
+    <string name="settings_faq">よくある質問</string>
+    <string name="settings_bug_feedback">バグ報告</string>
+    <string name="settings_clear_cache">キャッシュを削除</string>
+    <string name="settings_disclaimer">免責事項</string>
+    <string name="settings_disclaimer_message">端末を Root 化すると、システム更新やサードパーティ製モジュールなど外部要因により予期しないリスクや損害が生じる可能性があります。それらはご自身の責任で負担していただく必要があります。十分に理解した上でご利用ください。</string>
+    <string name="theme_store_subtitle">コミュニティテーマを探して適用</string>
+    <string name="script_library_subtitle">ローカルスクリプトの実行と管理</string>
+    <string name="plugin_subtitle">FolkPatch の機能を拡張</string>
+    <string name="my_themes_subtitle">保存したテーマ</string>
+    <string name="apm_api_marketplace_subtitle">コミュニティ共有の API を閲覧</string>
+    <string name="theme_download_paused">一時停止中</string>
+    <string name="settings_wallpaper_gallery">壁紙ギャラリー</string>
+    <string name="wallpaper_device_phone">スマートフォン</string>
+    <string name="wallpaper_device_tablet">タブレット</string>
+    <string name="wallpaper_layout_waterfall">ウォーターフォール</string>
+    <string name="wallpaper_layout_stack">スタック</string>
+    <string name="wallpaper_device_mixed">ミックス</string>
+    <string name="wallpaper_display_options">表示オプション</string>
+    <string name="wallpaper_display_layout">レイアウト</string>
+    <string name="wallpaper_download">ダウンロード</string>
+    <string name="wallpaper_cancel">キャンセル</string>
+    <string name="wallpaper_saved">保存しました</string>
+    <string name="wallpaper_download_failed">ダウンロードに失敗しました</string>
+    <string name="wallpaper_loading">壁紙を読み込み中</string>
+    <string name="wallpaper_empty">壁紙がありません</string>
+    <string name="wallpaper_retry">再試行</string>
+    <string name="wallpaper_preview">プレビュー</string>
+    <string name="wallpaper_set_background">背景に設定</string>
+    <string name="wallpaper_background_set">背景を更新しました</string>
 </resources>

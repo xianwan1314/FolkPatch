@@ -3,16 +3,12 @@ package me.bmax.apatch.util
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.content.pm.Signature
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.provider.OpenableColumns
 import android.system.Os
-import android.util.Base64
 import android.util.Log
 import android.widget.Toast
 import com.topjohnwu.superuser.CallbackList
@@ -25,14 +21,10 @@ import me.bmax.apatch.BuildConfig
 import me.bmax.apatch.Natives
 import me.bmax.apatch.R
 import me.bmax.apatch.apApp
-import me.bmax.apatch.ui.screen.MODULE_TYPE
+import me.bmax.apatch.ui.screen.patches.MODULE_TYPE
 import java.io.File
 import java.io.IOException
-import java.security.MessageDigest
-import java.security.cert.CertificateFactory
-import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
-import java.util.zip.ZipFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
@@ -618,9 +610,9 @@ fun runAPModuleAction(
         }
     }
 
-    val result = withNewRootShell{ 
-        newJob().add("${APApplication.APD_PATH} module action $moduleId")
-        .to(stdoutCallback, stderrCallback).exec()
+    val result = withNewRootShell{
+        newJob().add("${APApplication.APD_PATH} module action ${shellQuote(moduleId)}")
+            .to(stdoutCallback, stderrCallback).exec()
     }
     Log.i(TAG, "APModule runAction result: $result")
 
@@ -806,18 +798,81 @@ fun setMagicMountEnabled(enable: Boolean) {
         }
 }
 
+private fun migrateFeatureFile(current: String, legacy: String): Boolean {
+    val parent = File(current).parent
+    val shell = getRootShell()
+    val commands = mutableListOf<String>()
+    if (parent != null) {
+        commands += "mkdir -p '$parent'"
+    }
+    commands += "if [ ! -e '$current' ] && [ -e '$legacy' ]; then mv '$legacy' '$current' 2>/dev/null || cp -af '$legacy' '$current'; fi"
+    commands += "if [ -e '$current' ]; then rm -f '$legacy'; fi"
+    shell.newJob().add(*commands.toTypedArray()).exec()
+    val file = SuFile(current)
+    file.shell = shell
+    return file.exists()
+}
+
+private fun featureFileExists(current: String, legacy: String): Boolean {
+    return migrateFeatureFile(current, legacy)
+}
+
+private fun readFeatureText(current: String, legacy: String): String {
+    migrateFeatureFile(current, legacy)
+    return ShellUtils.fastCmd(
+        getRootShell(),
+        "cat '$current' 2>/dev/null",
+    ) ?: ""
+}
+
+private fun removeFeatureFile(current: String, legacy: String) {
+    getRootShell().newJob().add("rm -f '$current' '$legacy'").exec()
+}
+
+private fun writeFeatureText(current: String, legacy: String, content: String): Boolean {
+    val shell = getRootShell()
+    val parent = File(current).parent
+    val escapedContent = content.replace("'", "'\\''")
+    val commands = mutableListOf<String>()
+    if (parent != null) {
+        commands += "mkdir -p '$parent'"
+    }
+    commands += "printf '%s' '$escapedContent' > '$current'"
+    commands += "test -e '$current'"
+    commands += "rm -f '$legacy'"
+    val result = shell.newJob().add(*commands.toTypedArray()).exec()
+    if (!result.isSuccess) {
+        Log.e(TAG, "Failed to write feature config '$current': ${result.out}")
+    }
+    return result.isSuccess
+}
+
 fun isHideServiceEnabled(): Boolean {
-    val hideService = SuFile(APApplication.HIDE_SERVICE_FILE)
-    hideService.shell = getRootShell()
-    return hideService.exists()
+    return featureFileExists(
+        APApplication.HIDE_SERVICE_FILE,
+        APApplication.LEGACY_HIDE_SERVICE_FILE,
+    )
 }
 
 fun setHideServiceEnabled(enable: Boolean) {
     val shell = getRootShell()
-    shell.newJob().add("${if (enable) "touch" else "rm -rf"} ${APApplication.HIDE_SERVICE_FILE}")
+    if (enable) {
+        migrateFeatureFile(
+            APApplication.HIDE_SERVICE_FILE,
+            APApplication.LEGACY_HIDE_SERVICE_FILE,
+        )
+    } else {
+        removeFeatureFile(
+            APApplication.HIDE_SERVICE_FILE,
+            APApplication.LEGACY_HIDE_SERVICE_FILE,
+        )
+    }
+    if (enable) {
+        shell.newJob().add("touch '${APApplication.HIDE_SERVICE_FILE}'")
         .submit { result ->
             Log.i(TAG, "setHideServiceEnabled result: ${result.isSuccess} [${result.out}]")
         }
+    }
     // 如果启用，异步执行一次 Hide 二进制（避免阻塞 UI 线程）
     if (enable) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -827,55 +882,80 @@ fun setHideServiceEnabled(enable: Boolean) {
 }
 
 fun isUtsSpoofEnabled(): Boolean {
-    val flagFile = SuFile(APApplication.UTS_SPOOF_ENABLE_FILE)
-    flagFile.shell = getRootShell()
-    return flagFile.exists()
+    return featureFileExists(
+        APApplication.UTS_SPOOF_ENABLE_FILE,
+        APApplication.LEGACY_UTS_SPOOF_ENABLE_FILE,
+    )
 }
 
 fun setUtsSpoofEnabled(enable: Boolean) {
-    val shell = getRootShell()
-    shell.newJob().add("${if (enable) "touch" else "rm -f"} ${APApplication.UTS_SPOOF_ENABLE_FILE}")
-        .exec()
+    if (enable) {
+        migrateFeatureFile(
+            APApplication.UTS_SPOOF_ENABLE_FILE,
+            APApplication.LEGACY_UTS_SPOOF_ENABLE_FILE,
+        )
+        getRootShell().newJob().add("touch '${APApplication.UTS_SPOOF_ENABLE_FILE}'").exec()
+    } else {
+        removeFeatureFile(
+            APApplication.UTS_SPOOF_ENABLE_FILE,
+            APApplication.LEGACY_UTS_SPOOF_ENABLE_FILE,
+        )
+    }
 }
 
 fun writeUtsSpoofConfig(release: String, version: String) {
-    val shell = getRootShell()
-    val escapedRelease = release.replace("\\", "\\\\").replace("\"", "\\\"").replace("'", "'\\''")
-    val escapedVersion = version.replace("\\", "\\\\").replace("\"", "\\\"").replace("'", "'\\''")
+    val escapedRelease = release.replace("\\", "\\\\").replace("\"", "\\\"")
+    val escapedVersion = version.replace("\\", "\\\\").replace("\"", "\\\"")
     val json = "{\"release\":\"$escapedRelease\",\"version\":\"$escapedVersion\"}"
-    shell.newJob().add("echo '$json' > ${APApplication.UTS_SPOOF_CONFIG_FILE}")
-        .exec()
+    writeFeatureText(
+        APApplication.UTS_SPOOF_CONFIG_FILE,
+        APApplication.LEGACY_UTS_SPOOF_CONFIG_FILE,
+        json,
+    )
 }
 
 fun removeUtsSpoofConfig() {
-    val shell = getRootShell()
-    shell.newJob().add("rm -f ${APApplication.UTS_SPOOF_CONFIG_FILE}").exec()
+    removeFeatureFile(
+        APApplication.UTS_SPOOF_CONFIG_FILE,
+        APApplication.LEGACY_UTS_SPOOF_CONFIG_FILE,
+    )
 }
 
 fun isPathHideEnabled(): Boolean {
-    val flagFile = SuFile(APApplication.PATHHIDE_ENABLE_FILE)
-    flagFile.shell = getRootShell()
-    return flagFile.exists()
+    return featureFileExists(
+        APApplication.PATHHIDE_ENABLE_FILE,
+        APApplication.LEGACY_PATHHIDE_ENABLE_FILE,
+    )
 }
 
 fun setPathHideEnabled(enable: Boolean) {
-    val shell = getRootShell()
-    shell.newJob().add("mkdir -p ${APApplication.PATHHIDE_DIR}").exec()
-    shell.newJob().add("${if (enable) "touch" else "rm -f"} ${APApplication.PATHHIDE_ENABLE_FILE}")
-        .exec()
+    if (enable) {
+        migrateFeatureFile(
+            APApplication.PATHHIDE_ENABLE_FILE,
+            APApplication.LEGACY_PATHHIDE_ENABLE_FILE,
+        )
+        getRootShell().newJob().add("touch '${APApplication.PATHHIDE_ENABLE_FILE}'").exec()
+    } else {
+        removeFeatureFile(
+            APApplication.PATHHIDE_ENABLE_FILE,
+            APApplication.LEGACY_PATHHIDE_ENABLE_FILE,
+        )
+    }
 }
 
 fun writePathHidePaths(paths: String) {
-    val shell = getRootShell()
-    shell.newJob().add("mkdir -p ${APApplication.PATHHIDE_DIR}").exec()
-    val escapedPaths = normalizePathHidePaths(paths).replace("'", "'\\''")
-    shell.newJob().add("echo -n '$escapedPaths' > ${APApplication.PATHHIDE_PATHS_FILE}")
-        .exec()
+    writeFeatureText(
+        APApplication.PATHHIDE_PATHS_FILE,
+        APApplication.LEGACY_PATHHIDE_PATHS_FILE,
+        normalizePathHidePaths(paths),
+    )
 }
 
 fun readPathHidePaths(): String {
-    val shell = getRootShell()
-    val raw = ShellUtils.fastCmd(shell, "cat ${APApplication.PATHHIDE_PATHS_FILE} 2>/dev/null") ?: ""
+    val raw = readFeatureText(
+        APApplication.PATHHIDE_PATHS_FILE,
+        APApplication.LEGACY_PATHHIDE_PATHS_FILE,
+    )
     return normalizePathHidePaths(raw)
 }
 
@@ -901,75 +981,106 @@ private fun normalizePathHidePath(path: String): String? {
 }
 
 fun writePathHideUids(uids: String) {
-    val shell = getRootShell()
-    shell.newJob().add("mkdir -p ${APApplication.PATHHIDE_DIR}").exec()
-    val escapedUids = uids.replace("'", "'\\''")
-    shell.newJob().add("echo -n '$escapedUids' > ${APApplication.PATHHIDE_UIDS_FILE}")
-        .exec()
+    writeFeatureText(
+        APApplication.PATHHIDE_UIDS_FILE,
+        APApplication.LEGACY_PATHHIDE_UIDS_FILE,
+        uids,
+    )
 }
 
 fun readPathHideUids(): String {
-    val shell = getRootShell()
-    return ShellUtils.fastCmd(shell, "cat ${APApplication.PATHHIDE_UIDS_FILE} 2>/dev/null") ?: ""
+    return readFeatureText(
+        APApplication.PATHHIDE_UIDS_FILE,
+        APApplication.LEGACY_PATHHIDE_UIDS_FILE,
+    )
 }
 
 fun isPathHideUidModeEnabled(): Boolean {
-    val file = SuFile(APApplication.PATHHIDE_UID_MODE_FILE)
-    file.shell = getRootShell()
-    return file.exists()
+    return featureFileExists(
+        APApplication.PATHHIDE_UID_MODE_FILE,
+        APApplication.LEGACY_PATHHIDE_UID_MODE_FILE,
+    )
 }
 
 fun isPathHideFilterSystemEnabled(): Boolean {
-    val file = SuFile(APApplication.PATHHIDE_FILTER_SYSTEM_FILE)
-    file.shell = getRootShell()
-    return file.exists()
+    return featureFileExists(
+        APApplication.PATHHIDE_FILTER_SYSTEM_FILE,
+        APApplication.LEGACY_PATHHIDE_FILTER_SYSTEM_FILE,
+    )
 }
 
 fun setPathHideUidMode(enable: Boolean) {
-    val shell = getRootShell()
-    shell.newJob().add("mkdir -p ${APApplication.PATHHIDE_DIR}").exec()
-    shell.newJob().add("${if (enable) "touch" else "rm -f"} ${APApplication.PATHHIDE_UID_MODE_FILE}")
-        .exec()
+    if (enable) {
+        migrateFeatureFile(
+            APApplication.PATHHIDE_UID_MODE_FILE,
+            APApplication.LEGACY_PATHHIDE_UID_MODE_FILE,
+        )
+        getRootShell().newJob().add("touch '${APApplication.PATHHIDE_UID_MODE_FILE}'").exec()
+    } else {
+        removeFeatureFile(
+            APApplication.PATHHIDE_UID_MODE_FILE,
+            APApplication.LEGACY_PATHHIDE_UID_MODE_FILE,
+        )
+    }
 }
 
 fun setPathHideFilterSystem(enable: Boolean) {
-    val shell = getRootShell()
-    shell.newJob().add("mkdir -p ${APApplication.PATHHIDE_DIR}").exec()
-    shell.newJob().add("${if (enable) "touch" else "rm -f"} ${APApplication.PATHHIDE_FILTER_SYSTEM_FILE}")
-        .exec()
+    if (enable) {
+        migrateFeatureFile(
+            APApplication.PATHHIDE_FILTER_SYSTEM_FILE,
+            APApplication.LEGACY_PATHHIDE_FILTER_SYSTEM_FILE,
+        )
+        getRootShell().newJob().add("touch '${APApplication.PATHHIDE_FILTER_SYSTEM_FILE}'").exec()
+    } else {
+        removeFeatureFile(
+            APApplication.PATHHIDE_FILTER_SYSTEM_FILE,
+            APApplication.LEGACY_PATHHIDE_FILTER_SYSTEM_FILE,
+        )
+    }
 }
 
 fun setNetIsolateEnabled(enable: Boolean) {
-    val shell = getRootShell()
-    shell.newJob().add("mkdir -p ${APApplication.NETISOLATE_DIR}").exec()
-    shell.newJob().add("${if (enable) "touch" else "rm -f"} ${APApplication.NETISOLATE_ENABLE_FILE}")
-        .exec()
+    if (enable) {
+        migrateFeatureFile(
+            APApplication.NETISOLATE_ENABLE_FILE,
+            APApplication.LEGACY_NETISOLATE_ENABLE_FILE,
+        )
+        getRootShell().newJob().add("touch '${APApplication.NETISOLATE_ENABLE_FILE}'").exec()
+    } else {
+        removeFeatureFile(
+            APApplication.NETISOLATE_ENABLE_FILE,
+            APApplication.LEGACY_NETISOLATE_ENABLE_FILE,
+        )
+    }
 }
 
 fun writeNetIsolateUids(uids: String) {
-    val shell = getRootShell()
-    shell.newJob().add("mkdir -p ${APApplication.NETISOLATE_DIR}").exec()
-    val escapedUids = uids.replace("'", "'\\''")
-    shell.newJob().add("echo -n '$escapedUids' > ${APApplication.NETISOLATE_UIDS_FILE}").exec()
+    writeFeatureText(
+        APApplication.NETISOLATE_UIDS_FILE,
+        APApplication.LEGACY_NETISOLATE_UIDS_FILE,
+        uids,
+    )
 }
 
 fun isNetIsolateEnabled(): Boolean {
-    val flagFile = SuFile(APApplication.NETISOLATE_ENABLE_FILE)
-    flagFile.shell = getRootShell()
-    return flagFile.exists()
+    return featureFileExists(
+        APApplication.NETISOLATE_ENABLE_FILE,
+        APApplication.LEGACY_NETISOLATE_ENABLE_FILE,
+    )
 }
 
 fun readNetIsolateUids(): String {
-    val shell = getRootShell()
-    return ShellUtils.fastCmd(shell, "cat ${APApplication.NETISOLATE_UIDS_FILE} 2>/dev/null") ?: ""
+    return readFeatureText(
+        APApplication.NETISOLATE_UIDS_FILE,
+        APApplication.LEGACY_NETISOLATE_UIDS_FILE,
+    )
 }
 
 fun executeHideBinary(): Boolean {
     val shell = getRootShell()
     val context = apApp.applicationContext
 
-    // 确保 fp/bin 目录存在
-    shell.newJob().add("mkdir -p /data/adb/fp/bin").exec()
+    shell.newJob().add("mkdir -p '${File(APApplication.HIDE_BINARY_PATH).parent}'").exec()
 
     // 从 assets 复制 fpd 二进制文件到可执行目录
     try {
@@ -985,6 +1096,8 @@ fun executeHideBinary(): Boolean {
             "cp ${tempFile.absolutePath} ${APApplication.HIDE_BINARY_PATH}",
             "chmod 755 ${APApplication.HIDE_BINARY_PATH}",
             "restorecon ${APApplication.HIDE_BINARY_PATH}",
+            "rm -f ${APApplication.LEGACY_FPD_PATH}",
+            "rmdir /data/adb/fp/bin /data/adb/fp 2>/dev/null || true",
             "${APApplication.HIDE_BINARY_PATH} -hide"
         )
 
@@ -1025,8 +1138,7 @@ fun executeUmountBinary(): Boolean {
     val shell = getRootShell()
     val context = apApp.applicationContext
 
-    // 确保 fp/bin 目录存在
-    shell.newJob().add("mkdir -p /data/adb/fp/bin").exec()
+    shell.newJob().add("mkdir -p '${File(APApplication.UMOUNT_BINARY_PATH).parent}'").exec()
 
     try {
         val fpdAsset = context.assets.open("Service/fpd")
@@ -1040,6 +1152,8 @@ fun executeUmountBinary(): Boolean {
             "cp ${tempFile.absolutePath} ${APApplication.UMOUNT_BINARY_PATH}",
             "chmod 755 ${APApplication.UMOUNT_BINARY_PATH}",
             "restorecon ${APApplication.UMOUNT_BINARY_PATH}",
+            "rm -f ${APApplication.LEGACY_FPD_PATH}",
+            "rmdir /data/adb/fp/bin /data/adb/fp 2>/dev/null || true",
             "${APApplication.UMOUNT_BINARY_PATH} -umount"
         )
 
@@ -1157,74 +1271,6 @@ fun getMetaModuleImplement(): String {
         Log.e(TAG, "getMetaModuleImplement failed", e)
         return "None"
     }
-}
-
-private fun signatureFromAPI(context: Context): ByteArray? {
-    return try {
-        val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            context.packageManager.getPackageInfo(
-                context.packageName, PackageManager.GET_SIGNING_CERTIFICATES
-            )
-        } else {
-            context.packageManager.getPackageInfo(
-                context.packageName,
-                PackageManager.GET_SIGNATURES
-            )
-        }
-
-        val signatures: Array<out Signature>? =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                packageInfo.signingInfo?.apkContentsSigners
-            } else {
-                packageInfo.signatures
-            }
-
-        signatures?.firstOrNull()?.toByteArray()
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
-    }
-}
-
-private fun signatureFromAPK(context: Context): ByteArray? {
-    var signatureBytes: ByteArray? = null
-    try {
-        ZipFile(context.packageResourcePath).use { zipFile ->
-            val entries = zipFile.entries()
-            while (entries.hasMoreElements() && signatureBytes == null) {
-                val entry = entries.nextElement()
-                if (entry.name.matches("(META-INF/.*)\\.(RSA|DSA|EC)".toRegex())) {
-                    zipFile.getInputStream(entry).use { inputStream ->
-                        val certFactory = CertificateFactory.getInstance("X509")
-                        val x509Cert =
-                            certFactory.generateCertificate(inputStream) as X509Certificate
-                        signatureBytes = x509Cert.encoded
-                    }
-                }
-            }
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
-    return signatureBytes
-}
-
-private fun validateSignature(signatureBytes: ByteArray?, validSignature: String): Boolean {
-    signatureBytes ?: return false
-    val digest = MessageDigest.getInstance("SHA-256")
-    val signatureHash = Base64.encodeToString(digest.digest(signatureBytes), Base64.NO_WRAP)
-    return signatureHash == validSignature
-}
-
-fun verifyAppSignature(validSignature: String): Boolean {
-    val context = apApp.applicationContext
-    val apiSignature = signatureFromAPI(context)
-    val apkSignature = signatureFromAPK(context)
-
-    return validateSignature(apiSignature, validSignature) && validateSignature(
-        apkSignature,
-        validSignature
-    )
 }
 
 fun getMountImplement(): String {

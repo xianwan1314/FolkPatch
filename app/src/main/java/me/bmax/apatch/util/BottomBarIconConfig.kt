@@ -80,7 +80,14 @@ object BottomBarIconConfig {
      * Load a bitmap from a URI string at icon-appropriate size.
      * Returns null on failure.
      */
-    fun loadIconBitmap(context: Context, uriString: String?): Bitmap? {
+    /**
+     * Loads an image and returns the centre square crop.
+     *
+     * [targetSize] defaults to the nav-bar icon size; other callers (e.g. the
+     * settings profile avatar) can ask for a larger square so the image stays
+     * sharp when it is shown bigger.
+     */
+    fun loadIconBitmap(context: Context, uriString: String?, targetSize: Int = ICON_SIZE): Bitmap? {
         if (uriString.isNullOrBlank()) return null
         return try {
             val uri = Uri.parse(uriString)
@@ -90,7 +97,7 @@ object BottomBarIconConfig {
                 }
                 BitmapFactory.decodeStream(input, null, options)
                 // Calculate sample size for ~128px target
-                val scale = maxOf(options.outWidth, options.outHeight) / ICON_SIZE
+                val scale = maxOf(options.outWidth, options.outHeight) / targetSize
                 val opts = BitmapFactory.Options().apply {
                     inSampleSize = if (scale > 1) scale else 1
                 }

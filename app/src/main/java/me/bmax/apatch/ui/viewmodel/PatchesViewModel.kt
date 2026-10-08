@@ -51,8 +51,8 @@ import java.util.Locale
 import me.bmax.apatch.util.getFileNameFromUri
 import me.bmax.apatch.util.ModuleBackupUtils
 import me.bmax.apatch.util.SafeUriResolver
-import me.bmax.apatch.ui.screen.selectedKPImg
-import me.bmax.apatch.ui.screen.selectedBootImage
+import me.bmax.apatch.ui.screen.patches.selectedKPImg
+import me.bmax.apatch.ui.screen.patches.selectedBootImage
 
 private const val TAG = "PatchViewModel"
 
@@ -70,7 +70,9 @@ class PatchesViewModel : ViewModel() {
     var bootDev by mutableStateOf("")
     var kimgInfo by mutableStateOf(KPModel.KImgInfo("", false))
     var kpimgInfo by mutableStateOf(KPModel.KPImgInfo("", "", "", "", ""))
-    var superkey by mutableStateOf(APApplication.superKey)
+    var superkey by mutableStateOf(
+        APApplication.superKey.takeUnless { it == "su" }.orEmpty()
+    )
     var existedExtras = mutableStateListOf<KPModel.IExtraInfo>()
     var newExtras = mutableStateListOf<KPModel.IExtraInfo>()
     var newExtrasFileName = mutableListOf<String>()
@@ -231,6 +233,15 @@ class PatchesViewModel : ViewModel() {
         } else {
             error += result.err.joinToString("\n")
         }
+    }
+
+    val checkSuperKeyValidation: (superKey: String) -> Boolean = { superKey ->
+        superKey.length in 8..63 &&
+            superKey.all {
+                it in '0'..'9' || it in 'A'..'Z' || it in 'a'..'z'
+            } &&
+            superKey.any { it.isDigit() } &&
+            superKey.any { it.isLetter() }
     }
 
     fun copyAndParseBootimg(uri: Uri) {
@@ -578,6 +589,12 @@ class PatchesViewModel : ViewModel() {
 
             val installDirectly = mode == PatchMode.PATCH_AND_INSTALL || mode == PatchMode.INSTALL_TO_NEXT_SLOT
 
+            if (useKey && !checkSuperKeyValidation(this@PatchesViewModel.superkey)) {
+                error = "Invalid custom SuperKey"
+                patchdone = true
+                return@launch
+            }
+
             val superkey = if (useKey && this@PatchesViewModel.superkey.isNotEmpty()) {
                 this@PatchesViewModel.superkey
             } else {
@@ -670,6 +687,10 @@ class PatchesViewModel : ViewModel() {
                 return@launch
             }
 
+            if (useKey) {
+                APApplication.rememberCustomSuperKey(superkey)
+            }
+
             if (mode == PatchMode.PATCH_AND_INSTALL) {
                 logs.add("- Reboot to finish the installation...")
                 needReboot = true
@@ -723,6 +744,15 @@ class PatchesViewModel : ViewModel() {
                 clearJailbreakMarker()
             } else if (mode == PatchMode.PATCH_ONLY) {
                 val newBootFile = patchDir.getChildFile("new-boot.img")
+                if (!newBootFile.exists()) {
+                    val msg = " Patch failed."
+                    error = msg
+                    logs.add(error)
+                    logs.add("****************************")
+                    patchdone = true
+                    patching = false
+                    return@launch
+                }
                 val outDir = getSafeDownloadsDir(apApp)
                 if (!outDir.exists()) outDir.mkdirs()
                 val outPath = File(outDir, outFilename)
@@ -732,7 +762,17 @@ class PatchesViewModel : ViewModel() {
                     val outUri = createDownloadUri(apApp, outFilename)
                     succ = insertDownload(apApp, outUri, inputUri)
                 } else {
-                    newBootFile.inputStream().copyAndClose(outPath.outputStream())
+                    try {
+                        newBootFile.inputStream().copyAndClose(outPath.outputStream())
+                    } catch (_: IOException) {
+                        val msg = " Patch failed."
+                        error = msg
+                        logs.add(error)
+                        logs.add("****************************")
+                        patchdone = true
+                        patching = false
+                        return@launch
+                    }
                 }
                 if (succ) {
                     logs.add(apApp.getString(R.string.patch_output_written_to))

@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import me.bmax.apatch.apApp
 import me.bmax.apatch.Natives
 import me.bmax.apatch.ui.model.ApiMarketplaceItem
-import me.bmax.apatch.ui.screen.BannerApiService
+import me.bmax.apatch.ui.screen.misc.BannerApiService
 import me.bmax.apatch.ui.theme.BackgroundConfig
 import me.bmax.apatch.util.FolkApiClient
 import okhttp3.Request

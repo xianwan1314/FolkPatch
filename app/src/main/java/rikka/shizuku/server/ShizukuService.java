@@ -72,8 +72,13 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         Looper.loop();
     }
 
-    private static void waitSystemService(String name) {
+    private static boolean waitSystemService(String name, long timeoutMs) {
+        long deadline = System.currentTimeMillis() + timeoutMs;
         while (ServiceManager.getService(name) == null) {
+            if (System.currentTimeMillis() >= deadline) {
+                LOGGER.e("service " + name + " was not available within " + timeoutMs + "ms");
+                return false;
+            }
             try {
                 LOGGER.i("service " + name + " is not started, wait 1s.");
                 Thread.sleep(1000);
@@ -81,6 +86,7 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
                 LOGGER.w(e.getMessage(), e);
             }
         }
+        return true;
     }
 
     public static ApplicationInfo getManagerApplicationInfo() {
@@ -149,10 +155,12 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
         LOGGER.i("starting server... uid=%d pid=%d secontext=%s",
                 OsUtils.getUid(), OsUtils.getPid(), OsUtils.getSELinuxContext());
 
-        waitSystemService("package");
-        waitSystemService(Context.ACTIVITY_SERVICE);
-        waitSystemService(Context.USER_SERVICE);
-        waitSystemService(Context.APP_OPS_SERVICE);
+        if (!waitSystemService("package", 30_000L)
+                || !waitSystemService(Context.ACTIVITY_SERVICE, 30_000L)
+                || !waitSystemService(Context.USER_SERVICE, 30_000L)
+                || !waitSystemService(Context.APP_OPS_SERVICE, 30_000L)) {
+            System.exit(ServerConstants.SYSTEM_SERVICE_TIMEOUT);
+        }
 
         ApplicationInfo ai = getManagerApplicationInfo();
         if (ai == null) {
@@ -181,10 +189,12 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
 
         BinderSender.register(this);
 
-        mainHandler.post(() -> {
-            sendBinderToClient();
-            sendBinderToManager();
-        });
+        // Send the manager binder first. Broadcasting to every installed
+        // client can block on a slow provider; the manager must not be queued
+        // behind that loop or the settings page will report "not running"
+        // even though the server is alive.
+        mainHandler.post(this::sendBinderToManager);
+        new Thread(this::sendBinderToClient, "ShizukuBinderBroadcast").start();
     }
 
     @Override
@@ -684,10 +694,11 @@ public class ShizukuService extends Service<ShizukuUserServiceManager, ShizukuCl
                 LOGGER.e("provider is dead %s %d", name, userId);
 
                 if (retry) {
-                    // For unknown reason, sometimes this could happens
-                    // Kill Shizuku app and try again could work
-                    ActivityManagerApis.forceStopPackageNoThrow(packageName, userId);
-                    LOGGER.e("kill %s in user %d and try again", packageName, userId);
+                    // Do not force-stop the manager here: this method can be
+                    // called while its UI is visible, and killing the process
+                    // would make the settings page disappear. A fresh provider
+                    // lookup is enough to revive a dead provider.
+                    LOGGER.e("provider dead for %s in user %d, retrying", packageName, userId);
                     Thread.sleep(1000);
                     sendBinderToUserApp(binder, packageName, userId, false);
                 }

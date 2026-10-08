@@ -9,7 +9,7 @@ use notify::{
 use signal_hook::{consts::signal::*, iterator::Signals};
 use std::process::Stdio;
 use std::{
-    env, ffi::CStr, fs,
+    env, fs,
     os::unix::{fs::PermissionsExt, process::CommandExt},
     path::{Path, PathBuf},
     process::Command,
@@ -24,13 +24,204 @@ use crate::{
     utils::{self, switch_cgroups},
 };
 
-pub fn report_kernel(superkey: Option<String>, event: &str, state: &str) {
-    let rc = supercall::report_kernel_event(&superkey, event, state);
-    if rc == 0 {
-        return;
+fn migrate_file(old: &str, new: &str) -> Result<()> {
+    let old_path = Path::new(old);
+    if !old_path.exists() {
+        return Ok(());
     }
-    warn!("direct kernel event {event}/{state} failed: {rc}; falling back to SUPERCMD");
+    if let Some(parent) = Path::new(new).parent() {
+        fs::create_dir_all(parent)?;
+    }
+    if !Path::new(new).exists() && fs::rename(old_path, new).is_err() {
+        fs::copy(old_path, new)?;
+    }
+    if Path::new(new).exists() {
+        let _ = fs::remove_file(old_path);
+    }
+    Ok(())
+}
 
+fn migrate_legacy_feature_paths() {
+    let files = [
+        (defs::LEGACY_HIDE_SERVICE_FILE, defs::HIDE_SERVICE_FILE),
+        (defs::LEGACY_UMOUNT_SERVICE_FILE, defs::UMOUNT_SERVICE_FILE),
+        (defs::LEGACY_UMOUNT_PATH_FILE, defs::UMOUNT_PATH_FILE),
+        (defs::LEGACY_FPD_PATH, defs::HIDE_BINARY_PATH),
+        (
+            defs::LEGACY_UTS_SPOOF_ENABLE_FILE,
+            defs::UTS_SPOOF_ENABLE_FILE,
+        ),
+        (
+            defs::LEGACY_UTS_SPOOF_CONFIG_FILE,
+            defs::UTS_SPOOF_CONFIG_FILE,
+        ),
+        (
+            defs::LEGACY_UTS_SPOOF_BOOT_PENDING,
+            defs::UTS_SPOOF_BOOT_PENDING,
+        ),
+        (
+            defs::LEGACY_UTS_SPOOF_RETRY_FILE,
+            defs::UTS_SPOOF_RETRY_FILE,
+        ),
+        (
+            defs::LEGACY_PATHHIDE_ENABLE_FILE,
+            defs::PATHHIDE_ENABLE_FILE,
+        ),
+        (defs::LEGACY_PATHHIDE_PATHS_FILE, defs::PATHHIDE_PATHS_FILE),
+        (defs::LEGACY_PATHHIDE_UIDS_FILE, defs::PATHHIDE_UIDS_FILE),
+        (
+            defs::LEGACY_PATHHIDE_UID_MODE_FILE,
+            defs::PATHHIDE_UID_MODE_FILE,
+        ),
+        (
+            defs::LEGACY_PATHHIDE_FILTER_SYSTEM_FILE,
+            defs::PATHHIDE_FILTER_SYSTEM_FILE,
+        ),
+        (defs::LEGACY_PATHHIDE_RETRY_FILE, defs::PATHHIDE_RETRY_FILE),
+        (
+            defs::LEGACY_NETISOLATE_ENABLE_FILE,
+            defs::NETISOLATE_ENABLE_FILE,
+        ),
+        (
+            defs::LEGACY_NETISOLATE_UIDS_FILE,
+            defs::NETISOLATE_UIDS_FILE,
+        ),
+    ];
+
+    for (old, new) in files {
+        if let Err(error) = migrate_file(old, new) {
+            warn!("runtime configuration migration failed: {error}");
+        }
+    }
+    let _ = fs::remove_dir(defs::LEGACY_PATHHIDE_DIR);
+    let _ = fs::remove_dir(defs::LEGACY_NETISOLATE_DIR);
+    let _ = fs::remove_dir("/data/adb/fp/bin");
+    let _ = fs::remove_dir("/data/adb/fp");
+}
+
+fn fpd_path() -> &'static str {
+    if Path::new(defs::HIDE_BINARY_PATH).exists() {
+        defs::HIDE_BINARY_PATH
+    } else if Path::new(defs::LEGACY_FPD_PATH).exists() {
+        defs::LEGACY_FPD_PATH
+    } else {
+        defs::HIDE_BINARY_PATH
+    }
+}
+
+fn uts_is_active() -> bool {
+    let Ok(raw) = fs::read_to_string(defs::UTS_SPOOF_CONFIG_FILE) else {
+        return false;
+    };
+    let Ok(config) = serde_json::from_str::<serde_json::Value>(&raw) else {
+        return false;
+    };
+    let release = config.get("release").and_then(|v| v.as_str()).unwrap_or("");
+    let version = config.get("version").and_then(|v| v.as_str()).unwrap_or("");
+    if release.is_empty() && version.is_empty() {
+        return false;
+    }
+    let mut uts: libc::utsname = unsafe { std::mem::zeroed() };
+    if unsafe { libc::uname(&mut uts) } != 0 {
+        return false;
+    }
+    let current_release =
+        unsafe { std::ffi::CStr::from_ptr(uts.release.as_ptr()) }.to_string_lossy();
+    let current_version =
+        unsafe { std::ffi::CStr::from_ptr(uts.version.as_ptr()) }.to_string_lossy();
+    (release.is_empty() || current_release == release)
+        && (version.is_empty() || current_version == version)
+}
+
+fn property_policy_unresolved(
+    current: impl IntoIterator<Item = Option<String>>,
+    expected: impl IntoIterator<Item = &'static str>,
+) -> bool {
+    let mut supported = 0usize;
+    let mut mismatched = 0usize;
+    for (current, expected) in current.into_iter().zip(expected) {
+        if let Some(current) = current {
+            supported += 1;
+            if current != expected {
+                mismatched += 1;
+            }
+        }
+    }
+    supported > 0 && mismatched > 0
+}
+
+fn runtime_policy_unresolved(superkey: &Option<String>) -> usize {
+    let mut unresolved = 0;
+
+    if Path::new(defs::PATHHIDE_ENABLE_FILE).exists()
+        && !supercall::pathhide_status(superkey).is_some_and(|(active, _)| active)
+    {
+        unresolved += 1;
+    }
+    if Path::new(defs::NETISOLATE_ENABLE_FILE).exists()
+        && !supercall::netisolate_status(superkey).is_some_and(|(active, _)| active)
+    {
+        unresolved += 1;
+    }
+    if Path::new(defs::UTS_SPOOF_ENABLE_FILE).exists() && !uts_is_active() {
+        unresolved += 1;
+    }
+    if Path::new(defs::HIDE_SERVICE_FILE).exists() {
+        let expected = [
+            ("ro.boot.vbmeta.device_state", "locked"),
+            ("ro.boot.verifiedbootstate", "green"),
+            ("ro.boot.flash.locked", "1"),
+            ("ro.boot.veritymode", "enforcing"),
+        ];
+        let current = expected.iter().map(|(key, _)| crate::utils::getprop(key));
+        let expected_values = expected.iter().map(|(_, value)| *value);
+        if !Path::new(fpd_path()).exists() || property_policy_unresolved(current, expected_values) {
+            unresolved += 1;
+        }
+    }
+    if Path::new(defs::UMOUNT_SERVICE_FILE).exists() && !Path::new(fpd_path()).exists() {
+        unresolved += 1;
+    }
+    unresolved
+}
+
+pub fn runtime_policy_status(superkey: &Option<String>) -> serde_json::Value {
+    let pathhide = supercall::pathhide_status(superkey);
+    let netisolate = supercall::netisolate_status(superkey);
+    let audit_count = supercall::su_audit_count(superkey);
+    serde_json::json!({
+        "superuser_stats": {
+            "ready": audit_count.is_some(),
+            "entries": audit_count,
+        },
+        "pathhide": {
+            "configured": Path::new(defs::PATHHIDE_ENABLE_FILE).exists(),
+            "active": pathhide.map(|v| v.0),
+            "entries": pathhide.map(|v| v.1),
+        },
+        "netisolate": {
+            "configured": Path::new(defs::NETISOLATE_ENABLE_FILE).exists(),
+            "active": netisolate.map(|v| v.0),
+            "entries": netisolate.map(|v| v.1),
+        },
+        "kernel_spoof": {
+            "configured": Path::new(defs::UTS_SPOOF_ENABLE_FILE).exists(),
+            "active": uts_is_active(),
+        },
+        "hide": {
+            "configured": Path::new(defs::HIDE_SERVICE_FILE).exists(),
+            "binary": Path::new(fpd_path()).exists(),
+        },
+        "umount": {
+            "configured": Path::new(defs::UMOUNT_SERVICE_FILE).exists(),
+            "binary": Path::new(fpd_path()).exists(),
+            "paths": Path::new(defs::UMOUNT_PATH_FILE).exists(),
+        },
+        "unresolved": runtime_policy_unresolved(superkey),
+    })
+}
+
+pub fn report_kernel(superkey: Option<String>, event: &str, state: &str) {
     let args = [
         superkey.unwrap_or("su".to_string()),
         "event".to_string(),
@@ -49,8 +240,8 @@ pub fn report_kernel(superkey: Option<String>, event: &str, state: &str) {
 
 fn setup_fp_directories() -> Result<()> {
     utils::ensure_dir_with_perms(
-        Path::new("/data/adb/fp/bin"),
-        Path::new("/data/adb/fp"),
+        Path::new(defs::BINARY_DIR),
+        Path::new(defs::WORKING_DIR),
         0o755,
     )?;
     Ok(())
@@ -97,7 +288,6 @@ fn setup_logging() -> Result<()> {
                 "-f",
                 &logcat_path,
                 "logcatcher-bootlog:S",
-
             ])
             .spawn()
     };
@@ -123,80 +313,81 @@ fn disable_all_modules_safe() {
 }
 
 fn exec_fpd_hide() {
+    let fpd = fpd_path();
     if !Path::new(defs::HIDE_SERVICE_FILE).exists() {
-        info!("Hide Service disabled");
         return;
     }
-    info!("Hide Service enabled, executing fpd -hide...");
-    if !Path::new(defs::HIDE_BINARY_PATH).exists() {
-        warn!("fpd binary not found at {}, please copy it manually", defs::HIDE_BINARY_PATH);
+    info!("runtime property policy applying");
+    if !Path::new(fpd).exists() {
+        warn!("fpd binary not found, please install it manually");
         return;
     }
-    let result = Command::new(defs::HIDE_BINARY_PATH).arg("-hide").status();
+    let result = Command::new(fpd).arg("-hide").status();
     match result {
         Ok(status) => {
             if status.success() {
-                info!("fpd -hide executed successfully");
+                info!("runtime property policy applied");
             } else {
-                warn!("fpd -hide exited with status: {:?}", status.code());
+                warn!(
+                    "runtime property policy exited with status: {:?}",
+                    status.code()
+                );
             }
         }
         Err(e) => {
-            warn!("Failed to execute fpd -hide: {}", e);
+            warn!("runtime property policy failed: {}", e);
         }
     }
 }
 
 fn exec_fpd_umount() {
+    let fpd = fpd_path();
     if !Path::new(defs::UMOUNT_SERVICE_FILE).exists() {
-        info!("Umount Service disabled");
         return;
     }
-    info!("Umount Service enabled, executing fpd -umount...");
-    if !Path::new(defs::UMOUNT_BINARY_PATH).exists() {
-        warn!("fpd binary not found at {}, please copy it manually", defs::UMOUNT_BINARY_PATH);
+    info!("runtime mount policy applying");
+    if !Path::new(fpd).exists() {
+        warn!("fpd binary not found, please install it manually");
         return;
     }
-    let result = unsafe {
-        Command::new(defs::UMOUNT_BINARY_PATH)
-            .arg("-umount")
-            .stdout(Stdio::piped())
-            .stderr(Stdio::piped())
-            .pre_exec(|| {
-                let _ = utils::switch_mnt_ns(1);
-                Ok(())
-            })
-            .output()
-    };
+    let mut command = Command::new(fpd);
+    command
+        .arg("-umount")
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped());
+    if let Err(error) = utils::command_in_mnt_ns(&mut command, 1) {
+        warn!("runtime mount namespace unavailable: {error}");
+        return;
+    }
+    let result = command.output();
     match result {
         Ok(output) => {
             let stdout = String::from_utf8_lossy(&output.stdout);
             let stderr = String::from_utf8_lossy(&output.stderr);
             if output.status.success() {
-                info!("fpd -umount executed successfully");
+                info!("runtime mount policy applied");
             } else {
-                warn!("fpd -umount exited with status: {:?}", output.status.code());
+                warn!(
+                    "runtime mount policy exited with status: {:?}",
+                    output.status.code()
+                );
             }
             if !stdout.trim().is_empty() {
-                info!("fpd -umount stdout: {}", stdout.trim());
+                let _ = stdout;
             }
             if !stderr.trim().is_empty() {
-                info!("fpd -umount stderr: {}", stderr.trim());
+                let _ = stderr;
             }
         }
         Err(e) => {
-            warn!("Failed to execute fpd -umount: {}", e);
+            warn!("runtime mount policy failed: {}", e);
         }
     }
 }
 
 pub fn on_post_data_fs(superkey: Option<String>) -> Result<()> {
-    let key_len = superkey.as_ref().map(|s| s.len()).unwrap_or(0);
-    let key_preview = superkey.as_ref().map(|s| {
-        if s.len() > 4 { &s[..2] } else { s }
-    }).unwrap_or("<None>");
-    info!("[diag:post_fs_data] ENTER superkey_present={} key_len={} preview='{}..'", superkey.is_some(), key_len, key_preview);
-
+    info!("post-fs-data");
+    migrate_legacy_feature_paths();
     utils::umask(0);
     report_kernel(superkey.clone(), "post-fs-data", "before");
 
@@ -304,7 +495,7 @@ pub fn on_post_data_fs(superkey: Option<String>) -> Result<()> {
     if let Err(e) = module::exec_stage_script("post-fs-data", true) {
         warn!("exec post-fs-data scripts failed: {}", e);
     }
-    if let Err(e) = lua::exec_stage_lua("post-fs-data", true, superkey.as_deref().unwrap_or("")) {
+    if let Err(e) = lua::exec_stage_lua("post-fs-data", true) {
         warn!("Failed to exec post-fs-data lua: {}", e);
     }
     if let Err(e) = lua::exec_plugin_stage("post-fs-data") {
@@ -320,8 +511,7 @@ pub fn on_post_data_fs(superkey: Option<String>) -> Result<()> {
 
     run_stage("post-mount", superkey.clone(), true);
 
-    if magic_mount_enabled
-        && let Err(e) = crate::magic_mount::magic_mount(defs::AP_OVERLAY_SOURCE)
+    if magic_mount_enabled && let Err(e) = crate::magic_mount::magic_mount(defs::AP_OVERLAY_SOURCE)
     {
         log::error!("Folk Mount failed: {e}");
     }
@@ -358,7 +548,7 @@ fn run_stage(stage: &str, superkey: Option<String>, block: bool) {
     if let Err(e) = module::exec_stage_script(stage, block) {
         warn!("Failed to exec {stage} scripts: {e}");
     }
-    if let Err(e) = lua::exec_stage_lua(stage, block, superkey.as_deref().unwrap_or("")) {
+    if let Err(e) = lua::exec_stage_lua(stage, block) {
         warn!("Failed to exec {stage} lua: {e}");
     }
     if let Err(e) = lua::exec_plugin_stage(stage) {
@@ -367,9 +557,8 @@ fn run_stage(stage: &str, superkey: Option<String>, block: bool) {
 }
 
 pub fn on_services(superkey: Option<String>) -> Result<()> {
-    let key_len = superkey.as_ref().map(|s| s.len()).unwrap_or(0);
-    info!("[diag:services] ENTER superkey_present={} key_len={}", superkey.is_some(), key_len);
-
+    info!("services");
+    migrate_legacy_feature_paths();
     supercall::apply_sucompat(&superkey);
 
     if Path::new(defs::UTS_SPOOF_RETRY_FILE).exists() {
@@ -385,29 +574,21 @@ pub fn on_services(superkey: Option<String>) -> Result<()> {
 fn run_uid_monitor() {
     info!("Trigger run_uid_monitor!");
 
-    let mut command = &mut Command::new("/data/adb/apd");
-    {
-        command = command.process_group(0);
-        command = unsafe {
-            command.pre_exec(|| {
-                // ignore the error?
-                switch_cgroups();
-                Ok(())
-            })
-        };
+    let mut command = Command::new("/data/adb/apd");
+    utils::background_command(&mut command);
+    match command.arg("uid-listener").spawn() {
+        Ok(mut child) => {
+            thread::spawn(move || {
+                let _ = child.wait();
+            });
+        }
+        Err(error) => warn!("Cannot start UID listener: {error}"),
     }
-    command = command.arg("uid-listener");
-
-    command
-        .spawn()
-        .map(|_| ())
-        .expect("[run_uid_monitor] Failed to run uid monitor");
 }
 
 pub fn on_boot_completed(superkey: Option<String>) -> Result<()> {
-    let key_len = superkey.as_ref().map(|s| s.len()).unwrap_or(0);
-    info!("[diag:boot_completed] ENTER superkey_present={} key_len={}", superkey.is_some(), key_len);
-
+    info!("boot-completed");
+    migrate_legacy_feature_paths();
     supercall::apply_sucompat(&superkey);
 
     // Clear UTS spoof boot safety flag — boot completed successfully
@@ -431,19 +612,23 @@ pub fn on_boot_completed(superkey: Option<String>) -> Result<()> {
     exec_fpd_umount();
 
     run_uid_monitor();
+    let unresolved = runtime_policy_unresolved(&superkey);
+    if unresolved == 0 {
+        info!("runtime policy check complete");
+    } else {
+        warn!("runtime policy check incomplete: {unresolved}");
+    }
     Ok(())
 }
 
 pub fn on_manager_boot_completed(superkey: Option<String>) -> Result<()> {
-    let key_len_before = superkey.as_ref().map(|s| s.len()).unwrap_or(0);
-    info!("[diag:manager_boot] ENTER superkey_present={} key_len_before={}", superkey.is_some(), key_len_before);
+    info!("manager boot fallback");
+    migrate_legacy_feature_paths();
 
     let superkey = superkey.or_else(|| {
-        info!("Manager boot fallback invoked without explicit superkey, defaulting to trusted-manager key 'su'");
+        info!("Manager boot fallback invoked without explicit authentication key");
         Some("su".to_string())
     });
-
-    info!("[diag:manager_boot] superkey_present={} key_len_after={}", superkey.is_some(), superkey.as_ref().map(|s| s.len()).unwrap_or(0));
 
     supercall::apply_sucompat(&superkey);
 
@@ -457,7 +642,9 @@ pub fn on_manager_boot_completed(superkey: Option<String>) -> Result<()> {
         supercall::apply_pathhide(&superkey);
     }
 
-    if Path::new(defs::UTS_SPOOF_ENABLE_FILE).exists() || Path::new(defs::UTS_SPOOF_RETRY_FILE).exists() {
+    if Path::new(defs::UTS_SPOOF_ENABLE_FILE).exists()
+        || Path::new(defs::UTS_SPOOF_RETRY_FILE).exists()
+    {
         info!("Manager boot fallback: applying UTS spoof");
         supercall::apply_uts_spoof(&superkey);
         if Path::new(defs::UTS_SPOOF_BOOT_PENDING).exists() {
@@ -472,26 +659,46 @@ pub fn on_manager_boot_completed(superkey: Option<String>) -> Result<()> {
     }
 
     if Path::new(defs::HIDE_SERVICE_FILE).exists() {
-        info!("Manager boot fallback: retrying fpd -hide");
         exec_fpd_hide();
     }
 
     if Path::new(defs::UMOUNT_SERVICE_FILE).exists() {
-        info!("Manager boot fallback: retrying fpd -umount");
         exec_fpd_umount();
     }
 
+    let unresolved = runtime_policy_unresolved(&superkey);
+    if unresolved > 0 {
+        anyhow::bail!("runtime policy verification incomplete: {unresolved}");
+    }
+    info!("runtime policy check complete");
     Ok(())
 }
 
 pub fn start_uid_listener() -> Result<()> {
+    use std::os::{fd::AsRawFd, unix::fs::OpenOptionsExt};
+    let listener_lock = fs::OpenOptions::new()
+        .write(true)
+        .create(true)
+        .truncate(false)
+        .mode(0o600)
+        .custom_flags(libc::O_NOFOLLOW | libc::O_CLOEXEC)
+        .open("/data/adb/ap/uid-listener.lock")?;
+    if unsafe { libc::flock(listener_lock.as_raw_fd(), libc::LOCK_EX | libc::LOCK_NB) } != 0 {
+        let error = std::io::Error::last_os_error();
+        if error.raw_os_error() == Some(libc::EWOULDBLOCK) {
+            info!("UID listener already running; duplicate invocation ignored");
+            return Ok(());
+        }
+        return Err(error.into());
+    }
+
     info!("start_uid_listener triggered!");
     println!("[start_uid_listener] Registering...");
 
     // create inotify instance
     const SYS_PACKAGES_LIST_TMP: &str = "/data/system/packages.list.tmp";
     let sys_packages_list_tmp = PathBuf::from(&SYS_PACKAGES_LIST_TMP);
-    let dir: PathBuf = sys_packages_list_tmp.parent().unwrap().into();
+    let dir = PathBuf::from("/data/system");
 
     let (tx, rx) = std::sync::mpsc::channel();
     let tx_clone = tx.clone();
@@ -500,11 +707,17 @@ pub fn start_uid_listener() -> Result<()> {
     {
         let mutex_clone = mutex.clone();
         thread::spawn(move || {
-            let mut signals = Signals::new([SIGTERM, SIGINT, SIGPWR]).unwrap();
-            if let Some(sig) = signals.forever().next() {
+            let Ok(mut signals) = Signals::new([SIGTERM, SIGINT, SIGPWR]) else {
+                warn!("Cannot register UID listener shutdown signals");
+                return;
+            };
+            for sig in signals.forever() {
                 log::warn!("[shutdown] Caught signal {sig}, refreshing package list...");
                 let skey = c"su";
                 refresh_ap_package_list(skey, &mutex_clone);
+                if sig == SIGTERM || sig == SIGINT {
+                    std::process::exit(0);
+                }
             }
         });
     }
@@ -518,7 +731,7 @@ pub fn start_uid_listener() -> Result<()> {
             }) => {
                 if paths.contains(&sys_packages_list_tmp) {
                     info!("[uid_monitor] System packages list changed, sending to tx...");
-                    tx_clone.send(false).unwrap()
+                    let _ = tx_clone.send(false);
                 }
             }
             Err(err) => warn!("inotify error: {err}"),
@@ -529,12 +742,8 @@ pub fn start_uid_listener() -> Result<()> {
 
     watcher.watch(dir.as_ref(), RecursiveMode::NonRecursive)?;
 
-    {
-        let skey = CStr::from_bytes_with_nul(b"su\0")
-            .expect("[start_uid_listener] CStr::from_bytes_with_nul failed");
-        info!("[uid_monitor] Performing initial refresh on startup...");
-        refresh_ap_package_list(&skey, &mutex);
-    }
+    // Register first, so changes during the initial refresh remain queued.
+    refresh_ap_package_list(c"su", &mutex);
 
     let mut debounce = false;
     while let Ok(delayed) = rx.recv() {
@@ -596,4 +805,36 @@ pub fn soft_reboot(superkey: Option<String>) -> Result<()> {
     on_services(superkey)?;
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn unsupported_properties_do_not_mask_supported_mismatches() {
+        let expected = ["locked", "green", "1", "enforcing"];
+
+        assert!(!property_policy_unresolved(
+            [None, None, None, None],
+            expected
+        ));
+        assert!(!property_policy_unresolved(
+            [
+                Some("locked".into()),
+                Some("green".into()),
+                Some("1".into()),
+                Some("enforcing".into()),
+            ],
+            expected
+        ));
+        assert!(property_policy_unresolved(
+            [Some("unlocked".into()), None, None, None,],
+            expected
+        ));
+        assert!(property_policy_unresolved(
+            [Some("locked".into()), Some("orange".into()), None, None,],
+            expected
+        ));
+    }
 }

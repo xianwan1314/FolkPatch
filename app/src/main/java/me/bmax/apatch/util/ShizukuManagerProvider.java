@@ -87,9 +87,11 @@ public class ShizukuManagerProvider extends ShizukuProvider {
                 if (latch.await(5, TimeUnit.SECONDS)) {
                     return reply[0];
                 }
+                Shizuku.removeBinderReceivedListener(listener);
                 Log.e(TAG, "Binder not received in 5s");
                 return null;
             } catch (InterruptedException e) {
+                Shizuku.removeBinderReceivedListener(listener);
                 Thread.currentThread().interrupt();
                 return null;
             }

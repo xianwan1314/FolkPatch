@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_action_search">Tìm kiếm</string>
+    <string name="core_action_clear">Xóa</string>
+    <string name="core_action_back">Quay lại</string>
+    <string name="core_action_close">Đóng</string>
+    <string name="core_action_more">Thêm</string>
+    <string name="core_action_refresh">Làm mới</string>
+    <string name="core_action_filter">Lọc</string>
+    <string name="core_action_save">Lưu</string>
+    <string name="core_action_send">Gửi</string>
+    <string name="core_action_download">Tải xuống</string>
+    <string name="core_action_config">Cấu hình</string>
+    <string name="core_action_delete">Xóa</string>
+    <string name="core_state_busy">Đang bận</string>
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_action_search">索</string>
+    <string name="core_action_clear">清除</string>
+    <string name="core_action_back">返</string>
+    <string name="core_action_close">閉</string>
+    <string name="core_action_more">餘</string>
+    <string name="core_action_refresh">更</string>
+    <string name="core_action_filter">濾</string>
+    <string name="core_action_save">存</string>
+    <string name="core_action_send">遣</string>
+    <string name="core_action_download">下載</string>
+    <string name="core_action_config">所參</string>
+    <string name="core_action_delete">除</string>
+    <string name="core_state_busy">用事</string>
+</resources>

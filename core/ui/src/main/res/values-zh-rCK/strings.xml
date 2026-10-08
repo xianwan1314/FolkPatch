@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_action_search">翻找</string>
+    <string name="core_action_clear">撇沫</string>
+    <string name="core_action_back">回灶</string>
+    <string name="core_action_close">熄火</string>
+    <string name="core_action_more">再添</string>
+    <string name="core_action_refresh">重炒</string>
+    <string name="core_action_filter">挑拣</string>
+    <string name="core_action_save">起锅</string>
+    <string name="core_action_send">上菜</string>
+    <string name="core_action_download">端走</string>
+    <string name="core_action_config">调味</string>
+    <string name="core_action_delete">倒掉</string>
+    <string name="core_state_busy">灶上</string>
+</resources>

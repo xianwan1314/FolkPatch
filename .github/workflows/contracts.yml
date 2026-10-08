@@ -1,0 +1,43 @@
+name: Contracts
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  source-length:
+    name: Source file length
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Self-test the guard
+        run: python3 scripts/test-source-file-length.py
+
+      - name: Check source file length
+        run: python3 scripts/check-source-file-length.py
+
+  package-boundaries:
+    name: Package boundaries
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Self-test the guard
+        run: python3 scripts/test-package-boundaries.py
+
+      - name: Check package boundaries
+        run: python3 scripts/check-package-boundaries.py
+
+  boot-patch-output:
+    name: Boot patch output
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Check boot patch output
+        run: python3 scripts/test_boot_patch_output.py

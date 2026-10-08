@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="launcher_icon_style_anime">أنيمي</string>
+    <string name="launcher_icon_style_geometry">هندسي</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">نمط الشريط السفلي العائم</string>
+    <string name="settings_bottom_bar_standard">الشريط السفلي القياسي</string>
+    <string name="settings_bottom_bar_drawer">الشريط السفلي الدرجي</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
@@ -65,6 +71,7 @@
     <string name="reboot_fastbootd">إعادة التشغيل إلى وضع FastbootD</string>
     <string name="about">حول</string>
     <string name="developer_and_maintainer">المطور | المشرف</string>
+    <string name="developer_profile_picture">الصورة الرمزية للمطور</string>
     <string name="settings_app_language">اللغة</string>
     <string name="system_default">افتراضي النظام</string>
     <string name="settings_global_namespace_mode">وضع مساحة الاسم العام</string>
@@ -202,6 +209,7 @@
     <string name="patch_item_skey">المفتاح الخارق</string>
     <string name="patch_custom_superkey">مفتاح خارق مخصص</string>
     <string name="patch_custom_superkey_summary">لا يزال بإمكانك تعيين مفتاح خارق لإدارة Root والنواة، المدير مفوض بتوقيع مدمج من النواة</string>
+    <string name="patch_custom_superkey_optional">اختياري؛ عادةً لا يحتاج المدير الموقّع إلى مفتاح مخصص</string>
     <string name="patch_item_set_skey_label">يجب أن يتراوح طول المفتاح الخارق بين 8 و 63 حرفًا وأن يتضمن أرقامًا وحروفًا، ولكن بدون أحرف خاصة.</string>
     <string name="patch_confirm_superkey">تأكيد المفتاح الخارق</string>
     <string name="patch_skey_mismatch">المفتاح الخارق غير متطابق</string>
@@ -606,8 +614,6 @@
     <string name="dpi_apply_settings">تطبيق</string>
     <string name="dpi_confirm_title">تأكيد تغيير DPI</string>
     <string name="dpi_confirm_message">تغيير DPI التطبيق من %1$s إلى %2$s؟</string>
-    <string name="settings_alt_icon">أيقونة بديلة</string>
-    <string name="alt_icon_summary">استخدم أيقونة المشغل البديلة</string>
     <string name="settings_magic_mount">Folk Mount API</string>
     <string name="settings_magic_mount_summary">تفعيل نظام تركيب الوحدات المدمج</string>
     <string name="settings_new_app_profile_enabled">الترخيص التلقائي للتطبيقات الجديدة</string>
@@ -660,6 +666,11 @@
     <string name="shizuku_log_copied">تم النسخ إلى الحافظة</string>
     <string name="shizuku_log_source_server">سجل الخادم</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">مفصّل</string>
+    <string name="shizuku_log_level_debug">تصحيح الأخطاء</string>
+    <string name="shizuku_log_level_info">معلومات</string>
+    <string name="shizuku_log_level_warn">تحذير</string>
+    <string name="shizuku_log_level_error">خطأ</string>
     <string name="shizuku_log_search_hint">البحث في السجلات</string>
 <string name="settings_app_title">عنوان التطبيق</string>
     <string name="app_title_custom">مخصص</string>
@@ -703,6 +714,9 @@
 
 
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">الافتراضي للتطبيق</string>
+    <string name="settings_font_mode_system">الافتراضي للنظام</string>
+    <string name="settings_font_mode_custom">مخصص</string>
     <string name="settings_custom_font">خط مخصص</string>
     <string name="settings_select_font_file">تحديد ملف الخط</string>
     <string name="settings_custom_font_enabled">تمكين الخط المخصص</string>
@@ -947,6 +961,42 @@
     <string name="settings_discrete_slider">شريط تمرير متقطع</string>
     <string name="settings_discrete_slider_desc">إظهار علامات التدرج على مسار شريط التمرير</string>
     <string name="settings_category_behavior">السلوك</string>
+    <string name="profile_edit_title">تعديل الملف الشخصي</string>
+    <string name="profile_nickname_label">الاسم المستعار</string>
+    <string name="profile_signature_label">التوقيع</string>
+    <string name="profile_choose_avatar">اختيار صورة</string>
+    <string name="profile_avatar_default">صورة افتراضية</string>
+    <string name="profile_avatar_custom">صورة مخصصة</string>
+    <string name="profile_avatar_opacity">شفافية الصورة الرمزية</string>
+    <string name="profile_avatar_source_title">اختيار مصدر الصورة الرمزية</string>
+    <string name="profile_avatar_source_local">اختيار من الجهاز</string>
+    <string name="profile_avatar_source_qq">صورة QQ الرمزية</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">رقم QQ</string>
+    <string name="profile_avatar_gravatar_hint">البريد الإلكتروني</string>
+    <string name="profile_avatar_fetch_failed">تعذّر جلب الصورة الرمزية</string>
+    <string name="profile_crop_avatar">قص الصورة</string>
+    <string name="profile_restore_default">استعادة الافتراضي</string>
+    <string name="settings_section_general_basics">اللغة والتحديثات</string>
+    <string name="settings_section_general_interface">الواجهة والحركة</string>
+    <string name="settings_section_general_root">سلوك Root</string>
+    <string name="settings_section_general_mount">النظام والربط</string>
+    <string name="settings_section_general_identity">هوية التطبيق</string>
+    <string name="settings_section_general_maintenance">الصيانة</string>
+    <string name="settings_section_behavior_display">عرض الشاشة الرئيسية</string>
+    <string name="settings_section_behavior_actions">الإجراءات والتثبيت</string>
+    <string name="settings_section_function_hide">الإخفاء والعزل</string>
+    <string name="settings_section_function_root">ميزات Root</string>
+    <string name="settings_section_function_mount">الربط وإلغاء الربط</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">المصادقة</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">نسخ احتياطي محلي</string>
+    <string name="settings_section_backup_cloud">نسخ احتياطي سحابي</string>
+    <string name="settings_section_module_display">عرض الوحدات</string>
+    <string name="settings_section_module_update">التحديثات والتثبيت</string>
+    <string name="settings_section_multimedia_music">موسيقى الخلفية</string>
+    <string name="settings_section_multimedia_sound">الصوت والاهتزاز</string>
     <string name="settings_category_function">الوظيفة</string>
     <string name="settings_use_legacy_su_page">تفويض المستخدم المتميز لصفحة واحدة</string>
     <string name="settings_use_legacy_su_page_summary">تم تبديل صفحة المستخدم المتميز إلى تصميم تفويض لصفحة واحدة</string>
@@ -1183,6 +1233,8 @@
     <string name="theme_download_finalizing">جارٍ الانتهاء...</string>
     <string name="settings_predictive_back">إيماءة العودة التنبؤية</string>
     <string name="settings_predictive_back_summary">تمكين رسوم إيماءة العودة التنبؤية المتحركة في Android 14+</string>
+    <string name="settings_expressive_motion">حركة تعبيرية</string>
+    <string name="settings_expressive_motion_summary">استخدم منحنيات الحركة في Material 3 Expressive</string>
 
     <string name="home_device_status_battery_charging">جارٍ الشحن</string>
     <string name="home_device_status_cpu_temp">درجة حرارة المعالج</string>
@@ -1272,6 +1324,11 @@
     <string name="color_style_monochrome">أحادي اللون</string>
     <string name="color_style_neutral">محايد</string>
     <string name="color_style_fidelity">دقة</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">التباين</string>
+    <string name="color_contrast_standard">قياسي</string>
+    <string name="color_contrast_medium">متوسط</string>
+    <string name="color_contrast_high">عالٍ</string>
     <string name="settings_focus_card_background">خلفية بطاقة FocusUI</string>
     <string name="settings_focus_card_background_enabled">تم تمكين خلفيات بطاقة FocusUI؛ اضغط مطولاً على بطاقة لإدارة خلفيتها</string>
     <string name="settings_focus_card_background_summary">تمكين خلفيات بطاقة FocusUI وإدارة الخلفية بالضغط المطول</string>
@@ -1344,4 +1401,33 @@
     <string name="kpm_installed">مثبّت</string>
     <string name="kpm_disabled">معطّل (يسري بعد إعادة التشغيل)</string>
     <string name="kpm_embedded_unload_invalid">لا يمكن إلغاء تحميل وحدات KPM المضمّنة؛ ستظل فعّالة بعد إعادة التشغيل.</string>
+    <string name="settings_faq">الأسئلة الشائعة</string>
+    <string name="settings_bug_feedback">الإبلاغ عن خطأ</string>
+    <string name="settings_clear_cache">مسح ذاكرة التخزين المؤقت</string>
+    <string name="settings_disclaimer">إخلاء المسؤولية</string>
+    <string name="settings_disclaimer_message">بعد عمل روت للجهاز، قد تتسبب تحديثات النظام أو الوحدات الخارجية أو عوامل خارجية أخرى في مخاطر وخسائر غير متوقعة، ويتعين عليك تحملها بنفسك. يرجى الاستمرار فقط بعد فهم المخاطر جيدًا.</string>
+    <string name="theme_store_subtitle">اكتشف سمات المجتمع وطبّقها</string>
+    <string name="script_library_subtitle">تشغيل وإدارة النصوص البرمجية المحلية</string>
+    <string name="plugin_subtitle">وسّع قدرات FolkPatch</string>
+    <string name="my_themes_subtitle">السمات التي حفظتها</string>
+    <string name="apm_api_marketplace_subtitle">تصفّح واجهات API التي يشاركها المجتمع</string>
+    <string name="theme_download_paused">متوقف مؤقتًا</string>
+    <string name="settings_wallpaper_gallery">معرض الخلفيات</string>
+    <string name="wallpaper_device_phone">هاتف</string>
+    <string name="wallpaper_device_tablet">جهاز لوحي</string>
+    <string name="wallpaper_layout_waterfall">شلال</string>
+    <string name="wallpaper_layout_stack">مكدّس</string>
+    <string name="wallpaper_device_mixed">مختلط</string>
+    <string name="wallpaper_display_options">خيارات العرض</string>
+    <string name="wallpaper_display_layout">التخطيط</string>
+    <string name="wallpaper_download">تنزيل</string>
+    <string name="wallpaper_cancel">إلغاء</string>
+    <string name="wallpaper_saved">تم الحفظ</string>
+    <string name="wallpaper_download_failed">فشل التنزيل</string>
+    <string name="wallpaper_loading">جارٍ تحميل الخلفيات</string>
+    <string name="wallpaper_empty">لا توجد خلفيات</string>
+    <string name="wallpaper_retry">إعادة المحاولة</string>
+    <string name="wallpaper_preview">معاينة</string>
+    <string name="wallpaper_set_background">تعيين كخلفية</string>
+    <string name="wallpaper_background_set">تم تحديث الخلفية</string>
 </resources>

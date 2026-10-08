@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="launcher_icon_style_anime">Аниме</string>
+    <string name="launcher_icon_style_geometry">Геометрия</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">Стиль плавающей нижней панели</string>
+    <string name="settings_bottom_bar_standard">Стандартная нижняя панель</string>
+    <string name="settings_bottom_bar_drawer">Выдвижная нижняя панель</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
@@ -68,6 +74,7 @@
     <string name="reboot_fastbootd">Перезагрузить в FastbootD</string>
     <string name="about">О приложении</string>
     <string name="developer_and_maintainer">Разработчик | Сопровождающий</string>
+    <string name="developer_profile_picture">Фото профиля разработчика</string>
     <string name="settings_app_language">Язык</string>
     <string name="system_default">По умолчанию системы</string>
     <string name="settings_global_namespace_mode">Глобальный режим пространства имён</string>
@@ -164,6 +171,7 @@
     <string name="patch_item_skey">SuperKey</string>
     <string name="patch_custom_superkey">Пользовательский SuperKey</string>
     <string name="patch_custom_superkey_summary">Вы по-прежнему можете использовать SuperKey для управления Root и ядром, менеджер авторизован встроенной подписью ядра</string>
+    <string name="patch_custom_superkey_optional">Необязательно; подписанному менеджеру обычно не требуется пользовательский ключ</string>
     <string name="patch_item_set_skey_label">SuperKey должен содержать 8-63 символа и включать цифры и буквы, но без специальных символов.</string>
     <string name="patch_confirm_superkey">Подтвердите SuperKey</string>
     <string name="patch_skey_mismatch">SuperKey не совпадает</string>
@@ -298,7 +306,7 @@
     <string name="hide_apatch_manager_failure">Не удалось скрыть. Пожалуйста, сообщите об ошибке!</string>
 
     <string name="setting_reset_su_path">Сбросить путь su</string>
-    <string name="setting_reset_su_new_path">Новый полный путь</string>\
+    <string name="setting_reset_su_new_path">Новый полный путь</string>
 
     <string name="settings_folkx_engine_title">Движок анимации FolkX</string>
     <string name="settings_folkx_engine_summary">Использовать плавные физические пружинные анимации при переключении страниц верхнего уровня</string>
@@ -612,8 +620,6 @@ KernelPatch требует образ boot для патча.
     <string name="dpi_apply_settings">Применить</string>
     <string name="dpi_confirm_title">Подтверждение изменения DPI</string>
     <string name="dpi_confirm_message">Изменить DPI приложения с %1$s на %2$s?</string>
-    <string name="settings_alt_icon">Альтернативная иконка</string>
-    <string name="alt_icon_summary">Использовать альтернативный значок запуска</string>
     <string name="settings_magic_mount">Folk Mount API</string>
     <string name="settings_magic_mount_summary">Включить встроенную систему монтирования модулей</string>
     <string name="settings_new_app_profile_enabled">Автоматическое разрешение для новых приложений</string>
@@ -666,6 +672,11 @@ KernelPatch требует образ boot для патча.
     <string name="shizuku_log_copied">Скопировано в буфер обмена</string>
     <string name="shizuku_log_source_server">Журнал сервера</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">Подробный</string>
+    <string name="shizuku_log_level_debug">Отладка</string>
+    <string name="shizuku_log_level_info">Информация</string>
+    <string name="shizuku_log_level_warn">Предупреждение</string>
+    <string name="shizuku_log_level_error">Ошибка</string>
     <string name="shizuku_log_search_hint">Поиск по журналам</string>
 <string name="settings_app_title">Заголовок приложения</string>
     <string name="app_title_custom">Пользовательский</string>
@@ -793,6 +804,9 @@ KernelPatch требует образ boot для патча.
     <string name="apm_copy_list_success">Список модулей скопирован</string>
 
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">По умолчанию в приложении</string>
+    <string name="settings_font_mode_system">По умолчанию в системе</string>
+    <string name="settings_font_mode_custom">Пользовательский</string>
     <string name="settings_custom_font">Пользовательский шрифт</string>
     <string name="settings_select_font_file">Выбрать файл шрифта</string>
     <string name="settings_custom_font_enabled">Пользовательский шрифт включен</string>
@@ -950,6 +964,42 @@ KernelPatch требует образ boot для патча.
     <string name="settings_discrete_slider">Дискретный ползунок</string>
     <string name="settings_discrete_slider_desc">Показать отметки на дорожке ползунка</string>
     <string name="settings_category_behavior">Поведение</string>
+    <string name="profile_edit_title">Изменить профиль</string>
+    <string name="profile_nickname_label">Никнейм</string>
+    <string name="profile_signature_label">Подпись</string>
+    <string name="profile_choose_avatar">Выбрать аватар</string>
+    <string name="profile_avatar_default">Аватар по умолчанию</string>
+    <string name="profile_avatar_custom">Свой аватар</string>
+    <string name="profile_avatar_opacity">Непрозрачность аватара</string>
+    <string name="profile_avatar_source_title">Выбрать источник аватара</string>
+    <string name="profile_avatar_source_local">Выбрать с устройства</string>
+    <string name="profile_avatar_source_qq">Аватар QQ</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">Номер QQ</string>
+    <string name="profile_avatar_gravatar_hint">Эл. почта</string>
+    <string name="profile_avatar_fetch_failed">Не удалось загрузить аватар</string>
+    <string name="profile_crop_avatar">Обрезать аватар</string>
+    <string name="profile_restore_default">Сбросить настройки</string>
+    <string name="settings_section_general_basics">Язык и обновления</string>
+    <string name="settings_section_general_interface">Интерфейс и анимация</string>
+    <string name="settings_section_general_root">Поведение Root</string>
+    <string name="settings_section_general_mount">Система и монтирование</string>
+    <string name="settings_section_general_identity">Идентификация приложения</string>
+    <string name="settings_section_general_maintenance">Обслуживание</string>
+    <string name="settings_section_behavior_display">Отображение на главном экране</string>
+    <string name="settings_section_behavior_actions">Действия и установка</string>
+    <string name="settings_section_function_hide">Скрытие и изоляция</string>
+    <string name="settings_section_function_root">Функции Root</string>
+    <string name="settings_section_function_mount">Монтирование и размонтирование</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">Аутентификация</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">Локальная копия</string>
+    <string name="settings_section_backup_cloud">Облачная копия</string>
+    <string name="settings_section_module_display">Отображение модулей</string>
+    <string name="settings_section_module_update">Обновления и установка</string>
+    <string name="settings_section_multimedia_music">Фоновая музыка</string>
+    <string name="settings_section_multimedia_sound">Звук и вибрация</string>
     <string name="settings_category_function">Функция</string>
     <string name="settings_use_legacy_su_page">Авторизация суперпользователя на одной странице</string>
     <string name="settings_use_legacy_su_page_summary">Страница суперпользователя переключена на одностраничный дизайн авторизации</string>
@@ -1204,6 +1254,8 @@ KernelPatch требует образ boot для патча.
     <string name="theme_download_finalizing">Завершение...</string>
     <string name="settings_predictive_back">Предиктивный жест назад</string>
     <string name="settings_predictive_back_summary">Включить анимацию предиктивного жеста назад (Android 14+)</string>
+    <string name="settings_expressive_motion">Выразительная анимация</string>
+    <string name="settings_expressive_motion_summary">Использовать кривые анимации Material 3 Expressive</string>
 
     <string name="home_device_status_battery_charging">Зарядка</string>
     <string name="home_device_status_cpu_temp">Температура ЦПУ</string>
@@ -1293,6 +1345,11 @@ KernelPatch требует образ boot для патча.
     <string name="color_style_monochrome">Монохромный</string>
     <string name="color_style_neutral">Нейтральный</string>
     <string name="color_style_fidelity">Точность</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">Контраст</string>
+    <string name="color_contrast_standard">Стандартный</string>
+    <string name="color_contrast_medium">Средний</string>
+    <string name="color_contrast_high">Высокий</string>
     <string name="settings_focus_card_background">Обои карточки FocusUI</string>
     <string name="settings_focus_card_background_enabled">Обои карточки FocusUI включены; удерживайте карточку для управления обоями</string>
     <string name="settings_focus_card_background_summary">Включить обои карточки FocusUI и управление обоями через удержание</string>
@@ -1356,4 +1413,33 @@ KernelPatch требует образ boot для патча.
     <string name="kpm_installed">Установлен</string>
     <string name="kpm_disabled">Отключён (вступит в силу после перезагрузки)</string>
     <string name="kpm_embedded_unload_invalid">Встроенные KPM нельзя выгрузить; после перезагрузки они останутся активными.</string>
+    <string name="settings_faq">Частые вопросы</string>
+    <string name="settings_bug_feedback">Сообщить об ошибке</string>
+    <string name="settings_clear_cache">Очистить кэш</string>
+    <string name="settings_disclaimer">Отказ от ответственности</string>
+    <string name="settings_disclaimer_message">После получения root-прав обновления системы, сторонние модули и другие внешние факторы могут привести к непредвиденным рискам и потерям. Вы принимаете эти риски на себя. Пожалуйста, продолжайте только после того, как полностью их осознаете.</string>
+    <string name="theme_store_subtitle">Открывайте и применяйте темы сообщества</string>
+    <string name="script_library_subtitle">Запуск и управление локальными скриптами</string>
+    <string name="plugin_subtitle">Расширьте возможности FolkPatch</string>
+    <string name="my_themes_subtitle">Сохранённые темы</string>
+    <string name="apm_api_marketplace_subtitle">Просмотр API от сообщества</string>
+    <string name="theme_download_paused">Приостановлено</string>
+    <string name="settings_wallpaper_gallery">Галерея обоев</string>
+    <string name="wallpaper_device_phone">Телефон</string>
+    <string name="wallpaper_device_tablet">Планшет</string>
+    <string name="wallpaper_layout_waterfall">Водопад</string>
+    <string name="wallpaper_layout_stack">Стопка</string>
+    <string name="wallpaper_device_mixed">Смешанный</string>
+    <string name="wallpaper_display_options">Параметры отображения</string>
+    <string name="wallpaper_display_layout">Макет</string>
+    <string name="wallpaper_download">Скачать</string>
+    <string name="wallpaper_cancel">Отмена</string>
+    <string name="wallpaper_saved">Сохранено</string>
+    <string name="wallpaper_download_failed">Ошибка загрузки</string>
+    <string name="wallpaper_loading">Загрузка обоев</string>
+    <string name="wallpaper_empty">Нет обоев</string>
+    <string name="wallpaper_retry">Повторить</string>
+    <string name="wallpaper_preview">Предпросмотр</string>
+    <string name="wallpaper_set_background">Сделать фоном</string>
+    <string name="wallpaper_background_set">Фон обновлён</string>
 </resources>

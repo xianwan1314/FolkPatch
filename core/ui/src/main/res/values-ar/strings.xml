@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_action_search">بحث</string>
+    <string name="core_action_clear">مسح</string>
+    <string name="core_action_back">رجوع</string>
+    <string name="core_action_close">إغلاق</string>
+    <string name="core_action_more">المزيد</string>
+    <string name="core_action_refresh">تحديث</string>
+    <string name="core_action_filter">تصفية</string>
+    <string name="core_action_save">حفظ</string>
+    <string name="core_action_send">إرسال</string>
+    <string name="core_action_download">تنزيل</string>
+    <string name="core_action_config">إعداد</string>
+    <string name="core_action_delete">حذف</string>
+    <string name="core_state_busy">مشغول</string>
+</resources>

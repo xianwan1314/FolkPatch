@@ -15,17 +15,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,8 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +39,8 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import me.bmax.apatch.R
+import me.bmax.apatch.ui.component.folk.FolkScaffold
+import me.bmax.apatch.ui.component.folk.FolkTitleStyle
 import me.bmax.apatch.ui.component.splicedLazyColumnGroup
 import me.bmax.apatch.ui.theme.BackgroundConfig
 import me.bmax.apatch.util.ui.NavigationBarsSpacer
@@ -58,7 +54,6 @@ fun LanguagePickerScreen(navigator: DestinationsNavigator) {
     val languagesValues = stringArrayResource(id = R.array.languages_values)
     val currentLocale = AppCompatDelegate.getApplicationLocales()[0]?.toLanguageTag()
     val flat = BackgroundConfig.isCustomBackgroundEnabled || BackgroundConfig.settingsBackgroundUri != null
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val languageList = remember { languages.toList() }
 
     // Track the most recent tap so the new selection is reflected instantly;
@@ -67,30 +62,13 @@ fun LanguagePickerScreen(navigator: DestinationsNavigator) {
     var lastSelectedIndex by remember { mutableStateOf(-1) }
     LaunchedEffect(currentLocale) { lastSelectedIndex = -1 }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        stringResource(R.string.settings_app_language),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = null)
-                    }
-                },
-                scrollBehavior = scrollBehavior,
-            )
-        },
-        containerColor = Color.Transparent,
+    FolkScaffold(
+        title = stringResource(R.string.settings_app_language),
+        titleStyle = FolkTitleStyle.Inline,
+        onBack = { navigator.popBackStack() },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .padding(paddingValues)
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = Modifier.padding(paddingValues),
             verticalArrangement = Arrangement.spacedBy(0.dp),
         ) {
             item { Spacer(Modifier.height(12.dp)) }
@@ -122,7 +100,7 @@ fun LanguagePickerScreen(navigator: DestinationsNavigator) {
                                 )
                             }
                         }
-                        .padding(horizontal = 16.dp, vertical = 14.dp),
+                        .padding(horizontal = 16.dp, vertical = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (index == 0) {

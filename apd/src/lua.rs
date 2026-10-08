@@ -99,7 +99,11 @@ fn append_plugin_log(lua: &Lua, line: &str) {
         return;
     };
     let log_path = Path::new(&dir).join("last_output.log");
-    if let Ok(mut file) = fs::OpenOptions::new().create(true).append(true).open(&log_path) {
+    if let Ok(mut file) = fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(&log_path)
+    {
         let _ = writeln!(file, "{line}");
     }
 }
@@ -130,9 +134,7 @@ pub fn read_text_lua(lua: &Lua) -> LuaResult<Function> {
 
 /// `getprop(name)` — read an Android system property.
 pub fn getprop_lua(lua: &Lua) -> LuaResult<Function> {
-    lua.create_function(|_, name: String| {
-        Ok(crate::utils::getprop(&name).unwrap_or_default())
-    })
+    lua.create_function(|_, name: String| Ok(crate::utils::getprop(&name).unwrap_or_default()))
 }
 
 /// `setprop(name, value)` — set an Android system property (bypasses read-only).
@@ -165,8 +167,14 @@ pub fn exec_lua(lua: &Lua) -> LuaResult<Function> {
         let table = lua.create_table()?;
         table.set("ok", output.status.success())?;
         table.set("code", output.status.code().unwrap_or(-1))?;
-        table.set("stdout", String::from_utf8_lossy(&output.stdout).into_owned())?;
-        table.set("stderr", String::from_utf8_lossy(&output.stderr).into_owned())?;
+        table.set(
+            "stdout",
+            String::from_utf8_lossy(&output.stdout).into_owned(),
+        )?;
+        table.set(
+            "stderr",
+            String::from_utf8_lossy(&output.stderr).into_owned(),
+        )?;
         Ok(table)
     })
 }
@@ -189,11 +197,9 @@ pub fn write_file_lua(lua: &Lua) -> LuaResult<Function> {
 
 /// `read_file(path)` — read a file's text content.
 pub fn read_file_lua(lua: &Lua) -> LuaResult<Function> {
-    lua.create_function(|_, path: String| {
-        match fs::read_to_string(&path) {
-            Ok(s) => Ok(s),
-            Err(e) => Err(mlua::Error::external(format!("read_file failed: {e}"))),
-        }
+    lua.create_function(|_, path: String| match fs::read_to_string(&path) {
+        Ok(s) => Ok(s),
+        Err(e) => Err(mlua::Error::external(format!("read_file failed: {e}"))),
     })
 }
 
@@ -219,9 +225,8 @@ pub fn chmod_lua(lua: &Lua) -> LuaResult<Function> {
             mlua::Value::Integer(i) => *i as u32,
             mlua::Value::String(s) => {
                 let s = s.to_string_lossy();
-                u32::from_str_radix(s.trim_start_matches('0'), 8).map_err(|e| {
-                    mlua::Error::external(format!("invalid mode '{s}': {e}"))
-                })?
+                u32::from_str_radix(s.trim_start_matches('0'), 8)
+                    .map_err(|e| mlua::Error::external(format!("invalid mode '{s}': {e}")))?
             }
             _ => return Err(mlua::Error::external("mode must be number or string")),
         };
@@ -308,7 +313,11 @@ pub fn list_dir_lua(lua: &Lua) -> LuaResult<Function> {
     lua.create_function(|lua, path: String| {
         let entries = match fs::read_dir(&path) {
             Ok(rd) => rd,
-            Err(e) => return Err(mlua::Error::external(format!("list_dir {path} failed: {e}"))),
+            Err(e) => {
+                return Err(mlua::Error::external(format!(
+                    "list_dir {path} failed: {e}"
+                )));
+            }
         };
         let table = lua.create_table()?;
         let mut i = 1;
@@ -433,9 +442,9 @@ pub fn bind_plugin_api(lua: &Lua) -> LuaResult<()> {
     Ok(())
 }
 
-pub fn exec_stage_lua(stage: &str, wait: bool, superkey: &str) -> Result<()> {
+pub fn exec_stage_lua(stage: &str, wait: bool) -> Result<()> {
     let stage_safe = stage.replace('-', "_");
-    run_lua(superkey, &stage_safe, true, wait).map_err(|e| anyhow::anyhow!("{}", e))?;
+    run_lua("", &stage_safe, true, wait).map_err(|e| anyhow::anyhow!("{}", e))?;
     Ok(())
 }
 
@@ -507,8 +516,8 @@ pub fn exec_plugin_stage(stage: &str) -> Result<()> {
 }
 
 fn run_plugin(id: &str, function: &str) -> LuaResult<()> {
-    let path = crate::plugin::plugin_path(id)
-        .map_err(|error| mlua::Error::external(error.to_string()))?;
+    let path =
+        crate::plugin::plugin_path(id).map_err(|error| mlua::Error::external(error.to_string()))?;
     let entry = crate::plugin::read_manifest_optional(id)
         .map(|m| crate::plugin::plugin_entry_name(&m).to_string())
         .unwrap_or_else(|| crate::plugin::PLUGIN_ENTRY.to_string());
@@ -533,12 +542,53 @@ pub fn run_plugin_callback(id: &str, function: &str) -> Result<()> {
     run_plugin(id, function).map_err(|error| anyhow::anyhow!(error.to_string()))
 }
 
+fn valid_daemon_function(function: &str) -> bool {
+    !function.is_empty()
+        && function.len() <= 64
+        && function
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || b"_-.:".contains(&byte))
+}
+
+fn acquire_daemon_lock(id: &str, function: &str) -> Result<Option<std::fs::File>> {
+    use std::os::{fd::AsRawFd, unix::fs::OpenOptionsExt};
+
+    crate::plugin::plugin_path(id)?;
+    anyhow::ensure!(
+        valid_daemon_function(function),
+        "Invalid daemon function name: {function}"
+    );
+    let dir = format!("{}plugin_daemons", defs::WORKING_DIR);
+    ensure_dir_exists(&dir)?;
+    let path = format!("{dir}/{id}.{function}.lock");
+    let file = fs::OpenOptions::new()
+        .read(true)
+        .write(true)
+        .create(true)
+        .truncate(false)
+        .mode(0o600)
+        .custom_flags(libc::O_NOFOLLOW | libc::O_CLOEXEC)
+        .open(path)?;
+    if unsafe { libc::flock(file.as_raw_fd(), libc::LOCK_EX | libc::LOCK_NB) } != 0 {
+        let error = std::io::Error::last_os_error();
+        if error.raw_os_error() == Some(libc::EWOULDBLOCK) {
+            return Ok(None);
+        }
+        return Err(error.into());
+    }
+    Ok(Some(file))
+}
+
 /// Run a plugin callback in a loop with a fixed interval.
 /// This is the target of `apd plugin daemon`.
 pub fn run_plugin_daemon(id: &str, function: &str, interval: u64) -> Result<()> {
     let interval = interval.max(1);
     let plugin_dir = Path::new(defs::PLUGIN_DIR).join(id);
     let disable_file = plugin_dir.join(defs::DISABLE_FILE_NAME);
+    let Some(_daemon_lock) = acquire_daemon_lock(id, function)? else {
+        info!("Plugin daemon {id}::{function} already running; duplicate ignored");
+        return Ok(());
+    };
     info!("Starting plugin daemon {id}::{function} every {interval}s");
     loop {
         // Stop if plugin is disabled or uninstalled
@@ -621,7 +671,7 @@ pub fn run_lua(id: &str, function: &str, on_each_module: bool, _wait: bool) -> m
         for pair in modules.pairs::<String, mlua::Table>() {
             let (_, module_table) = pair?;
             if let Ok(func_obj) = module_table.get::<mlua::Function>(function) {
-                func_obj.call::<()>(id)?;
+                func_obj.call::<()>(())?;
             }
         }
     } else {
@@ -631,4 +681,19 @@ pub fn run_lua(id: &str, function: &str, on_each_module: bool, _wait: bool) -> m
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn daemon_function_names_cannot_escape_the_lock_directory() {
+        for valid in ["main", "service_loop", "tick.v1", "worker:1"] {
+            assert!(valid_daemon_function(valid), "{valid}");
+        }
+        for invalid in ["", "../main", "main/loop", "main\\loop", "a b"] {
+            assert!(!valid_daemon_function(invalid), "{invalid}");
+        }
+    }
 }

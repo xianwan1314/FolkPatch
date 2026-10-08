@@ -95,7 +95,7 @@ public class ServiceStarter {
     private static boolean sendBinder(IBinder binder, String token, boolean retry) {
         String packageName = ServerConstants.MANAGER_APPLICATION_ID;
         String name = packageName + ".shizuku";
-        int userId = 0;
+        int userId = android.os.Process.myUid() / 100000;
         IContentProvider provider = null;
 
         try {
@@ -108,10 +108,11 @@ public class ServiceStarter {
                 Log.e(TAG, String.format("provider is dead %s %d", name, userId));
 
                 if (retry) {
-                    // For unknown reason, sometimes this could happens
-                    // Kill Shizuku app and try again could work
-                    ActivityManagerApis.forceStopPackageNoThrow(packageName, userId);
-                    Log.e(TAG, String.format("kill %s in user %d and try again", packageName, userId));
+                    // The provider may have died while the manager process was
+                    // being recreated. Retry without force-stopping the manager,
+                    // otherwise the UI process that requested the service can be
+                    // killed as a side effect.
+                    Log.e(TAG, String.format("provider dead for %s in user %d, retrying", packageName, userId));
                     Thread.sleep(1000);
                     return sendBinder(binder, token, false);
                 }

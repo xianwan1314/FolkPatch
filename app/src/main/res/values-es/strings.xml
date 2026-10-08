@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="launcher_icon_style_anime">Anime</string>
+    <string name="launcher_icon_style_geometry">Geométrico</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">Estilo de la barra inferior flotante</string>
+    <string name="settings_bottom_bar_standard">Barra inferior estándar</string>
+    <string name="settings_bottom_bar_drawer">Barra inferior de cajón</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
@@ -65,6 +71,7 @@
     <string name="reboot_fastbootd">Reiniciar en FastbootD</string>
     <string name="about">Acerca de</string>
     <string name="developer_and_maintainer">Desarrollador | Mantenedor</string>
+    <string name="developer_profile_picture">Foto de perfil del desarrollador</string>
     <string name="settings_app_language">Idioma</string>
     <string name="system_default">Predeterminado del sistema</string>
     <string name="settings_global_namespace_mode">Modo de espacio de nombres global</string>
@@ -202,6 +209,7 @@
     <string name="patch_item_skey">SuperKey</string>
     <string name="patch_custom_superkey">SuperKey personalizado</string>
     <string name="patch_custom_superkey_summary">Aún puedes configurar un SuperKey para gestionar Root y el kernel, el gestor está autorizado por la firma integrada del kernel</string>
+    <string name="patch_custom_superkey_optional">Opcional; el gestor firmado normalmente no necesita una clave personalizada</string>
     <string name="patch_item_set_skey_label">La SuperKey debe tener entre 8 y 63 caracteres e incluir números y letras, pero no caracteres especiales.</string>
     <string name="patch_confirm_superkey">Confirmar SuperKey</string>
     <string name="patch_skey_mismatch">SuperKey no coincide</string>
@@ -605,8 +613,6 @@ Aquí hay algunas posibles razones para el fallo de autenticación—por favor v
     <string name="dpi_apply_settings">Aplicar</string>
     <string name="dpi_confirm_title">Confirmar cambio de DPI</string>
     <string name="dpi_confirm_message">¿Cambiar DPI de la app de %1$s a %2$s?</string>
-    <string name="settings_alt_icon">Icono alternativo</string>
-    <string name="alt_icon_summary">Usar icono de lanzador alternativo</string>
     <string name="settings_magic_mount">Folk Mount API</string>
     <string name="settings_magic_mount_summary">Activar el sistema de montaje de módulos integrado</string>
     <string name="settings_new_app_profile_enabled">Autorización automática de apps nuevas</string>
@@ -659,6 +665,11 @@ Aquí hay algunas posibles razones para el fallo de autenticación—por favor v
     <string name="shizuku_log_copied">Copiado al portapapeles</string>
     <string name="shizuku_log_source_server">Registro del servidor</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">Detallado</string>
+    <string name="shizuku_log_level_debug">Depuración</string>
+    <string name="shizuku_log_level_info">Información</string>
+    <string name="shizuku_log_level_warn">Advertencia</string>
+    <string name="shizuku_log_level_error">Error</string>
     <string name="shizuku_log_search_hint">Buscar registros</string>
 <string name="settings_app_title">Título de la App</string>
     <string name="app_title_custom">Personalizado</string>
@@ -701,6 +712,9 @@ Aquí hay algunas posibles razones para el fallo de autenticación—por favor v
     <string name="settings_title_image_offset_x">Posición Horizontal</string>
 
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">Predeterminada de la aplicación</string>
+    <string name="settings_font_mode_system">Predeterminada del sistema</string>
+    <string name="settings_font_mode_custom">Personalizada</string>
     <string name="settings_custom_font">Fuente Personalizada</string>
     <string name="settings_select_font_file">Seleccionar archivo de fuente</string>
     <string name="settings_custom_font_enabled">Fuente Personalizada Habilitada</string>
@@ -940,6 +954,42 @@ Aquí hay algunas posibles razones para el fallo de autenticación—por favor v
     <string name="settings_discrete_slider">Control deslizante discreto</string>
     <string name="settings_discrete_slider_desc">Mostrar marcas en las pistas del control deslizante</string>
     <string name="settings_category_behavior">Comportamiento</string>
+    <string name="profile_edit_title">Editar perfil</string>
+    <string name="profile_nickname_label">Apodo</string>
+    <string name="profile_signature_label">Firma</string>
+    <string name="profile_choose_avatar">Elegir avatar</string>
+    <string name="profile_avatar_default">Avatar predeterminado</string>
+    <string name="profile_avatar_custom">Avatar personalizado</string>
+    <string name="profile_avatar_opacity">Opacidad del avatar</string>
+    <string name="profile_avatar_source_title">Elegir origen del avatar</string>
+    <string name="profile_avatar_source_local">Elegir desde el dispositivo</string>
+    <string name="profile_avatar_source_qq">Avatar de QQ</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">Número de QQ</string>
+    <string name="profile_avatar_gravatar_hint">Correo electrónico</string>
+    <string name="profile_avatar_fetch_failed">No se pudo obtener el avatar</string>
+    <string name="profile_crop_avatar">Recortar avatar</string>
+    <string name="profile_restore_default">Restaurar valores</string>
+    <string name="settings_section_general_basics">Idioma y actualizaciones</string>
+    <string name="settings_section_general_interface">Interfaz y animación</string>
+    <string name="settings_section_general_root">Comportamiento de Root</string>
+    <string name="settings_section_general_mount">Sistema y montaje</string>
+    <string name="settings_section_general_identity">Identidad de la aplicación</string>
+    <string name="settings_section_general_maintenance">Mantenimiento</string>
+    <string name="settings_section_behavior_display">Pantalla de inicio</string>
+    <string name="settings_section_behavior_actions">Acciones e instalación</string>
+    <string name="settings_section_function_hide">Ocultar y aislar</string>
+    <string name="settings_section_function_root">Funciones de Root</string>
+    <string name="settings_section_function_mount">Montar y desmontar</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">Autenticación</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">Copia local</string>
+    <string name="settings_section_backup_cloud">Copia en la nube</string>
+    <string name="settings_section_module_display">Visualización de módulos</string>
+    <string name="settings_section_module_update">Actualizaciones e instalación</string>
+    <string name="settings_section_multimedia_music">Música de fondo</string>
+    <string name="settings_section_multimedia_sound">Sonido y vibración</string>
     <string name="settings_category_function">Función</string>
     <string name="settings_use_legacy_su_page">Autorización de superusuario de página única</string>
     <string name="settings_use_legacy_su_page_summary">La página de superusuario cambió a diseño de autorización de página única</string>
@@ -1198,6 +1248,8 @@ Aquí hay algunas posibles razones para el fallo de autenticación—por favor v
     <string name="theme_download_finalizing">Finalizando...</string>
     <string name="settings_predictive_back">Gesto atrás predictivo</string>
     <string name="settings_predictive_back_summary">Habilitar la animación del gesto atrás predictivo de Android 14+</string>
+    <string name="settings_expressive_motion">Movimiento expresivo</string>
+    <string name="settings_expressive_motion_summary">Usa las curvas de movimiento de Material 3 Expressive</string>
 
     <string name="home_device_status_battery_charging">Cargando</string>
     <string name="home_device_status_cpu_temp">Temp. CPU</string>
@@ -1287,6 +1339,11 @@ Aquí hay algunas posibles razones para el fallo de autenticación—por favor v
     <string name="color_style_monochrome">Monocromo</string>
     <string name="color_style_neutral">Neutro</string>
     <string name="color_style_fidelity">Fidelidad</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">Contraste</string>
+    <string name="color_contrast_standard">Estándar</string>
+    <string name="color_contrast_medium">Medio</string>
+    <string name="color_contrast_high">Alto</string>
     <string name="settings_focus_card_background">Fondo de tarjeta FocusUI</string>
     <string name="settings_focus_card_background_enabled">Fondos de tarjeta FocusUI activados; mantén pulsada una tarjeta para gestionar su fondo</string>
     <string name="settings_focus_card_background_summary">Activar fondos de tarjeta FocusUI y gestión de fondo con pulsación larga</string>
@@ -1359,4 +1416,33 @@ Aquí hay algunas posibles razones para el fallo de autenticación—por favor v
     <string name="kpm_installed">Instalado</string>
     <string name="kpm_disabled">Desactivado (se aplicará después de reiniciar)</string>
     <string name="kpm_embedded_unload_invalid">Los KPM incrustados no se pueden descargar; seguirán activos después de reiniciar.</string>
+    <string name="settings_faq">Preguntas frecuentes</string>
+    <string name="settings_bug_feedback">Informar de un error</string>
+    <string name="settings_clear_cache">Borrar caché</string>
+    <string name="settings_disclaimer">Descargo de responsabilidad</string>
+    <string name="settings_disclaimer_message">Después de rootear el dispositivo, las actualizaciones del sistema, los módulos de terceros u otros factores externos pueden causar riesgos y pérdidas imprevistas. Debes asumirlos por tu cuenta. Asegúrate de entenderlos antes de continuar.</string>
+    <string name="theme_store_subtitle">Descubre y aplica temas de la comunidad</string>
+    <string name="script_library_subtitle">Ejecuta y administra scripts locales</string>
+    <string name="plugin_subtitle">Amplía lo que FolkPatch puede hacer</string>
+    <string name="my_themes_subtitle">Temas que has guardado</string>
+    <string name="apm_api_marketplace_subtitle">Explora las API compartidas por la comunidad</string>
+    <string name="theme_download_paused">En pausa</string>
+    <string name="settings_wallpaper_gallery">Galería de fondos</string>
+    <string name="wallpaper_device_phone">Teléfono</string>
+    <string name="wallpaper_device_tablet">Tableta</string>
+    <string name="wallpaper_layout_waterfall">Cascada</string>
+    <string name="wallpaper_layout_stack">Apilado</string>
+    <string name="wallpaper_device_mixed">Mixto</string>
+    <string name="wallpaper_display_options">Opciones de visualización</string>
+    <string name="wallpaper_display_layout">Diseño</string>
+    <string name="wallpaper_download">Descargar</string>
+    <string name="wallpaper_cancel">Cancelar</string>
+    <string name="wallpaper_saved">Guardado</string>
+    <string name="wallpaper_download_failed">Error al descargar</string>
+    <string name="wallpaper_loading">Cargando fondos</string>
+    <string name="wallpaper_empty">No hay fondos</string>
+    <string name="wallpaper_retry">Reintentar</string>
+    <string name="wallpaper_preview">Vista previa</string>
+    <string name="wallpaper_set_background">Establecer como fondo</string>
+    <string name="wallpaper_background_set">Fondo actualizado</string>
 </resources>

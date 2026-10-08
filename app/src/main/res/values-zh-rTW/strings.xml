@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="launcher_icon_style_anime">動漫</string>
+    <string name="launcher_icon_style_geometry">幾何</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">浮動底欄樣式</string>
+    <string name="settings_bottom_bar_standard">標準底欄</string>
+    <string name="settings_bottom_bar_drawer">抽屜底欄</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
@@ -68,6 +74,7 @@
     <string name="reboot_fastbootd">重新啟動至 FastbootD</string>
     <string name="about">關於</string>
     <string name="developer_and_maintainer">開發者 | 維護者</string>
+    <string name="developer_profile_picture">開發者頭像</string>
     <string name="settings_app_language">語言</string>
     <string name="system_default">系統預設</string>
     <string name="settings_global_namespace_mode">全域命名空間模式</string>
@@ -158,6 +165,7 @@
     <string name="patch_item_skey">超級密鑰</string>
     <string name="patch_custom_superkey">自訂超級密鑰</string>
     <string name="patch_custom_superkey_summary">你仍可以設定超級密鑰來管理 Root 以及內核，管理器已由內建簽名授權</string>
+    <string name="patch_custom_superkey_optional">可選；預設使用管理器簽名授權</string>
     <string name="patch_item_set_skey_label">超級密鑰至少需要８個字元，並且同時包含數字和字母。</string>
     <string name="patch_confirm_superkey">確認超級密鑰</string>
     <string name="patch_skey_mismatch">兩次輸入的超級密鑰不一致</string>
@@ -659,6 +667,11 @@ KernelPatch 需要修補 boot 映像檔。
     <string name="shizuku_log_copied">已複製到剪貼簿</string>
     <string name="shizuku_log_source_server">服務端日誌</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">詳細</string>
+    <string name="shizuku_log_level_debug">偵錯</string>
+    <string name="shizuku_log_level_info">資訊</string>
+    <string name="shizuku_log_level_warn">警告</string>
+    <string name="shizuku_log_level_error">錯誤</string>
     <string name="shizuku_log_search_hint">搜尋日誌</string>
 <string name="settings_app_title">應用程式標題</string>
     <string name="app_title_custom">自訂</string>
@@ -673,8 +686,6 @@ KernelPatch 需要修補 boot 映像檔。
     <string name="settings_custom_background_opacity">卡片透明度</string>
     <string name="settings_custom_background_blur">背景模糊效果</string>
     <string name="settings_custom_background_dim">背景暗度</string>
-    <string name="settings_alt_icon">備用圖標</string>
-    <string name="alt_icon_summary">使用備選啟動器圖標</string>
     <string name="settings_select_background_image">選擇背景圖片</string>
     <string name="settings_custom_background_summary">設定自訂背景圖片</string>
     <string name="settings_custom_background_saved">背景儲存成功</string>
@@ -778,6 +789,9 @@ KernelPatch 需要修補 boot 映像檔。
     <string name="apm_copy_list_success">模組列表已複製</string>
 
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">應用程式預設</string>
+    <string name="settings_font_mode_system">系統預設</string>
+    <string name="settings_font_mode_custom">自訂</string>
     <string name="settings_custom_font">自訂字體</string>
     <string name="settings_select_font_file">選擇字體檔案</string>
     <string name="settings_custom_font_enabled">已啟用自訂字體</string>
@@ -994,6 +1008,42 @@ KernelPatch 需要修補 boot 映像檔。
     <string name="settings_discrete_slider">離散滑塊</string>
     <string name="settings_discrete_slider_desc">在滑塊軌道上顯示刻度標記</string>
     <string name="settings_category_behavior">行為</string>
+    <string name="profile_edit_title">編輯資料</string>
+    <string name="profile_nickname_label">暱稱</string>
+    <string name="profile_signature_label">簽名</string>
+    <string name="profile_choose_avatar">選擇頭像</string>
+    <string name="profile_avatar_default">預設頭像</string>
+    <string name="profile_avatar_custom">自訂頭像</string>
+    <string name="profile_avatar_opacity">頭像透明度</string>
+    <string name="profile_avatar_source_title">選擇頭像來源</string>
+    <string name="profile_avatar_source_local">從本機選擇</string>
+    <string name="profile_avatar_source_qq">QQ 頭像</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">QQ 號碼</string>
+    <string name="profile_avatar_gravatar_hint">電子郵件</string>
+    <string name="profile_avatar_fetch_failed">無法取得頭像</string>
+    <string name="profile_crop_avatar">裁剪頭像</string>
+    <string name="profile_restore_default">恢復預設</string>
+    <string name="settings_section_general_basics">語言與更新</string>
+    <string name="settings_section_general_interface">介面與動效</string>
+    <string name="settings_section_general_root">Root 行為</string>
+    <string name="settings_section_general_mount">系統與掛載</string>
+    <string name="settings_section_general_identity">應用程式識別</string>
+    <string name="settings_section_general_maintenance">維護</string>
+    <string name="settings_section_behavior_display">首頁顯示</string>
+    <string name="settings_section_behavior_actions">操作與安裝</string>
+    <string name="settings_section_function_hide">隱藏與隔離</string>
+    <string name="settings_section_function_root">Root 功能</string>
+    <string name="settings_section_function_mount">掛載與卸載</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">身分驗證</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">本機備份</string>
+    <string name="settings_section_backup_cloud">雲端備份</string>
+    <string name="settings_section_module_display">模組顯示</string>
+    <string name="settings_section_module_update">更新與安裝</string>
+    <string name="settings_section_multimedia_music">背景音樂</string>
+    <string name="settings_section_multimedia_sound">音效與震動</string>
     <string name="settings_category_function">功能</string>
     <string name="settings_use_legacy_su_page">單頁超級用戶授權</string>
     <string name="settings_use_legacy_su_page_summary">超級用戶頁面改用單頁授權設計</string>
@@ -1235,6 +1285,8 @@ KernelPatch 需要修補 boot 映像檔。
     <string name="theme_download_finalizing">正在完成...</string>
     <string name="settings_predictive_back">預測性返回手勢</string>
     <string name="settings_predictive_back_summary">啟用 Android 14+ 的預測性返回手勢動畫</string>
+    <string name="settings_expressive_motion">實驗性動效</string>
+    <string name="settings_expressive_motion_summary">使用 Material 3 Expressive 的動態曲線</string>
 
     <string name="home_device_status_battery_charging">充電中</string>
     <string name="home_device_status_cpu_temp">CPU 溫度</string>
@@ -1324,6 +1376,11 @@ KernelPatch 需要修補 boot 映像檔。
     <string name="color_style_monochrome">單色</string>
     <string name="color_style_neutral">中性</string>
     <string name="color_style_fidelity">保真</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">對比度</string>
+    <string name="color_contrast_standard">標準</string>
+    <string name="color_contrast_medium">中等</string>
+    <string name="color_contrast_high">高</string>
     <string name="settings_title_image_permission_required">請先授予儲存空間權限才能選擇標題圖片</string>
     <string name="settings_background_permission_required">請先授予儲存空間權限才能選擇背景圖片</string>
     <string name="settings_sound_effect_save_failed">儲存音效檔案失敗</string>
@@ -1349,4 +1406,33 @@ KernelPatch 需要修補 boot 映像檔。
     <string name="kpm_installed">已安裝</string>
     <string name="kpm_disabled">已停用（重新啟動後生效）</string>
     <string name="kpm_embedded_unload_invalid">嵌入的 KPM 無法卸載；重新啟動後仍會保持啟用。</string>
+    <string name="settings_faq">常見問題</string>
+    <string name="settings_bug_feedback">Bug 回報</string>
+    <string name="settings_clear_cache">清除快取檔案</string>
+    <string name="settings_disclaimer">免責聲明</string>
+    <string name="settings_disclaimer_message">在裝置上進行 Root 後，系統更新、第三方模組或其它外部因素可能造成無法預期的風險與損失，需由你自行承擔。請在充分了解風險後再繼續使用。</string>
+    <string name="theme_store_subtitle">探索並套用社群主題</string>
+    <string name="script_library_subtitle">執行與管理本機指令碼</string>
+    <string name="plugin_subtitle">擴充 FolkPatch 的能力</string>
+    <string name="my_themes_subtitle">你儲存的主題</string>
+    <string name="apm_api_marketplace_subtitle">瀏覽社群分享的 API</string>
+    <string name="theme_download_paused">已暫停</string>
+    <string name="settings_wallpaper_gallery">桌布圖鑑</string>
+    <string name="wallpaper_device_phone">手機</string>
+    <string name="wallpaper_device_tablet">平板</string>
+    <string name="wallpaper_layout_waterfall">瀑布流</string>
+    <string name="wallpaper_layout_stack">堆疊</string>
+    <string name="wallpaper_device_mixed">混合</string>
+    <string name="wallpaper_display_options">顯示選項</string>
+    <string name="wallpaper_display_layout">版面</string>
+    <string name="wallpaper_download">下載</string>
+    <string name="wallpaper_cancel">取消</string>
+    <string name="wallpaper_saved">已儲存</string>
+    <string name="wallpaper_download_failed">下載失敗</string>
+    <string name="wallpaper_loading">正在載入桌布</string>
+    <string name="wallpaper_empty">沒有桌布</string>
+    <string name="wallpaper_retry">重試</string>
+    <string name="wallpaper_preview">預覽</string>
+    <string name="wallpaper_set_background">設為背景</string>
+    <string name="wallpaper_background_set">背景已更新</string>
 </resources>

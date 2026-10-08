@@ -74,7 +74,7 @@ pub fn run(
         const SUPERCALL_HELLO: c_long = 0x1000;
         const SUPERCALL_HELLO_MAGIC: c_long = 0x11581158;
         let key = b"su\0";
-        let version_code: u32 = (0 << 16) | (13 << 8) | 1;
+        let version_code: u32 = (13 << 8) | 1;
         let cmd = ((version_code as c_long) << 32) | (0x1158 << 16) | (SUPERCALL_HELLO & 0xFFFF);
         let ret = unsafe { libc::syscall(__NR_SUPERCALL, key.as_ptr(), cmd) };
         if ret == SUPERCALL_HELLO_MAGIC {
@@ -119,4 +119,23 @@ pub fn run(
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_common_android_kernel_release_formats() {
+        assert_eq!(
+            parse_kmi("5.15.123-android14-4-g12345678-abcd1234").as_deref(),
+            Some("android14-5.15")
+        );
+        assert_eq!(
+            parse_kmi("Linux version 6.6.118-android15-8-gabc").as_deref(),
+            Some("android15-6.6")
+        );
+        assert_eq!(parse_kmi("6.1.0"), None);
+        assert_eq!(parse_kmi(""), None);
+    }
 }

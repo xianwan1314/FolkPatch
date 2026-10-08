@@ -1,0 +1,88 @@
+{
+  "items": [
+    {
+      "title": "Yazılım özellikleri",
+      "body": "FolkPatch, KernelPatch kullanarak çekirdek düzeyinde root sağlayan ve bunu bir yönetici, modül sistemi ve daha fazlasıyla genişleten bir APatch çatalıdır.\n\n• Superuser: root izni yönetimi ve yetkilendirme\n• APM: Android modülleri\n• KPM: çekirdek modülleri\n• Magic Mount: modül bağlama sağlar\n• Meta Module: bir meta modülün modül bağlamayı devralmasını sağlar\n• Modül yönetimi: modülleri yükleme, etkinleştirme, devre dışı bırakma ve kaldırma\n• Shizuku: Shizuku hizmet desteği sağlar"
+    },
+    {
+      "title": "1. Bootloader kilidini açmam FolkPatch kullanmak için gerekli mi?",
+      "body": "Genellikle evet. FolkPatch kurulumu normalde cihazın bootloader kilidinin açık olmasını gerektirir, çünkü FolkPatch cihazın boot image dosyasını yamalar ve flaşlar.\n\nKurulumdan önce bootloader kilidinin açık olduğundan emin olun ve mevcut sistem sürümünüzle eşleşen orijinal boot.img dosyasını yedekleyin. Yanlış veya uyumsuz bir image flaşlamak cihazın açılmamasına neden olabilir."
+    },
+    {
+      "title": "2. FolkPatch, APatch ve KernelPatch arasındaki ilişki nedir?",
+      "body": "FolkPatch, APatch çatalıdır. KernelPatch, FolkPatch’in çekirdek düzeyinde root sağlamak için altta kullandığı çekirdek yamalama bileşenidir.\n\nBasitçe söylemek gerekirse, KernelPatch düşük düzeyli çekirdek yamalama yeteneğini sağlar, APatch bunun üzerine bir Android root çözümü inşa eder ve FolkPatch APatch’i özellikler ve bir yönetici ile genişletmeye devam eder.\n\nBu nedenle KernelPatch, FolkPatch’in sunduğu başka bir root yöntemi değildir ve KernelPatch ile FolkPatch arasında seçim yapılacak iki ayrı yamalama yöntemi olarak anlaşılmamalıdır."
+    },
+    {
+      "title": "3. Cihazım FolkPatch’i destekliyor mu?",
+      "body": "FolkPatch şu anda Linux çekirdek sürümü 3.18 ile 6.18 arasındaki cihazları destekler ve ARM64 mimarisi ile KernelPatch uyumlu bir çekirdek ortamı gerektirir.\n\nDesteklenen aralıkta bir çekirdek sürümü olması uyumluluğu garanti etmez. Üretici çekirdekleri, üçüncü taraf çekirdekler ve özel olarak değiştirilmiş çekirdekler yine de uyumluluk sorunları yaşayabilir.\n\nCihazınız standart dışı veya yoğun şekilde özelleştirilmiş bir çekirdek kullanıyorsa, önce gerçek uyumluluğunu doğrulayın."
+    },
+    {
+      "title": "4. FolkPatch hangi bölümü yamalıyor? init_boot yamalanabilir mi?",
+      "body": "FolkPatch şu anda boot image dosyasını yamalar.\n\nMevcut sistem sürümünüzle eşleşen orijinal boot.img dosyasını kullanın ve init_boot.img, vendor_boot.img veya diğer boot image dosyalarını yama hedefi olarak kullanmayın.\n\nCihazınız alışılmadık bir boot düzenine sahipse, önce cihazın gerçekte hangi boot bölümünü kullandığını ve bunun orijinal image dosyasını doğrulayın."
+    },
+    {
+      "title": "5. Yamalama veya flaşlama sonrası cihaz açılmazsa ne yapmalıyım?",
+      "body": "Açılmayan bir cihaz genellikle uyumsuz bir boot image, uyumsuz bir KernelPatch/çekirdek kombinasyonu, yanlış bölümün flaşlanması veya başlangıcı bozan bir modülden kaynaklanır.\n\nCihaz hâlâ Fastboot veya Recovery moduna girebiliyorsa, önce yedeklediğiniz orijinal boot.img dosyasını geri yükleyin.\n\nSorun bir modülün yüklenmesi veya güncellenmesinden sonra ortaya çıktıysa, önce en son değiştirilen APM veya KPM modülünü kontrol edin. Orijinal boot image yedeği olmadan tekrar tekrar flaşlama yapmayın."
+    },
+    {
+      "title": "6. Yüklü bir modül etkili olmazsa ne yapmalıyım?",
+      "body": "Önce modülün yüklü ve etkin olduğundan emin olun, ardından modülün kendisinin belirttiği şekilde cihazı yeniden başlatın.\n\nAPM ve KPM farklı şekilde yüklenir ve bazı modüller belirli bir Android sürümüne, çekirdek sürümüne veya diğer modüllere bağlıdır, bu nedenle başarılı bir kurulum modülün çalışacağını garanti etmez.\n\nBir modül etkisizse önce yeniden başlatın; yine çalışmıyorsa modül sürümünü, uyumluluğunu ve ilgili günlükleri kontrol edin."
+    },
+    {
+      "title": "7. Bir modül yüklendikten sonra cihaz düzgün açılmazsa ne yapmalıyım?",
+      "body": "Bir modülü yükledikten veya güncelledikten sonra takılı bir başlangıç animasyonu, rastgele yeniden başlatmalar görürseniz veya sisteme giremiyorsanız, önce en son yüklenen veya güncellenen modülden şüphelenin.\n\nHâlâ açılabiliyorsanız, en son yüklenen modülü devre dışı bırakın veya kaldırın. Açılamıyorsanız, modülü cihazınızın kurtarma seçeneklerine göre ele alın ve gerekirse orijinal boot.img dosyasını geri yükleyin.\n\nÖzellikle KPM çekirdekte çalışır, bu nedenle uyumluluk sorunları doğrudan sistem başlangıcını bozabilir. Kaynağı bilinmeyen bir KPM yüklemeden önce kaynağını ve mevcut çekirdeğinizle uyumluluğunu doğrulayın."
+    },
+    {
+      "title": "8. APM ile KPM arasındaki fark nedir?",
+      "body": "APM ve KPM, FolkPatch’in desteklediği iki modül türüdür.\n\n• APM: Android sistem özelliklerini değiştiren veya genişleten Android modülleri\n• KPM: çekirdek düzeyinde çekirdeği genişleten veya değiştiren çekirdek modülleri\n\nFarklı düzeylerde çalışırlar ve farklı amaçlara hizmet ederler. Modül yazarları modülün nasıl uygulandığına göre APM veya KPM seçer."
+    },
+    {
+      "title": "9. Root verildi ama bir uygulama hâlâ root yok diyor. Ne yapmalıyım?",
+      "body": "Önce superuser sayfasını açın ve uygulamaya root verildiğini doğrulayın, ardından uygulamayı tamamen kapatıp yeniden başlatın.\n\nYetkilendirme sorunsuzsa ama uygulama hâlâ root algılayamıyorsa, su yolu, SELinux durumu, bağlama ortamı veya diğer sistem özellikleri gibi başka root kontrolleri kullanıyor olabilir.\n\nBazı cihazlarda KernelSU veya Magisk gibi başka root çözümlerinden kalıntılar da olabilir. Birden fazla root ortamı çakışabilir, bu nedenle başka bir root yöneticisinin veya ilgili kalıntıların olup olmadığını kontrol edin."
+    },
+    {
+      "title": "10. Root yolu neden /system/bin/kp olarak görünüyor?",
+      "body": "Sistemde başka bir root çözümü veya ilgili kalıntılar varsa, FolkPatch mevcut ortamla çakışmayı önlemek için root yolu olarak /system/bin/kp kullanabilir.\n\nGeleneksel /system/bin/su yolunu kullanmak istiyorsanız, önce diğer root çözümünün kaldırıldığından ve kalıntılarının temizlendiğinden emin olun, ardından yeniden yapılandırın.\n\nRoot yolunu değiştirmenin bazı uygulamalarda root algılamasını ve uyumluluğu etkileyebileceğini unutmayın."
+    },
+    {
+      "title": "11. Neden root isteği görünmüyor?",
+      "body": "Önce FolkPatch’in kendi root durumunun normal olduğundan ve superuser sayfasının çalıştığından emin olun.\n\nRoot çalışıyor ama uygulama istem göstermiyorsa, uygulamayı yeniden başlatmayı deneyin ve kalıcı olarak root reddedecek şekilde ayarlanıp ayarlanmadığını kontrol edin.\n\nSorun bir KPM veya APM yüklendikten veya güncellendikten sonra ortaya çıktıysa, sorunu daraltmak için önce en son değiştirilen modülü devre dışı bırakın."
+    },
+    {
+      "title": "12. Yükseltmeden sonra KernelPatch sürümü neden değişmiyor?",
+      "body": "KernelPatch’i yükseltip yeniden başlattıktan sonra cihaz hâlâ eski sürümü gösteriyorsa, önce bir KPM’in kritik bölümlere yazmayı engelleyip engellemediğini kontrol edin.\n\nBazı tuğlalanmayı önleyen KPM’ler boot ve diğer kritik bölümlere yapılan yazmaları engeller ve bu da KernelPatch güncellemesinin başarısız olmasına neden olur. KernelPatch’i yükseltmeden önce bölüm yazmalarını etkileyebilecek KPM’leri geçici olarak devre dışı bırakın.\n\nAyrıca mevcut boot image dosyasının cihazın mevcut sistem sürümüyle eşleştiğini ve yeni KernelPatch sürümünün çekirdeğinizle uyumlu olduğunu doğrulayın."
+    },
+    {
+      "title": "13. Android güncellemesinden sonra root neden kayboldu?",
+      "body": "A/B sorunsuz güncellemelerde sistem güncellemesi normalde diğer yuvaya yazılır. Yeni yuvaya geçildikten sonra bu yuvanın boot image dosyası FolkPatch tarafından yamalanmamış olabilir, bu nedenle root geçici olarak kaybolur.\n\nFolkPatch cihazınızda etkin olmayan yuvaya kurulumu destekliyorsa, OTA tamamlandıktan sonra ve yeni sisteme yeniden başlatmadan önce oraya kurabilirsiniz.\n\nZaten yeni sisteme başlatıp rootu kaybettiyseniz, o sistem sürümüyle eşleşen orijinal boot.img dosyasını edinin, yamalayın ve tekrar flaşlayın."
+    },
+    {
+      "title": "14. FolkPatch 4.3 ve sonrası neden artık SuperKey kullanmıyor?",
+      "body": "FolkPatch 4.3 ve sonrası, yöneticiyi eski SuperKey mekanizması yerine APK imza doğrulamasıyla kimlik doğrular.\n\nBu nedenle güncel bir FolkPatch sürümünde eski kılavuzları izleyerek bir SuperKey oluşturmanız veya yapılandırmanız gerekmez. Eski bir KernelPatch veya eski yönetici ile kimlik doğrulama mekanizması güncel sürümden farklı olabilir."
+    },
+    {
+      "title": "15. FolkPatch’i yeniden yükledikten sonra kimlik doğrulama neden başarısız oluyor?",
+      "body": "FolkPatch yönetici için APK imza kimlik doğrulaması kullanır. Yöneticiyi kaldırıp yeniden yüklerseniz, KernelPatch hâlâ önceki yöneticinin durumunu tutuyor olabilir, bu nedenle yeniden yüklemeden sonra kimlik doğrulama geçici olarak başarısız olabilir.\n\nBu durumda, KernelPatch mevcut yöneticiyi yeniden algılayabilsin diye önce cihazı yeniden başlatın. Sorun devam ederse, KernelPatch ve FolkPatch yönetici sürümlerinizin eşleştiğini doğrulayın."
+    },
+    {
+      "title": "16. Eski bir KernelPatch güncel FolkPatch ile neden kimlik doğrulayamıyor?",
+      "body": "Yönetici kimlik doğrulaması KernelPatch’in imza doğrulamasına bağlıdır. Eski KernelPatch sürümleri bu yetenekten yoksundur, bu nedenle güncel FolkPatch ile kimlik doğrulamayı tamamlayamazlar.\n\nGüncel bir FolkPatch sürümü kullanıyorsanız, KernelPatch sürümünün güncel kimlik doğrulama mekanizmasının gereksinimlerini karşıladığından emin olun."
+    },
+    {
+      "title": "17. FolkPatch’i nasıl kaldırırım?",
+      "body": "Cihazın mevcut durumuna göre bir kaldırma yöntemi seçin.\n\n• Yöneticiden kaldırma: FolkPatch’in sunduğu kaldırma özelliğini kullanın\n• Recovery ile kaldırma: eşleşen sürümün kaldırma paketiyle geri yükleyin\n• Elle geri yükleme: yedeklediğiniz orijinal boot.img dosyasını geri flaşlayın\n\nCihazda şu anda APM veya KPM ile ilgili sorunlar varsa, kaldırmadan veya geri yüklemeden önce bu modülleri ele alın."
+    },
+    {
+      "title": "18. Çekirdeğim 3.18–6.18 aralığında olduğu hâlde neden hâlâ desteklenmiyor diyor?",
+      "body": "Çekirdek sürümü aralığı yalnızca FolkPatch’in temel uyumluluk gereksinimidir; her çekirdeğin KernelPatch ile çalışacağını garanti etmez.\n\nFarklı üretici ve üçüncü taraf çekirdekleri alışılmadık yapılara, sembollere, yapılandırmalara veya değişikliklere sahip olabilir ve 3.18–6.18 aralığında olsalar bile yamalama başarısız olabilir.\n\nÇekirdek desteklenmiyor sorunuyla karşılaşırsanız, önce boot.img dosyasının mevcut sistemden geldiğini doğrulayın ve bilinen özel çekirdek uyumluluk sorunlarını kontrol edin. Tam uyumluluğu yalnızca çekirdek sürüm numarasına bakarak değerlendirmeyin."
+    },
+    {
+      "title": "19. Bir sorun bildirirken hangi bilgileri sağlamalıyım?",
+      "body": "Bir sorun bildirirken mümkün olduğunca aşağıdakileri sağlayın:\n\n• Cihaz üreticisi ve tam modeli\n• Android sürümü\n• Linux çekirdek sürümü\n• FolkPatch sürümü\n• KernelPatch sürümü\n• Mevcut boot.img dosyasının mevcut sistem sürümünden gelip gelmediği\n• Yüklü APM ve KPM\n• Tam hata mesajı veya günlükler\n• Sorun ortaya çıkmadan önce ne yaptığınız\n\nSorun root yetkilendirmesi, bir KernelPatch güncellemesi veya modüllerle ilgiliyse, yakın zamanda ilgili bir şey yükleyip güncellediğinizi veya kaldırdığınızı da belirtin."
+    },
+    {
+      "title": "20. FolkPatch’i kullanmadan önce nelere dikkat etmeliyim?",
+      "body": "Root, boot image yamalama ve APM/KPM yükleme sistem kararlılığını etkileyebilir.\n\nFolkPatch’i yüklemeden veya önemli bir güncelleme yapmadan önce, mevcut sisteminizle eşleşen orijinal boot.img dosyasını hazırlayın ve cihazın Fastboot veya Recovery moduna girebildiğinden emin olun.\n\nÜçüncü taraf modülleri yüklemeden önce kaynağın güvenilir olduğundan emin olun ve Android sürümünüz, çekirdeğiniz ve FolkPatch sürümünüzle uyumluluğunu kontrol edin."
+    }
+  ]
+}

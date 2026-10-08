@@ -66,14 +66,7 @@ object ModuleShortcut {
     }
 
     private fun getLauncherComponent(context: Context): ComponentName {
-        val prefs = APApplication.sharedPreferences
-        val useAlt = prefs.getBoolean("use_alt_icon", false)
-        val pkg = context.packageName
-        return if (useAlt) {
-            ComponentName(pkg, "me.bmax.apatch.ui.MainActivityAlias")
-        } else {
-            ComponentName(pkg, "me.bmax.apatch.ui.MainActivity")
-        }
+        return LauncherIconUtils.enabledLauncherComponent(context)
     }
 
     fun createModuleActionShortcut(

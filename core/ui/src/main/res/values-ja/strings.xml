@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_action_search">検索</string>
+    <string name="core_action_clear">クリア</string>
+    <string name="core_action_back">戻る</string>
+    <string name="core_action_close">閉じる</string>
+    <string name="core_action_more">その他</string>
+    <string name="core_action_refresh">更新</string>
+    <string name="core_action_filter">フィルター</string>
+    <string name="core_action_save">保存</string>
+    <string name="core_action_send">送信</string>
+    <string name="core_action_download">ダウンロード</string>
+    <string name="core_action_config">設定</string>
+    <string name="core_action_delete">削除</string>
+    <string name="core_state_busy">処理中</string>
+</resources>

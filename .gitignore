@@ -28,7 +28,11 @@ fpd/target/
 fpd/.cargo/
 
 # demo project
-demo
+.research
 KernelPatch
+
+# Python
+__pycache__/
+*.pyc
 winpatch/vendor/
 winpatch/target/

@@ -23,7 +23,8 @@ data class UmountConfig(
 object UmountConfigManager {
     private const val TAG = "UmountConfigManager"
     private const val CONFIG_FILE_NAME = "umount_config.json"
-    private const val UMOUNT_PATH_FILE = "/data/adb/fp/UmountPATH"
+    private const val UMOUNT_PATH_FILE = "/data/adb/ap/UmountPATH"
+    private const val LEGACY_UMOUNT_PATH_FILE = "/data/adb/fp/UmountPATH"
 
     // 当前配置状态
     var isEnabled = mutableStateOf(false)
@@ -44,7 +45,10 @@ object UmountConfigManager {
             } catch (_: Exception) { false }
 
             val pathsContent = try {
-                val job = shell.newJob().add("cat $UMOUNT_PATH_FILE 2>/dev/null")
+                val job = shell.newJob().add(
+                    "if [ ! -e $UMOUNT_PATH_FILE ] && [ -e $LEGACY_UMOUNT_PATH_FILE ]; then cp -af $LEGACY_UMOUNT_PATH_FILE $UMOUNT_PATH_FILE && rm -f $LEGACY_UMOUNT_PATH_FILE; fi",
+                    "cat $UMOUNT_PATH_FILE 2>/dev/null",
+                )
                 val list = mutableListOf<String>()
                 job.to(list, null).exec()
                 list.joinToString("\n")
@@ -169,7 +173,7 @@ object UmountConfigManager {
             val shell = getRootShell()
 
             // 确保目录存在
-            shell.newJob().add("mkdir -p /data/adb/fp/bin").exec()
+            shell.newJob().add("mkdir -p /data/adb/ap").exec()
 
             // 写入临时文件
             val tempFile = File(cacheDir, "UmountPATH_temp")
@@ -179,7 +183,9 @@ object UmountConfigManager {
             val result = shell.newJob().add(
                 "cp ${tempFile.absolutePath} $UMOUNT_PATH_FILE",
                 "chmod 644 $UMOUNT_PATH_FILE",
-                "restorecon $UMOUNT_PATH_FILE"
+                "restorecon $UMOUNT_PATH_FILE",
+                "rm -f $LEGACY_UMOUNT_PATH_FILE",
+                "rmdir /data/adb/fp/bin /data/adb/fp 2>/dev/null || true"
             ).exec()
 
             tempFile.delete()
@@ -203,7 +209,10 @@ object UmountConfigManager {
     private fun deleteUmountPathFile(context: Context): Boolean {
         return try {
             val shell = getRootShell()
-            val result = shell.newJob().add("rm -f $UMOUNT_PATH_FILE").exec()
+            val result = shell.newJob().add(
+                "rm -f $UMOUNT_PATH_FILE $LEGACY_UMOUNT_PATH_FILE",
+                "rmdir /data/adb/fp/bin /data/adb/fp 2>/dev/null || true",
+            ).exec()
 
             if (result.isSuccess) {
                 Log.d(TAG, "删除 UmountPATH 文件成功")

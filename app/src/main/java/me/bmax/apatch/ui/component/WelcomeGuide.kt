@@ -1,11 +1,9 @@
 package me.bmax.apatch.ui.component
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
@@ -22,14 +20,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import me.bmax.apatch.ui.component.folk.FolkAlertDialog
 import me.bmax.apatch.R
 import me.bmax.apatch.util.ui.APDialogBlurBehindUtils
+import me.bmax.apatch.ui.theme.tokens.FolkShape
 
 /**
  * 首次启动欢迎引导对话框 —— 4 页分布式指导。
@@ -67,157 +66,147 @@ fun WelcomeGuideDialog(
         )
     }
 
-    BasicAlertDialog(
+    FolkAlertDialog(
         onDismissRequest = { /* intentionally no-op: use buttons to dismiss */ },
-        properties = DialogProperties(
-            dismissOnClickOutside = false,
-            dismissOnBackPress = false,
-            usePlatformDefaultWidth = false,
-        )
+        width = 340.dp,
+        shape = FolkShape.Corner24,
+        blurBehind = false,
+        dialogProperties = DialogProperties(dismissOnClickOutside = false, dismissOnBackPress = false, usePlatformDefaultWidth = false),
     ) {
-        Surface(
-            modifier = Modifier
-                .width(340.dp)
-                .wrapContentHeight(),
-            shape = RoundedCornerShape(24.dp),
-            tonalElevation = AlertDialogDefaults.TonalElevation,
-            color = AlertDialogDefaults.containerColor,
+        Column(
+            modifier = Modifier.padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // ── 页面内容（AnimatedContent 带动画过渡） ──
-                AnimatedContent(
-                    targetState = currentPage,
-                    transitionSpec = {
-                        val dir = if (targetState > initialState) 1 else -1
-                        val enterOffset = { w: Int -> dir * w }
-                        (slideInHorizontally(tween(300)) { enterOffset(it) } + fadeIn(tween(200)))
-                            .togetherWith(
-                                slideOutHorizontally(tween(300)) { -enterOffset(it) } + fadeOut(tween(200))
-                            )
-                    },
-                    label = "welcome_page"
-                ) { pageIndex ->
-                    val page = pages[pageIndex]
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(vertical = 16.dp)
+            val pageSlideSpec = MaterialTheme.motionScheme.defaultSpatialSpec<IntOffset>()
+            val pageFadeSpec = MaterialTheme.motionScheme.defaultEffectsSpec<Float>()
+            // ── 页面内容（AnimatedContent 带动画过渡） ──
+            AnimatedContent(
+                targetState = currentPage,
+                transitionSpec = {
+                    val dir = if (targetState > initialState) 1 else -1
+                    val enterOffset = { w: Int -> dir * w }
+                    (slideInHorizontally(pageSlideSpec) { enterOffset(it) } + fadeIn(pageFadeSpec))
+                        .togetherWith(
+                            slideOutHorizontally(pageSlideSpec) { -enterOffset(it) } + fadeOut(pageFadeSpec)
+                        )
+                },
+                label = "welcome_page"
+            ) { pageIndex ->
+                val page = pages[pageIndex]
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(vertical = 16.dp)
+                ) {
+                    // ── 图标 ──
+                    Box(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(CircleShape)
+                            .background(
+                                MaterialTheme.colorScheme.primaryContainer
+                            ),
+                        contentAlignment = Alignment.Center
                     ) {
-                        // ── 图标 ──
-                        Box(
-                            modifier = Modifier
-                                .size(80.dp)
-                                .clip(CircleShape)
-                                .background(
-                                    MaterialTheme.colorScheme.primaryContainer
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = page.icon,
-                                contentDescription = null,
-                                modifier = Modifier.size(40.dp),
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-
-                        Spacer(Modifier.height(24.dp))
-
-                        // ── 标题 ──
-                        Text(
-                            text = stringResource(page.titleId),
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-
-                        Spacer(Modifier.height(12.dp))
-
-                        // ── 描述 ──
-                        Text(
-                            text = stringResource(page.descId),
-                            style = MaterialTheme.typography.bodyMedium,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            lineHeight = 22.sp
+                        Icon(
+                            imageVector = page.icon,
+                            contentDescription = null,
+                            modifier = Modifier.size(40.dp),
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
+
+                    Spacer(Modifier.height(24.dp))
+
+                    // ── 标题 ──
+                    Text(
+                        text = stringResource(page.titleId),
+                        style = MaterialTheme.typography.headlineSmallEmphasized,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    Spacer(Modifier.height(12.dp))
+
+                    // ── 描述 ──
+                    Text(
+                        text = stringResource(page.descId),
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(8.dp))
+
+            // ── 圆点指示器 ──
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(vertical = 8.dp)
+            ) {
+                repeat(totalPages) { index ->
+                    val isActive = index == currentPage
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 5.dp)
+                            .size(if (isActive) 10.dp else 8.dp)
+                            .clip(CircleShape)
+                            .background(
+                                if (isActive) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
+                            )
+                    )
+                }
+            }
+
+            // ── 底部按钮行 ──
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // 左侧：“上一步”（第一页隐藏）
+                if (currentPage > 0) {
+                    TextButton(onClick = { currentPage-- }) {
+                        Icon(
+                            Icons.Filled.ChevronLeft,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(stringResource(R.string.welcome_prev))
+                    }
+                } else {
+                    // 占位保持布局稳定
+                    Spacer(Modifier.width(80.dp))
                 }
 
-                Spacer(Modifier.height(8.dp))
-
-                // ── 圆点指示器 ──
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                ) {
-                    repeat(totalPages) { index ->
-                        val isActive = index == currentPage
-                        Box(
-                            modifier = Modifier
-                                .padding(horizontal = 5.dp)
-                                .size(if (isActive) 10.dp else 8.dp)
-                                .clip(CircleShape)
-                                .background(
-                                    if (isActive) MaterialTheme.colorScheme.primary
-                                    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
-                                )
-                        )
-                    }
+                // 中间：跳过（所有页都显示）
+                TextButton(onClick = {
+                    onDismiss()
+                }) {
+                    Text(
+                        text = stringResource(R.string.welcome_skip),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
 
-                // ── 底部按钮行 ──
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // 左侧：“上一步”（第一页隐藏）
-                    if (currentPage > 0) {
-                        TextButton(onClick = { currentPage-- }) {
-                            Icon(
-                                Icons.Filled.ChevronLeft,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Spacer(Modifier.width(4.dp))
-                            Text(stringResource(R.string.welcome_prev))
-                        }
-                    } else {
-                        // 占位保持布局稳定
-                        Spacer(Modifier.width(80.dp))
+                // 右侧：“下一步” / “开始使用”
+                if (currentPage < totalPages - 1) {
+                    TextButton(onClick = { currentPage++ }) {
+                        Text(stringResource(R.string.welcome_next))
+                        Spacer(Modifier.width(4.dp))
+                        Icon(
+                            Icons.Filled.ChevronRight,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
                     }
-
-                    // 中间：跳过（所有页都显示）
-                    TextButton(onClick = {
+                } else {
+                    Button(onClick = {
                         onDismiss()
                     }) {
-                        Text(
-                            text = stringResource(R.string.welcome_skip),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-
-                    // 右侧：“下一步” / “开始使用”
-                    if (currentPage < totalPages - 1) {
-                        TextButton(onClick = { currentPage++ }) {
-                            Text(stringResource(R.string.welcome_next))
-                            Spacer(Modifier.width(4.dp))
-                            Icon(
-                                Icons.Filled.ChevronRight,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp)
-                            )
-                        }
-                    } else {
-                        Button(onClick = {
-                            onDismiss()
-                        }) {
-                            Text(stringResource(R.string.welcome_got_it))
-                        }
+                        Text(stringResource(R.string.welcome_got_it))
                     }
                 }
             }

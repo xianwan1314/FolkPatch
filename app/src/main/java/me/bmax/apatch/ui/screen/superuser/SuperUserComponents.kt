@@ -1,0 +1,239 @@
+package me.bmax.apatch.ui.screen.superuser
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Block
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import me.bmax.apatch.R
+import me.bmax.apatch.ui.theme.tokens.FolkShape
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SelectionTopBar(
+    selectedCount: Int,
+    onClose: () -> Unit,
+    onGrantRoot: () -> Unit,
+    onRevokeRoot: () -> Unit,
+    onExclude: () -> Unit,
+) {
+    // The bar sits on primaryContainer, where M3's default disabled alpha turns
+    // the three action icons into a grey smudge. Lift just the disabled tint so
+    // the icons stay readable while the enabled state is still clearly darker.
+    val actionColors = IconButtonDefaults.iconButtonColors(
+        disabledContentColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.72f),
+    )
+    TopAppBar(
+        title = {
+            Text(stringResource(R.string.su_multi_select_count, selectedCount))
+        },
+        navigationIcon = {
+            IconButton(onClick = onClose) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = stringResource(android.R.string.cancel),
+                )
+            }
+        },
+        actions = {
+            IconButton(
+                onClick = onGrantRoot,
+                enabled = selectedCount > 0,
+                colors = actionColors,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Shield,
+                    contentDescription = stringResource(R.string.su_multi_select_grant_root),
+                )
+            }
+            IconButton(
+                onClick = onRevokeRoot,
+                enabled = selectedCount > 0,
+                colors = actionColors,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Security,
+                    contentDescription = stringResource(R.string.su_multi_select_revoke_root),
+                )
+            }
+            IconButton(
+                onClick = onExclude,
+                enabled = selectedCount > 0,
+                colors = actionColors,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Block,
+                    contentDescription = stringResource(R.string.su_multi_select_exclude),
+                )
+            }
+
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        ),
+    )
+}
+
+// ── M3E App Item ──────────────────────────────────────────────────────────
+
+@Composable
+fun LabelText(
+    label: String,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+) {
+    Surface(
+        modifier = Modifier.padding(end = 4.dp),
+        shape = RoundedCornerShape(4.dp),
+        color = containerColor,
+    ) {
+        Text(
+            text = label,
+            modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.dp),
+            style = MaterialTheme.typography.labelSmall,
+            color = contentColorFor(containerColor),
+            fontWeight = FontWeight.Medium,
+        )
+    }
+}
+
+// ── Options Bottom Sheet ──────────────────────────────────────────────────
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SuperUserOptionsSheet(
+    onDismiss: () -> Unit,
+    onRefresh: () -> Unit,
+    onToggleSystemApps: () -> Unit,
+    showSystemApps: Boolean,
+    onBackup: () -> Unit,
+    onRestore: () -> Unit,
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 32.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.su_title),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(bottom = 16.dp),
+            )
+
+            // Refresh
+            Surface(
+                onClick = onRefresh,
+                shape = FolkShape.Corner12,
+                color = Color.Transparent,
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.su_refresh),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+            }
+
+            // Show/Hide System Apps
+            Surface(
+                onClick = onToggleSystemApps,
+                shape = FolkShape.Corner12,
+                color = Color.Transparent,
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = if (showSystemApps) {
+                            stringResource(R.string.su_hide_system_apps)
+                        } else {
+                            stringResource(R.string.su_show_system_apps)
+                        },
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+            }
+
+            // Backup
+            Surface(
+                onClick = onBackup,
+                shape = FolkShape.Corner12,
+                color = Color.Transparent,
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.su_backup_list),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+            }
+
+            // Restore
+            Surface(
+                onClick = onRestore,
+                shape = FolkShape.Corner12,
+                color = Color.Transparent,
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.su_restore_list),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+            }
+        }
+    }
+}

@@ -16,7 +16,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.apApp
-import me.bmax.apatch.ui.screen.BannerApiService
+import me.bmax.apatch.ui.screen.misc.BannerApiService
 import me.bmax.apatch.ui.theme.BackgroundConfig
 import me.bmax.apatch.util.getRootShell
 import me.bmax.apatch.util.listModules

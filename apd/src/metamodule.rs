@@ -237,9 +237,13 @@ pub fn exec_metauninstall_script(module_id: &str) -> Result<()> {
 
     info!("Executing metamodule metauninstall.sh for module: {module_id}",);
 
+    let parent = metauninstall_path
+        .parent()
+        .context("metauninstall script has no parent directory")?;
     let result = Command::new(assets::BUSYBOX_PATH)
-        .args(["sh", metauninstall_path.to_str().unwrap()])
-        .current_dir(metauninstall_path.parent().unwrap())
+        .arg("sh")
+        .arg(&metauninstall_path)
+        .current_dir(parent)
         .envs(crate::module::get_common_script_envs(
             get_metamodule_id().as_deref(),
         ))
@@ -264,8 +268,13 @@ pub fn exec_mount_script(module_dir: &str) -> Result<()> {
 
     info!("Executing mount script for metamodule");
 
+    let parent = mount_script
+        .parent()
+        .context("metamodule mount script has no parent directory")?;
     let result = Command::new(assets::BUSYBOX_PATH)
-        .args(["sh", mount_script.to_str().unwrap()])
+        .arg("sh")
+        .arg(&mount_script)
+        .current_dir(parent)
         .envs(crate::module::get_common_script_envs(
             get_metamodule_id().as_deref(),
         ))

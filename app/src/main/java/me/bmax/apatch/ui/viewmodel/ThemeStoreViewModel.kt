@@ -218,22 +218,32 @@ class ThemeStoreViewModel(private val context: Context) : ViewModel() {
         }
 
         downloadJobs[themeId] = viewModelScope.launch {
-            themeDownloader.downloadTheme(remoteTheme).collect { progress ->
-                when (progress.status) {
-                    DownloadStatus.COMPLETED -> {
-                        // 下载完成，添加到本地主题列表
-                        addLocalTheme(remoteTheme)
-                        downloadJobs.remove(themeId)
-                    }
-                    DownloadStatus.FAILED -> {
-                        Log.e(TAG, "Download failed: ${progress.errorMessage}")
-                        downloadJobs.remove(themeId)
-                    }
-                    else -> {
-                        // 更新下载进度
-                        Log.d(TAG, "Download progress: ${progress.overallProgress * 100}%")
+            try {
+                themeDownloader.downloadTheme(remoteTheme).collect { progress ->
+                    when (progress.status) {
+                        DownloadStatus.COMPLETED -> {
+                            // 下载完成，添加到本地主题列表
+                            addLocalTheme(remoteTheme)
+                            downloadJobs.remove(themeId)
+                        }
+                        DownloadStatus.FAILED -> {
+                            Log.e(TAG, "Download failed: ${progress.errorMessage}")
+                            downloadJobs.remove(themeId)
+                        }
+                        DownloadStatus.PAUSED -> {
+                            // 暂停后结束本次收集，恢复时重新订阅同一个任务
+                            downloadJobs.remove(themeId)
+                        }
+                        else -> {
+                            // 更新下载进度
+                            Log.d(TAG, "Download progress: ${progress.overallProgress * 100}%")
+                        }
                     }
                 }
+            } finally {
+                // The flow also ends on pause, where no terminal progress is emitted;
+                // release the slot so the paused download can be resumed.
+                downloadJobs.remove(themeId)
             }
         }
     }
@@ -246,6 +256,13 @@ class ThemeStoreViewModel(private val context: Context) : ViewModel() {
             themeDownloader.cancelDownload(themeId)
             downloadJobs.remove(themeId)
         }
+    }
+
+    /**
+     * 暂停下载：保留下载任务与已下载的部分，等待恢复。
+     */
+    fun pauseDownload(themeId: String) {
+        themeDownloader.pauseDownload(themeId)
     }
 
     /**

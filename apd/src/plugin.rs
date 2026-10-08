@@ -115,12 +115,15 @@ pub fn read_manifest(id: &str) -> Result<PluginManifest> {
     if !path.exists() {
         bail!("Plugin {id} has no {PLUGIN_MANIFEST}");
     }
-    let content = fs::read_to_string(&path)
-        .with_context(|| format!("Failed to read manifest for {id}"))?;
+    let content =
+        fs::read_to_string(&path).with_context(|| format!("Failed to read manifest for {id}"))?;
     let manifest: PluginManifest =
         serde_json::from_str(&content).with_context(|| format!("Invalid manifest for {id}"))?;
     if manifest.id != id {
-        warn!("Manifest id '{}' does not match directory '{id}'", manifest.id);
+        warn!(
+            "Manifest id '{}' does not match directory '{id}'",
+            manifest.id
+        );
     }
     Ok(manifest)
 }
@@ -219,7 +222,10 @@ pub fn install_plugin(zip: &str) -> Result<()> {
     fs::create_dir_all(&target)?;
     for i in 0..archive.len() {
         let mut file = archive.by_index(i)?;
-        let Some(name) = file.enclosed_name().map(|p| p.to_string_lossy().into_owned()) else {
+        let Some(name) = file
+            .enclosed_name()
+            .map(|p| p.to_string_lossy().into_owned())
+        else {
             continue;
         };
         let relative = if entry_dir.is_empty() {
@@ -279,10 +285,10 @@ pub fn read_user_config(id: &str) -> Result<std::collections::HashMap<String, se
     if !path.exists() {
         return Ok(std::collections::HashMap::new());
     }
-    let content = fs::read_to_string(&path)
-        .with_context(|| format!("Failed to read config for {id}"))?;
+    let content =
+        fs::read_to_string(&path).with_context(|| format!("Failed to read config for {id}"))?;
     let map: std::collections::HashMap<String, serde_json::Value> =
-        serde_json::from_str(&content).unwrap_or_default();
+        serde_json::from_str(&content).with_context(|| format!("Invalid config for {id}"))?;
     Ok(map)
 }
 
@@ -336,31 +342,40 @@ pub fn list_plugins_json() -> Result<()> {
                 .as_ref()
                 .map(|_| crate::lua::plugin_has_callback(id, "action"))
                 .unwrap_or(false);
-            let (name, author, version, description, descriptions, license, has_manifest, config, quick_action) =
-                match manifest {
-                    Some(m) => (
-                        m.name,
-                        m.author,
-                        m.version,
-                        m.description,
-                        m.descriptions,
-                        m.license,
-                        true,
-                        m.config,
-                        m.quick_action,
-                    ),
-                    None => (
-                        String::new(),
-                        String::new(),
-                        String::new(),
-                        String::new(),
-                        std::collections::HashMap::new(),
-                        String::new(),
-                        false,
-                        Vec::new(),
-                        None,
-                    ),
-                };
+            let (
+                name,
+                author,
+                version,
+                description,
+                descriptions,
+                license,
+                has_manifest,
+                config,
+                quick_action,
+            ) = match manifest {
+                Some(m) => (
+                    m.name,
+                    m.author,
+                    m.version,
+                    m.description,
+                    m.descriptions,
+                    m.license,
+                    true,
+                    m.config,
+                    m.quick_action,
+                ),
+                None => (
+                    String::new(),
+                    String::new(),
+                    String::new(),
+                    String::new(),
+                    std::collections::HashMap::new(),
+                    String::new(),
+                    false,
+                    Vec::new(),
+                    None,
+                ),
+            };
             list.push(PluginInfo {
                 id: id.to_string(),
                 name,
@@ -379,4 +394,25 @@ pub fn list_plugins_json() -> Result<()> {
     }
     println!("{}", serde_json::to_string(&list)?);
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn rejects_plugin_ids_and_entries_that_escape_the_plugin_directory() {
+        for invalid in ["", ".", "..", "../plugin", "a/b", "a\\b"] {
+            assert!(plugin_path(invalid).is_err(), "{invalid}");
+        }
+
+        for invalid in ["../main.lua", "a/b.lua", "a\\b.lua"] {
+            let manifest = PluginManifest {
+                id: "demo".into(),
+                entry: Some(invalid.into()),
+                ..PluginManifest::default()
+            };
+            assert!(validate_manifest(&manifest).is_err(), "{invalid}");
+        }
+    }
 }

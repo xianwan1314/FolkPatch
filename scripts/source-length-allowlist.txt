@@ -1,0 +1,52 @@
+# Files already over the LINE_LIMIT of 400, grandfathered so the guard can
+# land without a mass refactor. This list may only shrink:
+#   * when a file drops to <= 400 lines, delete its line here;
+#   * never add a new path.
+# New files are never allowed to exceed the limit.
+apd/src/installer.sh
+apd/src/installer_bind.sh
+app/build.gradle.kts
+app/src/main/assets/util_functions.sh
+app/src/main/java/me/bmax/apatch/APatchApp.kt
+app/src/main/java/me/bmax/apatch/ui/MainActivityContent.kt
+app/src/main/java/me/bmax/apatch/ui/component/Dialog.kt
+app/src/main/java/me/bmax/apatch/ui/navigation/NavigationBarContent.kt
+app/src/main/java/me/bmax/apatch/ui/screen/module/APM.kt
+app/src/main/java/me/bmax/apatch/ui/screen/module/APMModuleItem.kt
+app/src/main/java/me/bmax/apatch/ui/screen/module/APMModuleList.kt
+app/src/main/java/me/bmax/apatch/ui/screen/theme/ApiMarketplace.kt
+app/src/main/java/me/bmax/apatch/ui/screen/home/HomeCircleCards.kt
+app/src/main/java/me/bmax/apatch/ui/screen/home/HomeStatsSections.kt
+app/src/main/java/me/bmax/apatch/ui/screen/home/HomeV2.kt
+app/src/main/java/me/bmax/apatch/ui/screen/home/HomeV3Cards.kt
+app/src/main/java/me/bmax/apatch/ui/screen/home/HomeV4HeroCard.kt
+app/src/main/java/me/bmax/apatch/ui/screen/patches/InstallModeSelect.kt
+app/src/main/java/me/bmax/apatch/ui/screen/module/KPM.kt
+app/src/main/java/me/bmax/apatch/ui/screen/module/KPMModuleItem.kt
+app/src/main/java/me/bmax/apatch/ui/screen/module/KPMModuleList.kt
+app/src/main/java/me/bmax/apatch/ui/screen/module/OnlineModuleScreen.kt
+app/src/main/java/me/bmax/apatch/ui/screen/patches/PatchesViews.kt
+app/src/main/java/me/bmax/apatch/ui/screen/plugin/PluginComponents.kt
+app/src/main/java/me/bmax/apatch/ui/screen/script/ScriptLibraryItems.kt
+app/src/main/java/me/bmax/apatch/ui/screen/misc/Settings.kt
+app/src/main/java/me/bmax/apatch/ui/screen/superuser/SuperUser.kt
+app/src/main/java/me/bmax/apatch/ui/screen/theme/ThemeStore.kt
+app/src/main/java/me/bmax/apatch/ui/screen/settings/AppearanceSettings.kt
+app/src/main/java/me/bmax/apatch/ui/screen/settings/FunctionSettingsHideAppItems.kt
+app/src/main/java/me/bmax/apatch/ui/screen/settings/FunctionSettingsPickers.kt
+app/src/main/java/me/bmax/apatch/ui/screen/settings/GeneralSettings.kt
+app/src/main/java/me/bmax/apatch/ui/screen/settings/appearance/AppearanceBackgroundSection.kt
+app/src/main/java/me/bmax/apatch/ui/screen/settings/appearance/AppearanceOptionDialogs.kt
+app/src/main/java/me/bmax/apatch/ui/screen/settings/general/GeneralSystemDialogs.kt
+app/src/main/java/me/bmax/apatch/ui/screen/settings/multimedia/MultimediaDialogs.kt
+app/src/main/java/me/bmax/apatch/ui/theme/BackgroundConfig.kt
+app/src/main/java/me/bmax/apatch/ui/theme/ThemeIO.kt
+app/src/main/java/me/bmax/apatch/ui/viewmodel/APModuleViewModel.kt
+app/src/main/java/me/bmax/apatch/ui/viewmodel/DashboardViewModel.kt
+app/src/main/java/me/bmax/apatch/ui/viewmodel/PatchesViewModel.kt
+app/src/main/java/me/bmax/apatch/ui/viewmodel/SuperUserViewModel.kt
+app/src/main/java/me/bmax/apatch/ui/viewmodel/ThemeStoreViewModel.kt
+app/src/main/java/me/bmax/apatch/util/APatchCli.kt
+app/src/main/java/me/bmax/apatch/util/ModuleShortcut.kt
+app/src/main/java/me/bmax/apatch/util/ShizukuServiceManager.kt
+app/src/main/java/me/bmax/apatch/util/ThemeDownloader.kt

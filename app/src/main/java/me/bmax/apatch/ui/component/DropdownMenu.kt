@@ -12,6 +12,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import me.bmax.apatch.ui.theme.BackgroundConfig
+import me.bmax.apatch.ui.theme.tokens.FolkShape
 
 @Composable
 fun ProvideMenuShape(
@@ -25,7 +26,7 @@ fun WallpaperAwareDropdownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    shape: CornerBasedShape = RoundedCornerShape(28.dp),
+    shape: CornerBasedShape = FolkShape.Corner28,
     containerColor: androidx.compose.ui.graphics.Color = androidx.compose.material3.MaterialTheme.colorScheme.surfaceContainer,
     content: @Composable ColumnScope.() -> Unit
 ) {

@@ -8,30 +8,78 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.font.FontFamily
+import androidx.core.content.res.ResourcesCompat
+import me.bmax.apatch.R
 import me.bmax.apatch.util.SafeUriResolver
 import java.io.File
 
+/**
+ * How the application renders text.
+ *
+ * [APP_DEFAULT] uses the font bundled with FolkPatch, [SYSTEM_DEFAULT] leaves
+ * the platform font in place and [CUSTOM] uses a font the user imported.
+ */
+enum class FontMode {
+    APP_DEFAULT,
+    SYSTEM_DEFAULT,
+    CUSTOM;
+
+    /** Value written to theme.json; kept stable for cross-version compatibility. */
+    val serializedName: String
+        get() = when (this) {
+            APP_DEFAULT -> "app"
+            SYSTEM_DEFAULT -> "system"
+            CUSTOM -> "custom"
+        }
+
+    companion object {
+        fun fromName(name: String?): FontMode? = entries.firstOrNull { it.name == name }
+
+        fun fromSerializedName(value: String?): FontMode? = when (value) {
+            "app" -> APP_DEFAULT
+            "system" -> SYSTEM_DEFAULT
+            "custom" -> CUSTOM
+            else -> null
+        }
+    }
+}
+
 object FontConfig {
     private const val PREFS_NAME = "font_settings"
+    private const val KEY_FONT_MODE = "font_mode"
     private const val KEY_CUSTOM_FONT_ENABLED = "custom_font_enabled"
     private const val KEY_CUSTOM_FONT_PATH = "custom_font_path"
     private const val TAG = "FontConfig"
 
+    var fontMode: FontMode by mutableStateOf(FontMode.SYSTEM_DEFAULT)
+        private set
+
     var isCustomFontEnabled: Boolean by mutableStateOf(false)
         private set
-        
+
     var customFontFilename: String? by mutableStateOf(null)
         private set
 
-    fun setCustomFontEnabledState(enabled: Boolean) {
-        isCustomFontEnabled = enabled
+    /** Selects a font mode and persists it. Only [FontMode.CUSTOM] keeps a user file. */
+    fun setFontMode(context: Context, mode: FontMode) {
+        fontMode = mode
+        isCustomFontEnabled = mode == FontMode.CUSTOM
+        save(context)
     }
 
     fun load(context: Context) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        isCustomFontEnabled = prefs.getBoolean(KEY_CUSTOM_FONT_ENABLED, false)
         customFontFilename = prefs.getString(KEY_CUSTOM_FONT_PATH, null)
-        
+
+        // Migrate the legacy boolean to the three-mode setting when font_mode
+        // was never written: an enabled custom font becomes CUSTOM, everything
+        // else keeps the platform font the user already had.
+        val storedMode = FontMode.fromName(prefs.getString(KEY_FONT_MODE, null))
+        val legacyEnabled = prefs.getBoolean(KEY_CUSTOM_FONT_ENABLED, false)
+        fontMode = storedMode ?: if (legacyEnabled) FontMode.CUSTOM else FontMode.SYSTEM_DEFAULT
+        isCustomFontEnabled = fontMode == FontMode.CUSTOM
+        var needsPersist = storedMode == null
+
         // Migration: If enabled but no filename, try to migrate from old fixed filename
         if (isCustomFontEnabled && customFontFilename == null) {
             val oldFixedFile = File(context.filesDir, "custom_font.ttf")
@@ -39,25 +87,32 @@ object FontConfig {
                 val newName = "custom_font_${System.currentTimeMillis()}.ttf"
                 if (oldFixedFile.renameTo(File(context.filesDir, newName))) {
                     customFontFilename = newName
-                    save(context)
+                    needsPersist = true
                 }
             }
         }
-        
-        // Validate if file exists
-        if (isCustomFontEnabled && customFontFilename != null) {
-            val file = File(context.filesDir, customFontFilename!!)
-            if (!file.exists()) {
-                isCustomFontEnabled = false
+
+        // Validate if file exists. A missing custom file must not leave the app
+        // in a broken state, so fall back to the platform font.
+        if (isCustomFontEnabled) {
+            val file = customFontFilename?.let { File(context.filesDir, it) }
+            if (file == null || !file.exists()) {
                 customFontFilename = null
-                save(context)
+                fontMode = FontMode.SYSTEM_DEFAULT
+                isCustomFontEnabled = false
+                needsPersist = true
             }
+        }
+
+        if (needsPersist) {
+            save(context)
         }
     }
 
     fun save(context: Context) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         prefs.edit()
+            .putString(KEY_FONT_MODE, fontMode.name)
             .putBoolean(KEY_CUSTOM_FONT_ENABLED, isCustomFontEnabled)
             .putString(KEY_CUSTOM_FONT_PATH, customFontFilename)
             .apply()
@@ -79,6 +134,7 @@ object FontConfig {
                 }
             }
             
+            fontMode = FontMode.CUSTOM
             isCustomFontEnabled = true
             customFontFilename = newFilename
             save(context)
@@ -107,6 +163,7 @@ object FontConfig {
                 }
             }
             
+            fontMode = FontMode.CUSTOM
             isCustomFontEnabled = true
             customFontFilename = newFilename
             save(context)
@@ -125,40 +182,56 @@ object FontConfig {
             }
         }
         customFontFilename = null
+        // Removing the imported font returns to the app's bundled default.
+        fontMode = FontMode.APP_DEFAULT
+        isCustomFontEnabled = false
         save(context)
     }
 
-    // Font cache to avoid Typeface.createFromFile disk I/O on every recomposition
+    // Font cache to avoid Typeface.createFromFile / resource lookups on every recomposition
     private var cachedFontFamily: FontFamily? = null
     private var cachedFilename: String? = null
+    private var cachedMode: FontMode? = null
 
     fun getFontFamily(context: Context): FontFamily {
-        if (isCustomFontEnabled && customFontFilename != null) {
-            // Return cached font if filename hasn't changed
-            if (customFontFilename == cachedFilename && cachedFontFamily != null) {
-                return cachedFontFamily!!
-            }
-            val file = File(context.filesDir, customFontFilename!!)
-            if (file.exists()) {
-                try {
-                    val typeface = Typeface.createFromFile(file)
-                    val family = FontFamily(typeface)
-                    cachedFilename = customFontFilename
-                    cachedFontFamily = family
-                    return family
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to load custom font", e)
-                }
-            }
+        if (fontMode == cachedMode && customFontFilename == cachedFilename && cachedFontFamily != null) {
+            return cachedFontFamily!!
         }
-        // Invalidate cache when custom font is disabled
-        cachedFilename = null
-        cachedFontFamily = null
-        return FontFamily.Default
+
+        val family = when (fontMode) {
+            FontMode.APP_DEFAULT -> loadBundledFont(context)
+            FontMode.SYSTEM_DEFAULT -> FontFamily.Default
+            FontMode.CUSTOM -> loadCustomFont(context)
+        }
+
+        cachedMode = fontMode
+        cachedFilename = customFontFilename
+        cachedFontFamily = family
+        return family
+    }
+
+    private fun loadBundledFont(context: Context): FontFamily = try {
+        ResourcesCompat.getFont(context, R.font.xiaolai)?.let { FontFamily(it) } ?: FontFamily.Default
+    } catch (e: Exception) {
+        Log.e(TAG, "Failed to load bundled font", e)
+        FontFamily.Default
+    }
+
+    private fun loadCustomFont(context: Context): FontFamily {
+        val filename = customFontFilename ?: return FontFamily.Default
+        val file = File(context.filesDir, filename)
+        if (!file.exists()) return FontFamily.Default
+        return try {
+            FontFamily(Typeface.createFromFile(file))
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to load custom font", e)
+            FontFamily.Default
+        }
     }
 
     fun invalidateFontCache() {
         cachedFilename = null
         cachedFontFamily = null
+        cachedMode = null
     }
 }

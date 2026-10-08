@@ -19,13 +19,19 @@ fn umount_lazy(path: &str) -> bool {
 }
 
 fn config_path() -> PathBuf {
-    std::env::current_exe()
+    let current = std::env::current_exe()
         .expect("failed to determine executable path")
         .parent()
         .expect("executable has no parent directory")
         .parent()
         .expect("executable parent has no grandparent directory")
-        .join("UmountPATH")
+        .join("UmountPATH");
+    if current.exists() {
+        current
+    } else {
+        let legacy = PathBuf::from("/data/adb/fp/UmountPATH");
+        if legacy.exists() { legacy } else { current }
+    }
 }
 
 pub fn run() -> u32 {

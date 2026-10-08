@@ -5,22 +5,26 @@ on:
     branches: [ main, develop ]
     paths:
       - 'app/**'
+      - 'apd/**'
       - 'fpd/**'
-      - 'kpm/**'
-      - '.github/workflows/build.yml'
-      - '.github/actions/setup-build-env/**'
       - 'build.gradle.kts'
-      - 'gradle/libs.versions.toml'
+      - 'settings.gradle.kts'
+      - 'gradle/**'
+      - 'gradle.properties'
+      - 'version.properties'
+      - '.github/workflows/build.yml'
   pull_request:
     branches: [ main, develop ]
     paths:
       - 'app/**'
+      - 'apd/**'
       - 'fpd/**'
-      - 'kpm/**'
-      - '.github/workflows/build.yml'
-      - '.github/actions/setup-build-env/**'
       - 'build.gradle.kts'
-      - 'gradle/libs.versions.toml'
+      - 'settings.gradle.kts'
+      - 'gradle/**'
+      - 'gradle.properties'
+      - 'version.properties'
+      - '.github/workflows/build.yml'
   workflow_dispatch:
     inputs:
       build_type:
@@ -88,10 +92,17 @@ jobs:
       - uses: actions/checkout@v5
         with:
           submodules: recursive
+          fetch-depth: 0
 
       - uses: ./.github/actions/setup-build-env
 
+      - name: Verify version
+        run: ./gradlew printVersion --no-daemon
+
       - run: ./gradlew assembleDebug --no-daemon
+
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest --no-daemon
 
       - name: Rename APK
         run: |
@@ -115,8 +126,12 @@ jobs:
       - uses: actions/checkout@v5
         with:
           submodules: recursive
+          fetch-depth: 0
 
       - uses: ./.github/actions/setup-build-env
+
+      - name: Verify version
+        run: ./gradlew printVersion --no-daemon
 
       - name: Decode keystore
         run: |

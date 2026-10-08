@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_launcher_icon">桌面图标</string>
+    <string name="launcher_icon_style_anime">动漫</string>
+    <string name="launcher_icon_style_geometry">几何</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">悬浮底栏样式</string>
+    <string name="settings_bottom_bar_standard">标准底栏</string>
+    <string name="settings_bottom_bar_drawer">蒸屉底栏</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
@@ -63,6 +70,7 @@
     <string name="reboot_fastbootd">换换地儿</string>
     <string name="about">咱家底</string>
     <string name="developer_and_maintainer">掌勺大厨 | 传人</string>
+    <string name="developer_profile_picture">开发者招牌</string>
     <string name="settings_app_language">方言</string>
     <string name="system_default">照旧</string>
     <string name="settings_global_namespace_mode">共用备料区</string>
@@ -174,6 +182,7 @@
     <string name="patch_item_skey">传世秘方</string>
     <string name="patch_custom_superkey">自定传世秘方</string>
     <string name="patch_custom_superkey_summary">你仍可设秘方来管理后厨，掌柜已获内务府印信授权</string>
+    <string name="patch_custom_superkey_optional">可选；掌柜已有内务府印信授权，通常无须另设秘方</string>
     <string name="patch_item_set_skey_label">传世秘方长度应为 8-63 个字符，包含数字和字母，不能包含特殊符号。</string>
     <string name="patch_confirm_superkey">再次确认传世秘方</string>
     <string name="patch_skey_mismatch">两次传世秘方不一致</string>
@@ -647,6 +656,11 @@ KernelPatch 这道菜需要用 boot 主料来烹饪。
     <string name="shizuku_log_copied">已抄录至剪贴板</string>
     <string name="shizuku_log_source_server">后厨日志</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">详尽</string>
+    <string name="shizuku_log_level_debug">调试</string>
+    <string name="shizuku_log_level_info">情报</string>
+    <string name="shizuku_log_level_warn">警告</string>
+    <string name="shizuku_log_level_error">焦糊</string>
     <string name="shizuku_log_search_hint">翻找记录</string>
 <string name="settings_app_title">软件名</string>
     <string name="app_title_custom">自个儿起</string>
@@ -689,6 +703,9 @@ KernelPatch 这道菜需要用 boot 主料来烹饪。
     <string name="settings_title_image_offset_x">水平位置</string>
 
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">本店默认</string>
+    <string name="settings_font_mode_system">系统默认</string>
+    <string name="settings_font_mode_custom">自定</string>
     <string name="settings_custom_font">自定字体</string>
     <string name="settings_select_font_file">挑字体文件</string>
     <string name="settings_custom_font_enabled">已开自定字体</string>
@@ -714,8 +731,6 @@ KernelPatch 这道菜需要用 boot 主料来烹饪。
     <string name="settings_clear_background">撤背景</string>
     <string name="settings_clear_background_confirm">真要撤背景图吗？</string>
 
-    <string name="settings_alt_icon">备用图标</string>
-    <string name="alt_icon_summary">用备选启动器图标</string>
 
     <!-- Video Background Settings -->
     <string name="settings_video_background">视频背景</string>
@@ -936,6 +951,42 @@ KernelPatch 这道菜需要用 boot 主料来烹饪。
     <string name="settings_discrete_slider">档位滑杆</string>
     <string name="settings_discrete_slider_desc">在菜单轨道上显示份量标记</string>
     <string name="settings_category_behavior">吃饭行为</string>
+    <string name="profile_edit_title">招牌资料</string>
+    <string name="profile_nickname_label">店名</string>
+    <string name="profile_signature_label">招牌标语</string>
+    <string name="profile_choose_avatar">更换招牌头像</string>
+    <string name="profile_avatar_default">默认招牌</string>
+    <string name="profile_avatar_custom">自定招牌</string>
+    <string name="profile_avatar_opacity">头像透明度</string>
+    <string name="profile_avatar_source_title">选择头像来源</string>
+    <string name="profile_avatar_source_local">从本机选取</string>
+    <string name="profile_avatar_source_qq">QQ 头像</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">QQ 号</string>
+    <string name="profile_avatar_gravatar_hint">邮箱</string>
+    <string name="profile_avatar_fetch_failed">头像获取失败</string>
+    <string name="profile_crop_avatar">裁剪招牌头像</string>
+    <string name="profile_restore_default">恢复原味</string>
+    <string name="settings_section_general_basics">方言与菜谱</string>
+    <string name="settings_section_general_interface">装潢与动效</string>
+    <string name="settings_section_general_root">后厨规矩</string>
+    <string name="settings_section_general_mount">备料与摆盘</string>
+    <string name="settings_section_general_identity">招牌标识</string>
+    <string name="settings_section_general_maintenance">后厨打理</string>
+    <string name="settings_section_behavior_display">门面展示</string>
+    <string name="settings_section_behavior_actions">操作与上菜</string>
+    <string name="settings_section_function_hide">藏料与隔离</string>
+    <string name="settings_section_function_root">后厨功能</string>
+    <string name="settings_section_function_mount">上菜与撤盘</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">身份核验</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">本地留份</string>
+    <string name="settings_section_backup_cloud">云端留份</string>
+    <string name="settings_section_module_display">招牌显示</string>
+    <string name="settings_section_module_update">上新与上菜</string>
+    <string name="settings_section_multimedia_music">餐厅背景乐</string>
+    <string name="settings_section_multimedia_sound">音效与震动</string>
     <string name="settings_category_function">餐厅功能</string>
     <string name="settings_use_legacy_su_page">单页首席大厨授权</string>
     <string name="settings_use_legacy_su_page_summary">首席大厨页面改用单页授权设计</string>
@@ -1192,6 +1243,8 @@ KernelPatch 这道菜需要用 boot 主料来烹饪。
     <string name="theme_download_finalizing">准备上菜...</string>
     <string name="settings_predictive_back">预测性返回手势</string>
     <string name="settings_predictive_back_summary">启用 Android 14+ 的预测性返回手势动画</string>
+    <string name="settings_expressive_motion">火候動勢</string>
+    <string name="settings_expressive_motion_summary">使用 Material 3 Expressive 的火候曲線</string>
 
     <string name="home_device_status_battery_charging">烤箱加热中</string>
     <string name="home_device_status_cpu_temp">灶台温度</string>
@@ -1280,6 +1333,11 @@ KernelPatch 这道菜需要用 boot 主料来烹饪。
     <string name="color_style_monochrome">单味</string>
     <string name="color_style_neutral">原味</string>
     <string name="color_style_fidelity">本味</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">浓淡</string>
+    <string name="color_contrast_standard">原味</string>
+    <string name="color_contrast_medium">中火</string>
+    <string name="color_contrast_high">猛火</string>
     <string name="settings_focus_card_background">FocusUI 卡片壁纸</string>
     <string name="settings_focus_card_background_enabled">FocusUI 卡片壁纸已开启，长按卡片管理壁纸</string>
     <string name="settings_focus_card_background_summary">启用 FocusUI 卡片壁纸及长按壁纸管理</string>
@@ -1340,4 +1398,33 @@ KernelPatch 这道菜需要用 boot 主料来烹饪。
     <string name="jailbreak">解禁</string>
     <string name="jailbreak_triggered">解禁已触发，等拿到 root 就小火回锅。</string>
     <string name="reboot_soft">小火回锅</string>
+    <string name="settings_faq">常见问题</string>
+    <string name="settings_bug_feedback">Bug 反馈</string>
+    <string name="settings_clear_cache">清除缓存</string>
+    <string name="settings_disclaimer">免责声明</string>
+    <string name="settings_disclaimer_message">给设备上 Root 之后，系统更新、第三方模块或别的外在因素都可能带来没准儿的风险和损失，得你自己承担。弄明白风险了再接着用。</string>
+    <string name="theme_store_subtitle">寻觅百家菜谱，随手下锅</string>
+    <string name="script_library_subtitle">掌灶本機食譜</string>
+    <string name="plugin_subtitle">添菜加料</string>
+    <string name="my_themes_subtitle">你存的菜谱</string>
+    <string name="apm_api_marketplace_subtitle">瞧瞧街坊的方子 API</string>
+    <string name="theme_download_paused">停火</string>
+    <string name="settings_wallpaper_gallery">壁紙菜譜</string>
+    <string name="wallpaper_device_phone">手機</string>
+    <string name="wallpaper_device_tablet">大盤平板</string>
+    <string name="wallpaper_layout_waterfall">瀑布流</string>
+    <string name="wallpaper_layout_stack">千層堆疊</string>
+    <string name="wallpaper_device_mixed">拼盤</string>
+    <string name="wallpaper_display_options">擺盤方案</string>
+    <string name="wallpaper_display_layout">擺盤</string>
+    <string name="wallpaper_download">出鍋下載</string>
+    <string name="wallpaper_cancel">取消</string>
+    <string name="wallpaper_saved">上菜</string>
+    <string name="wallpaper_download_failed">烹調失敗</string>
+    <string name="wallpaper_loading">備料中</string>
+    <string name="wallpaper_empty">空盤</string>
+    <string name="wallpaper_retry">回鍋</string>
+    <string name="wallpaper_preview">試味</string>
+    <string name="wallpaper_set_background">擺上背景</string>
+    <string name="wallpaper_background_set">背景已換盤</string>
 </resources>

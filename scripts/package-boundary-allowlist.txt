@@ -1,0 +1,10 @@
+# Package boundary exceptions.
+#
+# `reverse-import` entries are debt and should only shrink.
+# `hardcoded-color` entries below are intentional palette data sources: the
+# swatch table and the chart series colours are the data itself, not a screen
+# picking its own colour.
+#
+# Format: <rule> <path>
+hardcoded-color app/src/main/java/me/bmax/apatch/ui/component/ThemeColorPicker.kt
+hardcoded-color core/ui/src/main/java/me/bmax/apatch/ui/component/chart/ModulePieChart.kt

@@ -14,6 +14,8 @@ object ThemeManager {
         val backgroundDayDim: Float = 0.0f,
         val backgroundNightDim: Float = 0.0f,
         val isFontEnabled: Boolean,
+        // "app" | "system" | "custom"; null for legacy themes without the field.
+        val fontMode: String? = null,
         val customColor: String,
         val homeLayoutStyle: String,
         val statsTopLayout: String = "list",
@@ -23,6 +25,7 @@ object ThemeManager {
         val colorGenerationMode: String = "classic",
         val colorStandard: String = "MD3_2021",
         val colorStyle: String = "TONAL_SPOT",
+        val colorContrast: String = "STANDARD",
         val appLanguage: String?,
         // Grid Working Card Background
         val isGridWorkingCardBackgroundEnabled: Boolean = false,

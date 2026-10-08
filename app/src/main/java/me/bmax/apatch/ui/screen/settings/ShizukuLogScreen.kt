@@ -7,20 +7,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.Article
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.DeleteSweep
@@ -28,21 +22,13 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Share
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,18 +36,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
@@ -70,43 +58,56 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.SplicedColumnGroup
+import me.bmax.apatch.ui.component.folk.FolkScaffold
+import me.bmax.apatch.ui.component.folk.FolkLogCard
+import me.bmax.apatch.ui.component.folk.FolkLogEmptyState
+import me.bmax.apatch.ui.component.folk.FolkLogLevel
+import me.bmax.apatch.ui.component.folk.FolkLogLine
+import me.bmax.apatch.ui.component.folk.FolkLogLoading
+import me.bmax.apatch.ui.component.folk.FolkTitleStyle
+import me.bmax.apatch.ui.component.folk.folkLogLevelColor
+import me.bmax.apatch.ui.component.folk.folkLogTextStyle
+import me.bmax.apatch.ui.component.folk.parseFolkLogLevel
 import me.bmax.apatch.ui.component.WallpaperAwareDropdownMenu
 import me.bmax.apatch.ui.component.WallpaperAwareDropdownMenuItem
 import me.bmax.apatch.util.ShizukuServiceManager
 import me.bmax.apatch.util.ui.showToast
 import java.io.File
+import androidx.compose.material.icons.outlined.*
 
 /** Log source: server persistent log / system logcat. */
 private enum class LogSource { SERVER, LOGCAT }
 
-/** One log line and its parsed level. */
-private data class LogLine(val level: Char, val text: String)
+/** One log line, its parsed level and where that level letter sits in the text. */
+private data class LogLine(val level: FolkLogLevel, val text: String, val levelIndex: Int)
 
-private val LEVELS = listOf('V', 'D', 'I', 'W', 'E')
+private val LEVELS = listOf(
+    FolkLogLevel.Verbose,
+    FolkLogLevel.Debug,
+    FolkLogLevel.Info,
+    FolkLogLevel.Warn,
+    FolkLogLevel.Error,
+)
 
-/** Parse the log level from a line, e.g. "... I/tag: msg" or logcat's "... I/tag(pid): msg". */
-private fun parseLevel(line: String): Char {
-    // Find the first " X/" occurrence (X is the level letter)
-    var i = 0
-    while (i < line.length - 1) {
-        val c = line[i]
-        if ((c == 'V' || c == 'D' || c == 'I' || c == 'W' || c == 'E' || c == 'A')
-            && line[i + 1] == '/'
-            && (i == 0 || line[i - 1] == ' ')
-        ) {
-            return c
-        }
-        i++
-    }
-    return '?'
+/** Localised name of a level, so the filter chips read as words and not just letters. */
+@Composable
+private fun logLevelLabel(level: FolkLogLevel): String = when (level) {
+    FolkLogLevel.Verbose -> stringResource(R.string.shizuku_log_level_verbose)
+    FolkLogLevel.Debug -> stringResource(R.string.shizuku_log_level_debug)
+    FolkLogLevel.Info -> stringResource(R.string.shizuku_log_level_info)
+    FolkLogLevel.Warn -> stringResource(R.string.shizuku_log_level_warn)
+    FolkLogLevel.Error -> stringResource(R.string.shizuku_log_level_error)
+    FolkLogLevel.Unknown -> level.letter.toString()
 }
 
 private fun parseLines(raw: String): List<LogLine> {
     if (raw.isBlank()) return emptyList()
     return raw.split('\n')
         .filter { it.isNotBlank() }
-        .map { LogLine(parseLevel(it), it) }
+        .map { line ->
+            val (level, index) = parseFolkLogLevel(line)
+            LogLine(level, line, index)
+        }
 }
 
 @Destination<RootGraph>
@@ -122,10 +123,18 @@ fun ShizukuLogScreen(navigator: DestinationsNavigator) {
     var isLoading by remember { mutableStateOf(true) }
     var query by remember { mutableStateOf("") }
     // Active level filter; an empty set means show all.
-    var activeLevels by remember { mutableStateOf<Set<Char>>(emptySet()) }
+    var activeLevels by remember { mutableStateOf<Set<FolkLogLevel>>(emptySet()) }
     var showMenu by remember { mutableStateOf(false) }
+    var isSearchActive by remember { mutableStateOf(false) }
 
     val listState = rememberLazyListState()
+
+    // One horizontal scroll shared by the whole log stream, so dragging any line
+    // shifts every line together instead of each line scrolling on its own.
+    val logScrollState = rememberScrollState()
+    val textMeasurer = rememberTextMeasurer()
+    val logStyle = folkLogTextStyle()
+    val density = LocalDensity.current
 
     fun refresh() {
         scope.launch {
@@ -150,6 +159,19 @@ fun ShizukuLogScreen(navigator: DestinationsNavigator) {
         }
     }
 
+    // Every line is forced to the widest line's width (plus a little slack) so that
+    // sharing [logScrollState] cannot clamp against a shorter line's scroll range.
+    val logContentWidth = remember(visibleLines, logStyle) {
+        val widest = visibleLines.maxByOrNull { it.text.length }?.text
+        if (widest == null) {
+            Dp.Unspecified
+        } else {
+            with(density) {
+                (textMeasurer.measure(widest, logStyle).size.width + 16.dp.roundToPx()).toDp()
+            }
+        }
+    }
+
     // Scroll to the bottom (latest logs) when new data arrives
     LaunchedEffect(visibleLines.size, isLoading) {
         if (!isLoading && visibleLines.isNotEmpty()) {
@@ -157,22 +179,49 @@ fun ShizukuLogScreen(navigator: DestinationsNavigator) {
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.shizuku_log_title),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = null)
+    FolkScaffold(
+        title = stringResource(R.string.shizuku_log_title),
+        titleStyle = FolkTitleStyle.Inline,
+        onBack = {
+            if (isSearchActive) {
+                isSearchActive = false
+                query = ""
+            } else {
+                navigator.popBackStack()
+            }
+        },
+        titleContent = if (isSearchActive) {
+            {
+                TextField(
+                    value = query,
+                    onValueChange = { query = it },
+                    placeholder = { Text(stringResource(R.string.shizuku_log_search_hint)) },
+                    singleLine = true,
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+        } else {
+            null
+        },
+        actions = {
+                    if (isSearchActive) {
+                        if (query.isNotEmpty()) {
+                            IconButton(onClick = { query = "" }) {
+                                Icon(Icons.Outlined.Close, contentDescription = null)
+                            }
+                        }
+                    } else {
+                        IconButton(onClick = { isSearchActive = true }) {
+                            Icon(Icons.Outlined.Search, contentDescription = null)
+                        }
                     }
-                },
-                actions = {
                     IconButton(onClick = { showMenu = !showMenu }) {
                         Icon(Icons.Outlined.MoreVert, contentDescription = null)
                     }
@@ -249,109 +298,66 @@ fun ShizukuLogScreen(navigator: DestinationsNavigator) {
                             },
                         )
                     }
-                },
-                scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
-            )
         },
-        containerColor = Color.Transparent,
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding)) {
-            // 1) Source switch + level filters, grouped into one spliced card.
-            SplicedColumnGroup(flat = true) {
-                    item(key = "source") {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 12.dp),
-                        ) {
-                            SingleChoiceSegmentedButtonRow(
-                                modifier = Modifier.fillMaxWidth(),
-                            ) {
-                                SegmentedButton(
-                                    selected = source == LogSource.SERVER,
-                                    onClick = { source = LogSource.SERVER },
-                                    shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
-                                ) { Text(stringResource(R.string.shizuku_log_source_server)) }
-                                SegmentedButton(
-                                    selected = source == LogSource.LOGCAT,
-                                    onClick = { source = LogSource.LOGCAT },
-                                    shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
-                                ) { Text(stringResource(R.string.shizuku_log_source_logcat)) }
-                            }
-                        }
-                    }
-                    item(key = "levels") {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .horizontalScroll(rememberScrollState())
-                                .padding(horizontal = 16.dp, vertical = 4.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            LEVELS.forEach { level ->
-                                FilterChip(
-                                    selected = level in activeLevels,
-                                    onClick = {
-                                        activeLevels = if (level in activeLevels) {
-                                            activeLevels - level
-                                        } else {
-                                            activeLevels + level
-                                        }
-                                    },
-                                    label = { Text(level.toString(), color = levelColor(level)) },
-                                )
-                            }
-                        }
-                    }
-                    item(key = "search") {
-                        OutlinedTextField(
-                            value = query,
-                            onValueChange = { query = it },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
-                            singleLine = true,
-                            leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = null) },
-                            placeholder = { Text(stringResource(R.string.shizuku_log_search_hint)) },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            // Compact toolbar on the page itself, not in a card: source on one
+            // line, level filters on the next. Two lines keep every chip visible
+            // instead of hiding the last one past the screen edge, and still cost
+            // far less height than the old filter card.
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    FilterChip(
+                        selected = source == LogSource.SERVER,
+                        onClick = { source = LogSource.SERVER },
+                        label = { Text(stringResource(R.string.shizuku_log_source_server)) },
+                    )
+                    FilterChip(
+                        selected = source == LogSource.LOGCAT,
+                        onClick = { source = LogSource.LOGCAT },
+                        label = { Text(stringResource(R.string.shizuku_log_source_logcat)) },
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    LEVELS.forEach { level ->
+                        FilterChip(
+                            selected = level in activeLevels,
+                            onClick = {
+                                activeLevels = if (level in activeLevels) {
+                                    activeLevels - level
+                                } else {
+                                    activeLevels + level
+                                }
+                            },
+                            label = { Text("${level.letter} ${logLevelLabel(level)}", color = folkLogLevelColor(level)) },
                         )
+                    }
                 }
             }
 
             // 2) Log body: a single rounded container in the app's card style,
             // filling the remaining height like a standard manager log page.
             when {
-                isLoading -> Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    CircularProgressIndicator()
-                }
-                visibleLines.isEmpty() -> Column(
-                    modifier = Modifier.fillMaxSize().padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Outlined.Article,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(56.dp),
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    Text(
-                        text = stringResource(R.string.shizuku_log_empty),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
+                isLoading -> FolkLogLoading()
+                visibleLines.isEmpty() -> FolkLogEmptyState(
+                    icon = Icons.AutoMirrored.Outlined.Article,
+                    title = stringResource(R.string.shizuku_log_empty),
+                )
                 else -> Box(modifier = Modifier.fillMaxSize().padding(bottom = 8.dp)) {
-                    Surface(
+                    FolkLogCard(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 16.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        color = MaterialTheme.colorScheme.surfaceContainer,
                     ) {
                         LazyColumn(
                             state = listState,
@@ -359,16 +365,12 @@ fun ShizukuLogScreen(navigator: DestinationsNavigator) {
                             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
                         ) {
                             items(visibleLines) { line ->
-                                Text(
+                                FolkLogLine(
+                                    level = line.level,
                                     text = line.text,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    fontFamily = FontFamily.Monospace,
-                                    fontSize = 11.sp,
-                                    color = levelColor(line.level),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .horizontalScroll(rememberScrollState())
-                                        .padding(vertical = 1.dp),
+                                    levelIndex = line.levelIndex,
+                                    scrollState = logScrollState,
+                                    contentWidth = logContentWidth,
                                 )
                             }
                         }
@@ -377,14 +379,4 @@ fun ShizukuLogScreen(navigator: DestinationsNavigator) {
             }
         }
     }
-}
-
-@Composable
-private fun levelColor(level: Char): Color = when (level) {
-    'E' -> MaterialTheme.colorScheme.error
-    'W' -> Color(0xFFE29A2E)
-    'I' -> MaterialTheme.colorScheme.onSurface
-    'D' -> MaterialTheme.colorScheme.onSurfaceVariant
-    'V' -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-    else -> MaterialTheme.colorScheme.onSurfaceVariant
 }

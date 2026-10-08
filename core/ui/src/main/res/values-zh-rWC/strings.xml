@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_action_search">探寻</string>
+    <string name="core_action_clear">涤</string>
+    <string name="core_action_back">回</string>
+    <string name="core_action_close">归寂</string>
+    <string name="core_action_more">余</string>
+    <string name="core_action_refresh">吐纳</string>
+    <string name="core_action_filter">筛</string>
+    <string name="core_action_save">结丹</string>
+    <string name="core_action_send">传讯</string>
+    <string name="core_action_download">取宝</string>
+    <string name="core_action_config">法门</string>
+    <string name="core_action_delete">湮</string>
+    <string name="core_state_busy">运功</string>
+</resources>

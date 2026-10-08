@@ -12,7 +12,7 @@ use std::{
     env::var as env_var,
     fs::{self, remove_dir_all},
     io::{Cursor, Read},
-    path::{Path, PathBuf, Component},
+    path::{Path, PathBuf},
     process::Command,
     str::FromStr,
 };
@@ -228,7 +228,7 @@ pub fn exec_script<T: AsRef<Path>>(path: T, wait: bool) -> Result<()> {
     let is_elf = fs::read(path.as_ref())
         .ok()
         .and_then(|bytes| bytes.get(..4).map(|b| b.to_vec()))
-        .map_or(false, |magic| magic == [0x7f, b'E', b'L', b'F']);
+        .is_some_and(|magic| magic == [0x7f, b'E', b'L', b'F']);
 
     let mut command = Command::new(if is_elf {
         path.as_ref().as_os_str().to_owned()
@@ -245,8 +245,12 @@ pub fn exec_script<T: AsRef<Path>>(path: T, wait: bool) -> Result<()> {
             });
         }
     }
+    let parent = path
+        .as_ref()
+        .parent()
+        .with_context(|| format!("script has no parent: {}", path.as_ref().display()))?;
     command
-        .current_dir(path.as_ref().parent().unwrap())
+        .current_dir(parent)
         .envs(get_common_script_envs(module_id.as_deref()));
     if !is_elf {
         command
@@ -408,10 +412,7 @@ fn _install_module(zip: &str) -> Result<()> {
     // The id becomes a directory name under MODULE_DIR and is interpolated into
     // shell commands by the manager; reject path traversal at this trust boundary
     // (same rule as KernelSU and module_config.rs).
-    let id_re = regex_lite::Regex::new(r"^[a-zA-Z][a-zA-Z0-9._-]+$")?;
-    if !id_re.is_match(module_id) {
-        bail!("invalid module id: {module_id}");
-    }
+    ensure_valid_module_id(module_id)?;
 
     // Check if this module is a metamodule
     let is_metamodule = metamodule::is_metamodule(&module_prop);
@@ -483,7 +484,7 @@ fn _install_module(zip: &str) -> Result<()> {
     let file = fs::File::open(zip)?;
     let mut archive = zip::ZipArchive::new(file)?;
     archive.extract(&_module_update_dir)?;
-    
+
     // Set SELinux context for module root directory and special files
     // This is critical for .img files that need to be loop-mounted
     #[cfg(unix)]
@@ -492,19 +493,19 @@ fn _install_module(zip: &str) -> Result<()> {
         if module_update_path.exists() {
             // Set adb_data_file context for the module root directory
             restorecon::lsetfilecon(&_module_update_dir, restorecon::ADB_CON)?;
-            
+
             // Process special files like .img that need proper permissions for mounting
             if let Ok(entries) = fs::read_dir(&_module_update_dir) {
                 for entry in entries.flatten() {
                     let path = entry.path();
-                    if let Some(extension) = path.extension() {
-                        if extension == "img" {
-                            // Set proper permissions for image files (readable by all)
-                            fs::set_permissions(&path, fs::Permissions::from_mode(0o644))?;
-                            // Set SELinux context to allow loop mounting
-                            restorecon::lsetfilecon(&path, restorecon::ADB_CON)?;
-                            info!("Set permissions and SELinux context for: {:?}", path);
-                        }
+                    if let Some(extension) = path.extension()
+                        && extension == "img"
+                    {
+                        // Set proper permissions for image files (readable by all)
+                        fs::set_permissions(&path, fs::Permissions::from_mode(0o644))?;
+                        // Set SELinux context to allow loop mounting
+                        restorecon::lsetfilecon(&path, restorecon::ADB_CON)?;
+                        info!("Set permissions and SELinux context for: {:?}", path);
                     }
                 }
             }
@@ -620,7 +621,16 @@ pub fn read_module_prop(module_path: &Path) -> Result<HashMap<String, String>> {
     Ok(prop_map)
 }
 
+fn ensure_valid_module_id(id: &str) -> Result<()> {
+    let id_re = regex_lite::Regex::new(r"^[a-zA-Z][a-zA-Z0-9._-]+$")?;
+    if !id_re.is_match(id) {
+        bail!("invalid module id: {id}");
+    }
+    Ok(())
+}
+
 pub fn run_action(id: &str) -> Result<()> {
+    ensure_valid_module_id(id)?;
     let action_script_path = format!("/data/adb/modules/{}/action.sh", id);
     if Path::new(&action_script_path).exists() {
         let _ = exec_script(&action_script_path, true);
@@ -706,34 +716,6 @@ pub fn disable_all_modules() -> Result<()> {
     Ok(())
 }
 
-// Resolve a module icon path to an absolute on-disk path
-fn resolve_module_icon_path(
-    module_prop_map: &mut HashMap<String, String>,
-    key: &str,
-    module_path: &Path,
-) {
-    let module_id = module_prop_map.get("id").map(|s| s.as_str()).unwrap_or("");
-
-    if let Some(icon_value) = module_prop_map.get(key).map(|v| v.trim()).filter(|v| !v.is_empty()) {
-        let path = Path::new(icon_value);
-
-        if path.is_absolute() || path.components().any(|c| matches!(c, Component::ParentDir)) {
-            log::warn!("Rejected {} (invalid path) for module {}: {}", key, module_id, icon_value);
-            return;
-        }
-
-        let candidate = module_path.join(path);
-
-        if candidate.exists() && candidate.is_file() {
-            if let Some(full_path) = candidate.to_str() {
-                module_prop_map.insert(key.to_string(), full_path.to_string());
-            }
-        } else {
-            log::debug!("{} not found for module {}: {}", key, module_id, candidate.display());
-        }
-    }
-}
-
 fn _list_modules(path: &str) -> Vec<HashMap<String, String>> {
     // Load all module configs once to minimize I/O overhead
     let all_configs = match module_config::get_all_module_configs() {
@@ -805,9 +787,8 @@ fn _list_modules(path: &str) -> Vec<HashMap<String, String>> {
         module_prop_map.insert("web".to_owned(), web.to_string());
         module_prop_map.insert("action".to_owned(), action.to_string());
 
-        // Resolve and validate module icon paths for action and webui icons
-        resolve_module_icon_path(&mut module_prop_map, "actionIcon", &path);
-        resolve_module_icon_path(&mut module_prop_map, "webuiIcon", &path);
+        crate::module_icon::resolve(&mut module_prop_map, "actionIcon", &path);
+        crate::module_icon::resolve(&mut module_prop_map, "webuiIcon", &path);
 
         // Apply module config overrides and extract managed features
         if let Some(module_id) = module_prop_map.get("id")

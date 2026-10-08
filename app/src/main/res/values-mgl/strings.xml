@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="launcher_icon_style_anime">魔法少女</string>
+    <string name="launcher_icon_style_geometry">几何魔法阵</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">星图浮栏样式</string>
+    <string name="settings_bottom_bar_standard">标准星栏</string>
+    <string name="settings_bottom_bar_drawer">抽屉星栏</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
@@ -65,6 +71,7 @@
     <string name="reboot_fastbootd">前往星界传送阵</string>
     <string name="about">我来自哪?</string>
     <string name="developer_and_maintainer">施法者 | 守护者</string>
+    <string name="developer_profile_picture">开发者魔像</string>
     <string name="settings_app_language">魔法语言</string>
     <string name="system_default">默认魔法</string>
     <string name="settings_global_namespace_mode">全域魔法领域</string>
@@ -158,6 +165,7 @@
     <string name="patch_item_skey">心之密钥</string>
     <string name="patch_custom_superkey">自定义心之密钥</string>
     <string name="patch_custom_superkey_summary">你仍可设心之密钥来管理魔法，魔法书已获内印授权</string>
+    <string name="patch_custom_superkey_optional">可择；符印加持之魔法书，通常无须再设心之密钥</string>
     <string name="patch_item_set_skey_label">心之密钥长度应为8-63个字符，包含星光和月辉，不能含有混沌之力。</string>
     <string name="patch_confirm_superkey">再次凝炼心之密钥</string>
     <string name="patch_skey_mismatch">两次心之密钥不契合</string>
@@ -665,6 +673,11 @@ KernelPatch 魔法阵需要 boot 核心来施展。
     <string name="shizuku_log_copied">已复刻至剪贴板</string>
     <string name="shizuku_log_source_server">施法端记录</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">详述</string>
+    <string name="shizuku_log_level_debug">调试</string>
+    <string name="shizuku_log_level_info">情报</string>
+    <string name="shizuku_log_level_warn">警示</string>
+    <string name="shizuku_log_level_error">崩解</string>
     <string name="shizuku_log_search_hint">查找魔法记录</string>
 <string name="settings_app_title">魔法使名称</string>
     <string name="app_title_custom">自定义魔法名</string>
@@ -677,8 +690,6 @@ KernelPatch 魔法阵需要 boot 核心来施展。
     <string name="settings_custom_background">自定义魔法背景</string>
     <string name="settings_custom_background_enabled">已启用自定义魔法背景</string>
     <string name="settings_custom_background_opacity">魔法阵透明度</string>
-    <string name="settings_alt_icon">备用魔法图标</string>
-    <string name="alt_icon_summary">使用备选魔法启动器图标</string>
     <string name="settings_custom_background_blur">魔法背景模糊</string>
     <string name="settings_custom_background_dim">背景暗度</string>
     <string name="settings_select_background_image">选择魔法背景图片</string>
@@ -795,6 +806,9 @@ KernelPatch 魔法阵需要 boot 核心来施展。
     <string name="apm_copy_list_success">名录已抄录完毕</string>
 
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">魔法书默认</string>
+    <string name="settings_font_mode_system">星界默认</string>
+    <string name="settings_font_mode_custom">自定义魔法</string>
     <string name="settings_custom_font">魔法少女变身</string>
     <string name="settings_select_font_file">选择星尘卷轴(TTF)</string>
     <string name="settings_custom_font_enabled">已使用星尘卷轴</string>
@@ -953,6 +967,42 @@ KernelPatch 魔法阵需要 boot 核心来施展。
     <string name="settings_discrete_slider">魔法离散滑块</string>
     <string name="settings_discrete_slider_desc">为魔法滑块轨道添加刻度标记</string>
     <string name="settings_category_behavior">咒语指令</string>
+    <string name="profile_edit_title">魔法契约</string>
+    <string name="profile_nickname_label">魔法名</string>
+    <string name="profile_signature_label">咒语箴言</string>
+    <string name="profile_choose_avatar">更换魔法头像</string>
+    <string name="profile_avatar_default">默认魔像</string>
+    <string name="profile_avatar_custom">自定义魔像</string>
+    <string name="profile_avatar_opacity">头像透明</string>
+    <string name="profile_avatar_source_title">头像之源</string>
+    <string name="profile_avatar_source_local">择于器</string>
+    <string name="profile_avatar_source_qq">QQ 幻像</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">QQ 号</string>
+    <string name="profile_avatar_gravatar_hint">鸽信</string>
+    <string name="profile_avatar_fetch_failed">幻像召之不得</string>
+    <string name="profile_crop_avatar">裁切魔法头像</string>
+    <string name="profile_restore_default">回归初始</string>
+    <string name="settings_section_general_basics">魔法升级</string>
+    <string name="settings_section_general_interface">幻境动效</string>
+    <string name="settings_section_general_root">根源魔力</string>
+    <string name="settings_section_general_mount">结界挂载</string>
+    <string name="settings_section_general_identity">魔法身份</string>
+    <string name="settings_section_general_maintenance">魔力净化</string>
+    <string name="settings_section_behavior_display">魔法主页</string>
+    <string name="settings_section_behavior_actions">咒式与安装</string>
+    <string name="settings_section_function_hide">隐匿结界</string>
+    <string name="settings_section_function_root">根源魔法</string>
+    <string name="settings_section_function_mount">挂载与解除</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">契约认证</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">本地记忆</string>
+    <string name="settings_section_backup_cloud">云端记忆</string>
+    <string name="settings_section_module_display">魔法模组显示</string>
+    <string name="settings_section_module_update">升级与安装</string>
+    <string name="settings_section_multimedia_music">魔法幻音</string>
+    <string name="settings_section_multimedia_sound">音效与震动</string>
     <string name="settings_category_function">魔法功能</string>
     <string name="settings_use_legacy_su_page">单页超级用户授权喵</string>
     <string name="settings_use_legacy_su_page_summary">超级用户页面改用单页授权设计喵</string>
@@ -1193,6 +1243,8 @@ KernelPatch 魔法阵需要 boot 核心来施展。
     <string name="theme_download_finalizing">魔法凝聚中...</string>
     <string name="settings_predictive_back">预知回溯魔法手势</string>
     <string name="settings_predictive_back_summary">启用 Android 14+ 的预知回溯魔法动画</string>
+    <string name="settings_expressive_motion">魔法動勢</string>
+    <string name="settings_expressive_motion_summary">使用 Material 3 Expressive 的動勢曲線</string>
 
     <string name="home_device_status_battery_charging">魔力充盈中</string>
     <string name="home_device_status_cpu_temp">魔法温度</string>
@@ -1282,6 +1334,11 @@ KernelPatch 魔法阵需要 boot 核心来施展。
     <string name="color_style_monochrome">单色魔法</string>
     <string name="color_style_neutral">中立魔法</string>
     <string name="color_style_fidelity">保真魔法</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">对比度魔法</string>
+    <string name="color_contrast_standard">标准魔法</string>
+    <string name="color_contrast_medium">中等魔法</string>
+    <string name="color_contrast_high">高魔法</string>
     <string name="settings_focus_card_background">FocusUI 卡片壁纸</string>
     <string name="settings_focus_card_background_enabled">FocusUI 卡片壁纸已开启，长按卡片管理壁纸</string>
     <string name="settings_focus_card_background_summary">启用 FocusUI 卡片壁纸及长按壁纸管理</string>
@@ -1342,4 +1399,33 @@ KernelPatch 魔法阵需要 boot 核心来施展。
     <string name="jailbreak">解封</string>
     <string name="jailbreak_triggered">解封已触发，等待获得魔法使权能后轻灵重生。</string>
     <string name="reboot_soft">轻灵重生</string>
+    <string name="settings_faq">常见问题</string>
+    <string name="settings_bug_feedback">捉虫反馈</string>
+    <string name="settings_clear_cache">清除缓存</string>
+    <string name="settings_disclaimer">免责咒文</string>
+    <string name="settings_disclaimer_message">对法器施以 Root 后，天地异变、外道模块或诸般外缘皆可能招致不可测之祸，需由你自行承担。待你明了凶险，方可续行。</string>
+    <string name="theme_store_subtitle">尋常魔環，施於掌中</string>
+    <string name="script_library_subtitle">萌法運行與管領</string>
+    <string name="plugin_subtitle">萌法再擴</string>
+    <string name="my_themes_subtitle">汝所藏之魔法題</string>
+    <string name="apm_api_marketplace_subtitle">覽眾所施之 API</string>
+    <string name="theme_download_paused">魔力暫凝</string>
+    <string name="settings_wallpaper_gallery">魔法圖鑑</string>
+    <string name="wallpaper_device_phone">魔法手機</string>
+    <string name="wallpaper_device_tablet">魔法平板</string>
+    <string name="wallpaper_layout_waterfall">魔法瀑布</string>
+    <string name="wallpaper_layout_stack">疊層魔法</string>
+    <string name="wallpaper_device_mixed">混合魔力</string>
+    <string name="wallpaper_display_options">陳列魔法</string>
+    <string name="wallpaper_display_layout">魔法陣式</string>
+    <string name="wallpaper_download">詠唱下載</string>
+    <string name="wallpaper_cancel">取消</string>
+    <string name="wallpaper_saved">詠唱成功</string>
+    <string name="wallpaper_download_failed">詠唱失敗</string>
+    <string name="wallpaper_loading">詠唱魔法圖中</string>
+    <string name="wallpaper_empty">無魔法圖</string>
+    <string name="wallpaper_retry">再詠唱</string>
+    <string name="wallpaper_preview">魔法預覽</string>
+    <string name="wallpaper_set_background">化為魔法背景</string>
+    <string name="wallpaper_background_set">魔法背景已更替</string>
 </resources>

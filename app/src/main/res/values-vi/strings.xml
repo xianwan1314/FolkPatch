@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="launcher_icon_style_anime">Anime</string>
+    <string name="launcher_icon_style_geometry">Hình học</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">Kiểu thanh dưới nổi</string>
+    <string name="settings_bottom_bar_standard">Thanh dưới tiêu chuẩn</string>
+    <string name="settings_bottom_bar_drawer">Thanh dưới dạng ngăn kéo</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
@@ -65,6 +71,7 @@
     <string name="reboot_fastbootd">Khởi động lại vào FastbootD</string>
     <string name="about">Về</string>
     <string name="developer_and_maintainer">Nhà phát triển | Người bảo trì</string>
+    <string name="developer_profile_picture">Ảnh đại diện của nhà phát triển</string>
     <string name="settings_app_language">Ngôn ngữ</string>
     <string name="system_default">Mặc định hệ thống</string>
     <string name="settings_global_namespace_mode">Chế độ không gian tên toàn cục</string>
@@ -158,6 +165,7 @@
     <string name="patch_item_skey">Khóa siêu cấp</string>
     <string name="patch_custom_superkey">Khóa siêu cấp tùy chỉnh</string>
     <string name="patch_custom_superkey_summary">Bạn vẫn có thể đặt khóa siêu cấp để quản lý Root và kernel, trình quản lý đã được ủy quyền bằng chữ ký tích hợp</string>
+    <string name="patch_custom_superkey_optional">Tùy chọn; trình quản lý đã ký thường không cần khóa tùy chỉnh</string>
     <string name="patch_item_set_skey_label">Độ dài khóa siêu cấp phải từ 8-63 ký tự, bao gồm chữ số và chữ cái, không chứa ký tự đặc biệt.</string>
     <string name="patch_confirm_superkey">Xác nhận khóa siêu cấp</string>
     <string name="patch_skey_mismatch">Khóa siêu cấp không khớp</string>
@@ -660,6 +668,11 @@ Dưới đây là một số nguyên nhân có thể gây ra thất bại xác t
     <string name="shizuku_log_copied">Đã sao chép vào bộ nhớ tạm</string>
     <string name="shizuku_log_source_server">Nhật ký máy chủ</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">Chi tiết</string>
+    <string name="shizuku_log_level_debug">Gỡ lỗi</string>
+    <string name="shizuku_log_level_info">Thông tin</string>
+    <string name="shizuku_log_level_warn">Cảnh báo</string>
+    <string name="shizuku_log_level_error">Lỗi</string>
     <string name="shizuku_log_search_hint">Tìm kiếm nhật ký</string>
 <string name="settings_app_title">Tên ứng dụng</string>
     <string name="app_title_custom">Tùy chỉnh</string>
@@ -674,10 +687,11 @@ Dưới đây là một số nguyên nhân có thể gây ra thất bại xác t
     <string name="settings_custom_background_opacity">Độ mờ của thẻ</string>
     <string name="settings_custom_background_blur">Làm mờ nền</string>
     <string name="settings_custom_background_dim">Mức tối của nền</string>
-    <string name="settings_alt_icon">Biểu tượng thay thế</string>
-    <string name="alt_icon_summary">Sử dụng biểu tượng trình khởi chạy thay thế</string>
 
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">Mặc định của ứng dụng</string>
+    <string name="settings_font_mode_system">Mặc định của hệ thống</string>
+    <string name="settings_font_mode_custom">Tùy chỉnh</string>
     <string name="settings_custom_font">Font chữ tùy chỉnh</string>
     <string name="settings_select_font_file">Chọn tệp font chữ</string>
     <string name="settings_custom_font_enabled">Đã bật font chữ tùy chỉnh</string>
@@ -949,6 +963,42 @@ Dưới đây là một số nguyên nhân có thể gây ra thất bại xác t
     <string name="settings_discrete_slider">Thanh trượt có nấc</string>
     <string name="settings_discrete_slider_desc">Hiển thị vạch đánh dấu trên đường trượt</string>
     <string name="settings_category_behavior">Hành vi</string>
+    <string name="profile_edit_title">Chỉnh sửa hồ sơ</string>
+    <string name="profile_nickname_label">Biệt danh</string>
+    <string name="profile_signature_label">Chữ ký</string>
+    <string name="profile_choose_avatar">Chọn ảnh đại diện</string>
+    <string name="profile_avatar_default">Ảnh đại diện mặc định</string>
+    <string name="profile_avatar_custom">Ảnh đại diện tùy chỉnh</string>
+    <string name="profile_avatar_opacity">Độ mờ ảnh đại diện</string>
+    <string name="profile_avatar_source_title">Chọn nguồn ảnh đại diện</string>
+    <string name="profile_avatar_source_local">Chọn từ thiết bị</string>
+    <string name="profile_avatar_source_qq">Ảnh đại diện QQ</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">Số QQ</string>
+    <string name="profile_avatar_gravatar_hint">Email</string>
+    <string name="profile_avatar_fetch_failed">Không thể tải ảnh đại diện</string>
+    <string name="profile_crop_avatar">Cắt ảnh đại diện</string>
+    <string name="profile_restore_default">Khôi phục mặc định</string>
+    <string name="settings_section_general_basics">Ngôn ngữ &amp; Cập nhật</string>
+    <string name="settings_section_general_interface">Giao diện &amp; Hiệu ứng</string>
+    <string name="settings_section_general_root">Hành vi Root</string>
+    <string name="settings_section_general_mount">Hệ thống &amp; Mount</string>
+    <string name="settings_section_general_identity">Nhận diện ứng dụng</string>
+    <string name="settings_section_general_maintenance">Bảo trì</string>
+    <string name="settings_section_behavior_display">Hiển thị trang chủ</string>
+    <string name="settings_section_behavior_actions">Thao tác &amp; Cài đặt</string>
+    <string name="settings_section_function_hide">Ẩn &amp; Cô lập</string>
+    <string name="settings_section_function_root">Tính năng Root</string>
+    <string name="settings_section_function_mount">Mount &amp; Unmount</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">Xác thực</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">Sao lưu cục bộ</string>
+    <string name="settings_section_backup_cloud">Sao lưu đám mây</string>
+    <string name="settings_section_module_display">Hiển thị mô-đun</string>
+    <string name="settings_section_module_update">Cập nhật &amp; Cài đặt</string>
+    <string name="settings_section_multimedia_music">Nhạc nền</string>
+    <string name="settings_section_multimedia_sound">Âm thanh &amp; Rung</string>
     <string name="settings_category_function">Chức năng</string>
     <string name="settings_use_legacy_su_page">Ủy quyền siêu người dùng một trang</string>
     <string name="settings_use_legacy_su_page_summary">Trang siêu người dùng chuyển sang thiết kế ủy quyền một trang</string>
@@ -1203,6 +1253,8 @@ Dưới đây là một số nguyên nhân có thể gây ra thất bại xác t
     <string name="theme_download_finalizing">Đang hoàn tất...</string>
     <string name="settings_predictive_back">Cử chỉ quay lại dự đoán</string>
     <string name="settings_predictive_back_summary">Bật hoạt ảnh cử chỉ quay lại dự đoán Android 14+</string>
+    <string name="settings_expressive_motion">Chuyển động biểu cảm</string>
+    <string name="settings_expressive_motion_summary">Dùng đường cong chuyển động Material 3 Expressive</string>
 
     <string name="home_device_status_battery_charging">Đang sạc</string>
     <string name="home_device_status_cpu_temp">Nhiệt độ CPU</string>
@@ -1292,6 +1344,11 @@ Dưới đây là một số nguyên nhân có thể gây ra thất bại xác t
     <string name="color_style_monochrome">Đơn sắc</string>
     <string name="color_style_neutral">Trung tính</string>
     <string name="color_style_fidelity">Trung thực</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">Độ tương phản</string>
+    <string name="color_contrast_standard">Tiêu chuẩn</string>
+    <string name="color_contrast_medium">Trung bình</string>
+    <string name="color_contrast_high">Cao</string>
     <string name="settings_focus_card_background">Hình nền thẻ FocusUI</string>
     <string name="settings_focus_card_background_enabled">Hình nền thẻ FocusUI đã bật; nhấn giữ thẻ để quản lý hình nền</string>
     <string name="settings_focus_card_background_summary">Bật hình nền thẻ FocusUI và quản lý hình nền bằng nhấn giữ</string>
@@ -1355,4 +1412,33 @@ Dưới đây là một số nguyên nhân có thể gây ra thất bại xác t
     <string name="kpm_installed">Đã cài đặt</string>
     <string name="kpm_disabled">Đã tắt (có hiệu lực sau khi khởi động lại)</string>
     <string name="kpm_embedded_unload_invalid">Không thể tải KPM đã nhúng; chúng vẫn hoạt động sau khi khởi động lại.</string>
+    <string name="settings_faq">Câu hỏi thường gặp</string>
+    <string name="settings_bug_feedback">Báo lỗi</string>
+    <string name="settings_clear_cache">Xóa bộ nhớ đệm</string>
+    <string name="settings_disclaimer">Tuyên bố miễn trừ trách nhiệm</string>
+    <string name="settings_disclaimer_message">Sau khi root thiết bị, các bản cập nhật hệ thống, mô-đun của bên thứ ba hoặc các yếu tố bên ngoài khác có thể gây ra rủi ro và tổn thất không lường trước, bạn phải tự chịu trách nhiệm. Hãy tiếp tục sau khi đã hiểu rõ rủi ro.</string>
+    <string name="theme_store_subtitle">Khám phá và áp dụng chủ đề cộng đồng</string>
+    <string name="script_library_subtitle">Chạy và quản lý script cục bộ</string>
+    <string name="plugin_subtitle">Mở rộng khả năng của FolkPatch</string>
+    <string name="my_themes_subtitle">Chủ đề bạn đã lưu</string>
+    <string name="apm_api_marketplace_subtitle">Duyệt API do cộng đồng chia sẻ</string>
+    <string name="theme_download_paused">Đã tạm dừng</string>
+    <string name="settings_wallpaper_gallery">Thư viện hình nền</string>
+    <string name="wallpaper_device_phone">Điện thoại</string>
+    <string name="wallpaper_device_tablet">Máy tính bảng</string>
+    <string name="wallpaper_layout_waterfall">Thác nước</string>
+    <string name="wallpaper_layout_stack">Xếp chồng</string>
+    <string name="wallpaper_device_mixed">Hỗn hợp</string>
+    <string name="wallpaper_display_options">Tùy chọn hiển thị</string>
+    <string name="wallpaper_display_layout">Bố cục</string>
+    <string name="wallpaper_download">Tải xuống</string>
+    <string name="wallpaper_cancel">Hủy</string>
+    <string name="wallpaper_saved">Đã lưu</string>
+    <string name="wallpaper_download_failed">Tải xuống thất bại</string>
+    <string name="wallpaper_loading">Đang tải hình nền</string>
+    <string name="wallpaper_empty">Không có hình nền</string>
+    <string name="wallpaper_retry">Thử lại</string>
+    <string name="wallpaper_preview">Xem trước</string>
+    <string name="wallpaper_set_background">Đặt làm hình nền</string>
+    <string name="wallpaper_background_set">Đã cập nhật hình nền</string>
 </resources>

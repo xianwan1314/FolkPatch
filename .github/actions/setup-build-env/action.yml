@@ -4,20 +4,20 @@ description: Install all build dependencies (Java, Android SDK, Gradle, Rust too
 runs:
   using: composite
   steps:
-    - uses: actions/setup-java@v4
+    - uses: actions/setup-java@v5
       with:
         distribution: temurin
         java-version: '21'
 
-    - uses: android-actions/setup-android@v3
-
-    - uses: gradle/actions/setup-gradle@v3
-
-    - uses: actions-rs/toolchain@v1
+    - uses: android-actions/setup-android@v4
       with:
-        toolchain: stable
-        target: aarch64-linux-android
-        override: true
+        packages: platform-tools
+
+    - uses: gradle/actions/setup-gradle@v6
+
+    - uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: aarch64-linux-android
 
     - name: Install ARM GNU toolchain
       shell: bash

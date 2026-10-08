@@ -1,0 +1,88 @@
+{
+  "items": [
+    {
+      "title": "Funciones del software",
+      "body": "FolkPatch es un fork de APatch que utiliza KernelPatch para proporcionar root a nivel de kernel y lo amplía con un gestor, un sistema de módulos y más.\n\n• Superusuario: gestión y autorización de permisos root\n• APM: módulos de Android\n• KPM: módulos de kernel\n• Magic Mount: proporciona el montaje de módulos\n• Meta Module: permite que un metamódulo se encargue del montaje de módulos\n• Gestión de módulos: instalar, activar, desactivar y eliminar módulos\n• Shizuku: proporciona compatibilidad con el servicio Shizuku"
+    },
+    {
+      "title": "1. ¿Necesito desbloquear el bootloader para usar FolkPatch?",
+      "body": "Normalmente sí. Instalar FolkPatch suele requerir desbloquear el bootloader del dispositivo, porque FolkPatch parchea y flashea la imagen de arranque del dispositivo.\n\nAntes de instalar, asegúrate de que el bootloader esté desbloqueado y haz una copia de seguridad del boot.img original que corresponda a tu versión actual del sistema. Flashear una imagen incorrecta o que no coincida puede impedir que el dispositivo arranque."
+    },
+    {
+      "title": "2. ¿Cuál es la relación entre FolkPatch, APatch y KernelPatch?",
+      "body": "FolkPatch es un fork de APatch. KernelPatch es el componente de parcheo del kernel que FolkPatch usa por debajo para proporcionar root a nivel de kernel.\n\nEn pocas palabras, KernelPatch proporciona la capacidad de parcheo de kernel de bajo nivel, APatch construye sobre ella una solución de root para Android, y FolkPatch continúa ampliando APatch con funciones y un gestor.\n\nPor lo tanto, KernelPatch no es otro método de root ofrecido por FolkPatch, y KernelPatch y FolkPatch no deben entenderse como dos métodos de parcheo separados entre los que elegir."
+    },
+    {
+      "title": "3. ¿Mi dispositivo es compatible con FolkPatch?",
+      "body": "Actualmente FolkPatch es compatible con dispositivos que ejecutan el kernel de Linux 3.18 a 6.18, y requiere una arquitectura ARM64 y un entorno de kernel compatible con KernelPatch.\n\nQue la versión del kernel esté dentro del rango admitido no garantiza la compatibilidad. Los kernels de fabricantes, los de terceros y los modificados especialmente todavía pueden tener problemas de compatibilidad.\n\nSi tu dispositivo usa un kernel no estándar o muy personalizado, confirma primero su compatibilidad real."
+    },
+    {
+      "title": "4. ¿Qué partición parchea FolkPatch? ¿Puede parchear init_boot?",
+      "body": "Actualmente FolkPatch parchea la imagen de arranque boot.\n\nUsa el boot.img original que corresponda a tu versión actual del sistema, y no uses init_boot.img, vendor_boot.img ni otras imágenes de arranque como objetivo del parcheo.\n\nSi tu dispositivo tiene una disposición de arranque poco habitual, confirma primero qué partición boot usa realmente el dispositivo y cuál es su imagen original."
+    },
+    {
+      "title": "5. ¿Qué pasa si el dispositivo no arranca después de parchear o flashear?",
+      "body": "Un dispositivo que no arranca suele deberse a una imagen de arranque que no coincide, una combinación KernelPatch/kernel incompatible, flashear la partición equivocada o un módulo que rompe el inicio.\n\nSi el dispositivo todavía puede entrar en Fastboot o Recovery, restaura primero el boot.img original que guardaste.\n\nSi el problema apareció después de instalar o actualizar un módulo, revisa primero el último APM o KPM modificado. No flashees repetidamente sin una copia de seguridad de la imagen de arranque original."
+    },
+    {
+      "title": "6. ¿Qué pasa si un módulo instalado no surte efecto?",
+      "body": "Primero confirma que el módulo esté instalado y activado, y luego reinicia el dispositivo como indique el propio módulo.\n\nAPM y KPM se cargan de forma diferente, y algunos módulos dependen de una versión concreta de Android, de la versión del kernel u otros módulos, por lo que una instalación correcta no garantiza que el módulo funcione.\n\nSi un módulo no surte efecto, reinicia primero; si sigue sin funcionar, revisa la versión del módulo, la compatibilidad y los registros relacionados."
+    },
+    {
+      "title": "7. ¿Qué pasa si el dispositivo no arranca correctamente después de instalar un módulo?",
+      "body": "Si ves una animación de arranque bloqueada, reinicios aleatorios o no puedes entrar al sistema después de instalar o actualizar un módulo, sospecha primero del último módulo instalado o actualizado.\n\nSi todavía puedes arrancar, desactiva o elimina el último módulo instalado. Si no puedes arrancar, gestiona el módulo según las opciones de recuperación de tu dispositivo, restaurando el boot.img original si es necesario.\n\nEn particular, KPM se ejecuta en el kernel, por lo que los problemas de compatibilidad pueden romper directamente el inicio del sistema. Antes de instalar un KPM de origen desconocido, confirma su procedencia y su compatibilidad con tu kernel actual."
+    },
+    {
+      "title": "8. ¿Cuál es la diferencia entre APM y KPM?",
+      "body": "APM y KPM son los dos tipos de módulos que admite FolkPatch.\n\n• APM: módulos de Android, que modifican o amplían funciones del sistema Android\n• KPM: módulos de kernel, que amplían o modifican el kernel a nivel de kernel\n\nSe ejecutan en niveles distintos y cumplen propósitos distintos. Los autores de módulos eligen APM o KPM según cómo esté implementado el módulo."
+    },
+    {
+      "title": "9. Se concede root pero una app sigue diciendo que no hay root. ¿Y ahora qué?",
+      "body": "Primero abre la página de superusuario y confirma que a la app se le ha concedido root, luego ciérrala por completo y vuelve a abrirla.\n\nSi la autorización está bien pero la app sigue sin detectar root, puede que use otras comprobaciones de root, como la ruta su, el estado de SELinux, el entorno de montaje u otras características del sistema.\n\nAlgunos dispositivos también pueden tener restos de otras soluciones de root, como KernelSU o Magisk. Varios entornos de root pueden entrar en conflicto, así que comprueba si existe otro gestor de root o restos relacionados."
+    },
+    {
+      "title": "10. ¿Por qué la ruta de root aparece como /system/bin/kp?",
+      "body": "Si existe otra solución de root o restos relacionados en el sistema, FolkPatch puede usar /system/bin/kp como ruta de root para evitar conflictos con el entorno existente.\n\nSi quieres usar la ruta tradicional /system/bin/su, primero asegúrate de que la otra solución de root se ha eliminado y de que se han limpiado sus restos, y luego vuelve a configurar.\n\nTen en cuenta que cambiar la ruta de root puede afectar a la detección de root y a la compatibilidad en algunas apps."
+    },
+    {
+      "title": "11. ¿Por qué no aparece una solicitud de root?",
+      "body": "Primero confirma que el estado de root del propio FolkPatch es normal y que la página de superusuario funciona.\n\nSi root funciona pero la app no muestra ninguna solicitud, prueba a reiniciar la app y comprueba si se ha configurado para denegar root de forma permanente.\n\nSi el problema apareció después de instalar o actualizar un KPM o un APM, desactiva primero el último módulo modificado para acotar el problema."
+    },
+    {
+      "title": "12. ¿Por qué la versión de KernelPatch no cambia después de actualizar?",
+      "body": "Si el dispositivo sigue mostrando la versión antigua después de actualizar KernelPatch y reiniciar, comprueba primero si algún KPM está bloqueando la escritura en particiones críticas.\n\nAlgunos KPM anti-brick interceptan la escritura en boot y otras particiones críticas, lo que hace que falle la actualización de KernelPatch. Antes de actualizar KernelPatch, desactiva temporalmente los KPM que puedan afectar a la escritura en particiones.\n\nTambién confirma que la imagen de arranque actual coincide con la versión actual del sistema del dispositivo y que la nueva versión de KernelPatch es compatible con tu kernel."
+    },
+    {
+      "title": "13. ¿Por qué desapareció root tras una actualización de Android?",
+      "body": "Con las actualizaciones continuas A/B, la actualización del sistema normalmente se escribe en la otra ranura. Tras cambiar a la nueva ranura, puede que su imagen de arranque no esté parcheada por FolkPatch, por lo que root se pierde temporalmente.\n\nSi FolkPatch admite la instalación en la ranura inactiva de tu dispositivo, puedes instalarlo allí después de que termine la OTA y antes de reiniciar al nuevo sistema.\n\nSi ya has arrancado en el nuevo sistema y has perdido root, obtén el boot.img original que corresponda a esa versión del sistema, parchéalo y vuelve a flashearlo."
+    },
+    {
+      "title": "14. ¿Por qué FolkPatch 4.3 y posteriores ya no usan SuperKey?",
+      "body": "FolkPatch 4.3 y posteriores autentican el gestor mediante la verificación de la firma del APK en lugar del antiguo mecanismo SuperKey.\n\nPor eso, con una versión actual de FolkPatch no necesitas generar ni configurar un SuperKey siguiendo guías antiguas. Con un KernelPatch antiguo o un gestor antiguo, el mecanismo de autenticación puede ser distinto al de la versión actual."
+    },
+    {
+      "title": "15. ¿Por qué falla la autenticación tras reinstalar FolkPatch?",
+      "body": "FolkPatch usa la autenticación por firma del APK para el gestor. Si desinstalas y reinstalas el gestor, KernelPatch puede conservar todavía el estado del gestor anterior, por lo que la autenticación puede fallar temporalmente tras reinstalar.\n\nEn ese caso, reinicia primero el dispositivo para que KernelPatch vuelva a detectar el gestor actual. Si el problema persiste, confirma que las versiones de tu KernelPatch y del gestor de FolkPatch coincidan."
+    },
+    {
+      "title": "16. ¿Por qué un KernelPatch antiguo no puede autenticar el FolkPatch actual?",
+      "body": "La autenticación del gestor depende de la verificación de firma de KernelPatch. Las versiones antiguas de KernelPatch carecen de esa capacidad, por lo que no pueden completar la autenticación con el FolkPatch actual.\n\nSi usas una versión actual de FolkPatch, asegúrate de que la versión de KernelPatch cumpla los requisitos del mecanismo de autenticación actual."
+    },
+    {
+      "title": "17. ¿Cómo desinstalo FolkPatch?",
+      "body": "Elige un método de desinstalación según el estado actual del dispositivo.\n\n• Desinstalación desde el gestor: usa la función de desinstalación que ofrece FolkPatch\n• Desinstalación desde Recovery: restaura con el paquete de desinstalación de la versión correspondiente\n• Restauración manual: vuelve a flashear el boot.img original que guardaste\n\nSi el dispositivo tiene actualmente problemas relacionados con APM o KPM, gestiona esos módulos antes de desinstalar o restaurar."
+    },
+    {
+      "title": "18. ¿Por qué sigue diciendo no compatible si mi kernel está dentro de 3.18–6.18?",
+      "body": "El rango de versiones del kernel es solo el requisito básico de compatibilidad de FolkPatch; no garantiza que todos los kernels funcionen con KernelPatch.\n\nDistintos kernels de fabricantes y de terceros pueden tener estructuras, símbolos, configuraciones o modificaciones poco habituales, y pueden fallar al parchearse incluso dentro de 3.18–6.18.\n\nSi te encuentras con un problema de kernel no compatible, confirma primero que el boot.img provenga del sistema actual y comprueba si hay problemas de compatibilidad conocidos con kernels especiales. No juzgues la compatibilidad total solo por el número de versión del kernel."
+    },
+    {
+      "title": "19. ¿Qué información debo proporcionar al informar de un problema?",
+      "body": "Al informar de un problema, proporciona la mayor cantidad posible de lo siguiente:\n\n• Fabricante y modelo exacto del dispositivo\n• Versión de Android\n• Versión del kernel de Linux\n• Versión de FolkPatch\n• Versión de KernelPatch\n• Si el boot.img actual proviene de la versión actual del sistema\n• APM y KPM instalados\n• El mensaje de error completo o los registros\n• Qué hiciste antes de que apareciera el problema\n\nSi el problema está relacionado con la autorización de root, una actualización de KernelPatch o módulos, menciona también si recientemente instalaste, actualizaste o eliminaste algo relacionado."
+    },
+    {
+      "title": "20. ¿Qué debo tener en cuenta antes de usar FolkPatch?",
+      "body": "Root, el parcheo de la imagen de arranque y la instalación de APM/KPM pueden afectar a la estabilidad del sistema.\n\nAntes de instalar FolkPatch o hacer una actualización importante, prepara el boot.img original que corresponda a tu sistema actual y asegúrate de que el dispositivo pueda entrar en Fastboot o Recovery.\n\nAntes de instalar módulos de terceros, asegúrate de que la fuente sea fiable y comprueba la compatibilidad con tu versión de Android, tu kernel y tu versión de FolkPatch."
+    }
+  ]
+}

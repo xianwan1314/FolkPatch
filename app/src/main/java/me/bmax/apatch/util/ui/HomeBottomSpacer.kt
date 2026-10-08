@@ -1,7 +1,6 @@
 package me.bmax.apatch.util.ui
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -13,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import me.bmax.apatch.ui.navigation.LocalBottomBarVisible
 import me.bmax.apatch.ui.navigation.LocalIsFloatingNavMode
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun HomeBottomSpacer(modifier: Modifier = Modifier) {
@@ -26,7 +26,7 @@ fun HomeBottomSpacer(modifier: Modifier = Modifier) {
             isFloatingMode -> navBarBottom
             else -> 16.dp
         },
-        animationSpec = tween(durationMillis = 300),
+        animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
         label = "homeBottomSpacer"
     )
 

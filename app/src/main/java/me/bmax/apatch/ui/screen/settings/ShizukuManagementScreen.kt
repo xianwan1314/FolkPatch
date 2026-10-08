@@ -18,20 +18,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.Article
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,13 +39,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import android.widget.Toast
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -61,10 +55,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.SplicedColumnGroup
-import me.bmax.apatch.ui.component.ToggleSettingCard
-import me.bmax.apatch.ui.screen.LabelText
+import me.bmax.apatch.ui.component.folk.FolkScaffold
+import me.bmax.apatch.ui.component.folk.FolkTitleStyle
+import me.bmax.apatch.ui.screen.superuser.LabelText
 import me.bmax.apatch.util.ShizukuServiceManager
+import me.bmax.apatch.ui.component.folk.FolkSettingsGroup
+import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
+import androidx.compose.material.icons.outlined.*
+import me.bmax.apatch.ui.component.folk.FolkStateView
+import androidx.compose.material.icons.outlined.Apps
 
 private data class ShizukuApp(
     val packageInfo: PackageInfo,
@@ -73,84 +72,117 @@ private data class ShizukuApp(
     val shellOnly: Boolean,
 )
 
+private data class ShizukuLoadResult(
+    val serverIsRoot: Boolean,
+    val apps: List<ShizukuApp>,
+)
+
 @Destination<RootGraph>
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShizukuManagementScreen(navigator: DestinationsNavigator) {
     val context = LocalContext.current
     var loading by remember { mutableStateOf(true) }
     var available by remember { mutableStateOf(true) }
+    var loadFailed by remember { mutableStateOf(false) }
     var serverIsRoot by remember { mutableStateOf(false) }
     var apps by remember { mutableStateOf(emptyList<ShizukuApp>()) }
 
     suspend fun loadApps() {
         loading = true
-        val result = withContext(Dispatchers.IO) {
-            // 服务可能刚从设置页启动、binder 尚未完全就绪，短暂等待后再判定。
-            var ready = ShizukuServiceManager.isServerRunning()
-            var waited = 0
-            while (!ready && waited < 3000) {
-                Thread.sleep(200L)
-                waited += 200
-                ready = ShizukuServiceManager.isServerRunning()
+        try {
+            val result = withContext(Dispatchers.IO) {
+                // 服务可能刚从设置页启动、binder 尚未完全就绪，短暂等待后再判定。
+                var ready = ShizukuServiceManager.isServerRunning()
+                var waited = 0
+                while (!ready && waited < 3000) {
+                    Thread.sleep(200L)
+                    waited += 200
+                    ready = ShizukuServiceManager.isServerRunning()
+                }
+                if (!ready) {
+                    null
+                } else {
+                    val packageInfos = ShizukuServiceManager.getApplications() ?: return@withContext null
+                    val rootServer = ShizukuServiceManager.isRootServer()
+                    val loadedApps = packageInfos
+                        .mapNotNull { packageInfo ->
+                            val uid = packageInfo.applicationInfo?.uid ?: return@mapNotNull null
+                            ShizukuApp(
+                                packageInfo = packageInfo,
+                                uid = uid,
+                                allowed = ShizukuServiceManager.isAllowed(uid),
+                                shellOnly = ShizukuServiceManager.getShellOnly(uid),
+                            )
+                        }
+                        .distinctBy { it.uid }
+                        .sortedBy { app ->
+                            runCatching {
+                                app.packageInfo.applicationInfo
+                                    ?.loadLabel(context.packageManager)
+                                    ?.toString()
+                                    ?.lowercase()
+                                    .orEmpty()
+                            }.getOrDefault("")
+                        }
+                    ShizukuLoadResult(rootServer, loadedApps)
+                }
             }
-            if (!ready) {
-                null
+            available = result != null
+            loadFailed = false
+            if (result != null) {
+                serverIsRoot = result.serverIsRoot
+                apps = result.apps
             } else {
-                serverIsRoot = ShizukuServiceManager.isRootServer()
-                ShizukuServiceManager.getApplications()
-                    .mapNotNull { packageInfo ->
-                        val uid = packageInfo.applicationInfo?.uid ?: return@mapNotNull null
-                        ShizukuApp(
-                            packageInfo = packageInfo,
-                            uid = uid,
-                            allowed = ShizukuServiceManager.isAllowed(uid),
-                            shellOnly = ShizukuServiceManager.getShellOnly(uid),
-                        )
-                    }
-                    .distinctBy { it.uid }
-                    .sortedBy { app ->
-                        app.packageInfo.applicationInfo?.loadLabel(context.packageManager).toString().lowercase()
-                    }
+                apps = emptyList()
             }
+        } catch (t: Throwable) {
+            Log.e("ShizukuMgr", "loadApps failed", t)
+            available = false
+            loadFailed = true
+            apps = emptyList()
+        } finally {
+            loading = false
         }
-        available = result != null
-        apps = result.orEmpty()
-        loading = false
     }
 
     LaunchedEffect(Unit) { loadApps() }
 
     val scope = rememberCoroutineScope()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.shizuku_management_title)) },
-                navigationIcon = {
-                    IconButton(onClick = navigator::popBackStack) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = null)
-                    }
-                },
-                actions = {
-                    IconButton(onClick = {
-                        navigator.navigate(ShizukuLogScreenDestination)
-                    }) {
-                        Icon(
-                            Icons.AutoMirrored.Outlined.Article,
-                            contentDescription = stringResource(R.string.shizuku_log_title),
-                        )
-                    }
-                },
-            )
+    FolkScaffold(
+        title = stringResource(R.string.shizuku_management_title),
+        titleStyle = FolkTitleStyle.Inline,
+        onBack = navigator::popBackStack,
+        actions = {
+            IconButton(onClick = {
+                navigator.navigate(ShizukuLogScreenDestination)
+            }) {
+                Icon(
+                    Icons.AutoMirrored.Outlined.Article,
+                    contentDescription = stringResource(R.string.shizuku_log_title),
+                )
+            }
         },
-        containerColor = Color.Transparent,
     ) { padding ->
         when {
             loading -> Column(
                 modifier = Modifier.fillMaxSize().padding(padding),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) { CircularProgressIndicator(modifier = Modifier.padding(32.dp)) }
+            loadFailed -> Column(
+                modifier = Modifier.fillMaxSize().padding(padding).padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    text = stringResource(R.string.shizuku_management_load_failed),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Spacer(Modifier.height(16.dp))
+                Button(onClick = { scope.launch { loadApps() } }) {
+                    Text(stringResource(R.string.retry))
+                }
+            }
             !available -> Column(
                 modifier = Modifier.fillMaxSize().padding(padding).padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -165,20 +197,16 @@ fun ShizukuManagementScreen(navigator: DestinationsNavigator) {
                     Text(stringResource(R.string.retry))
                 }
             }
-            apps.isEmpty() -> Column(
-                modifier = Modifier.fillMaxSize().padding(padding).padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Text(
-                    text = stringResource(R.string.shizuku_management_empty),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                Spacer(Modifier.height(16.dp))
-                Button(onClick = { scope.launch { loadApps() } }) {
-                    Text(stringResource(R.string.retry))
-                }
-            }
+            apps.isEmpty() -> FolkStateView(
+                title = stringResource(R.string.shizuku_management_empty),
+                modifier = Modifier.padding(padding),
+                icon = Icons.Outlined.Apps,
+                action = {
+                    Button(onClick = { scope.launch { loadApps() } }) {
+                        Text(stringResource(R.string.retry))
+                    }
+                },
+            )
             else -> LazyColumn(
                 modifier = Modifier.fillMaxSize().padding(padding),
                 contentPadding = PaddingValues(top = 8.dp, bottom = 24.dp),
@@ -186,9 +214,15 @@ fun ShizukuManagementScreen(navigator: DestinationsNavigator) {
                 items(apps, key = { it.uid }) { app ->
                     val info = app.packageInfo.applicationInfo ?: return@items
                     val label = remember(app.packageInfo.packageName) {
-                        info.loadLabel(context.packageManager).toString()
+                        runCatching { info.loadLabel(context.packageManager).toString() }
+                            .getOrDefault(app.packageInfo.packageName)
                     }
-                    SplicedColumnGroup(flat = true) {
+                    // One group per app: keep a gap between the cards (the
+                    // settings sub-pages get this from FolkSettingsSection).
+                    FolkSettingsGroup(
+                        flat = true,
+                        modifier = Modifier.padding(bottom = 10.dp),
+                    ) {
                         item(key = "header") {
                             ShizukuAppHeader(
                                 packageInfo = app.packageInfo,
@@ -206,11 +240,10 @@ fun ShizukuManagementScreen(navigator: DestinationsNavigator) {
                             )
                         }
                         item(key = "allow") {
-                            ToggleSettingCard(
-                                flat = true,
+                            FolkSwitchPreference(
                                 icon = Icons.Outlined.Shield,
                                 title = stringResource(R.string.shizuku_management_allowed_title),
-                                description = if (app.allowed) {
+                                summary = if (app.allowed) {
                                     stringResource(R.string.shizuku_management_granted)
                                 } else {
                                     stringResource(R.string.shizuku_management_denied)
@@ -229,11 +262,10 @@ fun ShizukuManagementScreen(navigator: DestinationsNavigator) {
                         }
                         if (serverIsRoot) {
                             item(key = "root") {
-                                ToggleSettingCard(
-                                    flat = true,
-                                    icon = Icons.Filled.Lock,
+                                FolkSwitchPreference(
+                                    icon = Icons.Outlined.Lock,
                                     title = stringResource(R.string.shizuku_management_root_access),
-                                    description = stringResource(R.string.shizuku_management_root_access_desc),
+                                    summary = stringResource(R.string.shizuku_management_root_access_desc),
                                     checked = !app.shellOnly,
                                     onCheckedChange = { root ->
                                         try {

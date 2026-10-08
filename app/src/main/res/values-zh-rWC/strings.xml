@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="launcher_icon_style_anime">仙漫畫卷</string>
+    <string name="launcher_icon_style_geometry">幾何仙陣</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">悬浮仙法导航栏样式</string>
+    <string name="settings_bottom_bar_standard">仙法标准导航栏</string>
+    <string name="settings_bottom_bar_drawer">乾坤袋导航栏</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
@@ -64,6 +70,7 @@
     <string name="reboot_fastbootd">重铸入太虚境</string>
     <string name="about">仙门叙略</string>
     <string name="developer_and_maintainer">道门尊长 | 护道者</string>
+    <string name="developer_profile_picture">开发者仙容</string>
     <string name="settings_app_language">仙音道语</string>
     <string name="system_default">循天道常序</string>
     <string name="settings_global_namespace_mode">全域仙域结界</string>
@@ -156,6 +163,7 @@
     <string name="patch_item_skey">登仙秘钥</string>
     <string name="patch_custom_superkey">自拟登仙秘钥</string>
     <string name="patch_custom_superkey_summary">道友仍可设秘钥以御内核，此器已获仙印认可</string>
+    <string name="patch_custom_superkey_optional">可择；此器已获仙印认可，通常无须另拟秘钥</string>
     <string name="patch_item_set_skey_label">登仙秘钥须凝炼八至六十三道符文，含天数字文，毋杂邪魔异符。</string>
     <string name="patch_confirm_superkey">再次凝炼登仙秘钥</string>
     <string name="patch_skey_mismatch">两次登仙秘钥不合</string>
@@ -659,6 +667,11 @@ KernelPatch 大法需要以 boot 灵胎为引。
     <string name="shizuku_log_copied">已摹写至剪贴板</string>
     <string name="shizuku_log_source_server">天机阁日志</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">详察</string>
+    <string name="shizuku_log_level_debug">调试</string>
+    <string name="shizuku_log_level_info">天机</string>
+    <string name="shizuku_log_level_warn">警示</string>
+    <string name="shizuku_log_level_error">劫难</string>
     <string name="shizuku_log_search_hint">探寻记录</string>
 <string name="settings_app_title">仙器名讳</string>
     <string name="app_title_custom">自赐名讳</string>
@@ -676,8 +689,6 @@ KernelPatch 大法需要以 boot 灵胎为引。
     <string name="settings_select_background_image">择仙府背景图</string>
     <string name="settings_custom_background_summary">设自定仙府背景图</string>
     <string name="settings_custom_background_saved">仙府背景已存</string>
-    <string name="settings_alt_icon">備用圖標</string>
-    <string name="alt_icon_summary">用備選啟動器圖標</string>
     <string name="settings_custom_background_error">存仙府背景败陨</string>
     <string name="settings_crop_not_supported">此器不允裁炼，原图已存</string>
     <string name="settings_crop_dialog_title">裁炼仙府景图</string>
@@ -790,6 +801,9 @@ KernelPatch 大法需要以 boot 灵胎为引。
     <string name="apm_copy_list_success">名录已拓印</string>
 
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">仙府默认</string>
+    <string name="settings_font_mode_system">天道默认</string>
+    <string name="settings_font_mode_custom">自定</string>
     <string name="settings_custom_font">仙府字体</string>
     <string name="settings_select_font_file">择仙府字体</string>
     <string name="settings_custom_font_enabled">已启仙府字体</string>
@@ -950,6 +964,42 @@ KernelPatch 大法需要以 boot 灵胎为引。
     <string name="settings_discrete_slider">道阶滑块</string>
     <string name="settings_discrete_slider_desc">显示修炼进度刻度</string>
     <string name="settings_category_behavior">功法运转</string>
+    <string name="profile_edit_title">仙籍资料</string>
+    <string name="profile_nickname_label">道号</string>
+    <string name="profile_signature_label">道心寄语</string>
+    <string name="profile_choose_avatar">更换仙容</string>
+    <string name="profile_avatar_default">默认仙容</string>
+    <string name="profile_avatar_custom">自定仙容</string>
+    <string name="profile_avatar_opacity">神相明晦</string>
+    <string name="profile_avatar_source_title">择头像之源</string>
+    <string name="profile_avatar_source_local">自器择之</string>
+    <string name="profile_avatar_source_qq">QQ 幻像</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">QQ 号</string>
+    <string name="profile_avatar_gravatar_hint">传讯</string>
+    <string name="profile_avatar_fetch_failed">幻像难求</string>
+    <string name="profile_crop_avatar">裁切仙容</string>
+    <string name="profile_restore_default">归于初始</string>
+    <string name="settings_section_general_basics">道文与更新</string>
+    <string name="settings_section_general_interface">仙容与道韵</string>
+    <string name="settings_section_general_root">根基道行</string>
+    <string name="settings_section_general_mount">灵阵与挂载</string>
+    <string name="settings_section_general_identity">仙号标识</string>
+    <string name="settings_section_general_maintenance">洞府打理</string>
+    <string name="settings_section_behavior_display">山门首页</string>
+    <string name="settings_section_behavior_actions">法术与安装</string>
+    <string name="settings_section_function_hide">隐匿与隔绝</string>
+    <string name="settings_section_function_root">根基功法</string>
+    <string name="settings_section_function_mount">御物与解御</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">灵印认证</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">本地玉简</string>
+    <string name="settings_section_backup_cloud">云端玉简</string>
+    <string name="settings_section_module_display">悟道模块</string>
+    <string name="settings_section_module_update">更新与炼制</string>
+    <string name="settings_section_multimedia_music">仙音</string>
+    <string name="settings_section_multimedia_sound">音效与震动</string>
     <string name="settings_category_function">悟道功能</string>
     <string name="settings_category_module">悟道模块</string>
     <string name="settings_category_security">护道结界</string>
@@ -1191,6 +1241,8 @@ KernelPatch 大法需要以 boot 灵胎为引。
     <string name="theme_download_finalizing">凝丹中...</string>
     <string name="settings_predictive_back">仙预返回手势</string>
     <string name="settings_predictive_back_summary">启用仙界 Android 14+ 的预知返回仙法动画</string>
+    <string name="settings_expressive_motion">仙法動勢</string>
+    <string name="settings_expressive_motion_summary">使用 Material 3 Expressive 之動勢法門</string>
 
     <string name="home_device_status_battery_charging">灵力充盈中</string>
     <string name="home_device_status_cpu_temp">道力温度</string>
@@ -1279,6 +1331,11 @@ KernelPatch 大法需要以 boot 灵胎为引。
     <string name="color_style_monochrome">归一</string>
     <string name="color_style_neutral">无为</string>
     <string name="color_style_fidelity">返璞</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">阴阳对比</string>
+    <string name="color_contrast_standard">筑基</string>
+    <string name="color_contrast_medium">化神</string>
+    <string name="color_contrast_high">渡劫</string>
     <string name="settings_focus_card_background">FocusUI 卡片法相</string>
     <string name="settings_focus_card_background_enabled">FocusUI 卡片法相已启，长按卡片管理法相</string>
     <string name="settings_focus_card_background_summary">启用 FocusUI 卡片法相及长按法相管理</string>
@@ -1339,4 +1396,33 @@ KernelPatch 大法需要以 boot 灵胎为引。
     <string name="jailbreak">破禁</string>
     <string name="jailbreak_triggered">破禁已触发，待取得 root 仙根后灵台重启。</string>
     <string name="reboot_soft">灵台重启</string>
+    <string name="settings_faq">常见问题</string>
+    <string name="settings_bug_feedback">缺陷禀报</string>
+    <string name="settings_clear_cache">涤荡缓存</string>
+    <string name="settings_disclaimer">免责天劫</string>
+    <string name="settings_disclaimer_message">对法器 Root 之后，天机更新、外道模块或诸般外劫皆可能招致不测之祸与损，需由你自行承担。待你参悟风险，方可续行。</string>
+    <string name="theme_store_subtitle">寻觅诸天法门，即刻修持</string>
+    <string name="script_library_subtitle">御行本機符籙</string>
+    <string name="plugin_subtitle">廣 FolkPatch 之法</string>
+    <string name="my_themes_subtitle">汝所藏之仙題</string>
+    <string name="apm_api_marketplace_subtitle">覽眾所傳之 API</string>
+    <string name="theme_download_paused">止息</string>
+    <string name="settings_wallpaper_gallery">天機圖鑑</string>
+    <string name="wallpaper_device_phone">法寶手機</string>
+    <string name="wallpaper_device_tablet">洞天平板</string>
+    <string name="wallpaper_layout_waterfall">飛瀑</string>
+    <string name="wallpaper_layout_stack">疊嶂</string>
+    <string name="wallpaper_device_mixed">陰陽交融</string>
+    <string name="wallpaper_display_options">陣法陳列</string>
+    <string name="wallpaper_display_layout">陣式</string>
+    <string name="wallpaper_download">納取下載</string>
+    <string name="wallpaper_cancel">作罷</string>
+    <string name="wallpaper_saved">已納乾坤袋</string>
+    <string name="wallpaper_download_failed">納取失敗</string>
+    <string name="wallpaper_loading">天機推演中</string>
+    <string name="wallpaper_empty">空空如也</string>
+    <string name="wallpaper_retry">再推演</string>
+    <string name="wallpaper_preview">觀天象</string>
+    <string name="wallpaper_set_background">設為道場背景</string>
+    <string name="wallpaper_background_set">背景已蛻變</string>
 </resources>

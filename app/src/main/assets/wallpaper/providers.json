@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "providers": [
+    {
+      "id": "loliapi-server",
+      "name": "LoliAPI (Server)",
+      "homepage": "https://www.loliapi.com/docs/acg/",
+      "baseUrl": "https://api.mysqil.com",
+      "responseType": "redirect",
+      "query": {},
+      "idParam": "id",
+      "devicePaths": {
+        "phone": "/api/random/phone",
+        "tablet": "/api/random/tablet"
+      }
+    },
+    {
+      "id": "loliapi",
+      "name": "LoliAPI (Direct)",
+      "homepage": "https://www.loliapi.com/docs/acg/",
+      "baseUrl": "https://www.loliapi.com",
+      "responseType": "redirect",
+      "query": {},
+      "idParam": "id",
+      "devicePaths": {
+        "phone": "/acg/pe/",
+        "tablet": "/acg/pc/"
+      }
+    }
+  ]
+}

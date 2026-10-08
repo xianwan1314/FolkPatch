@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_action_search">Поиск</string>
+    <string name="core_action_clear">Очистить</string>
+    <string name="core_action_back">Назад</string>
+    <string name="core_action_close">Закрыть</string>
+    <string name="core_action_more">Ещё</string>
+    <string name="core_action_refresh">Обновить</string>
+    <string name="core_action_filter">Фильтр</string>
+    <string name="core_action_save">Сохранить</string>
+    <string name="core_action_send">Отправить</string>
+    <string name="core_action_download">Скачать</string>
+    <string name="core_action_config">Настроить</string>
+    <string name="core_action_delete">Удалить</string>
+    <string name="core_state_busy">Занято</string>
+</resources>

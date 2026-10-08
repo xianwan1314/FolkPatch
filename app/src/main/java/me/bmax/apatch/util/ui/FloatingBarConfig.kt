@@ -12,6 +12,15 @@ import androidx.compose.ui.graphics.Shape
  */
 object FloatingBarConfig {
 
+    /** 悬浮底栏样式：标准底栏 */
+    const val STYLE_STANDARD = "standard"
+
+    /** 悬浮底栏样式：抽屉底栏（可展开分支） */
+    const val STYLE_DRAWER = "drawer"
+
+    /** 悬浮底栏默认样式 */
+    const val DEFAULT_STYLE = STYLE_DRAWER
+
     /** 是否启用紧凑圆角风格 */
     var isCompactRoundedStyle by mutableStateOf(true)
 

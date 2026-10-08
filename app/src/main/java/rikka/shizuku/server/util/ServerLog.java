@@ -1,6 +1,7 @@
 package rikka.shizuku.server.util;
 
 import android.util.Log;
+import android.system.Os;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -113,10 +114,22 @@ public final class ServerLog {
                 LOG_DIR.mkdirs();
             }
             fileStream = new FileOutputStream(LOG_FILE, true /* append */);
-            //noinspection ResultOfMethodCallIgnored
-            LOG_FILE.setReadable(true, false);
+            normalizeFileOwnership(LOG_FILE);
         } catch (IOException e) {
             fileStream = null;
+        }
+    }
+
+    private static void normalizeFileOwnership(File file) {
+        if (!file.exists()) {
+            return;
+        }
+        try {
+            if (Os.getuid() == 0) {
+                Os.chown(file.getAbsolutePath(), 2000, 2000);
+            }
+            Os.chmod(file.getAbsolutePath(), 0600);
+        } catch (Throwable ignored) {
         }
     }
 
@@ -136,6 +149,7 @@ public final class ServerLog {
             LOG_FILE_BACKUP.delete();
             //noinspection ResultOfMethodCallIgnored
             LOG_FILE.renameTo(LOG_FILE_BACKUP);
+            normalizeFileOwnership(LOG_FILE_BACKUP);
             openFileLocked();
         } catch (Throwable ignored) {
         }

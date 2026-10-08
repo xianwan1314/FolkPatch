@@ -10,13 +10,12 @@ import android.os.Process
 import android.util.Log
 import me.bmax.apatch.util.ui.showToast
 import androidx.core.content.edit
-import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topjohnwu.superuser.CallbackList
 import me.bmax.apatch.ui.CrashHandleActivity
+import me.bmax.apatch.util.APatchKeyHelper
 import me.bmax.apatch.util.APatchCli
-import me.bmax.apatch.util.verifyAppSignature
 import me.bmax.apatch.ui.theme.MusicConfig
 import me.bmax.apatch.util.MusicManager
 import me.bmax.apatch.util.Version
@@ -105,21 +104,38 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
         const val SUCOMPAT_FILE = "/data/adb/ap/sucompat"
         const val SELINUX_HIDE_FILE = APATCH_FOLDER + "selinux_hide"
         const val MAGIC_MOUNT_FILE = "/data/adb/.magic_mount_enable"
-        const val HIDE_SERVICE_FILE = "/data/adb/.hide_service_enable"
-        const val HIDE_BINARY_PATH = "/data/adb/fp/bin/fpd"
-        const val UMOUNT_SERVICE_FILE = "/data/adb/.umount_service_enable"
-        const val UMOUNT_BINARY_PATH = "/data/adb/fp/bin/fpd"
-        const val UTS_SPOOF_ENABLE_FILE = "/data/adb/.uts_spoof_enable"
-        const val UTS_SPOOF_CONFIG_FILE = "/data/adb/.uts_spoof_config"
-        const val PATHHIDE_DIR = "/data/adb/fp/pathhide/"
-        const val PATHHIDE_PATHS_FILE = "/data/adb/fp/pathhide/paths"
-        const val PATHHIDE_ENABLE_FILE = "/data/adb/fp/pathhide/enabled"
-        const val PATHHIDE_UIDS_FILE = "/data/adb/fp/pathhide/uids"
-        const val PATHHIDE_UID_MODE_FILE = "/data/adb/fp/pathhide/uid_mode"
-        const val PATHHIDE_FILTER_SYSTEM_FILE = "/data/adb/fp/pathhide/filter_system"
-        const val NETISOLATE_DIR = "/data/adb/fp/netisolate/"
-        const val NETISOLATE_ENABLE_FILE = "/data/adb/fp/netisolate/enabled"
-        const val NETISOLATE_UIDS_FILE = "/data/adb/fp/netisolate/uids"
+        const val HIDE_SERVICE_FILE = APATCH_FOLDER + "hide_service"
+        const val HIDE_BINARY_PATH = APATCH_BIN_FOLDER + "fpd"
+        const val UMOUNT_SERVICE_FILE = APATCH_FOLDER + "umount_service"
+        const val UMOUNT_BINARY_PATH = APATCH_BIN_FOLDER + "fpd"
+        const val UTS_SPOOF_ENABLE_FILE = APATCH_FOLDER + "uts_enable"
+        const val UTS_SPOOF_CONFIG_FILE = APATCH_FOLDER + "uts_config"
+        const val PATHHIDE_DIR = APATCH_FOLDER + "pathhide/"
+        const val PATHHIDE_PATHS_FILE = PATHHIDE_DIR + "paths"
+        const val PATHHIDE_ENABLE_FILE = PATHHIDE_DIR + "enabled"
+        const val PATHHIDE_UIDS_FILE = PATHHIDE_DIR + "uids"
+        const val PATHHIDE_UID_MODE_FILE = PATHHIDE_DIR + "uid_mode"
+        const val PATHHIDE_FILTER_SYSTEM_FILE = PATHHIDE_DIR + "filter_system"
+        const val NETISOLATE_DIR = APATCH_FOLDER + "netisolate/"
+        const val NETISOLATE_ENABLE_FILE = NETISOLATE_DIR + "enabled"
+        const val NETISOLATE_UIDS_FILE = NETISOLATE_DIR + "uids"
+
+        // Compatibility paths used by earlier FolkPatch builds. They are migrated
+        // on demand and removed only after the new path is safely populated.
+        const val LEGACY_HIDE_SERVICE_FILE = "/data/adb/.hide_service_enable"
+        const val LEGACY_FPD_PATH = "/data/adb/fp/bin/fpd"
+        const val LEGACY_UMOUNT_SERVICE_FILE = "/data/adb/.umount_service_enable"
+        const val LEGACY_UTS_SPOOF_ENABLE_FILE = "/data/adb/.uts_spoof_enable"
+        const val LEGACY_UTS_SPOOF_CONFIG_FILE = "/data/adb/.uts_spoof_config"
+        const val LEGACY_PATHHIDE_DIR = "/data/adb/fp/pathhide/"
+        const val LEGACY_PATHHIDE_PATHS_FILE = LEGACY_PATHHIDE_DIR + "paths"
+        const val LEGACY_PATHHIDE_ENABLE_FILE = LEGACY_PATHHIDE_DIR + "enabled"
+        const val LEGACY_PATHHIDE_UIDS_FILE = LEGACY_PATHHIDE_DIR + "uids"
+        const val LEGACY_PATHHIDE_UID_MODE_FILE = LEGACY_PATHHIDE_DIR + "uid_mode"
+        const val LEGACY_PATHHIDE_FILTER_SYSTEM_FILE = LEGACY_PATHHIDE_DIR + "filter_system"
+        const val LEGACY_NETISOLATE_DIR = "/data/adb/fp/netisolate/"
+        const val LEGACY_NETISOLATE_ENABLE_FILE = LEGACY_NETISOLATE_DIR + "enabled"
+        const val LEGACY_NETISOLATE_UIDS_FILE = LEGACY_NETISOLATE_DIR + "uids"
         const val JAILBREAK_FILE = APATCH_FOLDER + "jailbreak"
         const val JAILBREAK_KO_PATH = APATCH_FOLDER + "kernelpatch.ko"
         /** Persisted, file-backed KPMs. Each module lives in <id>/<id>.kpm. */
@@ -145,6 +161,7 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
         const val PREF_UTS_SPOOF_ENABLED = "uts_spoof_enabled"
         const val PREF_UTS_SPOOF_RELEASE = "uts_spoof_release"
         const val PREF_UTS_SPOOF_VERSION = "uts_spoof_version"
+        const val HOME_LAYOUT_STYLE_DEFAULT = "circle"
         private const val SHOW_BACKUP_WARN = "show_backup_warning"
         private const val CRASH_COUNT_KEY = "fp_crash_count"
         private const val CRASH_TIMESTAMP_KEY = "fp_crash_timestamp"
@@ -253,78 +270,103 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
 
 
         var superKey: String = ""
-            set(value) {
-                field = value
-                _kpStateInitializedLiveData.postValue(false)
-                val ready = Natives.nativeReady(value)
-                _kpStateLiveData.value =
-                    if (ready) State.KERNELPATCH_INSTALLED else State.UNKNOWN_STATE
-                _apStateLiveData.value =
-                    if (ready) State.ANDROIDPATCH_NOT_INSTALLED else State.UNKNOWN_STATE
-                Log.d(TAG, "state: " + _kpStateLiveData.value)
-                if (!ready) {
-                    _kpStateInitializedLiveData.postValue(true)
-                    return
-                }
+            private set
 
-                thread {
-                    try {
-                        val rc = Natives.su(0, null)
-                        if (!rc) {
-                            Log.e(TAG, "Native.su failed")
-                            return@thread
+        fun rememberCustomSuperKey(value: String) {
+            if (value != "su") {
+                APatchKeyHelper.writeSPSuperKey(value)
+            }
+        }
+
+        fun setSuperKeyAndRefresh(value: String) {
+            superKey = value
+            _kpStateInitializedLiveData.postValue(false)
+            val ready = Natives.nativeReady(value)
+            _kpStateLiveData.value =
+                if (ready) State.KERNELPATCH_INSTALLED else State.UNKNOWN_STATE
+            _apStateLiveData.value =
+                if (ready) State.ANDROIDPATCH_NOT_INSTALLED else State.UNKNOWN_STATE
+            Log.d(TAG, "state: " + _kpStateLiveData.value)
+            if (!ready) {
+                _kpStateInitializedLiveData.postValue(true)
+                return
+            }
+
+            thread {
+                try {
+                    val rc = Natives.su(0, null)
+                    if (!rc) {
+                        Log.e(TAG, "Native.su failed")
+                        return@thread
+                    }
+
+                    APatchCli.refresh()
+
+                    val buildV = Version.getKpImg()
+                    val installedV = Version.installedKPTime()
+
+                    Log.d(TAG, "kp installed version: ${installedV}, build version: $buildV")
+
+                    val isBlocked = apApp.isKernelPatchUpdateBlocked()
+
+                    if (buildV != installedV) {
+                        if (isBlocked) {
+                            _kpStateLiveData.postValue(State.KERNELPATCH_INSTALLED)
+                        } else {
+                            _kpStateLiveData.postValue(State.KERNELPATCH_NEED_UPDATE)
                         }
+                    }
+                    Log.d(TAG, "kp state: " + _kpStateLiveData.value)
 
-                        APatchCli.refresh()
+                    if (File(NEED_REBOOT_FILE).exists()) {
+                        _kpStateLiveData.postValue(State.KERNELPATCH_NEED_REBOOT)
+                    }
+                    Log.d(TAG, "kp state: " + _kpStateLiveData.value)
 
-                        val buildV = Version.getKpImg()
-                        val installedV = Version.installedKPTime()
+                    val bundledHash = Version.getBundledApdSha256()
+                    val installedHash = Version.getInstalledApdSha256()
+                    Log.d(TAG, "bundled apd sha256: $bundledHash, installed apd sha256: $installedHash")
 
-                        Log.d(TAG, "kp installed version: ${installedV}, build version: $buildV")
+                    val isApBlocked = apApp.isAndroidPatchUpdateBlocked()
 
-                        val isBlocked = apApp.isKernelPatchUpdateBlocked()
-
-                        if (buildV != installedV) {
-                            if (isBlocked) {
-                                _kpStateLiveData.postValue(State.KERNELPATCH_INSTALLED)
-                            } else {
-                                _kpStateLiveData.postValue(State.KERNELPATCH_NEED_UPDATE)
-                            }
-                        }
-                        Log.d(TAG, "kp state: " + _kpStateLiveData.value)
-
-                        if (File(NEED_REBOOT_FILE).exists()) {
-                            _kpStateLiveData.postValue(State.KERNELPATCH_NEED_REBOOT)
-                        }
-                        Log.d(TAG, "kp state: " + _kpStateLiveData.value)
-
-                        val bundledHash = Version.getBundledApdSha256()
-                        val installedHash = Version.getInstalledApdSha256()
-                        Log.d(TAG, "bundled apd sha256: $bundledHash, installed apd sha256: $installedHash")
-
-                        val isApBlocked = apApp.isAndroidPatchUpdateBlocked()
-
-                        if (installedHash.isNotEmpty()) {
-                            if (bundledHash == installedHash) {
+                    if (installedHash.isNotEmpty()) {
+                        if (bundledHash == installedHash) {
+                            _apStateLiveData.postValue(State.ANDROIDPATCH_INSTALLED)
+                        } else {
+                            if (isApBlocked) {
                                 _apStateLiveData.postValue(State.ANDROIDPATCH_INSTALLED)
                             } else {
-                                if (isApBlocked) {
-                                    _apStateLiveData.postValue(State.ANDROIDPATCH_INSTALLED)
-                                } else {
-                                    _apStateLiveData.postValue(State.ANDROIDPATCH_NEED_UPDATE)
-                                }
+                                _apStateLiveData.postValue(State.ANDROIDPATCH_NEED_UPDATE)
                             }
-                        } else {
-                            _apStateLiveData.postValue(State.ANDROIDPATCH_NOT_INSTALLED)
                         }
-                        Log.d(TAG, "ap state: " + _apStateLiveData.value)
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Failed to refresh patch state", e)
-                    } finally {
-                        _kpStateInitializedLiveData.postValue(true)
+                    } else {
+                        _apStateLiveData.postValue(State.ANDROIDPATCH_NOT_INSTALLED)
                     }
+                    Log.d(TAG, "ap state: " + _apStateLiveData.value)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to refresh patch state", e)
+                } finally {
+                    _kpStateInitializedLiveData.postValue(true)
                 }
             }
+        }
+
+        private fun resolveSuperKey(): String {
+            APatchKeyHelper.setSharedPreferences(sharedPreferences)
+            val savedKey = APatchKeyHelper.readSPSuperKey()
+
+            if (Natives.nativeReady("su")) {
+                Log.i(TAG, "signature auth ready")
+                return "su"
+            }
+
+            if (!savedKey.isNullOrEmpty() && Natives.nativeReady(savedKey)) {
+                Log.i(TAG, "using stored SuperKey for legacy kernel")
+                return savedKey
+            }
+
+            return "su"
+        }
 
         private fun bypassHiddenApiRestrictions() {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
@@ -357,6 +399,8 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
         }
         apApp = this
         sharedPreferences = getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
+        me.bmax.apatch.ui.component.SwitchIconState.showIcon =
+            sharedPreferences.getBoolean("show_switch_icon", true)
 
         // Load all configs synchronously before superKey assignment
         // (superKey setter triggers a thread that reads config-dependent state)
@@ -389,17 +433,6 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
             return
         }
 
-        if (!BuildConfig.DEBUG && !verifyAppSignature("EfmnIzuo19nXxRJV8183fJTHt0EQFE1G200TU7AVWug=")) {
-            while (true) {
-                val intent = Intent(Intent.ACTION_DELETE)
-                intent.data = "package:$packageName".toUri()
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-                startActivity(intent)
-                exitProcess(0)
-            }
-        }
-
         if (!sharedPreferences.contains("app_initialized")) {
             sharedPreferences.edit()
                 .putBoolean("app_initialized", true)
@@ -407,13 +440,15 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
                 .putBoolean("night_mode_follow_sys", true)
                 .putBoolean("use_system_color_theme", true)
                 .putString("custom_color", "indigo")
-                .putString("home_layout_style", "dashboard_ui")
+                .putString("home_layout_style", HOME_LAYOUT_STYLE_DEFAULT)
                 .apply()
             // 首次安装部署内置仪表盘卡片壁纸
             me.bmax.apatch.ui.theme.BackgroundManager.provisionDefaultDashboardCardBg(this)
         }
         
         me.bmax.apatch.util.LauncherIconUtils.applySaved(this)
+        APatchKeyHelper.setSharedPreferences(sharedPreferences)
+        setSuperKeyAndRefresh(resolveSuperKey())
 
         Log.d(TAG, "Initializing OkHttpClient...")
         okhttpClient =
@@ -425,7 +460,7 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
                 .addInterceptor { block ->
                     block.proceed(
                         block.request().newBuilder()
-                            .header("User-Agent", "APatch/${BuildConfig.VERSION_CODE}")
+                            .header("User-Agent", "FolkPatch/${BuildConfig.VERSION_CODE}")
                             .header("Accept-Language", Locale.getDefault().toLanguageTag()).build()
                     )
                 }.build()

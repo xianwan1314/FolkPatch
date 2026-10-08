@@ -23,9 +23,6 @@ data class ScrollState(
 
 val LocalScrollState = compositionLocalOf<ScrollState?> { null }
 
-val LocalBottomBarVisible = compositionLocalOf { mutableStateOf(true) }
-val LocalIsFloatingNavMode = compositionLocalOf { false }
-
 /**
  * Bottom clearance for scrollable list content so the last item can always be
  * scrolled above the FAB and the floating navigation bar overlay, regardless

@@ -11,6 +11,7 @@ mod magica;
 mod metamodule;
 mod module;
 mod module_config;
+mod module_icon;
 mod package;
 mod plugin;
 #[cfg(any(target_os = "linux", target_os = "android"))]

@@ -9,7 +9,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Folder
@@ -30,6 +29,8 @@ import androidx.lifecycle.LifecycleEventObserver
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.R
 import java.io.File
+import me.bmax.apatch.core.ui.R as CoreR
+import me.bmax.apatch.ui.theme.tokens.FolkShape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,7 +82,7 @@ fun FilePickerDialog(
                 .fillMaxWidth(0.94f)
                 .widthIn(max = 720.dp)
                 .fillMaxHeight(0.88f),
-            shape = RoundedCornerShape(24.dp),
+            shape = FolkShape.Corner24,
             // Force opaque color to avoid transparency issues
             color = MaterialTheme.colorScheme.surface.copy(alpha = 1f),
             tonalElevation = 6.dp
@@ -183,7 +184,7 @@ fun FilePickerDialog(
                                         currentPath = rootPath
                                     }
                                 }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(CoreR.string.core_action_back))
                                 }
                             }
                         },

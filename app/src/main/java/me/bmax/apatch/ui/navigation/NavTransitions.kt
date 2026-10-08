@@ -15,7 +15,6 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.navigation.NavBackStackEntry
 import com.ramcosta.composedestinations.animations.NavHostAnimatedDestinationStyle
-import me.bmax.apatch.ui.screen.BottomBarDestination
 
 fun createNavTransitions(
     folkXEngineEnabled: Boolean,

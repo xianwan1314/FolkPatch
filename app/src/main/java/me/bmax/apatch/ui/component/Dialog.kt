@@ -19,8 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialogDefaults
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
@@ -61,8 +59,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.parcelize.Parcelize
+import me.bmax.apatch.ui.component.folk.FolkAlertDialog
 import me.bmax.apatch.util.ui.APDialogBlurBehindUtils.Companion.setupWindowBlurListener
 import kotlin.coroutines.resume
+import me.bmax.apatch.ui.theme.tokens.FolkShape
 
 private const val TAG = "DialogComponent"
 
@@ -444,60 +444,47 @@ private fun LoadingDialog() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ConfirmDialog(visuals: ConfirmDialogVisuals, confirm: () -> Unit, dismiss: () -> Unit) {
-    BasicAlertDialog(
+    FolkAlertDialog(
         onDismissRequest = {
             dismiss()
         },
-        properties = DialogProperties(
-            decorFitsSystemWindows = true,
-            usePlatformDefaultWidth = false,
-            securePolicy = SecureFlagPolicy.SecureOff
-        )
+        width = 320.dp,
+        shape = FolkShape.Corner20,
+        dialogProperties = DialogProperties(decorFitsSystemWindows = true, usePlatformDefaultWidth = false, securePolicy = SecureFlagPolicy.SecureOff),
     ) {
-        Surface(
-            modifier = Modifier
-                .width(320.dp)
-                .wrapContentHeight(),
-            shape = RoundedCornerShape(20.dp),
-            tonalElevation = AlertDialogDefaults.TonalElevation,
-            color = AlertDialogDefaults.containerColor,
-        ) {
-            Column(modifier = Modifier.padding(PaddingValues(all = 24.dp))) {
-                Box(
-                    Modifier
-                        .padding(PaddingValues(bottom = 16.dp))
-                        .align(Alignment.Start)
-                ) {
-                    Text(text = visuals.title, style = MaterialTheme.typography.headlineSmall)
-                }
-                Box(
-                    Modifier
-                        .weight(weight = 1f, fill = false)
-                        .padding(PaddingValues(bottom = 24.dp))
-                        .align(Alignment.Start)
-                ) {
+        Column(modifier = Modifier.padding(PaddingValues(all = 24.dp))) {
+            Box(
+                Modifier
+                    .padding(PaddingValues(bottom = 16.dp))
+                    .align(Alignment.Start)
+            ) {
+                Text(text = visuals.title, style = MaterialTheme.typography.headlineSmall)
+            }
+            Box(
+                Modifier
+                    .weight(weight = 1f, fill = false)
+                    .padding(PaddingValues(bottom = 24.dp))
+                    .align(Alignment.Start)
+            ) {
 
-                    if (visuals.isMarkdown) {
-                        MarkdownContent(content = visuals.content)
-                    } else {
-                        Text(text = visuals.content, style = MaterialTheme.typography.bodyMedium)
-                    }
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(onClick = dismiss) {
-                        Text(text = visuals.dismiss ?: stringResource(id = android.R.string.cancel))
-                    }
-
-                    TextButton(onClick = confirm) {
-                        Text(text = visuals.confirm ?: stringResource(id = android.R.string.ok))
-                    }
+                if (visuals.isMarkdown) {
+                    MarkdownContent(content = visuals.content)
+                } else {
+                    Text(text = visuals.content, style = MaterialTheme.typography.bodyMedium)
                 }
             }
-            val dialogWindowProvider = LocalView.current.parent as DialogWindowProvider
-            setupWindowBlurListener(dialogWindowProvider.window)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                TextButton(onClick = dismiss) {
+                    Text(text = visuals.dismiss ?: stringResource(id = android.R.string.cancel))
+                }
+
+                TextButton(onClick = confirm) {
+                    Text(text = visuals.confirm ?: stringResource(id = android.R.string.ok))
+                }
+            }
         }
     }
 

@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Check
@@ -47,6 +46,7 @@ import rikka.shizuku.Shizuku
 import rikka.shizuku.ShizukuApiConstants
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import me.bmax.apatch.ui.theme.tokens.FolkShape
 
 /**
  * Shizuku 授权确认界面。
@@ -103,7 +103,7 @@ class ShizukuPermissionActivity : ComponentActivity() {
                     onAllow = { reply(allowed = true, onetime = false) },
                     onAllowOnce = { reply(allowed = true, onetime = true) },
                     onDeny = { reply(allowed = false, onetime = true) },
-                    onDismiss = ::finish,
+                    onDismiss = { reply(allowed = false, onetime = true) },
                 )
             }
         }
@@ -162,7 +162,7 @@ private fun PermissionDialog(
 ) {
     BasicAlertDialog(onDismissRequest = onDismiss) {
         Surface(
-            shape = RoundedCornerShape(28.dp),
+            shape = FolkShape.Corner28,
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
             tonalElevation = 6.dp,
             modifier = Modifier.fillMaxWidth(),
@@ -250,13 +250,13 @@ private fun PermissionOption(
 ) {
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(18.dp),
+        shape = FolkShape.Corner16,
         color = container,
         contentColor = content,
         modifier = Modifier.fillMaxWidth(),
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(

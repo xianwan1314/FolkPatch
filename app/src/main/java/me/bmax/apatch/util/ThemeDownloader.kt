@@ -187,8 +187,9 @@ class ThemeDownloader(private val context: Context) {
     fun downloadTheme(theme: ThemeStoreViewModel.RemoteTheme): Flow<DownloadProgress> = flow {
         val taskId = theme.id
         
-        // 检查是否已在下载
-        if (downloadTasks.containsKey(taskId)) {
+        // 已在下载：拒绝重复请求；已暂停：复用同一个任务继续下载
+        val existingTask = downloadTasks[taskId]
+        if (existingTask != null && !existingTask.isPaused) {
             emit(DownloadProgress(
                 themeId = taskId,
                 fileProgress = 0f,
@@ -215,8 +216,8 @@ class ThemeDownloader(private val context: Context) {
                 // 预览图 URL 不安全时仅跳过预览图，不阻断主题下载
             }
 
-            val task = DownloadTask(theme)
-            downloadTasks[taskId] = task
+            val task = existingTask ?: DownloadTask(theme).also { downloadTasks[taskId] = it }
+            task.isPaused = false
             
             // 初始状态
             emit(DownloadProgress(
@@ -239,25 +240,40 @@ class ThemeDownloader(private val context: Context) {
                 errorMessage = null
             ))
 
-            // 1. 下载主题文件（致命：失败则整体失败）
-            val themeResult = downloadFileWithRetry(
-                url = theme.downloadUrl,
-                file = themeFile,
-                taskId = taskId,
-                isThemeFile = true
-            ) { fileProgress ->
-                // 主题文件进度占 70%
-                val overall = fileProgress * 0.7f
-                updateProgress(taskId, fileProgress, 0f, overall, DownloadStatus.DOWNLOADING, null)
-            }
+            // 1. 下载主题文件（致命：失败则整体失败；恢复时跳过已完成的部分）
+            var lastFileProgress = 0f
+            if (!task.themeFileCompleted) {
+                val themeResult = downloadFileWithRetry(
+                    url = theme.downloadUrl,
+                    file = themeFile,
+                    taskId = taskId,
+                    isThemeFile = true
+                ) { fileProgress ->
+                    lastFileProgress = fileProgress
+                    // 主题文件进度占 70%
+                    val overall = fileProgress * 0.7f
+                    updateProgress(taskId, fileProgress, 0f, overall, DownloadStatus.DOWNLOADING, null)
+                }
 
-            if (!themeResult.success) {
-                updateProgress(taskId, 0f, 0f, 0f, DownloadStatus.FAILED, themeResult.error)
-                return@flow
+                if (themeResult.paused) {
+                    updateProgress(
+                        taskId, lastFileProgress, 0f, lastFileProgress * 0.7f,
+                        DownloadStatus.PAUSED, null
+                    )
+                    return@flow
+                }
+
+                if (!themeResult.success) {
+                    updateProgress(taskId, 0f, 0f, 0f, DownloadStatus.FAILED, themeResult.error)
+                    return@flow
+                }
+
+                task.themeFileCompleted = true
             }
 
             // 2. 下载预览图（非致命：失败仅记录并跳过，不阻断主题安装）
             val previewFile = getPreviewImagePath(theme.author, theme.name)
+            var lastImageProgress = 0f
             emit(DownloadProgress(
                 themeId = taskId,
                 fileProgress = 1f,
@@ -273,9 +289,18 @@ class ThemeDownloader(private val context: Context) {
                 taskId = taskId,
                 isThemeFile = false
             ) { imageProgress ->
+                lastImageProgress = imageProgress
                 // 预览图进度占 30%
                 val overall = 0.7f + (imageProgress * 0.3f)
                 updateProgress(taskId, 1f, imageProgress, overall, DownloadStatus.DOWNLOADING, null)
+            }
+
+            if (imageResult.paused) {
+                updateProgress(
+                    taskId, 1f, lastImageProgress, 0.7f + lastImageProgress * 0.3f,
+                    DownloadStatus.PAUSED, null
+                )
+                return@flow
             }
 
             if (!imageResult.success) {
@@ -319,7 +344,8 @@ class ThemeDownloader(private val context: Context) {
      */
     private data class DownloadFileResult(
         val success: Boolean,
-        val error: String? = null
+        val error: String? = null,
+        val paused: Boolean = false
     )
 
     /**
@@ -353,6 +379,10 @@ class ThemeDownloader(private val context: Context) {
                 validateDownloadedFile(file, isThemeFile, expectedSize)
 
                 return@withContext DownloadFileResult(true)
+            } catch (e: DownloadPausedException) {
+                // 暂停不是失败：保留已下载的部分文件，下次续传
+                Log.d(TAG, "Download paused: ${file.absolutePath}")
+                return@withContext DownloadFileResult(false, "paused", paused = true)
             } catch (e: Exception) {
                 lastError = describeException(e)
                 Log.w(TAG, "Download attempt ${retryCount + 1} failed: $lastError")
@@ -456,9 +486,12 @@ class ThemeDownloader(private val context: Context) {
 
                         onProgress(progress.coerceIn(0f, 1f))
 
-                        // 检查是否被取消
+                        // 检查是否被取消或暂停
                         if (downloadTasks[taskId]?.isCancelled == true) {
                             throw IOException("Download cancelled")
+                        }
+                        if (downloadTasks[taskId]?.isPaused == true) {
+                            throw DownloadPausedException()
                         }
                     }
                 }
@@ -610,6 +643,16 @@ class ThemeDownloader(private val context: Context) {
             currentMap.remove(themeId)
             _downloadProgress.value = currentMap
         }
+
+        // 任务已结束（含已暂停的任务）：恢复时必须重新开始，不能复用被取消的任务
+        downloadTasks.remove(themeId)
+    }
+
+    /**
+     * 暂停下载：任务与已下载的部分文件都保留，等待 [downloadTheme] 恢复。
+     */
+    fun pauseDownload(themeId: String) {
+        downloadTasks[themeId]?.isPaused = true
     }
 
     /**
@@ -637,7 +680,17 @@ class ThemeDownloader(private val context: Context) {
     private class DownloadTask(val theme: ThemeStoreViewModel.RemoteTheme) {
         @Volatile
         var isCancelled = false
+
+        @Volatile
+        var isPaused = false
+
+        /** 主题文件已完成，恢复时只需继续下载预览图。 */
+        @Volatile
+        var themeFileCompleted = false
     }
+
+    /** 暂停信号：用异常中断拷贝循环，但保留已下载的部分文件以便续传。 */
+    private class DownloadPausedException : IOException("Download paused")
 }
 
 /**

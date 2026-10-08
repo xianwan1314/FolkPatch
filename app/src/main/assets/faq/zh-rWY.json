@@ -1,0 +1,88 @@
+{
+  "items": [
+    {
+      "title": "程式諸能述略",
+      "body": "FolkPatch 者，APatch 之支也。假 KernelPatch 之力，得核級 Root，乃於其上廣主事、件之制，及他諸能。\n\n• 執權者：掌 Root 之授與其禁\n• APM：Android 之件\n• KPM：核之件\n• Magic Mount：予件掛載之能\n• Meta Module：許以元件代掌件之掛載\n• 件之掌：許裝、啟、寢、卸諸事\n• Shizuku：予 Shizuku 之服務"
+    },
+    {
+      "title": "1. 用 FolkPatch 須先解 Bootloader 乎？",
+      "body": "須之。行 FolkPatch 之事前，通常須先解其機之 Bootloader，蓋 FolkPatch 須補並刷其機之 boot 像也。\n\n行前請確 Bootloader 已解，且預存與當下統系版本相應之原 boot.img。刷之誤，或用不相應之像，或致其機不得正啟。"
+    },
+    {
+      "title": "2. FolkPatch、APatch 與 KernelPatch，其相與何若？",
+      "body": "FolkPatch 者，APatch 之支也。KernelPatch 者，乃 FolkPatch 底層所用之核補件，為核級 Root 之能立其基。\n\n約言之，KernelPatch 主底層核之補，APatch 於其上出 Android Root 之制，而 FolkPatch 則循 APatch 而續廣其能與主事。\n\n故 KernelPatch 非 FolkPatch 所出之別一 Root 之制，亦不當以 KernelPatch 與 FolkPatch 為二者必擇其一之補法。"
+    },
+    {
+      "title": "3. 吾之機，能行 FolkPatch 乎？",
+      "body": "FolkPatch 今許 Linux Kernel 3.18 至 6.18 之機，且須其機為 ARM64 之構，而有相容 KernelPatch 之核之境。\n\n核之版在許中，未必定能相容。或廠商之核、第三方之核，及經特改之核，猶有不相能之患。\n\n若其機用非標準、或深改之核，宜先確其機實相容否。"
+    },
+    {
+      "title": "4. FolkPatch 補何分區？可補 init_boot 乎？",
+      "body": "FolkPatch 今所補者，boot 之像也。\n\n請用與當下統系版本相應之原 boot.img 以補，勿以 init_boot.img、vendor_boot.img 等他啟像為 FolkPatch 所補之的。\n\n若其機之啟像構造特異，宜先確其機實用之分區，及其相應之原像。"
+    },
+    {
+      "title": "5. 補之或刷之而不能啟，奈何？",
+      "body": "不能啟者，通常由於 boot 像不相應、KernelPatch 與今核不相能、刷分區之誤，或件所致之啟異。\n\n若其機猶可入 Fastboot 或 Recovery，則先復其所預存之原 boot.img。\n\n若患見於裝件或更件之後，宜先察近所操之 APM 或 KPM。未有原 boot 之副，勿反覆刷之。"
+    },
+    {
+      "title": "6. 裝件而不效，奈何？",
+      "body": "先確其件已裝而在啟之態，乃依件之自言，重啟其機。\n\nAPM 與 KPM 之載法不同，諸件猶有賴特定之 Android 版本、核版本，或他件之境者，故裝之既成，未必即能行也。\n\n件裝而不效，可先重啟其機；猶不效，則察件之版本、相容之況，及相關之籍。"
+    },
+    {
+      "title": "7. 裝件之後，其機不得正啟，奈何？",
+      "body": "若裝件或更件之後，見卡於啟之畫、自復啟，或不得入統系之患，則先疑近所裝、所更之件。\n\n能入統系者，可先寢或卸近所裝之件。不能入統系者，則依當下之機所可復之況，理其相關之件，必要時復其原 boot.img。\n\n尤以 KPM 直行於核之層，相容之患或逕及其機之啟。裝來源不明之 KPM 前，請確其源，並察其與今核相容否。"
+    },
+    {
+      "title": "8. APM 與 KPM 之別何在？",
+      "body": "APM 與 KPM，乃 FolkPatch 所許之二種件。\n\n• APM：Android 之件，用以改或廣 Android 統系之能\n• KPM：核之件，用以於核之層，廣改統系核之能\n\n二者所行之層與所用之境不同。作者依件之實法，擇 APM 或 KPM。"
+    },
+    {
+      "title": "9. Root 既授，而應用猶言無 Root，奈何？",
+      "body": "先入執權者之頁，確其應用已得 Root 之授，乃盡止其應用而重啟之。\n\n若授之態無異，而應用猶不覺 Root，或其所用乃他法以察 Root，如察 su 之徑、SELinux 之況、掛載之境，或他統系之徵。\n\n諸機猶有他 Root 之制所遺，如 KernelSU 或 Magisk。數 Root 之境並存，或相梗，宜確統系中別有 Root 主事否，或存其所遺。"
+    },
+    {
+      "title": "10. 何以 Root 之徑現為 /system/bin/kp？",
+      "body": "若統系中別有 Root 之制，或存其所遺，FolkPatch 或用 /system/bin/kp 為 Root 之徑，以免與舊境相梗。\n\n若欲用舊式 /system/bin/su 之徑，請先確他 Root 之制已卸，並清其所遺，而後重配之。\n\n須知改 Root 之徑，或影響諸應用之 Root 之察與相容。"
+    },
+    {
+      "title": "11. Root 之求不現，奈何？",
+      "body": "先確 FolkPatch 自身之 Root 態無異，並察執權者之頁可行否。\n\n若 Root 無異，而應用不彈其求，可試重啟其應用，並察此應用是否已定為拒，或永拒其 Root 之柄。\n\n若患見於裝或更 KPM、APM 之後，宜先寢近所改之件，以察之。"
+    },
+    {
+      "title": "12. 何以升 KernelPatch 之後，其版無變？",
+      "body": "若升 KernelPatch 而重啟之後，猶現舊版，先察有無阻其要分區之寫之 KPM。\n\n諸防變磚之 KPM，或阻 boot 等要分區之寫，遂使 KernelPatch 之升不成。升 KernelPatch 前，可暫寢可礙分區之寫之 KPM。\n\n同時確當下 boot 之像與其機當下統系版本相應，並確新 KernelPatch 之版與今核相容。"
+    },
+    {
+      "title": "13. 何以 Android 更新之後，Root 亡？",
+      "body": "若其機用 A/B 無縫之更，統系之更通常書新版於別一 Slot。既易至新 Slot，其中 boot 之像或未經 FolkPatch 之補，故 Root 暫失。\n\n若 FolkPatch 許其機之閒 Slot 之裝，可於 OTA 既畢之後、未重啟入新統系之前，裝 FolkPatch 於閒 Slot。\n\n若已入新統系而失 Root，則須得其統系版本相應之原 boot.img，重補而後刷之。"
+    },
+    {
+      "title": "14. 何以 FolkPatch 4.3 及以上之版，不復用 SuperKey？",
+      "body": "FolkPatch 4.3 及以上之版，已改以 APK 簽名之驗為主事之認證，不復用舊版 SuperKey 之認證。\n\n故用當下之版者，無須依舊法以生、以配 SuperKey。用舊版 KernelPatch 或舊主事之時，其認證之制或與當下之版不同。"
+    },
+    {
+      "title": "15. 何以重裝 FolkPatch 之後，見認證之敗？",
+      "body": "FolkPatch 今以 APK 之簽名為主事之認證。若卸而重裝其主事，KernelPatch 或猶存舊主事之相關之態，故重裝之後或暫不得成其認證。\n\n遇此，可先重啟其機，使 KernelPatch 重察當下之主事。若猶存其患，請確當下之 KernelPatch 與 FolkPatch 主事之版相應。"
+    },
+    {
+      "title": "16. 何以舊版 KernelPatch 不能認當下之 FolkPatch？",
+      "body": "FolkPatch 當下之主事認證，賴 KernelPatch 之簽名驗制。較早之 KernelPatch 無相應之簽名驗能，故不能與當下之 FolkPatch 成其認證。\n\n若用當下之版 FolkPatch，請確 KernelPatch 之版足當下認證之制所需。"
+    },
+    {
+      "title": "17. 何以卸 FolkPatch？",
+      "body": "可依其機當下之況，擇宜法以卸之。\n\n• 主事之卸：用 FolkPatch 所予之卸能\n• Recovery 之卸：用相應之版之卸包以復\n• 手復：刷回所預存之原 boot.img\n\n若其機有 APM 或 KPM 所致之患，宜先理其相關之件，而後卸之、復之。"
+    },
+    {
+      "title": "18. 何以核之版在 3.18–6.18 之中，猶言不支持？",
+      "body": "核之版之界，惟 FolkPatch 之基限，未足保諸核皆可行 KernelPatch。\n\n不同之廠商與第三方之核，或有特異之核構、符號、所設，或有所改，雖其版號在 3.18–6.18 之中，或猶不得正補。\n\n若遇核不支持之患，請先確 boot.img 是否出於當下之統系，並察其機有無已知之特核相容之患。勿惟以 Kernel 之版號，斷其機全相容否。"
+    },
+    {
+      "title": "19. 遇患而獻言，當備何訊？",
+      "body": "獻言之時，請盡備以下之訊：\n\n• 其機之廠商與具體之型\n• Android 之版\n• Linux Kernel 之版\n• FolkPatch 之版\n• KernelPatch 之版\n• 當下所用之 boot.img 是否出於當下之統系版本\n• 已裝之 APM 與 KPM\n• 完備之誤訊或籍\n• 患見之前所行之事\n\n若其患關 Root 之授、KernelPatch 之更，或件，請並言近有裝、更，或刪其相關之件否。"
+    },
+    {
+      "title": "20. 用 FolkPatch 之前，當慎何事？",
+      "body": "Root、補 boot 之像，及裝 APM、KPM，皆或累統系之穩。\n\n裝 FolkPatch 或行要更之前，務必備其當下統系相應之原 boot.img，並確其機可入 Fastboot 或 Recovery 等復境。\n\n裝第三方之件前，請確其源可信，並察其件與當下之 Android、核，及 FolkPatch 之版相容否。"
+    }
+  ]
+}

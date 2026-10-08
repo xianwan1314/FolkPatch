@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_launcher_icon">Ikona launchera</string>
+    <string name="launcher_icon_style_anime">Anime</string>
+    <string name="launcher_icon_style_geometry">Geometryczny</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">Styl pływającego dolnego paska</string>
+    <string name="settings_bottom_bar_standard">Standardowy dolny pasek</string>
+    <string name="settings_bottom_bar_drawer">Dolny pasek szufladowy</string>
     <string name="app_name_fpatch">FPatch</string>
     <string name="desktop_app_name">Nazwa aplikacji desktopowej</string>
     <string name="home">Pulpit</string>
@@ -59,6 +66,7 @@
     <string name="reboot_fastbootd">Uruchom ponownie w trybie FastbootD</string>
     <string name="about">O aplikacji</string>
     <string name="developer_and_maintainer">Deweloper | Opiekun</string>
+    <string name="developer_profile_picture">Zdjęcie profilowe dewelopera</string>
     <string name="settings_app_language">Język</string>
     <string name="system_default">Domyślne ustawienie systemowe</string>
     <string name="settings_global_namespace_mode">Tryb globalnej przestrzeni nazw</string>
@@ -143,6 +151,7 @@
     <string name="patch_item_skey">SuperKey</string>
     <string name="patch_custom_superkey">Niestandardowy SuperKey</string>
     <string name="patch_custom_superkey_summary">Nadal możesz ustawić SuperKey do zarządzania Root i jądrem, menedżer jest autoryzowany przez wbudowany podpis jądra</string>
+    <string name="patch_custom_superkey_optional">Opcjonalne; podpisany menedżer zwykle nie wymaga niestandardowego klucza</string>
     <string name="patch_item_set_skey_label">SuperKey powinien mieć od 8 do 63 znaków i zawierać zarówno cyfry, jak i litery, ale bez znaków specjalnych.</string>
     <string name="patch_confirm_superkey">Potwierdź SuperKey</string>
     <string name="patch_skey_mismatch">SuperKey się nie zgadza</string>
@@ -550,8 +559,6 @@ Kontynuować mimo to?</string>
     <string name="dpi_apply_settings">Zastosuj</string>
     <string name="dpi_confirm_title">Potwierdź zmianę DPI</string>
     <string name="dpi_confirm_message">Zmienić DPI aplikacji z %1$s na %2$s?</string>
-    <string name="settings_alt_icon">Alternatywna ikona</string>
-    <string name="alt_icon_summary">Użyj alternatywnej ikony programu uruchamiającego</string>
     <string name="settings_magic_mount">API montowania Folk</string>
     <string name="settings_magic_mount_summary">Włącz wbudowany system montowania modułów</string>
     <string name="settings_new_app_profile_enabled">Automatyczna autoryzacja nowych aplikacji</string>
@@ -604,6 +611,11 @@ Kontynuować mimo to?</string>
     <string name="shizuku_log_copied">Skopiowano do schowka</string>
     <string name="shizuku_log_source_server">Log serwera</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">Szczegółowy</string>
+    <string name="shizuku_log_level_debug">Debugowanie</string>
+    <string name="shizuku_log_level_info">Informacje</string>
+    <string name="shizuku_log_level_warn">Ostrzeżenie</string>
+    <string name="shizuku_log_level_error">Błąd</string>
     <string name="shizuku_log_search_hint">Szukaj w logach</string>
 <string name="settings_app_title">Tytuł aplikacji</string>
     <string name="app_title_custom">Niestandardowy</string>
@@ -723,6 +735,9 @@ Kontynuować mimo to?</string>
     <string name="apm_copy_list_title">Kopiuj listę</string>
     <string name="apm_copy_list_success">Lista modułów skopiowana</string>
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">Domyślna aplikacji</string>
+    <string name="settings_font_mode_system">Domyślna systemu</string>
+    <string name="settings_font_mode_custom">Niestandardowa</string>
     <string name="settings_custom_font">Niestandardowa czcionka</string>
     <string name="settings_select_font_file">Wybierz plik czcionki</string>
     <string name="settings_custom_font_enabled">Włączono niestandardową czcionkę</string>
@@ -873,6 +888,42 @@ Kontynuować mimo to?</string>
     <string name="settings_discrete_slider">Suwak dyskretny</string>
     <string name="settings_discrete_slider_desc">Pokaż znaczniki na torze suwaka</string>
     <string name="settings_category_behavior">Zachowanie</string>
+    <string name="profile_edit_title">Edytuj profil</string>
+    <string name="profile_nickname_label">Nazwa</string>
+    <string name="profile_signature_label">Podpis</string>
+    <string name="profile_choose_avatar">Wybierz awatar</string>
+    <string name="profile_avatar_default">Domyślny awatar</string>
+    <string name="profile_avatar_custom">Własny awatar</string>
+    <string name="profile_avatar_opacity">Krycie awatara</string>
+    <string name="profile_avatar_source_title">Wybierz źródło awatara</string>
+    <string name="profile_avatar_source_local">Wybierz z urządzenia</string>
+    <string name="profile_avatar_source_qq">Awatar QQ</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">Numer QQ</string>
+    <string name="profile_avatar_gravatar_hint">E-mail</string>
+    <string name="profile_avatar_fetch_failed">Nie udało się pobrać awatara</string>
+    <string name="profile_crop_avatar">Przytnij awatar</string>
+    <string name="profile_restore_default">Przywróć domyślne</string>
+    <string name="settings_section_general_basics">Język i aktualizacje</string>
+    <string name="settings_section_general_interface">Interfejs i animacje</string>
+    <string name="settings_section_general_root">Zachowanie Root</string>
+    <string name="settings_section_general_mount">System i montowanie</string>
+    <string name="settings_section_general_identity">Tożsamość aplikacji</string>
+    <string name="settings_section_general_maintenance">Konserwacja</string>
+    <string name="settings_section_behavior_display">Ekran główny</string>
+    <string name="settings_section_behavior_actions">Akcje i instalacja</string>
+    <string name="settings_section_function_hide">Ukrywanie i izolacja</string>
+    <string name="settings_section_function_root">Funkcje Root</string>
+    <string name="settings_section_function_mount">Montowanie i odmontowanie</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">Uwierzytelnianie</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">Kopia lokalna</string>
+    <string name="settings_section_backup_cloud">Kopia w chmurze</string>
+    <string name="settings_section_module_display">Wyświetlanie modułów</string>
+    <string name="settings_section_module_update">Aktualizacje i instalacja</string>
+    <string name="settings_section_multimedia_music">Muzyka w tle</string>
+    <string name="settings_section_multimedia_sound">Dźwięk i wibracje</string>
     <string name="settings_category_function">Funkcje</string>
     <string name="settings_use_legacy_su_page">Jednostronicowa autoryzacja superużytkownika</string>
     <string name="settings_use_legacy_su_page_summary">Strona superużytkownika przełączona na projekt autoryzacji jednostronicowej</string>
@@ -1100,6 +1151,8 @@ Kontynuować mimo to?</string>
     <string name="theme_download_finalizing">Finalizowanie...</string>
     <string name="settings_predictive_back">Predykcyjny gest wstecz</string>
     <string name="settings_predictive_back_summary">Włącz animację predykcyjnego gestu wstecz w Androidzie 14+</string>
+    <string name="settings_expressive_motion">Ruch ekspresyjny</string>
+    <string name="settings_expressive_motion_summary">Użyj krzywych ruchu Material 3 Expressive</string>
     <string name="app_title_apatch_folk">Folk APatch</string>
     <string name="app_title_apatchx">APatch X</string>
     <string name="app_title_apatch">APatch</string>
@@ -1217,6 +1270,11 @@ Kontynuować mimo to?</string>
     <string name="color_style_monochrome">Monochromatyczny</string>
     <string name="color_style_neutral">Neutralny</string>
     <string name="color_style_fidelity">Wierność</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">Kontrast</string>
+    <string name="color_contrast_standard">Standardowy</string>
+    <string name="color_contrast_medium">Średni</string>
+    <string name="color_contrast_high">Wysoki</string>
     <string name="settings_focus_card_background">Tapeta karty FocusUI</string>
     <string name="settings_focus_card_background_enabled">Tapety kart FocusUI włączone; przytrzymaj kartę, aby zarządzać jej tapetą</string>
     <string name="settings_focus_card_background_summary">Włącz tapety kart FocusUI i zarządzanie tapetą przez przytrzymanie</string>
@@ -1280,4 +1338,33 @@ Kontynuować mimo to?</string>
     <string name="kpm_installed">Zainstalowano</string>
     <string name="kpm_disabled">Wyłączono (zacznie obowiązywać po ponownym uruchomieniu)</string>
     <string name="kpm_embedded_unload_invalid">Osadzonych modułów KPM nie można odładować; pozostaną aktywne po ponownym uruchomieniu.</string>
+    <string name="settings_faq">Częste pytania</string>
+    <string name="settings_bug_feedback">Zgłoś błąd</string>
+    <string name="settings_clear_cache">Wyczyść pamięć podręczną</string>
+    <string name="settings_disclaimer">Wyłączenie odpowiedzialności</string>
+    <string name="settings_disclaimer_message">Po uzyskaniu uprawnień root aktualizacje systemu, moduły firm trzecich lub inne czynniki zewnętrzne mogą powodować nieprzewidziane ryzyko i straty, które ponosisz na własną odpowiedzialność. Kontynuuj dopiero po pełnym zrozumieniu ryzyka.</string>
+    <string name="theme_store_subtitle">Odkrywaj i stosuj motywy społeczności</string>
+    <string name="script_library_subtitle">Uruchamiaj i zarządzaj lokalnymi skryptami</string>
+    <string name="plugin_subtitle">Rozszerz możliwości FolkPatch</string>
+    <string name="my_themes_subtitle">Zapisane motywy</string>
+    <string name="apm_api_marketplace_subtitle">Przeglądaj API udostępniane przez społeczność</string>
+    <string name="theme_download_paused">Wstrzymano</string>
+    <string name="settings_wallpaper_gallery">Galeria tapet</string>
+    <string name="wallpaper_device_phone">Telefon</string>
+    <string name="wallpaper_device_tablet">Tablet</string>
+    <string name="wallpaper_layout_waterfall">Kaskada</string>
+    <string name="wallpaper_layout_stack">Stos</string>
+    <string name="wallpaper_device_mixed">Mieszany</string>
+    <string name="wallpaper_display_options">Opcje wyświetlania</string>
+    <string name="wallpaper_display_layout">Układ</string>
+    <string name="wallpaper_download">Pobierz</string>
+    <string name="wallpaper_cancel">Anuluj</string>
+    <string name="wallpaper_saved">Zapisano</string>
+    <string name="wallpaper_download_failed">Pobieranie nie powiodło się</string>
+    <string name="wallpaper_loading">Wczytywanie tapet</string>
+    <string name="wallpaper_empty">Brak tapet</string>
+    <string name="wallpaper_retry">Ponów</string>
+    <string name="wallpaper_preview">Podgląd</string>
+    <string name="wallpaper_set_background">Ustaw jako tło</string>
+    <string name="wallpaper_background_set">Tło zaktualizowane</string>
 </resources>

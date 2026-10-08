@@ -1,8 +1,6 @@
 package me.bmax.apatch.ui.component
 
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -45,6 +43,7 @@ import me.bmax.apatch.R
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.remember
+import androidx.compose.ui.semantics.Role
 
 data class ThemeColorOption(
     val key: String,
@@ -155,10 +154,7 @@ private fun ThemeColorCircle(
 ) {
     val scale by animateFloatAsState(
         targetValue = if (isSelected) 1.1f else 1f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow,
-        ),
+        animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
         label = "colorScale",
     )
 
@@ -173,7 +169,7 @@ private fun ThemeColorCircle(
                 .size(56.dp)
                 .scale(scale)
                 .clip(shape)
-                .clickable(
+                .clickable(role = Role.RadioButton, 
                     interactionSource = remember { MutableInteractionSource() },
                     indication = ripple(
                         bounded = true,
@@ -200,8 +196,8 @@ private fun ThemeColorCircle(
         ) {
             androidx.compose.animation.AnimatedVisibility(
                 visible = isSelected,
-                enter = scaleIn(spring(dampingRatio = Spring.DampingRatioMediumBouncy)) + fadeIn(),
-                exit = scaleOut() + fadeOut(),
+                enter = scaleIn(animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()) + fadeIn(animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec()),
+                exit = scaleOut(animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()),
             ) {
                 Icon(
                     imageVector = Icons.Default.Done,

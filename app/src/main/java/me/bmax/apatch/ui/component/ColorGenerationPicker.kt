@@ -1,8 +1,6 @@
 package me.bmax.apatch.ui.component
 
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,11 +12,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Contrast
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,11 +29,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.theme.ColorGenerationMode
 import me.bmax.apatch.ui.theme.ColorStandard
 import me.bmax.apatch.ui.theme.ColorStyle
+import me.bmax.apatch.ui.theme.ColorContrast
+import androidx.compose.ui.semantics.Role
+import me.bmax.apatch.ui.theme.tokens.FolkShape
 
 // ─── Color Generation Mode (Classic / Custom) ────────────────────────────────
 
@@ -135,6 +139,44 @@ fun ColorStylePicker(
     if (bare) content() else ExpressiveCard(modifier = modifier, flat = flat) { content() }
 }
 
+// ─── Color Contrast (Standard / Medium / High) ───────────────────────────────
+
+@Composable
+fun ColorContrastSelector(
+    selectedContrast: ColorContrast,
+    onContrastSelected: (ColorContrast) -> Unit,
+    modifier: Modifier = Modifier,
+    flat: Boolean = false,
+    bare: Boolean = false,
+) {
+    val contrastLabel = stringResource(R.string.color_contrast_label)
+    val content: @Composable () -> Unit = {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .semantics { contentDescription = contrastLabel },
+        ) {
+            SegmentedToggleRow(
+                options = ColorContrast.entries.map { contrast ->
+                    SegmentedOption(
+                        label = stringResource(contrast.labelRes),
+                        icon = when (contrast) {
+                            ColorContrast.STANDARD -> Icons.Default.Contrast
+                            ColorContrast.MEDIUM -> Icons.Default.Tune
+                            ColorContrast.HIGH -> Icons.Default.AutoAwesome
+                        },
+                        key = contrast.name,
+                    )
+                },
+                selectedIndex = ColorContrast.entries.indexOf(selectedContrast),
+                onOptionSelected = { index -> onContrastSelected(ColorContrast.entries[index]) },
+            )
+        }
+    }
+
+    if (bare) content() else ExpressiveCard(modifier = modifier, flat = flat) { content() }
+}
+
 // ─── Segmented Toggle Row (reusable) ─────────────────────────────────────────
 
 data class SegmentedOption(
@@ -175,10 +217,7 @@ private fun SegmentedItem(
 ) {
     val scale by animateFloatAsState(
         targetValue = if (isSelected) 1.03f else 1f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow,
-        ),
+        animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
         label = "segItem",
     )
 
@@ -191,9 +230,9 @@ private fun SegmentedItem(
     Row(
         modifier = modifier
             .scale(scale)
-            .clip(RoundedCornerShape(16.dp))
+            .clip(FolkShape.Corner16)
             .background(bgColor)
-            .clickable(onClick = onClick)
+            .clickable(role = Role.RadioButton, onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
@@ -221,10 +260,7 @@ private fun StyleSegment(
 ) {
     val scale by animateFloatAsState(
         targetValue = if (isSelected) 1.05f else 1f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow,
-        ),
+        animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
         label = "styleSeg",
     )
 
@@ -237,10 +273,10 @@ private fun StyleSegment(
     Box(
         modifier = Modifier
             .scale(scale)
-            .clip(RoundedCornerShape(20.dp))
+            .clip(FolkShape.Corner20)
             .background(bgColor)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 8.dp),
+            .clickable(role = Role.RadioButton, onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(

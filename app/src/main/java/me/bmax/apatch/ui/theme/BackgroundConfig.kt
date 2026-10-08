@@ -1,7 +1,11 @@
 package me.bmax.apatch.ui.theme
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.util.Log
 import androidx.compose.runtime.*
@@ -34,6 +38,41 @@ object BackgroundConfig {
         private set
     var customBackgroundNightDim: Float by mutableStateOf(0.5f)
         private set
+
+    // Page wallpaper平均感知亮度（key 为文件路径），用于壁纸模式下自动适配内容配色
+    private val wallpaperLuminanceMap = mutableStateMapOf<String, Float>()
+
+    /** 返回指定壁纸 URI 的原始平均感知亮度（0..1），未知时返回 null。 */
+    fun wallpaperLuminanceFor(uri: String?): Float? =
+        luminanceKey(uri)?.let { wallpaperLuminanceMap[it] }
+
+    internal fun setWallpaperLuminance(uri: String?, luminance: Float) {
+        luminanceKey(uri)?.let { wallpaperLuminanceMap[it] = luminance }
+    }
+
+    private fun luminanceKey(uri: String?): String? {
+        if (uri.isNullOrEmpty()) return null
+        return runCatching { Uri.parse(uri).path ?: uri }.getOrDefault(uri)
+    }
+
+    private fun encodeWallpaperLuminanceMap(): String {
+        return runCatching {
+            val json = org.json.JSONObject()
+            wallpaperLuminanceMap.forEach { (key, value) -> json.put(key, value.toDouble()) }
+            json.toString()
+        }.getOrDefault("")
+    }
+
+    private fun decodeWallpaperLuminanceMap(raw: String?) {
+        wallpaperLuminanceMap.clear()
+        if (raw.isNullOrEmpty()) return
+        runCatching {
+            val json = org.json.JSONObject(raw)
+            json.keys().forEach { key ->
+                wallpaperLuminanceMap[key] = json.optDouble(key).toFloat()
+            }
+        }
+    }
 
     // Video Background
     var videoBackgroundUri: String? by mutableStateOf(null)
@@ -191,6 +230,7 @@ object BackgroundConfig {
     private const val KEY_CUSTOM_BACKGROUND_DUAL_DIM_ENABLED = "custom_background_dual_dim_enabled"
     private const val KEY_CUSTOM_BACKGROUND_DAY_DIM = "custom_background_day_dim"
     private const val KEY_CUSTOM_BACKGROUND_NIGHT_DIM = "custom_background_night_dim"
+    private const val KEY_WALLPAPER_LUMINANCE_MAP = "wallpaper_luminance_map"
     
     private const val KEY_VIDEO_BACKGROUND_URI = "video_background_uri"
     private const val KEY_VIDEO_BACKGROUND_ENABLED = "video_background_enabled"
@@ -744,6 +784,8 @@ object BackgroundConfig {
             putBoolean(KEY_NAVBAR_GLASS_INNER_GLOW_ENABLED, isNavBarGlassInnerGlowEnabled)
             putBoolean(KEY_NAVBAR_GLASS_BORDER_ENABLED, isNavBarGlassBorderEnabled)
 
+            putString(KEY_WALLPAPER_LUMINANCE_MAP, encodeWallpaperLuminanceMap())
+
             apply()
         }
     }
@@ -753,6 +795,7 @@ object BackgroundConfig {
      */
     fun load(context: Context) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        decodeWallpaperLuminanceMap(prefs.getString(KEY_WALLPAPER_LUMINANCE_MAP, null))
         val uri = prefs.getString(KEY_CUSTOM_BACKGROUND_URI, null)
         val enabled = prefs.getBoolean(KEY_CUSTOM_BACKGROUND_ENABLED, false)
         val opacity = prefs.getFloat(KEY_CUSTOM_BACKGROUND_OPACITY, 0.5f)
@@ -938,7 +981,9 @@ object BackgroundConfig {
         isDualBackgroundDimEnabled = true
         customBackgroundDayDim = 0.0f
         customBackgroundNightDim = 0.5f
-        
+
+        wallpaperLuminanceMap.clear()
+
         videoBackgroundUri = null
         isVideoBackgroundEnabled = false
         videoVolume = 0f
@@ -1466,6 +1511,11 @@ object BackgroundManager {
                     .appendQueryParameter("t", System.currentTimeMillis().toString())
                     .build()
 
+                // 记录壁纸平均亮度，供壁纸模式下的内容配色自适应
+                computeLuminanceFromFile(targetFile)?.let { luminance ->
+                    BackgroundConfig.setWallpaperLuminance(fileUri.toString(), luminance)
+                }
+
                 Log.d(TAG, "图片保存成功，文件URI: $fileUri")
                 fileUri
             } catch (e: Exception) {
@@ -1474,6 +1524,102 @@ object BackgroundManager {
                 FsUtils.deleteQuietly(targetFile)
                 null
             }
+        }
+    }
+
+    private val VIDEO_EXTENSIONS = setOf(".mp4", ".webm", ".mkv", ".mov", ".avi", ".3gp")
+
+    /** 计算文件（图片或视频首帧）的平均感知亮度（0..1）；失败返回 null。 */
+    private fun computeLuminanceFromFile(file: File): Float? {
+        if (!file.exists() || file.length() == 0L) return null
+        val extension = file.extension.lowercase().let { if (it.isEmpty()) "" else ".$it" }
+        val bitmap = try {
+            if (extension in VIDEO_EXTENSIONS) extractVideoFrame(file) else decodeSampledBitmap(file)
+        } catch (e: Exception) {
+            Log.w(TAG, "读取壁纸亮度失败: ${e.message}")
+            null
+        } ?: return null
+        return try {
+            averageLuminance(bitmap)
+        } finally {
+            if (!bitmap.isRecycled) bitmap.recycle()
+        }
+    }
+
+    private fun decodeSampledBitmap(file: File): Bitmap? {
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeFile(file.absolutePath, bounds)
+        if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null
+        var sampleSize = 1
+        while (bounds.outWidth / sampleSize > 128 || bounds.outHeight / sampleSize > 128) {
+            sampleSize *= 2
+        }
+        val options = BitmapFactory.Options().apply {
+            inSampleSize = sampleSize
+            inPreferredConfig = Bitmap.Config.ARGB_8888
+        }
+        return BitmapFactory.decodeFile(file.absolutePath, options)
+    }
+
+    private fun extractVideoFrame(file: File): Bitmap? {
+        val retriever = MediaMetadataRetriever()
+        return try {
+            retriever.setDataSource(file.absolutePath)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                retriever.getScaledFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC, 128, 128)
+            } else {
+                retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "读取视频首帧失败: ${e.message}")
+            null
+        } finally {
+            runCatching { retriever.release() }
+        }
+    }
+
+    private fun averageLuminance(bitmap: Bitmap): Float {
+        val pixels = IntArray(bitmap.width * bitmap.height)
+        bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+        if (pixels.isEmpty()) return 0.5f
+        var sum = 0.0
+        for (pixel in pixels) {
+            val r = (pixel shr 16) and 0xFF
+            val g = (pixel shr 8) and 0xFF
+            val b = pixel and 0xFF
+            sum += (0.299 * r + 0.587 * g + 0.114 * b) / 255.0
+        }
+        return (sum / pixels.size).toFloat()
+    }
+
+    /**
+     * 为尚无亮度记录的已启用壁纸补算亮度（用于旧配置、主题导入等未经过保存流程的场景）。
+     */
+    suspend fun refreshMissingWallpaperLuminances(context: Context) {
+        if (!BackgroundConfig.isCustomBackgroundEnabled) return
+        withContext(Dispatchers.IO) {
+            val uris = LinkedHashSet<String>()
+            BackgroundConfig.customBackgroundUri?.let { uris.add(it) }
+            BackgroundConfig.videoBackgroundUri?.let { uris.add(it) }
+            if (BackgroundConfig.isMultiBackgroundEnabled) {
+                BackgroundConfig.homeBackgroundUri?.let { uris.add(it) }
+                BackgroundConfig.kernelBackgroundUri?.let { uris.add(it) }
+                BackgroundConfig.superuserBackgroundUri?.let { uris.add(it) }
+                BackgroundConfig.systemModuleBackgroundUri?.let { uris.add(it) }
+                BackgroundConfig.settingsBackgroundUri?.let { uris.add(it) }
+            }
+            var changed = false
+            uris.forEach { uri ->
+                if (BackgroundConfig.wallpaperLuminanceFor(uri) == null) {
+                    val path = runCatching { Uri.parse(uri).path }.getOrNull() ?: return@forEach
+                    val luminance = computeLuminanceFromFile(File(path))
+                    if (luminance != null) {
+                        BackgroundConfig.setWallpaperLuminance(uri, luminance)
+                        changed = true
+                    }
+                }
+            }
+            if (changed) BackgroundConfig.save(context)
         }
     }
 }

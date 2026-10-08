@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_action_search">搜索喵</string>
+    <string name="core_action_clear">清掉喵</string>
+    <string name="core_action_back">返回喵</string>
+    <string name="core_action_close">关掉喵</string>
+    <string name="core_action_more">更多喵</string>
+    <string name="core_action_refresh">刷新喵</string>
+    <string name="core_action_filter">筛选喵</string>
+    <string name="core_action_save">保存喵</string>
+    <string name="core_action_send">发送喵</string>
+    <string name="core_action_download">下载喵</string>
+    <string name="core_action_config">配置喵</string>
+    <string name="core_action_delete">删掉喵</string>
+    <string name="core_state_busy">忙喵</string>
+</resources>

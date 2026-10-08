@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_launcher_icon">桌面图标</string>
+    <string name="launcher_icon_style_anime">动漫</string>
+    <string name="launcher_icon_style_geometry">几何</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">悬浮快捷栏样式</string>
+    <string name="settings_bottom_bar_standard">标准快捷栏</string>
+    <string name="settings_bottom_bar_drawer">潜影盒快捷栏</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
@@ -64,6 +71,7 @@
     <string name="reboot_fastbootd">切到创造模式</string>
     <string name="about">关于这个世界</string>
     <string name="developer_and_maintainer">世界创造者 | 守护者</string>
+    <string name="developer_profile_picture">开发者头像</string>
     <string name="settings_app_language">语言资源包</string>
     <string name="system_default">默认资源包</string>
     <string name="settings_global_namespace_mode">全局区块加载</string>
@@ -174,6 +182,7 @@
     <string name="patch_item_skey">OP密钥</string>
     <string name="patch_custom_superkey">自定义OP密钥</string>
     <string name="patch_custom_superkey_summary">你还能设OP密钥来管Root和内核，管理器已经内置签名授权了</string>
+    <string name="patch_custom_superkey_optional">可选；默认使用管理器签名授权</string>
     <string name="patch_item_set_skey_label">OP密钥需要8-63个字符，只能用数字和字母，别夹带特殊符号进去</string>
     <string name="patch_confirm_superkey">再输一次OP密钥</string>
     <string name="patch_skey_mismatch">两次OP密钥对不上啊</string>
@@ -646,6 +655,11 @@ KernelPatch 附魔需要 boot 方块作为材料。
     <string name="shizuku_log_copied">已抄写至剪贴板</string>
     <string name="shizuku_log_source_server">服务器日志</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">详尽</string>
+    <string name="shizuku_log_level_debug">调试</string>
+    <string name="shizuku_log_level_info">线索</string>
+    <string name="shizuku_log_level_warn">警告</string>
+    <string name="shizuku_log_level_error">危险</string>
     <string name="shizuku_log_search_hint">查找记录</string>
 <string name="settings_app_title">应用名称</string>
     <string name="app_title_custom">自定义</string>
@@ -688,6 +702,9 @@ KernelPatch 附魔需要 boot 方块作为材料。
     <string name="settings_title_image_offset_x">水平位置</string>
 
     <!-- 字体设置 -->
+    <string name="settings_font_mode_app">应用默认</string>
+    <string name="settings_font_mode_system">系统默认</string>
+    <string name="settings_font_mode_custom">自定义</string>
     <string name="settings_custom_font">自定义字体</string>
     <string name="settings_select_font_file">选择字体文件</string>
     <string name="settings_custom_font_enabled">已启用自定义字体</string>
@@ -713,8 +730,6 @@ KernelPatch 附魔需要 boot 方块作为材料。
     <string name="settings_clear_background">清除背景</string>
     <string name="settings_clear_background_confirm">确定要清除背景图片吗？</string>
 
-    <string name="settings_alt_icon">备用图标</string>
-    <string name="alt_icon_summary">使用备选启动器图标</string>
 
     <!-- 视频背景 -->
     <string name="settings_video_background">视频背景</string>
@@ -936,6 +951,42 @@ KernelPatch 附魔需要 boot 方块作为材料。
     <string name="module">模组</string>
     <string name="settings_category_appearance">外观皮肤</string>
     <string name="settings_category_behavior">玩家行为</string>
+    <string name="profile_edit_title">玩家资料</string>
+    <string name="profile_nickname_label">玩家名</string>
+    <string name="profile_signature_label">个性签名</string>
+    <string name="profile_choose_avatar">更换头像</string>
+    <string name="profile_avatar_default">默认头像</string>
+    <string name="profile_avatar_custom">自定义头像</string>
+    <string name="profile_avatar_opacity">头像透明度</string>
+    <string name="profile_avatar_source_title">选择头像来源</string>
+    <string name="profile_avatar_source_local">从设备选择</string>
+    <string name="profile_avatar_source_qq">QQ 头像</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">QQ 号</string>
+    <string name="profile_avatar_gravatar_hint">邮箱</string>
+    <string name="profile_avatar_fetch_failed">获取头像失败</string>
+    <string name="profile_crop_avatar">裁剪头像</string>
+    <string name="profile_restore_default">恢复默认</string>
+    <string name="settings_section_general_basics">语言与更新</string>
+    <string name="settings_section_general_interface">界面与动效</string>
+    <string name="settings_section_general_root">底层行为</string>
+    <string name="settings_section_general_mount">系统与挂载</string>
+    <string name="settings_section_general_identity">应用标识</string>
+    <string name="settings_section_general_maintenance">维护</string>
+    <string name="settings_section_behavior_display">主界面显示</string>
+    <string name="settings_section_behavior_actions">操作与安装</string>
+    <string name="settings_section_function_hide">隐藏与隔离</string>
+    <string name="settings_section_function_root">底层功能</string>
+    <string name="settings_section_function_mount">挂载与卸载</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">身份验证</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">本地存档</string>
+    <string name="settings_section_backup_cloud">云端存档</string>
+    <string name="settings_section_module_display">模组显示</string>
+    <string name="settings_section_module_update">更新与安装</string>
+    <string name="settings_section_multimedia_music">背景音乐</string>
+    <string name="settings_section_multimedia_sound">音效与震动</string>
 
     <!-- 外观子分类 -->
     <string name="settings_appearance_font">字体设置</string>
@@ -1228,6 +1279,8 @@ KernelPatch 附魔需要 boot 方块作为材料。
     <string name="umount_config_save_failed">配置保存失败</string>
     <string name="settings_predictive_back">预测性返回手势</string>
     <string name="settings_predictive_back_summary">启用 Android 14+ 的预测性返回手势动画</string>
+    <string name="settings_expressive_motion">冒險動勢</string>
+    <string name="settings_expressive_motion_summary">使用 Material 3 Expressive 的動勢曲線</string>
 
     <string name="home_device_status_battery_charging">充电中（附魔中）</string>
     <string name="home_device_status_cpu_temp">CPU温度（熔炉温度）</string>
@@ -1317,6 +1370,11 @@ KernelPatch 附魔需要 boot 方块作为材料。
     <string name="color_style_monochrome">单色</string>
     <string name="color_style_neutral">中性</string>
     <string name="color_style_fidelity">保真</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">对比度（明暗）</string>
+    <string name="color_contrast_standard">普通</string>
+    <string name="color_contrast_medium">困难</string>
+    <string name="color_contrast_high">极限</string>
     <string name="settings_title_image_permission_required">需要存储权限才能选择标题贴图！</string>
     <string name="settings_background_permission_required">需要存储权限才能选择背景贴图！</string>
     <string name="settings_sound_effect_save_failed">音效保存到末影箱失败了！</string>
@@ -1339,4 +1397,33 @@ KernelPatch 附魔需要 boot 方块作为材料。
     <string name="jailbreak">解封</string>
     <string name="jailbreak_triggered">解封已触发，等拿到 OP 权限就快速重生。</string>
     <string name="reboot_soft">快速重生</string>
+    <string name="settings_faq">常见问题</string>
+    <string name="settings_bug_feedback">缺陷回报</string>
+    <string name="settings_clear_cache">清理缓存</string>
+    <string name="settings_disclaimer">免责契约</string>
+    <string name="settings_disclaimer_message">将设备 Root 之后，系统更新、第三方模块或其它外界因素皆可能带来不可预知的危险与损失，须由你自行承担。待你明了风险，方可继续冒险。</string>
+    <string name="theme_store_subtitle">探索各路秘宝，即刻装备</string>
+    <string name="script_library_subtitle">運行與掌理本機卷軸</string>
+    <string name="plugin_subtitle">擴 FolkPatch 之能</string>
+    <string name="my_themes_subtitle">你所藏之主題</string>
+    <string name="apm_api_marketplace_subtitle">覽眾所授之 API</string>
+    <string name="theme_download_paused">暂停</string>
+    <string name="settings_wallpaper_gallery">冒險圖鑑</string>
+    <string name="wallpaper_device_phone">旅者手機</string>
+    <string name="wallpaper_device_tablet">冒險平板</string>
+    <string name="wallpaper_layout_waterfall">瀑布流</string>
+    <string name="wallpaper_layout_stack">疊放</string>
+    <string name="wallpaper_device_mixed">混編</string>
+    <string name="wallpaper_display_options">陳列選項</string>
+    <string name="wallpaper_display_layout">排版</string>
+    <string name="wallpaper_download">拾取下載</string>
+    <string name="wallpaper_cancel">放棄</string>
+    <string name="wallpaper_saved">已收入行囊</string>
+    <string name="wallpaper_download_failed">拾取失敗</string>
+    <string name="wallpaper_loading">探索中</string>
+    <string name="wallpaper_empty">空無一物</string>
+    <string name="wallpaper_retry">再探</string>
+    <string name="wallpaper_preview">偵察</string>
+    <string name="wallpaper_set_background">設為背景</string>
+    <string name="wallpaper_background_set">背景已更新</string>
 </resources>

@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="launcher_icon_style_anime">動漫</string>
+    <string name="launcher_icon_style_geometry">聖光幾何</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">悬浮圣光底栏样式</string>
+    <string name="settings_bottom_bar_standard">圣光标准底栏</string>
+    <string name="settings_bottom_bar_drawer">圣匣底栏</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
@@ -65,6 +71,7 @@
     <string name="reboot_fastbootd">前往天使神殿</string>
     <string name="about">创世之纪</string>
     <string name="developer_and_maintainer">圣光使者 | 圣域守护者</string>
+    <string name="developer_profile_picture">开发者圣像</string>
     <string name="settings_app_language">圣域语言</string>
     <string name="system_default">天意默认</string>
     <string name="settings_global_namespace_mode">全域圣境领域</string>
@@ -157,6 +164,7 @@
     <string name="patch_item_skey">圣光之心</string>
     <string name="patch_custom_superkey">自选圣光之心</string>
     <string name="patch_custom_superkey_summary">你仍可设圣光之心来管理神恩，圣器已获神印授权</string>
+    <string name="patch_custom_superkey_optional">可择；圣器受神印授权，通常无须另设圣光之心</string>
     <string name="patch_item_set_skey_label">圣光之心长度应为8-63个字符，包含星辰和月华，不能含有混沌之力。</string>
     <string name="patch_confirm_superkey">再次祝祷圣光之心</string>
     <string name="patch_skey_mismatch">两次圣光之心不契合</string>
@@ -657,6 +665,11 @@
     <string name="shizuku_log_copied">已拓印至剪贴板</string>
     <string name="shizuku_log_source_server">神谕端日志</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">详述</string>
+    <string name="shizuku_log_level_debug">调试</string>
+    <string name="shizuku_log_level_info">神示</string>
+    <string name="shizuku_log_level_warn">警示</string>
+    <string name="shizuku_log_level_error">谬误</string>
     <string name="shizuku_log_search_hint">检索神谕</string>
 <string name="settings_app_title">天使使名称</string>
     <string name="app_title_custom">自定义圣名</string>
@@ -680,8 +693,6 @@
     <string name="settings_crop_dialog_message">是否裁剪图片？</string>
     <string name="settings_crop_dialog_crop">是</string>
     <string name="settings_crop_dialog_direct">否</string>
-    <string name="settings_alt_icon">備用圖標</string>
-    <string name="alt_icon_summary">使用備選啟動器圖標</string>
     <string name="settings_background_selected">已选择天使背景</string>
     <string name="settings_background_image_cleared">天使背景已清除</string>
     <string name="settings_clear_background">清除天使背景</string>
@@ -787,6 +798,9 @@
     <string name="apm_copy_list_success">名录已抄录完毕</string>
 
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">圣域默认</string>
+    <string name="settings_font_mode_system">天意默认</string>
+    <string name="settings_font_mode_custom">自定义</string>
     <string name="settings_custom_font">天使变身</string>
     <string name="settings_select_font_file">选择星尘卷轴(TTF)</string>
     <string name="settings_custom_font_enabled">已使用星尘卷轴</string>
@@ -950,6 +964,42 @@
     <string name="settings_discrete_slider">神谕滑块</string>
     <string name="settings_discrete_slider_desc">在圣光轨道上显示刻度标记</string>
     <string name="settings_category_behavior">神谕指令</string>
+    <string name="profile_edit_title">圣契资料</string>
+    <string name="profile_nickname_label">圣名</string>
+    <string name="profile_signature_label">圣言</string>
+    <string name="profile_choose_avatar">更换圣像</string>
+    <string name="profile_avatar_default">默认圣像</string>
+    <string name="profile_avatar_custom">自定圣像</string>
+    <string name="profile_avatar_opacity">头像明晦</string>
+    <string name="profile_avatar_source_title">择头像之源</string>
+    <string name="profile_avatar_source_local">择于机</string>
+    <string name="profile_avatar_source_qq">QQ 神像</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">QQ 号</string>
+    <string name="profile_avatar_gravatar_hint">信笺</string>
+    <string name="profile_avatar_fetch_failed">神像不可召</string>
+    <string name="profile_crop_avatar">裁切圣像</string>
+    <string name="profile_restore_default">归于初始</string>
+    <string name="settings_section_general_basics">圣言与更新</string>
+    <string name="settings_section_general_interface">圣光与动效</string>
+    <string name="settings_section_general_root">根源神谕</string>
+    <string name="settings_section_general_mount">圣域与挂载</string>
+    <string name="settings_section_general_identity">圣名标识</string>
+    <string name="settings_section_general_maintenance">圣所维护</string>
+    <string name="settings_section_behavior_display">圣殿首页</string>
+    <string name="settings_section_behavior_actions">圣行与安装</string>
+    <string name="settings_section_function_hide">隐匿与隔离</string>
+    <string name="settings_section_function_root">根源恩赐</string>
+    <string name="settings_section_function_mount">圣引与解除</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">圣印认证</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">本地圣录</string>
+    <string name="settings_section_backup_cloud">云端圣录</string>
+    <string name="settings_section_module_display">圣光模块</string>
+    <string name="settings_section_module_update">更新与安装</string>
+    <string name="settings_section_multimedia_music">天使幻音</string>
+    <string name="settings_section_multimedia_sound">音效与震动</string>
     <string name="settings_category_function">圣光功能</string>
     <string name="settings_category_module">魔法模组</string>
     <string name="settings_category_security">结界守护</string>
@@ -1194,6 +1244,8 @@
     <string name="theme_download_finalizing">圣光凝聚中...</string>
     <string name="settings_predictive_back">圣预返回手势</string>
     <string name="settings_predictive_back_summary">启用圣域 Android 14+ 的预知返回圣光动画</string>
+    <string name="settings_expressive_motion">神機動勢</string>
+    <string name="settings_expressive_motion_summary">使用 Material 3 Expressive 之動勢曲線</string>
 
     <string name="home_device_status_battery_charging">圣光充能中</string>
     <string name="home_device_status_cpu_temp">神念温度</string>
@@ -1283,6 +1335,11 @@
     <string name="color_style_monochrome">归一</string>
     <string name="color_style_neutral">中庸</string>
     <string name="color_style_fidelity">返璞</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">明暗圣衡</string>
+    <string name="color_contrast_standard">凡</string>
+    <string name="color_contrast_medium">灵</string>
+    <string name="color_contrast_high">圣</string>
     <string name="settings_focus_card_background">FocusUI 卡片壁纸</string>
     <string name="settings_focus_card_background_enabled">FocusUI 卡片壁纸已开启，长按卡片管理壁纸</string>
     <string name="settings_focus_card_background_summary">启用 FocusUI 卡片壁纸及长按壁纸管理</string>
@@ -1343,4 +1400,33 @@
     <string name="jailbreak">圣辉解禁</string>
     <string name="jailbreak_triggered">圣辉解禁已触发，等待获得神恩后圣翼轻旋。</string>
     <string name="reboot_soft">圣翼轻旋</string>
+    <string name="settings_faq">常见疑问</string>
+    <string name="settings_bug_feedback">缺陷奏报</string>
+    <string name="settings_clear_cache">涤除缓存</string>
+    <string name="settings_disclaimer">免责神谕</string>
+    <string name="settings_disclaimer_message">对设备施以 Root 之后，系统更新、第三方模块或其它外缘皆可能降下不可预知之险与损，须由你自负。待你明晓其险，方可续行。</string>
+    <string name="theme_store_subtitle">觅世间華彩，施於掌中</string>
+    <string name="script_library_subtitle">行止本機簡牒</string>
+    <string name="plugin_subtitle">拓 FolkPatch 之能</string>
+    <string name="my_themes_subtitle">汝所藏之神題</string>
+    <string name="apm_api_marketplace_subtitle">覽眾所施之 API</string>
+    <string name="theme_download_paused">凝止</string>
+    <string name="settings_wallpaper_gallery">聖光圖鑑</string>
+    <string name="wallpaper_device_phone">聖光手機</string>
+    <string name="wallpaper_device_tablet">聖光石板</string>
+    <string name="wallpaper_layout_waterfall">聖光瀑布</string>
+    <string name="wallpaper_layout_stack">聖光疊壤</string>
+    <string name="wallpaper_device_mixed">聖光交融</string>
+    <string name="wallpaper_display_options">聖像陳列</string>
+    <string name="wallpaper_display_layout">聖圖陣式</string>
+    <string name="wallpaper_download">降臨下載</string>
+    <string name="wallpaper_cancel">取消</string>
+    <string name="wallpaper_saved">降臨成功</string>
+    <string name="wallpaper_download_failed">降臨失敗</string>
+    <string name="wallpaper_loading">聖光降臨中</string>
+    <string name="wallpaper_empty">無聖光圖</string>
+    <string name="wallpaper_retry">再祈</string>
+    <string name="wallpaper_preview">聖光顯現</string>
+    <string name="wallpaper_set_background">設為聖光背景</string>
+    <string name="wallpaper_background_set">聖光背景已更</string>
 </resources>

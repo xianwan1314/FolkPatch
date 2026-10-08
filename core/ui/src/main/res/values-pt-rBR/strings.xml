@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_action_search">Buscar</string>
+    <string name="core_action_clear">Limpar</string>
+    <string name="core_action_back">Voltar</string>
+    <string name="core_action_close">Fechar</string>
+    <string name="core_action_more">Mais</string>
+    <string name="core_action_refresh">Atualizar</string>
+    <string name="core_action_filter">Filtrar</string>
+    <string name="core_action_save">Salvar</string>
+    <string name="core_action_send">Enviar</string>
+    <string name="core_action_download">Baixar</string>
+    <string name="core_action_config">Configurar</string>
+    <string name="core_action_delete">Excluir</string>
+    <string name="core_state_busy">Ocupado</string>
+</resources>

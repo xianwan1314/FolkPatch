@@ -1,0 +1,88 @@
+{
+  "items": [
+    {
+      "title": "Funkcje oprogramowania",
+      "body": "FolkPatch to fork APatch, który wykorzystuje KernelPatch do zapewnienia roota na poziomie jądra, oraz rozszerza go o menedżer, system modułów i nie tylko.\n\n• Superuser: zarządzanie uprawnieniami root i autoryzacja\n• APM: moduły Androida\n• KPM: moduły jądra\n• Magic Mount: zapewnia montowanie modułów\n• Meta Module: pozwala modułowi meta przejąć montowanie modułów\n• Zarządzanie modułami: instalowanie, włączanie, wyłączanie i usuwanie modułów\n• Shizuku: zapewnia obsługę usługi Shizuku"
+    },
+    {
+      "title": "1. Czy muszę odblokować bootloader, aby korzystać z FolkPatch?",
+      "body": "Zwykle tak. Instalacja FolkPatch zwykle wymaga odblokowania bootloadera urządzenia, ponieważ FolkPatch patchuje i wgrywa obraz rozruchowy urządzenia.\n\nPrzed instalacją upewnij się, że bootloader jest odblokowany, i wykonaj kopię zapasową oryginalnego boot.img zgodnego z bieżącą wersją systemu. Wgranie błędnego lub niedopasowanego obrazu może uniemożliwić uruchomienie urządzenia."
+    },
+    {
+      "title": "2. Jaki jest związek między FolkPatch, APatch i KernelPatch?",
+      "body": "FolkPatch to fork APatch. KernelPatch to komponent do patchowania jądra, którego FolkPatch używa pod spodem, aby zapewnić roota na poziomie jądra.\n\nMówiąc prościej, KernelPatch zapewnia niskopoziomową możliwość patchowania jądra, APatch buduje na nim rozwiązanie root dla Androida, a FolkPatch dalej rozszerza APatch o funkcje i menedżera.\n\nKernelPatch nie jest więc inną metodą root oferowaną przez FolkPatch, a KernelPatch i FolkPatch nie należy rozumieć jako dwóch oddzielnych metod patchowania, między którymi trzeba wybierać."
+    },
+    {
+      "title": "3. Czy moje urządzenie obsługuje FolkPatch?",
+      "body": "FolkPatch obsługuje obecnie urządzenia z jądrem Linux od 3.18 do 6.18 i wymaga architektury ARM64 oraz środowiska jądra zgodnego z KernelPatch.\n\nWersja jądra w obsługiwanym zakresie nie gwarantuje zgodności. Jądra producentów, jądra firm trzecich oraz specjalnie zmodyfikowane jądra mogą nadal mieć problemy ze zgodnością.\n\nJeśli Twoje urządzenie używa niestandardowego lub mocno dostosowanego jądra, najpierw potwierdź jego rzeczywistą zgodność."
+    },
+    {
+      "title": "4. Którą partycję patchuje FolkPatch? Czy może patchować init_boot?",
+      "body": "FolkPatch obecnie patchuje obraz rozruchowy.\n\nUżyj oryginalnego boot.img zgodnego z bieżącą wersją systemu i nie używaj init_boot.img, vendor_boot.img ani innych obrazów rozruchowych jako celu patchowania.\n\nJeśli Twoje urządzenie ma nietypowy układ rozruchu, najpierw potwierdź, której partycji rozruchowej faktycznie używa, oraz jej oryginalnego obrazu."
+    },
+    {
+      "title": "5. Co zrobić, jeśli urządzenie nie uruchamia się po patchowaniu lub wgraniu?",
+      "body": "Urządzenie, które się nie uruchamia, jest zwykle spowodowane niedopasowanym obrazem rozruchowym, niekompatybilnym połączeniem KernelPatch/jądro, wgraniem niewłaściwej partycji lub modułem psującym rozruch.\n\nJeśli urządzenie nadal może wejść w Fastboot lub Recovery, najpierw przywróć zapasową kopię oryginalnego boot.img.\n\nJeśli problem pojawił się po zainstalowaniu lub aktualizacji modułu, najpierw sprawdź ostatnio zmieniony APM lub KPM. Nie wgrywaj wielokrotnie bez kopii zapasowej oryginalnego obrazu rozruchowego."
+    },
+    {
+      "title": "6. Co zrobić, jeśli zainstalowany moduł nie działa?",
+      "body": "Najpierw upewnij się, że moduł jest zainstalowany i włączony, a następnie uruchom ponownie urządzenie zgodnie z opisem samego modułu.\n\nAPM i KPM ładują się inaczej, a niektóre moduły zależą od konkretnej wersji Androida, wersji jądra lub innych modułów, więc udana instalacja nie gwarantuje, że moduł zadziała.\n\nJeśli moduł nie ma efektu, najpierw uruchom ponownie; jeśli nadal nie działa, sprawdź wersję modułu, zgodność i powiązane logi."
+    },
+    {
+      "title": "7. Co zrobić, jeśli urządzenie nie uruchamia się prawidłowo po instalacji modułu?",
+      "body": "Jeśli po zainstalowaniu lub aktualizacji modułu widzisz zawieszoną animację rozruchu, losowe restarty lub nie możesz wejść do systemu, najpierw podejrzewaj ostatnio zainstalowany lub zaktualizowany moduł.\n\nJeśli nadal możesz uruchomić system, wyłącz lub usuń ostatnio zainstalowany moduł. Jeśli nie możesz uruchomić, obsłuż moduł zgodnie z opcjami odzyskiwania urządzenia, w razie potrzeby przywracając oryginalny boot.img.\n\nSzczególnie KPM działa w jądrze, więc problemy ze zgodnością mogą bezpośrednio zepsuć rozruch systemu. Przed zainstalowaniem KPM o nieznanym pochodzeniu potwierdź jego źródło i zgodność z bieżącym jądrem."
+    },
+    {
+      "title": "8. Jaka jest różnica między APM i KPM?",
+      "body": "APM i KPM to dwa typy modułów obsługiwane przez FolkPatch.\n\n• APM: moduły Androida, które modyfikują lub rozszerzają funkcje systemu Android\n• KPM: moduły jądra, które rozszerzają lub modyfikują jądro na poziomie jądra\n\nDziałają na różnych poziomach i służą różnym celom. Autorzy modułów wybierają APM lub KPM w zależności od sposobu implementacji modułu."
+    },
+    {
+      "title": "9. Root jest przyznany, ale aplikacja nadal twierdzi, że go nie ma. Co teraz?",
+      "body": "Najpierw otwórz stronę superusera i potwierdź, że aplikacji przyznano roota, a następnie całkowicie zamknij ją i uruchom ponownie.\n\nJeśli autoryzacja jest w porządku, ale aplikacja nadal nie wykrywa roota, może używać innych kontroli, takich jak ścieżka su, status SELinux, środowisko montowania lub inne cechy systemu.\n\nNiektóre urządzenia mogą też mieć pozostałości po innych rozwiązaniach root, takich jak KernelSU lub Magisk. Wiele środowisk root może się kolidować, więc sprawdź, czy nie istnieje inny menedżer root lub powiązane pozostałości."
+    },
+    {
+      "title": "10. Dlaczego ścieżka root jest wyświetlana jako /system/bin/kp?",
+      "body": "Jeśli w systemie istnieje inne rozwiązanie root lub powiązane pozostałości, FolkPatch może użyć /system/bin/kp jako ścieżki root, aby uniknąć konfliktu z istniejącym środowiskiem.\n\nJeśli chcesz użyć tradycyjnej ścieżki /system/bin/su, najpierw upewnij się, że inne rozwiązanie root zostało usunięte, a jego pozostałości wyczyszczone, a następnie skonfiguruj ponownie.\n\nPamiętaj, że zmiana ścieżki root może wpłynąć na wykrywanie roota i zgodność w niektórych aplikacjach."
+    },
+    {
+      "title": "11. Dlaczego żądanie root nie pojawia się?",
+      "body": "Najpierw potwierdź, że status root samego FolkPatch jest prawidłowy i że strona superusera działa.\n\nJeśli root działa, ale aplikacja nie pokazuje monitu, spróbuj uruchomić aplikację ponownie i sprawdź, czy nie ustawiono dla niej trwałego odmawiania roota.\n\nJeśli problem pojawił się po zainstalowaniu lub aktualizacji KPM lub APM, najpierw wyłącz ostatnio zmieniony moduł, aby zawęzić przyczynę."
+    },
+    {
+      "title": "12. Dlaczego wersja KernelPatch nie zmienia się po aktualizacji?",
+      "body": "Jeśli po aktualizacji KernelPatch i ponownym uruchomieniu urządzenie nadal pokazuje starą wersję, najpierw sprawdź, czy jakiś KPM nie blokuje zapisu do krytycznych partycji.\n\nNiektóre KPM chroniące przed zbrickowaniem przechwytują zapisy do partycji rozruchowej i innych krytycznych partycji, co powoduje niepowodzenie aktualizacji KernelPatch. Przed aktualizacją KernelPatch tymczasowo wyłącz KPM, które mogą wpływać na zapis partycji.\n\nUpewnij się też, że bieżący obraz rozruchowy jest zgodny z bieżącą wersją systemu urządzenia, a nowa wersja KernelPatch jest zgodna z Twoim jądrem."
+    },
+    {
+      "title": "13. Dlaczego root zniknął po aktualizacji Androida?",
+      "body": "W przypadku aktualizacji bezproblemowych A/B aktualizacja systemu jest zwykle zapisywana na drugim slocie. Po przełączeniu na nowy slot jego obraz rozruchowy może nie być załatany przez FolkPatch, więc root zostaje tymczasowo utracony.\n\nJeśli FolkPatch obsługuje instalację na nieaktywnym slocie na Twoim urządzeniu, możesz zainstalować go tam po zakończeniu OTA, a przed ponownym uruchomieniem do nowego systemu.\n\nJeśli urządzenie już uruchomiło nowy system i utraciłeś roota, zdobądź oryginalny boot.img zgodny z tą wersją systemu, załatuj go i wgraj ponownie."
+    },
+    {
+      "title": "14. Dlaczego FolkPatch 4.3 i nowsze nie używają już SuperKey?",
+      "body": "FolkPatch 4.3 i nowsze uwierzytelniają menedżera za pomocą weryfikacji podpisu APK zamiast starego mechanizmu SuperKey.\n\nWięc w aktualnej wersji FolkPatch nie musisz generować ani konfigurować SuperKey według starych przewodników. W przypadku starego KernelPatch lub starego menedżera mechanizm uwierzytelniania może różnić się od bieżącej wersji."
+    },
+    {
+      "title": "15. Dlaczego uwierzytelnianie kończy się niepowodzeniem po ponownej instalacji FolkPatch?",
+      "body": "FolkPatch używa uwierzytelniania podpisem APK dla menedżera. Jeśli odinstalujesz i ponownie zainstalujesz menedżera, KernelPatch może nadal przechowywać stan poprzedniego menedżera, więc uwierzytelnianie może tymczasowo zawodzić po ponownej instalacji.\n\nW takim przypadku najpierw uruchom ponownie urządzenie, aby KernelPatch mógł ponownie wykryć bieżącego menedżera. Jeśli problem nadal występuje, potwierdź, że wersje KernelPatch i menedżera FolkPatch są zgodne."
+    },
+    {
+      "title": "16. Dlaczego stary KernelPatch nie może uwierzytelnić bieżącego FolkPatch?",
+      "body": "Uwierzytelnianie menedżera zależy od weryfikacji podpisu KernelPatch. Starsze wersje KernelPatch nie mają tej możliwości, więc nie mogą ukończyć uwierzytelniania z bieżącym FolkPatch.\n\nJeśli używasz bieżącej wersji FolkPatch, upewnij się, że wersja KernelPatch spełnia wymagania bieżącego mechanizmu uwierzytelniania."
+    },
+    {
+      "title": "17. Jak odinstalować FolkPatch?",
+      "body": "Wybierz metodę odinstalowania w zależności od bieżącego stanu urządzenia.\n\n• Odinstalowanie przez menedżera: użyj funkcji odinstalowania udostępnionej przez FolkPatch\n• Odinstalowanie przez Recovery: przywróć za pomocą pakietu odinstalowania dla pasującej wersji\n• Przywracanie ręczne: wgraj z powrotem zapasową kopię oryginalnego boot.img\n\nJeśli urządzenie ma obecnie problemy związane z APM lub KPM, zajmij się tymi modułami przed odinstalowaniem lub przywróceniem."
+    },
+    {
+      "title": "18. Dlaczego nadal jest napisane, że nie jest obsługiwane, gdy moje jądro jest w zakresie 3.18–6.18?",
+      "body": "Zakres wersji jądra to jedynie podstawowy wymóg zgodności FolkPatch; nie gwarantuje, że każde jądro działa z KernelPatch.\n\nRóżne jądra producentów i firm trzecich mogą mieć nietypowe struktury, symbole, konfiguracje lub modyfikacje i mogą nie dać się załatać nawet w zakresie 3.18–6.18.\n\nJeśli napotkasz problem z nieobsługiwanym jądrem, najpierw potwierdź, że boot.img pochodzi z bieżącego systemu, i sprawdź znane problemy ze zgodnością specjalnych jąder. Nie oceniaj pełnej zgodności wyłącznie na podstawie numeru wersji jądra."
+    },
+    {
+      "title": "19. Jakie informacje powinienem podać, zgłaszając problem?",
+      "body": "Zgłaszając problem, podaj jak najwięcej z poniższych:\n\n• Producent i dokładny model urządzenia\n• Wersja Androida\n• Wersja jądra Linux\n• Wersja FolkPatch\n• Wersja KernelPatch\n• Czy bieżący boot.img pochodzi z bieżącej wersji systemu\n• Zainstalowane APM i KPM\n• Pełny komunikat błędu lub logi\n• Co robiłeś przed pojawieniem się problemu\n\nJeśli problem dotyczy autoryzacji root, aktualizacji KernelPatch lub modułów, wspomnij też, czy ostatnio coś powiązanego instalowałeś, aktualizowałeś lub usuwałeś."
+    },
+    {
+      "title": "20. O czym należy pamiętać przed użyciem FolkPatch?",
+      "body": "Root, patchowanie obrazu rozruchowego i instalowanie APM/KPM mogą wpływać na stabilność systemu.\n\nPrzed zainstalowaniem FolkPatch lub wykonaniem ważnej aktualizacji przygotuj oryginalny boot.img zgodny z bieżącym systemem i upewnij się, że urządzenie może wejść w Fastboot lub Recovery.\n\nPrzed zainstalowaniem modułów firm trzecich upewnij się, że źródło jest godne zaufania, i sprawdź zgodność z Twoją wersją Androida, jądrem i wersją FolkPatch."
+    }
+  ]
+}

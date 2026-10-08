@@ -1,0 +1,1501 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_icon_style_anime">漫符</string>
+    <string name="launcher_icon_style_geometry">幾何之符</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">浮欄之式</string>
+    <string name="settings_bottom_bar_standard">常式下欄</string>
+    <string name="settings_bottom_bar_drawer">屜式下欄</string>
+    <string name="app_name" translatable="false">FolkPatch</string>
+    <string name="app_name_fpatch">FPatch</string>
+
+    <string name="desktop_app_name">案上題名</string>
+
+    <string name="home">首頁</string>
+
+    <string name="success">功成</string>
+    <string name="failure">事敗</string>
+
+    <string name="patch_warnning">安設有險，務先存其數，以備不虞。</string>
+    <string name="patch">補</string>
+
+    <string name="kernel_patch">KernelPatch</string>
+    <string name="android_patch">AndroidPatch</string>
+
+    <string name="settings_nav_layout_title">導欄規制</string>
+    <string name="settings_nav_layout_summary">或隱或現導欄諸件</string>
+    <string name="settings_nav_scheme">導式</string>
+    <string name="settings_nav_mode">導欄之式</string>
+    <string name="settings_nav_mode_summary">擇導欄現示之法</string>
+    <string name="settings_nav_mode_auto">自循常</string>
+    <string name="settings_nav_mode_bottom">恆居其下</string>
+    <string name="settings_nav_mode_rail">恆居其側</string>
+    <string name="settings_nav_mode_floating">浮動下欄</string>
+    <string name="settings_show_apm">現統系之件</string>
+    <string name="settings_show_kpm">現 KPM</string>
+    <string name="settings_show_superuser">現執權者</string>
+    <string name="settings_floating_auto_hide">浮欄自隱</string>
+    <string name="settings_floating_auto_hide_summary">無所舉措三息，浮欄自隱</string>
+    <string name="settings_floating_swipe_hide">拂隱浮欄</string>
+    <string name="settings_floating_swipe_hide_summary">下拂則隱，上拂則現</string>
+    <string name="settings_navbar_glass_effect">琉璃之效</string>
+    <string name="settings_navbar_glass_effect_summary">為浮欄施霜面琉璃之效</string>
+    <string name="settings_navbar_glass_blur_strength">朦朧之度</string>
+    <string name="settings_navbar_glass_transparency">底之透度</string>
+    <string name="settings_navbar_glass_highlight_strength">明耀之度</string>
+    <string name="settings_navbar_glass_specular">鏡面之照</string>
+    <string name="settings_navbar_glass_specular_summary">於欄首現鏡照之明</string>
+    <string name="settings_navbar_glass_inner_glow">內蘊之輝</string>
+    <string name="settings_navbar_glass_inner_glow_summary">於欄末現微輝之效</string>
+    <string name="settings_navbar_glass_border">欄廓</string>
+    <string name="settings_navbar_glass_border_summary">為欄施微廓之線</string>
+    <string name="settings_compact_rounded_bar">圓緊之式</string>
+    <string name="settings_compact_rounded_bar_summary">用圓首緊湊之浮欄，隅角圓轉，間距略蹙</string>
+    <string name="settings_stats_top_layout">上欄之式</string>
+    <string name="settings_stats_top_layout_summary">擇上欄消息之式</string>
+    <string name="settings_stats_top_layout_list">ListUI</string>
+    <string name="settings_stats_top_layout_grid">GridUI</string>
+    <string name="settings_block_kernelpatch_update">遏 KernelPatch 更新</string>
+    <string name="settings_block_kernelpatch_update_summary">不示 KernelPatch 更新之告</string>
+    <string name="settings_block_androidpatch_update">遏統系補之更新</string>
+    <string name="settings_block_androidpatch_update_summary">不示統系補（APD）更新之告</string>
+
+    <string name="reboot">重啟</string>
+    <string name="settings">規制</string>
+    <string name="reboot_recovery">重啟入 Recovery</string>
+    <string name="reboot_bootloader">重啟入 Bootloader</string>
+    <string name="reboot_download">重啟入 Download</string>
+    <string name="reboot_edl">重啟入 EDL</string>
+    <string name="reboot_fastbootd">重啟入 FastbootD</string>
+    <string name="reboot_download_confirm">重啟入 Download 之式乎？其機將入固件刷寫之界。</string>
+    <string name="reboot_edl_confirm">重啟入 EDL（Emergency Download）之式乎？屏將常黑，惟深刷之器可救。</string>
+    <string name="about">關於</string>
+    <string name="developer_and_maintainer">開發者 | 修葺者</string>
+    <string name="developer_profile_picture">开发者素像</string>
+    <string name="settings_app_language">語言</string>
+    <string name="system_default">循統系</string>
+    <string name="settings_global_namespace_mode">全局命名域之式</string>
+    <string name="settings_global_namespace_mode_summary">凡 Root 之會話，皆用全局掛載之域</string>
+    <string name="settings_clear_super_key_dialog">果欲行之乎？</string>
+    <string name="settings_sucompat">舊 su 相容</string>
+    <string name="settings_sucompat_summary">"開舊 su 相容之制（以待 su 不效之時）"</string>
+    <string name="settings_selinux_hide">隱 SELinux 之改（試）</string>
+    <string name="settings_selinux_hide_summary">"使 SELinux 之改不為用者諸程所覺（此能或未穩，安全之式則寢之）"</string>
+    <string name="settings_selinux_hide_warning_title">警</string>
+    <string name="settings_selinux_hide_warning_below_5_10">"此能僅驗於 5.10 以上之核，舊核或未穩。"</string>
+    <string name="settings_selinux_hide_warning_non_gki">"非 GKI 之核，險尤重，或致不能啟；務先存其數。"</string>
+    <string name="settings_grid_working_card_hide_check">隱其況之符</string>
+    <string name="settings_grid_working_card_hide_check_summary">隱工作牌上之勾符或警符</string>
+    <string name="settings_grid_working_card_hide_text">隱其況之文</string>
+    <string name="settings_grid_working_card_hide_text_summary">隱工作牌上 \'Working\' 或 \'Not installed\' 之文</string>
+    <string name="settings_grid_working_card_hide_mode">隱其工作之式</string>
+    <string name="settings_grid_working_card_hide_mode_summary">隱工作牌上 \'Full\' 或 \'Half\' 之文</string>
+
+
+    <string name="settings_folkx_engine_title">FolkX 動效之機</string>
+    <string name="settings_folkx_engine_summary">於頂層諸頁互易之際，行依物理之彈簧動效</string>
+    <string name="settings_folkx_animation_type">動效之式</string>
+    <string name="settings_folkx_animation_speed">動效之速</string>
+    <string name="settings_folkx_animation_linear">直行</string>
+    <string name="settings_folkx_animation_spatial">空際之行</string>
+    <string name="settings_folkx_animation_fade">隱現</string>
+    <string name="settings_folkx_animation_vertical">上下推移</string>
+    <string name="settings_folkx_animation_diagonal">斜向推移</string>
+
+    <string name="su_exclude_all_title">盡除之</string>
+    <string name="su_exclude_all_confirm">果欲盡除諸非 Root 之應用乎？</string>
+    <string name="su_batch_exclude_title">批量除之</string>
+    <string name="su_batch_exclude_content">為諸非 ROOT 之應用除其注入，請擇所行</string>
+    <string name="su_exclude_btn">除之</string>
+    <string name="su_exclude_reverse_btn">反之</string>
+
+    <string name="home_learn_apatch">習 FolkPatch</string>
+    <string name="home_click_to_learn_apatch">覽 FolkPatch 之能與其用法</string>
+    <string name="settings_hide_apatch_card">隱「習 FolkPatch」之牌</string>
+    <string name="settings_hide_apatch_card_summary">隱首頁「習 FolkPatch」之牌</string>
+
+    <string name="about_source_code"><![CDATA[<p>覽其源於 %1$s<p/>入吾 %2$s 頻道<p/>入吾 %3$s 群組]]></string>
+    <string name="send_log">呈籍</string>
+    <string name="settings_clean_storage">清應用之數</string>
+    <string name="settings_clean_storage_summary">修殘卷所致之下取或施用之失</string>
+    <string name="settings_clean_storage_confirm">此將刪所下之題、所納之樂、聲效及諸積貯之卷，而後重建其目錄。爾之規制當存。續乎？</string>
+    <string name="settings_clean_storage_done">清畢</string>
+    <string name="save_log">存籍</string>
+    <string name="log_saved">籍已存</string>
+    <string name="safe_mode">安全之式</string>
+    <string name="support_or_donate">贊助</string>
+
+    <string name="super_key">SuperKey</string>
+    <string name="clear_super_key">清 SuperKey</string>
+    <string name="patch_set_superkey">置 SuperKey</string>
+    <string name="home_patch_set_key_desc">KernelPatch 之惟一憑信</string>
+    <string name="home_patch_next_step">次步</string>
+
+    <string name="home_not_installed">未裝</string>
+    <string name="home_install_unknown">KernelPatch 未裝</string>
+    <string name="home_install_unknown_summary">Root 不可用\n其核或未補，或未刷入</string>
+    <string name="home_click_to_install">點而裝之</string>
+    <string name="home_working">行中</string>
+    <string name="home_version">版本：%s</string>
+    <string name="home_kp_need_update">有新版本</string>
+    <string name="home_kp_cando_update">更新</string>
+
+    <string name="home_installing">裝中</string>
+    <string name="kpatch_version">版本：%s</string>
+    <string name="apatch_version">版本：%s</string>
+
+    <string name="kpatch_version_update" formatted="false">版本：%s -&gt; %s</string>
+    <string name="kpatch_shadow_path_title">kpatch</string>
+    <string name="home_auth_key_title">輸入 SuperKey</string>
+    <string name="home_auth_key_desc">認證而後啟</string>
+    <string name="home_kpatch_info_title">消息</string>
+
+    <string name="home_ap_cando_install">裝</string>
+
+    <string name="home_ap_cando_uninstall">卸</string>
+    <string name="home_ap_cando_reboot">重啟</string>
+
+    <string name="patch_title">補</string>
+
+    <string name="patch_config_title">諸補</string>
+    <string name="patch_mode_bootimg_patch">式：補</string>
+    <string name="patch_mode_patch_and_install">式：補而裝之</string>
+    <string name="patch_mode_install_to_next_slot">式：裝入未用之 Slot（OTA 之後）</string>
+    <string name="patch_mode_restore">式：復舊</string>
+    <string name="patch_mode_uninstall_patch">式：去 KPatch</string>
+    <string name="patch_select_bootimg_btn">擇 boot</string>
+    <string name="patch_embed_kpm_btn">嵌 KPM</string>
+    <string name="patch_start_patch_btn">行之</string>
+    <string name="patch_start_unpatch_btn">去補</string>
+    <string name="patch_item_error">!!誤!!</string>
+    <string name="patch_item_bootimg">bootimg</string>
+    <string name="patch_item_bootimg_slot">Slot：</string>
+    <string name="patch_item_bootimg_dev">器：</string>
+    <string name="patch_item_kernel">核</string>
+    <string name="patch_item_kpimg">kpimg</string>
+    <string name="patch_item_kpimg_version">版本：</string>
+    <string name="patch_item_kpimg_comile_time">時：</string>
+    <string name="patch_item_kpimg_config">所設：</string>
+    <string name="patch_item_new_extra_kpm">新嵌</string>
+    <string name="patch_item_existed_extra_kpm">已存</string>
+    <string name="patch_item_extra_name">名：</string>
+    <string name="patch_item_extra_version">版本：</string>
+    <string name="patch_item_extra_author">作者：</string>
+    <string name="patch_item_extra_kpm_license">許可：</string>
+    <string name="patch_item_extra_kpm_desciption">述：</string>
+    <string name="patch_item_extra_args">所參：</string>
+    <string name="patch_item_extra_event">事：</string>
+    <string name="patch_item_skey">SuperKey</string>
+    <string name="patch_custom_superkey">自定 SuperKey</string>
+    <string name="patch_custom_superkey_summary">仍可用 SuperKey 主其 Root；今則由核驗主事之簽名</string>
+    <string name="patch_custom_superkey_optional">可略；已簽之主事，通常無須自定之鍵</string>
+    <string name="patch_item_set_skey_label">SuperKey 宜八至六十三字，當兼有數字與字母，然不可用特殊之符。</string>
+    <string name="patch_confirm_superkey">再輸 SuperKey</string>
+    <string name="patch_skey_mismatch">SuperKey 不合</string>
+
+    <string name="home_kernel">核之版本</string>
+    <string name="home_manager_version">主事之版本</string>
+    <string name="home_fingerprint">指紋</string>
+
+    <string name="home_selinux_status">SELinux 之況</string>
+    <string name="home_selinux_status_disabled">已寢</string>
+    <string name="home_selinux_status_enforcing">嚴行</string>
+    <string name="home_selinux_status_permissive">寬行</string>
+    <string name="home_selinux_status_unknown">未詳</string>
+
+    <string name="settings_selinux_mode">SELinux 之式</string>
+    <string name="settings_selinux_mode_summary">擇 SELinux 行法之式</string>
+    <string name="settings_selinux_mode_enforcing">嚴行（緊）</string>
+    <string name="settings_selinux_mode_permissive">寬行（鬆）</string>
+    <string name="settings_selinux_current_mode">今：%s</string>
+    <string name="settings_selinux_mode_enforcing_summary">SELinux 全行其禁</string>
+    <string name="settings_selinux_mode_permissive_summary">SELinux 惟錄其違，不拒之</string>
+    <string name="msg_selinux_permissive_warning">改為寬行，則 SELinux 不復行禁。違者惟錄而不拒，其安稍減。續乎？</string>
+    <string name="msg_selinux_enforcing_confirm">改為嚴行乎？SELinux 將全行諸禁，拒其未許之犯。</string>
+
+    <string name="home_device_info">器</string>
+    <string name="home_system_version">統系之版本</string>
+    <string name="home_kpatch_version">KernelPatch 之版本</string>
+    <string name="home_su_path">su 之徑</string>
+    <string name="home_apatch_version">FolkPatch 之版本</string>
+
+    <string name="kpm">KPModule</string>
+    <string name="kpm_kp_not_installed">KernelPatch 未裝</string>
+    <string name="kpm_add_kpm">增 KPM</string>
+    <string name="kpm_load">載</string>
+    <string name="kpm_install">裝</string>
+    <string name="kpm_embed">嵌</string>
+    <string name="kpm_embedded">已嵌</string>
+    <string name="kpm_loaded">已載</string>
+    <string name="kpm_load_toast_succ">載之而通</string>
+    <string name="kpm_install_toast_succ">裝之而通，重啟乃效</string>
+    <string name="kpm_load_toast_failed">載之不遂</string>
+    <string name="kpm_unload_confirm">卸去 %s 之件乎？</string>
+    <string name="kpm_unload">卸</string>
+    <string name="kpm_control">掌之</string>
+    <string name="kpm_apm_empty">未有載之件</string>
+    <string name="kpm_custom_order">易自定件之序</string>
+    <string name="kpm_load_failed">載諸核件而敗</string>
+    <string name="kpm_version">版本</string>
+    <string name="kpm_license">許可</string>
+    <string name="kpm_author">作者</string>
+    <string name="kpm_desc">述</string>
+    <string name="kpm_args">所參</string>
+    <string name="kpm_installed">已裝</string>
+    <string name="kpm_disabled">已寢（重啟乃效）</string>
+    <string name="kpm_embedded_unload_invalid">已嵌之 KPM 不可卸；重啟之後，亦在其位。</string>
+
+    <string name="su_title">執權者</string>
+    <string name="su_selinux_via_hook">假 hook 而過</string>
+    <string name="su_pkg_excluded_label">除</string>
+    <string name="su_pkg_excluded_setting_title">除其改</string>
+    <string name="su_pkg_excluded_setting_summary">開此，則許 FolkPatch 復此應用諸件所改之卷。</string>
+    <string name="su_pkg_root_setting_title">執權者</string>
+    <string name="su_pkg_root_setting_summary">開此，則予爾應用執權者之柄，使其可行 SU 之命。</string>
+    <string name="su_pkg_normal_setting_title">常式</string>
+    <string name="su_pkg_normal_setting_summary">素定之態，別無所措。</string>
+    <string name="su_show_system_apps">現統系之應用</string>
+    <string name="su_hide_system_apps">隱統系之應用</string>
+    <string name="su_refresh">刷新</string>
+    <string name="su_multi_select_title">擇應用</string>
+    <string name="su_multi_select_count">已擇 %d</string>
+    <string name="su_multi_select_grant_root">授 ROOT</string>
+    <string name="su_multi_select_revoke_root">收 ROOT</string>
+    <string name="su_multi_select_exclude">除之</string>
+    <string name="su_multi_select_confirm_grant">授 ROOT 於 %d 應用乎？</string>
+    <string name="su_multi_select_confirm_revoke">收 %d 應用之 ROOT 乎？</string>
+    <string name="su_multi_select_confirm_exclude">除 %d 應用乎？</string>
+    <string name="su_multi_select_enter">多擇</string>
+    <string name="apm">統系之件</string>
+
+
+    <string name="apm_not_installed">AndroidPatch 未裝</string>
+    <string name="apm_failed_to_enable">未能啟其件：%s</string>
+    <string name="apm_failed_to_disable">未能寢其件：%s</string>
+    <string name="apm_empty">未有裝之件</string>
+    <string name="apm_load_failed">載諸件而敗</string>
+    <string name="apm_remove">除</string>
+    <string name="apm_undo">復</string>
+    <string name="apm_install">裝</string>
+    <string name="apm_uninstall_confirm">卸去 %s 之件乎？</string>
+    <string name="apm_uninstall_success">%s 已卸</string>
+    <string name="apm_uninstall_failed">卸之不遂：%s</string>
+    <string name="apm_undo_uninstall_success">%s 已復</string>
+    <string name="apm_undo_uninstall_failed">復之不遂：%s</string>
+    <string name="apm_version">版本</string>
+    <string name="apm_author">作者</string>
+    <string name="apm_desc">述</string>
+    <string name="apm_overlay_fs_not_available">核已寢 OverlayFS，故諸件不可用！</string>
+    <string name="apm_magisk_conflict">與 Magisk 相梗，故諸件不可用！</string>
+    <string name="apm_mount_warning_title">緊要之告</string>
+    <string name="apm_mount_warning_message">諸件素不掛載。請用自具之掛載，或用元件。</string>
+    <string name="apm_mount_warning_button">知之矣</string>
+    <string name="apm_reboot_to_apply">重啟乃效</string>
+    <string name="apm_changelog">更革之記</string>
+    <string name="apm_update">更新</string>
+    <string name="apm_downloading">方取件：%s</string>
+    <string name="apm_start_downloading">始取：%s</string>
+    <string name="apm_new_version_available">有新版本 %s，點而升之。</string>
+
+    <string name="hide_apatch_manager">隱 APatch 主事</string>
+    <string name="hide_apatch_manager_summary">裝一代理之應用，其包名隨機，名號自定</string>
+    <string name="hide_apatch_dialog_new_manager_name">新主事之名</string>
+    <string name="hide_apatch_dialog_summary">將為桌面所示之新名</string>
+    <string name="hide_apatch_manager_failure">隱之不遂。請報此誤！</string>
+
+    <string name="setting_reset_su_path">復 su 之徑</string>
+    <string name="setting_reset_su_new_path">新徑之全</string>
+
+
+    <string name="apm_webui_open">啟</string>
+    <string name="apm_action">行</string>
+    <string name="module_shortcut_add">捷徑</string>
+    <string name="module_shortcut_not_supported">桌面不支持捷徑。</string>
+    <string name="module_shortcut_created">捷徑已立於桌面。</string>
+    <string name="module_shortcut_updated">捷徑已更新。</string>
+    <string name="module_shortcut_permission_tip_xiaomi">請於 Xiaomi 之規制中，為此應用開「立桌面捷徑」之柄。</string>
+    <string name="module_shortcut_permission_tip_oppo">請於 OPPO 之規制中，為此應用開「桌面捷徑」之柄。</string>
+    <string name="module_shortcut_permission_tip_default">若立捷徑不遂，請於統系規制中，為此應用開桌面捷徑之柄。</string>
+    <string name="enable_web_debugging">開 WebView 之勘誤</string>
+    <string name="enable_web_debugging_summary">可用以勘 WebUI 之誤。非需之時勿開。</string>
+    <string name="settings_apm_install_confirm">裝前先問</string>
+    <string name="settings_apm_install_confirm_summary">裝件之前，先示問語</string>
+    <string name="settings_show_more_module_info">現件之詳</string>
+    <string name="settings_show_more_module_info_summary">於件列中現其標識與大小</string>
+    <string name="settings_apm_stay_on_page">留於操作之頁</string>
+    <string name="settings_apm_stay_on_page_summary">行件之事畢，不自返</string>
+    <string name="settings_enable_module_shortcut_add">開增捷徑之鈕</string>
+    <string name="settings_enable_module_shortcut_add_summary">現 WebUI 增捷徑之鈕</string>
+    <string name="settings_info_copy">長按其文以錄之</string>
+    <string name="settings_info_copy_summary">長按首頁消息牌中之目，錄其文</string>
+    <string name="home_info_copied">已錄 %1$s</string>
+    <string name="settings_disable_module_update_check">止件之更新察</string>
+    <string name="settings_disable_module_update_check_summary">止統系諸件之自察更新</string>
+    <string name="settings_module_sort_optimization">件序之優</string>
+    <string name="settings_module_sort_optimization_summary">使有 WebUI 與 Action 之統系件居首</string>
+    <string name="apm_custom_order">自定件之序</string>
+    <string name="apm_drag_to_reorder">曳而易其序</string>
+    <string name="apm_reset_order">用素定之序</string>
+    <string name="settings_fold_system_module">卷統系諸件</string>
+    <string name="settings_fold_system_module_summary">點件牌以展或卷其行</string>
+    <string name="settings_simple_list_bottom_bar">簡列下欄</string>
+    <string name="settings_simple_list_bottom_bar_summary">件之行用純符之鈕，取法 APatch</string>
+    <string name="settings_spliced_card_group">連牌之組</string>
+    <string name="settings_spliced_card_group_summary">件列用 M3E 連牌之式</string>
+    <string name="settings_show_kpm_status_badge">現 KPM 之幟</string>
+    <string name="settings_show_kpm_status_badge_summary">於 KPM 件牌上現嵌或載之幟</string>
+    <string name="apm_install_confirm_title">裝件</string>
+    <string name="apm_install_confirm_content">果欲裝 %s 乎？</string>
+    <string name="apm_disable_all_title">盡寢諸件</string>
+    <string name="module_shortcut_name">捷徑之名</string>
+    <string name="module_shortcut_icon">捷徑之符</string>
+    <string name="module_shortcut_type">捷徑之式</string>
+    <string name="module_shortcut_type_webui">WebUI</string>
+    <string name="module_shortcut_type_action">Action</string>
+    <string name="module_shortcut_icon_default">用素符</string>
+    <string name="module_shortcut_icon_select">擇符</string>
+    <string name="apm_disable_all_confirm">果欲盡寢諸件乎？凡已裝之件皆將停用。</string>
+    <string name="apm_enable_module_banner">開件之題圖</string>
+    <string name="apm_enable_module_banner_summary">件若有題圖，則示之</string>
+    <string name="apm_enable_folk_banner">自定件之題圖</string>
+    <string name="apm_enable_folk_banner_summary">長按件牌，以擇題圖</string>
+    <string name="apm_folk_banner_title">件之纂</string>
+    <string name="apm_folk_banner_select">擇圖</string>
+    <string name="apm_folk_banner_clear">清 FolkBanner</string>
+    <string name="apm_folk_banner_saved">已為 %s 注入 FolkBanner。</string>
+    <string name="apm_folk_banner_cleared">已為 %s 清去 FolkBanner。</string>
+    <string name="apm_folk_banner_failed">未能為 %s 更新 FolkBanner。</string>
+    <string name="folk_banner_custom_info_title">件之消息</string>
+    <string name="folk_banner_custom_info_name">名</string>
+    <string name="folk_banner_custom_info_version">版本</string>
+    <string name="folk_banner_custom_info_author">作者</string>
+    <string name="folk_banner_custom_info_description">述</string>
+    <string name="folk_banner_custom_info_save">存</string>
+    <string name="folk_banner_custom_info_reset">復舊</string>
+    <string name="folk_banner_custom_info_saved">已為 %s 存件之消息</string>
+    <string name="folk_banner_custom_info_reset_done">已為 %s 復件之消息</string>
+    <string name="apm_banner_api_mode">API 之式</string>
+    <string name="apm_banner_api_mode_summary">件之題圖用隨機之圖 API，抑或用本地之目錄</string>
+    <string name="apm_banner_api_source">設 API 之源</string>
+    <string name="apm_banner_api_source_hint">輸 API 之址，或本地之徑</string>
+    <string name="apm_banner_api_source_saved">API 之源已存</string>
+    <string name="apm_banner_api_source_not_configured">未設</string>
+    <string name="apm_banner_api_url_configured">API 之址已設</string>
+    <string name="apm_banner_local_dir_configured">本地目錄已設</string>
+    <string name="apm_banner_clear_cache">清積貯</string>
+    <string name="apm_banner_cache_cleared">題圖之積貯已清</string>
+    <string name="apm_banner_api_config_title">設 API 之源</string>
+    <string name="apm_banner_api_config_desc">輸隨機圖 API 之址，或本地目錄之徑。每件各得一圖。</string>
+    <string name="apm_banner_api_examples_title">例：</string>
+    <string name="apm_banner_api_examples">API：https://picsum.photos/800/400\n本地：/sdcard/Pictures/Banners</string>
+    <!-- API Marketplace -->
+    <string name="apm_api_marketplace_title">API 之市</string>
+    <string name="apm_api_preview">預覽</string>
+    <string name="apm_api_apply">施之</string>
+    <string name="apm_api_preview_title">API 之預覽</string>
+    <string name="apm_api_preview_failed">載預覽而敗</string>
+    <string name="apm_api_url_label">API 之址：</string>
+    <string name="apm_api_apply_success">API 之源已施</string>
+    <string name="apm_api_verifying">方勘…</string>
+    <string name="apm_api_retry">再試</string>
+    <string name="apm_api_empty">未有可用之 API 源</string>
+    <string name="settings_banner_custom_opacity">題圖之濃淡</string>
+    <string name="settings_banner_custom_opacity_summary">題圖用自定之濃淡，不循壁飾之式</string>
+    <string name="settings_banner_opacity">題圖之透度</string>
+
+    <string name="settings_donot_store_superkey">不存 SuperKey 於本地</string>
+    <string name="settings_donot_store_superkey_summary">每啟主事，皆須驗 SuperKey</string>
+
+
+
+    <string name="mode_select_page_title">安設</string>
+    <string name="mode_select_page_patch_and_install">補而裝之</string>
+    <string name="mode_select_page_select_file">擇一 boot 之像以補之</string>
+    <string name="restore_select_file">擇一分區之 boot 卷以復之</string>
+    <string name="mode_select_page_install_inactive_slot">裝入未用之 Slot（OTA 之後）</string>
+    <string name="mode_select_page_install_inactive_slot_warning">重啟之後，其機將**強**入當下未用之 Slot！\n惟於 OTA 既畢之後，方用此選。\n續乎？</string>
+    <string name="mode_select_page_select_kpimg">用本地之補卷（KPimg）</string>
+    <string name="mode_select_page_init_boot_warning_title">所擇之像有誤</string>
+    <string name="mode_select_page_init_boot_warning_message">所擇之卷，似為 init_boot 或 vendor_boot 之像。
+KernelPatch 須用 boot 之像以補。
+
+請擇正當之 boot 像（通常名為 boot.img）。
+
+猶續之乎？</string>
+    <string name="patch_custom_kpimg_label">自定 KPimg</string>
+    <string name="patch_custom_kpimg_file">卷：%s</string>
+    <string name="patch_select_kpimg_btn">擇 KPimg</string>
+
+    <string name="home_dialog_auth_fail_title">認證不成</string>
+    <string name="home_dialog_auth_fail_content">未能驗 SuperKey，故 FolkPatch 啟之不成。
+認證之敗，其故有數，請自審何者當之：
+
+\n1. 爾未嘗以 KernelPatch 補 boot.img，或忘其所為。
+\n2. 所補之 boot.img 猶臥於爾之案上，未嘗刷入其機。
+\n3. SuperKey 輸之誤，或雜有奇異之符，如異域之文。
+\n4. 爾之機或與 FolkPatch、KernelPatch 不相能，強行折騰，徒勞無功。
+\n5. 爾或行過奇異之舉——如用某件，除其包名，而梗 FolkPatch，遂自陷於局外。
+
+</string>
+
+    <string name="home_more_menu_feedback_or_suggestion">獻言</string>
+    <string name="home_more_menu_about">關於</string>
+    <string name="home_more_menu_document">文獻</string>
+    <string name="home_more_menu_music_play">奏樂</string>
+    <string name="home_more_menu_music_pause">止樂</string>
+
+    <!-- Plugin strings -->
+    <string name="plugin_title">外掛</string>
+    <string name="plugin_refresh">刷新</string>
+    <string name="plugin_summary_title">APD Lua 外掛</string>
+    <string name="plugin_summary_not_installed">APD 未裝 · 外掛不可用</string>
+    <string name="plugin_state_enabled">已啟</string>
+    <string name="plugin_state_disabled">已寢</string>
+    <string name="plugin_toggle_failed">易外掛之態而敗</string>
+    <string name="plugin_empty">未有裝之外掛</string>
+    <string name="plugin_empty_hint">置 main.lua 於 /data/adb/plugins/&lt;id&gt;/ 之下，乃得一外掛。</string>
+    <string name="plugin_load_failed">載諸外掛而敗</string>
+    <string name="plugin_manage_summary">掌 APD Lua 之外掛</string>
+    <string name="plugin_install">裝外掛</string>
+    <string name="plugin_install_success">外掛已裝</string>
+    <string name="plugin_install_failed">裝外掛不成</string>
+    <string name="plugin_uninstall_title">卸去外掛</string>
+    <string name="plugin_uninstall">卸去</string>
+    <string name="plugin_uninstall_confirm">卸去 %1$s 之外掛乎？</string>
+    <string name="plugin_uninstall_success">外掛已去</string>
+    <string name="plugin_uninstall_failed">去外掛而敗</string>
+    <string name="plugin_action">行之</string>
+    <string name="plugin_action_success">行之事既畢</string>
+    <string name="plugin_action_failed">行之不成</string>
+    <string name="plugin_quick_action_success">行之而通</string>
+    <string name="plugin_quick_action_failed">行之而敗</string>
+    <string name="plugin_config">設</string>
+    <string name="plugin_config_title">設 %1$s</string>
+    <string name="plugin_config_saved">所設已存</string>
+    <string name="plugin_log_title">行之所出</string>
+    <string name="plugin_log_empty">尚未有行之籍</string>
+    <string name="plugin_log_page_title">外掛之籍</string>
+    <string name="plugin_log_all_empty">尚未有外掛出籍</string>
+    <string name="plugin_log_clear">清籍</string>
+    <string name="plugin_log_cleared">籍已清</string>
+    <string name="plugin_log_export">出籍</string>
+
+    <string name="home_dialog_uninstall_title">卸去</string>
+    
+    <string name="home_dialog_uninstall_ap_only">惟卸其補</string>
+    <string name="home_dialog_uninstall_all">盡卸之</string>
+    <string name="home_dialog_uninstall_ap_only_desc">惟去 AndroidPatch，而留主事。</string>
+    <string name="home_dialog_uninstall_all_desc">去 AndroidPatch，而行盡卸之事。</string>
+
+    <string name="kpm_control_dialog_title">掌 KPM</string>
+    <string name="kpm_control_dialog_content">請輸操縱之數：</string>
+    <string name="kpm_control_paramters">所參之數</string>
+    <string name="kpm_control_outMsg">所出</string>
+    <string name="kpm_control_ok">成矣！</string>
+    <string name="kpm_control_failed">敗矣！</string>
+    
+    <string name="settings_night_mode_follow_sys">夜題循統系</string>
+    <string name="settings_night_mode_follow_sys_summary">依統系之規制，自易夜題</string>
+    <string name="settings_night_theme_enabled">夜題</string>
+    
+    <string name="settings_use_system_color_theme">統系之色題</string>
+    <string name="settings_use_system_color_theme_summary">用統系自壁飾所生之色題</string>
+    <string name="settings_custom_color_theme">色題</string>
+
+    <string name="amber_theme">琥珀</string>
+    <string name="blue_theme">青藍</string>
+    <string name="blue_grey_theme">青灰</string>
+    <string name="brown_theme">褐</string>
+    <string name="cyan_theme">天青</string>
+    <string name="deep_orange_theme">深橙</string>
+    <string name="deep_purple_theme">深紫</string>
+    <string name="green_theme">綠</string>
+    <string name="indigo_theme">靛</string>
+    <string name="light_blue_theme">淡藍</string>
+    <string name="light_green_theme">淡綠</string>
+    <string name="lime_theme">檸綠</string>
+    <string name="orange_theme">橙</string>
+    <string name="pink_theme">粉</string>
+    <string name="purple_theme">紫</string>
+    <string name="red_theme">赤</string>
+    <string name="sakura_theme">櫻</string>
+    <string name="teal_theme">蒼青</string>
+    <string name="yellow_theme">黃</string>
+    <string name="ink_wash_theme">水墨</string>
+
+    <string name="theme_color">題色</string>
+    <string name="theme_light">晝</string>
+    <string name="theme_dark">夜</string>
+    <string name="theme_system">循統系</string>
+
+    <string name="about_app_desc">基於 KernelPatch 之 Root 之制，無須重編其核，即可鉤核中之能。</string>
+    <string name="about_powered_by">賴 %1$s 之力</string>
+    <string name="about_telegram_group">Telegram 群組</string>
+    <string name="github">GitHub</string>
+    <string name="telegram">Telegram</string>
+    
+    <!-- Loading Strings -->
+    <string name="loading_modules">方載諸件…</string>
+    <string name="loading_scripts">方索諸腳本…</string>
+    <string name="loading_themes">方載諸題…</string>
+    <string name="loading_apis">方載 API 之源…</string>
+    <string name="retry">再試</string>
+
+    <!-- Online Module Strings -->
+    <string name="online_module_title">線上統系之件</string>
+    <string name="online_module_download_start">始取：%s</string>
+    <string name="online_module_download_complete">取畢：%s</string>
+    <string name="online_module_download_notification">方取 %s。其程請觀通知之欄，取畢之卷請觀 Download 之目錄。</string>
+
+    <!-- Online Module Source Strings -->
+    <string name="online_module_source_official">官</string>
+    <string name="online_module_source_cluster">庫之叢</string>
+    <string name="online_module_source_custom">自定之庫</string>
+    <string name="online_module_source_title">件之源</string>
+    <string name="online_module_repo_url_title">庫之址</string>
+    <string name="online_module_repo_url_hint">https://example.com/modules.json</string>
+    <string name="online_module_repo_settings">庫之規制</string>
+
+    <!-- Repo Module Detail Strings -->
+    <string name="repo_module_detail_links">諸鏈</string>
+    <string name="repo_module_detail_homepage">主頁</string>
+    <string name="repo_module_detail_source">源碼</string>
+    <string name="repo_module_detail_support">相助</string>
+    <string name="repo_module_detail_versions">版本之歷</string>
+    <string name="repo_module_detail_download">取而裝之</string>
+    <string name="repo_module_detail_by_author">作者 %1$s</string>
+    <string name="online_module_repo_browse_title">覽諸庫</string>
+    <string name="online_module_view_modules">覽其件</string>
+    <string name="online_module_select_repo_hint">擇一庫以覽其件</string>
+    <string name="online_module_enter_url_hint">輸庫之址</string>
+    <string name="online_module_invalid_url">請輸正當之址</string>
+    <string name="online_module_explore_repos">探諸庫</string>
+    <string name="online_module_repo_count">%1$d 庫</string>
+    <string name="online_module_module_count">%1$d+ 件</string>
+    <string name="online_module_select_repo">擇一庫</string>
+    <string name="online_module_enter_url_manually">手輸其址</string>
+    <string name="online_module_default_repo">素庫</string>
+    <string name="online_module_repo_list_title">庫之目錄</string>
+    <string name="online_module_load_error">載之不遂，請刷新而後再試</string>
+    <string name="online_module_no_search_results">未得相合之件</string>
+    <string name="online_module_module_detail_download_count">取數：%1$s</string>
+    <string name="online_module_module_detail_last_update">末次更新：%1$s</string>
+    <string name="online_module_module_detail_version">版本：%1$s</string>
+    <string name="online_module_module_detail_size">大小：%1$s</string>
+    <string name="online_module_module_detail_author">作者：%1$s</string>
+    <string name="online_module_module_detail_description">述：%1$s</string>
+    <string name="online_module_module_detail_suitable">宜於：%1$s</string>
+    <string name="online_module_module_detail_changelog">更革之記：%1$s</string>
+    <string name="online_module_module_detail_instructions">用法：%1$s</string>
+
+    <!-- Online KPM Strings -->
+    <string name="online_kpm_title">線上核件</string>
+    <string name="online_kpm_download_start">始取：%s</string>
+    <string name="online_kpm_download_complete">取畢：%s</string>
+    <string name="online_kpm_download_notification">方取 %s。其程請觀通知之欄，取畢之卷請觀 Download 之目錄。</string>
+
+    <!-- Online Plugin Strings -->
+    <string name="online_plugin_title">線上外掛</string>
+    <string name="online_plugin_download_start">始取：%s</string>
+    <string name="online_plugin_download_complete">取畢：%s</string>
+    <string name="online_plugin_download_notification">方取 %s。其程請觀通知之欄，取畢之卷請觀 Download 之目錄。</string>
+
+    <!-- Online Script Strings -->
+    <string name="online_script_title">線上腳本</string>
+    <string name="online_script_download_start">始取：%s</string>
+    <string name="online_script_download_complete">取畢：%s</string>
+    <string name="online_script_download_notification">方取 %s</string>
+
+    <!-- Crash Handle Strings -->
+    <string name="crash_handle_title">傾覆之報</string>
+    <string name="crash_handle_copy">錄之</string>
+
+    <!-- About Screen Strings -->
+    <string name="about_app_version">應用之版本：%s</string>
+    <string name="about_github">GitHub</string>
+    <string name="about_telegram_channel">Telegram 頻道</string>
+
+    <!-- App Title Strings -->
+    <string name="app_title_custom">自定</string>
+    <string name="app_title_fpatch">FPatch</string>
+    <string name="app_title_apatch_folk">APatch Folk</string>
+    <string name="app_title_apatchx">APatch X</string>
+    <string name="app_title_apatch">APatch</string>
+    <string name="app_title_folkpatch">FolkPatch</string>
+    <string name="app_title_kernelpatch">KernelPatch</string>
+    <string name="app_title_kernelsu">KernelSU</string>
+    <string name="app_title_supersu">SuperSU</string>
+    <string name="app_title_superuser">Superuser</string>
+    <string name="app_title_superpatch">SuperPatch</string>
+    <string name="app_title_magicpatch">MagicPatch</string>
+
+    <string name="settings_app_dpi">應用之 DPI</string>
+    <string name="dpi_apply_settings">施之</string>
+    <string name="dpi_confirm_title">定 DPI 之易</string>
+    <string name="dpi_confirm_message">易應用之 DPI，自 %1$s 至 %2$s 乎？</string>
+    <string name="settings_magic_mount">Folk Mount API</string>
+    <string name="settings_magic_mount_summary">開自具之件掛載之制</string>
+    <string name="settings_new_app_profile_enabled">自授新應用</string>
+    <string name="settings_new_app_profile_enabled_summary">於新應用，自施預定之授權式</string>
+    <string name="settings_new_app_profile_mode">素定之授權式</string>
+    <string name="settings_new_app_profile_normal">NO ROOT</string>
+    <string name="settings_new_app_profile_root">ROOT</string>
+    <string name="settings_new_app_profile_exclude">除之</string>
+    <string name="settings_new_app_profile_update_failed">新應用之制更新而敗：%s</string>
+    <string name="settings_hide_service">FolkPatch 之隱</string>
+    <string name="settings_hide_service_summary">於某種程度上，隱 Bootloader 已解之狀</string>
+
+    <string name="settings_shizuku_service">Shizuku 之服務</string>
+    <string name="settings_shizuku_service_summary">為諸支持 Shizuku 之應用，供 ADB 之 API（自具之服務，無須第三方之應用）</string>
+    <string name="settings_shizuku_service_running">Shizuku 之服務方行</string>
+    <string name="settings_shizuku_started">Shizuku 之服務已啟</string>
+    <string name="settings_shizuku_start_failed">啟 Shizuku 之服務而敗</string>
+    <string name="settings_shizuku_stopped">Shizuku 之服務已止</string>
+    <string name="settings_shizuku_stop_failed">止 Shizuku 之服務而敗</string>
+    <string name="shizuku_manage_apps">掌已授之應用</string>
+    <string name="shizuku_management_title">Shizuku 之授權</string>
+    <string name="shizuku_management_empty">未得通 Shizuku 之應用</string>
+    <string name="shizuku_management_unavailable">Shizuku 之服務未行</string>
+    <string name="shizuku_management_load_failed">載已授之應用而敗</string>
+    <string name="shizuku_management_uid">UID %1$d</string>
+    <string name="shizuku_management_granted">許之</string>
+    <string name="shizuku_management_denied">不許</string>
+    <string name="shizuku_management_update_failed">更新授權而敗</string>
+    <string name="shizuku_management_root_access">Root 之柄</string>
+    <string name="shizuku_management_allowed_title">Shizuku 之柄</string>
+    <string name="shizuku_management_root_access_desc">以 root 行其命。闔之，則以 shell（UID 2000）行之，不能讀其所護之數。</string>
+    <string name="shizuku_management_badge_allowed">已許</string>
+    <string name="shizuku_management_badge_denied">不許</string>
+    <string name="shizuku_management_badge_root">ROOT</string>
+    <string name="shizuku_management_badge_shell">SHELL</string>
+    <string name="shizuku_log_title">Shizuku 之籍</string>
+    <string name="shizuku_log_empty">無籍</string>
+    <string name="shizuku_log_refresh">刷新</string>
+    <string name="shizuku_log_clear">清籍</string>
+    <string name="shizuku_log_cleared">籍已清</string>
+    <string name="shizuku_log_export">出籍</string>
+    <string name="shizuku_log_copy">錄之</string>
+    <string name="shizuku_log_copied">已錄於板</string>
+    <string name="shizuku_log_source_server">服務之籍</string>
+    <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">繁</string>
+    <string name="shizuku_log_level_debug">勘</string>
+    <string name="shizuku_log_level_info">訊</string>
+    <string name="shizuku_log_level_warn">警</string>
+    <string name="shizuku_log_level_error">誤</string>
+    <string name="shizuku_log_search_hint">索其籍</string>
+    <string name="shizuku_permission_title">許 %1$s 用 Shizuku 乎？</string>
+    <string name="shizuku_permission_message">此應用將得假 Shizuku 以 root 之柄，調統系之 API。</string>
+    <string name="shizuku_permission_allow">許之</string>
+    <string name="shizuku_permission_allow_once">惟此一次</string>
+    <string name="shizuku_permission_deny">不許</string>
+    <string name="shizuku_permission_allow_summary">授以久長之柄</string>
+    <string name="shizuku_permission_allow_once_summary">惟許此次</string>
+    <string name="shizuku_permission_deny_summary">拒其柄</string>
+    <string name="shizuku_permission_binder_timeout">未能通 Shizuku 之服務，請重啟之而後再試</string>
+<string name="settings_kernel_spoof">核之偽裝</string>
+    <string name="settings_kernel_spoof_summary">偽其核之版本與編時</string>
+    <string name="settings_kernel_spoof_version">核之版本</string>
+    <string name="settings_kernel_spoof_build_time">核之編時</string>
+    <string name="settings_kernel_spoof_restore">復舊</string>
+    <!-- Path Hide -->
+    <string name="settings_path_hide">徑之隱</string>
+    <string name="settings_path_hide_summary">於核之層，隱其卷與目錄，使諸應用不得見</string>
+    <string name="path_hide_paths_label">所隱之徑（每行一者）</string>
+    <string name="path_hide_paths_placeholder">/storage/emulated/0/file.txt\n/storage/emulated/0/folder</string>
+    <string name="path_hide_paths_helper">每行輸一徑。相合之徑，皆應以 ENOENT。</string>
+    <string name="path_hide_save">存</string>
+    <string name="path_hide_enabled">徑之隱已開</string>
+    <string name="path_hide_disabled">徑之隱已寢</string>
+    <string name="path_hide_applied">徑隱之所設已施</string>
+    <string name="path_hide_failed">徑隱之事而敗：%d</string>
+    <string name="path_hide_uid_mode">UID 行法之式</string>
+    <string name="path_hide_uid_mode_summary">惟為特定應用之 UID 隱其徑</string>
+    <string name="path_hide_uids_label">所欲之 UID（每行一者）</string>
+    <string name="path_hide_uids_helper">輸應用之 UID。惟此諸應用之徑乃隱。</string>
+    <string name="path_hide_uid_save">存 UID</string>
+    <string name="path_hide_uid_mode_enabled">UID 行法之式已開</string>
+    <string name="path_hide_uid_mode_disabled">UID 行法之式已寢</string>
+    <string name="path_hide_filter_system">濾統系之 UID</string>
+    <string name="path_hide_filter_system_summary">亦為 root 與統系諸程隱其徑（UID &lt; 10000）</string>
+    <string name="path_hide_filter_system_enabled">統系 UID 之濾已開</string>
+    <string name="path_hide_filter_system_disabled">統系 UID 之濾已寢</string>
+    <string name="path_hide_filter_system_warning_title">警</string>
+    <string name="path_hide_filter_system_warning_message">開此，則亦為 root 與統系諸程隱其徑（UID &lt; 10000）。或致統系之能失其常，宜慎行之。</string>
+    <string name="path_hide_uid_applied">UID 之白冊已施</string>
+    <string name="path_hide_select_apps">擇應用</string>
+    <string name="path_hide_no_apps_selected">未擇應用</string>
+    <string name="path_hide_app_removed">已去 %d 條陳舊之目，蓋其應用已卸</string>
+    <string name="path_hide_search_apps">索應用…</string>
+    <string name="path_hide_show_system">現統系之應用</string>
+    <string name="netisolate_title">網絡之隔</string>
+    <string name="netisolate_enable">網絡之隔已開</string>
+    <string name="netisolate_disable">網絡之隔已寢</string>
+    <string name="netisolate_enable_summary">於核之層，絕所擇應用之網絡</string>
+    <string name="netisolate_uids_label">所絕之應用</string>
+    <string name="netisolate_uids_hint">輸所絕之 UID（每行一者）</string>
+    <string name="netisolate_no_uids">未有絕之應用</string>
+    <!-- Umount Service -->
+    <string name="settings_umount_service">卸掛之服務</string>
+    <string name="settings_umount_service_summary">設掛載之點，於啟時自卸之</string>
+    <string name="umount_config_title">卸掛之設</string>
+    <string name="umount_config_enabled">開卸掛</string>
+    <string name="umount_config_enabled_summary">於啟時自卸所定之掛載點</string>
+    <string name="umount_config_paths_label">掛載點之徑（每行一者）</string>
+    <string name="umount_config_paths_placeholder">/system/vendor/app\n/system/vendor/priv-app</string>
+    <string name="umount_config_paths_helper">每行輸一掛載點之徑，以卸之</string>
+    <string name="umount_config_save">存</string>
+    <string name="umount_config_save_confirm">果存其所設乎？</string>
+    <string name="umount_config_save_success">所設已存</string>
+    <string name="umount_config_save_failed">存所設而敗</string>
+    <string name="settings_app_title">應用之名</string>
+    <string name="settings_custom_app_title">自定應用之名</string>
+    <string name="custom_app_title_dialog_title">自定應用之名</string>
+    <string name="custom_app_title_dialog_hint">輸應用之名</string>
+    <string name="custom_app_title_dialog_confirm">定</string>
+    <string name="custom_app_title_dialog_empty">名不可空</string>
+    <string name="cancel">罷</string>
+    <string name="settings_custom_background">自定底圖</string>
+    <string name="settings_custom_background_enabled">自定底圖已開</string>
+    <string name="settings_custom_background_opacity">牌之濃淡</string>
+    <string name="settings_custom_background_blur">底之朦朧</string>
+    <string name="settings_custom_background_dim">底之晦</string>
+    <string name="settings_custom_background_dual_dim">開晝夜兩晦</string>
+    <string name="settings_custom_background_dual_dim_desc">依晝夜之題，自調底之晦</string>
+    <string name="settings_custom_background_day_dim">晝時底之晦</string>
+    <string name="settings_custom_background_night_dim">夜時底之晦</string>
+    <string name="settings_multi_background_mode">多底之式</string>
+    <string name="settings_multi_background_mode_summary">為諸頁各置其底圖</string>
+    <string name="settings_select_home_background">首頁之底圖</string>
+    <string name="settings_select_kernel_background">核件之底圖</string>
+    <string name="settings_select_superuser_background">執權者之底圖</string>
+    <string name="settings_select_system_module_background">統系件之底圖</string>
+    <string name="settings_select_settings_background">規制之底圖</string>
+
+    <string name="settings_advanced_title_style">進階題式</string>
+    <string name="settings_advanced_title_style_summary">以上欄之題，易為自定之圖</string>
+    <string name="settings_advanced_title_style_enabled">進階題式已開</string>
+    <string name="settings_select_title_image">擇題圖</string>
+    <string name="settings_title_image_permission_required">請授儲存之柄，乃可擇題圖</string>
+    <string name="settings_background_permission_required">請授儲存之柄，乃可擇底圖</string>
+    <string name="settings_title_image_selected">題圖已擇</string>
+    <string name="settings_title_image_saved">題圖已存</string>
+    <string name="settings_title_image_error">存題圖而敗</string>
+    <string name="settings_clear_title_image">清題圖</string>
+    <string name="settings_clear_title_image_confirm">果欲清其題圖乎？</string>
+    <string name="settings_title_image_cleared">題圖已清</string>
+    <string name="settings_title_image_day_opacity">晝時之濃淡</string>
+    <string name="settings_title_image_night_opacity">夜時之濃淡</string>
+    <string name="settings_title_image_dim">底之晦</string>
+    <string name="settings_title_image_offset_x">左右之位</string>
+
+    
+    <!-- Font Settings -->
+    <string name="settings_font_mode_app">應用素定</string>
+    <string name="settings_font_mode_system">系統素定</string>
+    <string name="settings_font_mode_custom">自定</string>
+    <string name="settings_custom_font">自定書體</string>
+    <string name="settings_select_font_file">擇書體之卷</string>
+    <string name="settings_custom_font_enabled">自定書體已開</string>
+    <string name="settings_custom_font_summary">應用用自定之 TTF 書體</string>
+    <string name="settings_font_selected">已擇自定之書體</string>
+    <string name="settings_custom_font_error">存書體之卷而敗</string>
+    <string name="settings_custom_font_saved">自定書體已存</string>
+    <string name="settings_clear_font">復素定之書體</string>
+    <string name="settings_clear_font_confirm">果欲復素定之書體乎？</string>
+    <string name="settings_font_cleared">已復素定之書體</string>
+    <string name="settings_font_select_hint">擇一 TTF 之卷</string>
+    <string name="settings_select_background_image">擇底圖</string>
+    <string name="settings_custom_background_summary">置一自定之底圖</string>
+    <string name="settings_custom_background_saved">底圖已存</string>
+    <string name="settings_custom_background_error">存底圖而敗</string>
+    <string name="settings_crop_not_supported">此機不支持裁圖，姑存原圖</string>
+    <string name="settings_crop_dialog_title">裁壁飾</string>
+    <string name="settings_crop_dialog_message">裁其圖乎？</string>
+    <string name="settings_crop_dialog_crop">然</string>
+    <string name="settings_crop_dialog_direct">否</string>
+    <string name="settings_background_selected">底圖已擇</string>
+    <string name="settings_background_image_cleared">底圖已清</string>
+    <string name="settings_clear_background">清底圖</string>
+    <string name="settings_clear_background_confirm">果欲清其底圖乎？</string>
+
+
+    <!-- Video Background Settings -->
+    <string name="settings_video_background">影戲之底</string>
+    <string name="settings_video_background_summary">以影戲為底</string>
+    <string name="settings_select_video">擇影戲</string>
+    <string name="settings_video_selected">影戲已擇</string>
+    <string name="settings_clear_video_background">清影戲之底</string>
+    <string name="settings_clear_video_background_confirm">果欲清其影戲之底乎？</string>
+    <string name="settings_video_background_enabled">影戲之底已開</string>
+    <string name="settings_video_volume">影戲之聲量</string>
+    
+    <!-- KPM AutoLoad Strings -->
+    
+    
+    <!-- Module Backup/Restore Strings -->
+    <string name="apm_copy_list_title">錄其列</string>
+    <string name="apm_copy_list_success">件之列已錄</string>
+
+    <!-- APM Bulk Install Strings -->
+    <string name="apm_bulk_install_title">統系件之批量裝</string>
+    <string name="apm_bulk_install_list_title">件之列</string>
+    <string name="apm_bulk_install_add">增件</string>
+    <string name="apm_bulk_install_empty">未增件</string>
+    <string name="apm_bulk_install_action">批量裝之</string>
+    <string name="apm_bulk_install_log_title">批量裝之籍</string>
+    <string name="apm_bulk_install_log_start">方始批量之裝...</string>
+    <string name="apm_bulk_install_log_installing">方裝 %1$s</string>
+    <string name="apm_batch_install_full_process">行批量裝之全事</string>
+    <string name="apm_batch_install_full_process_summary">統系件之批量裝，以全事行之</string>
+    <string name="next_module">次件</string>
+    <string name="apm_bulk_install_log_installed">%s 之件已裝。</string>
+    <string name="apm_bulk_install_log_done">諸事皆畢。</string>
+    <string name="apm_bulk_install_first_use_text">此能許爾一時裝諸件，乃速裝之法，宜於裝時不涉緊要之事者。若件須以聲鍵相應，請於規制中開全事之裝。</string>
+    <string name="apm_bulk_install_remove">除</string>
+    <string name="apm_first_use_title">迎於統系諸件</string>
+    <string name="apm_first_use_text">迎於統系諸件。此用與 Magisk 生態相合之件。點右下之鈕以裝件；亦可用上之裝器，以批量裝件。復有一鍵盡存其副之能，然此法或不宜於諸件，爾宜自為其副。</string>
+
+    <!-- Welcome Guide -->
+    <string name="welcome_title_1">迎於 FolkPatch</string>
+    <string name="welcome_desc_1">基於 KernelPatch 之極可自定、可攜之 Root 主事。使爾之機，真為爾有。</string>
+    <string name="welcome_title_2">盡可自定</string>
+    <string name="welcome_desc_2">凡色、底、書體、聲，乃至觸之振，皆可自定。覽題肆以求他式！</string>
+    <string name="welcome_title_3">核中之掌</string>
+    <string name="welcome_desc_3">進階之核能，一觸可及。啟規制，點右上之調鈕，則得 FolkPatch 之隱、卸掛、徑隱諸能。</string>
+    <string name="welcome_title_4">可以行矣</string>
+    <string name="welcome_desc_4">萬事已備！請始探最為靈活之 Root 掌法。願爾行之愉快！</string>
+    <string name="welcome_prev">前</string>
+    <string name="welcome_next">後</string>
+    <string name="welcome_skip">略過</string>
+    <string name="welcome_got_it">始用之</string>
+
+    
+
+    <string name="dont_show_again">不復示</string>
+    <string name="got_it">知之矣</string>
+
+    <!-- Hide Settings Strings -->
+    <string name="home_hide_su_path">隱 su 之徑</string>
+    <string name="home_hide_kpatch_version">隱核補之版本</string>
+    <string name="home_hide_fingerprint">隱指紋</string>
+    <string name="home_hide_zygisk">隱 Zygisk 之措</string>
+    <string name="home_hide_mount">隱掛載之措</string>
+    <string name="home_hide_su_path_summary">隱消息牌中 su 之徑</string>
+    <string name="home_hide_kpatch_version_summary">隱消息牌中核補之版本</string>
+    <string name="home_hide_fingerprint_summary">隱消息牌中之指紋</string>
+    <string name="home_hide_zygisk_summary">隱消息牌中 Zygisk 之措</string>
+    <string name="home_hide_mount_summary">隱消息牌中掛載之措</string>
+
+    
+    
+    <!-- Auto Backup Strings -->
+    <string name="settings_auto_backup_module">自副統系件</string>
+    <string name="settings_auto_backup_module_summary">裝件之時，自存其副於私目錄</string>
+    <string name="settings_open_backup_dir">啟副之目錄</string>
+    <string name="backup_dir_empty">副之目錄空</string>
+    <string name="backup_dir_open_failed">啟副之目錄而敗</string>
+    <string name="auto_backup_failed">自副而敗：%s</string>
+    <string name="auto_backup_success">自副已成：%s</string>
+    <string name="settings_auto_backup_boot">自副 Boot</string>
+    <string name="settings_auto_backup_boot_summary">以 Boot 自存副於本地（Downloads/FolkPatch/BootBackups）</string>
+
+    <!-- Home Layout Strings -->
+    <string name="settings_home_layout_style">首頁之式</string>
+    <string name="settings_home_layout_default">ListUI</string>
+    <string name="settings_home_layout_grid">GridUI</string>
+    <string name="settings_home_layout_focus">FocusUI</string>
+    <string name="settings_home_layout_sign">SignUI</string>
+    <string name="settings_home_layout_circle">CircleUI</string>
+    <string name="settings_home_layout_dashboard_pro">DashboardUI</string>
+    <string name="settings_home_layout_stats">StatsUI</string>
+    <string name="unofficial_version_title">非官之版</string>
+    <string name="unofficial_version_message">爾所用之 FolkPatch 非官版，請下官版！</string>
+    <string name="go_to_github">往 Github</string>
+    <string name="settings_save_theme">存題</string>
+    <string name="settings_import_theme">納題</string>
+    <string name="settings_theme_saved">題已存</string>
+    <string name="settings_theme_imported">題已納</string>
+    <string name="settings_theme_save_failed">存題而敗</string>
+    <string name="settings_theme_import_failed">納題而敗</string>
+    <string name="settings_reset_theme">復素題</string>
+    <string name="settings_reset_theme_confirm">果欲盡復題之規制於素乎？此將清諸自定之底、書體、樂與聲效。</string>
+    <string name="settings_theme_reset">題已復素</string>
+    <string name="settings_theme_reset_failed">復題而敗</string>
+
+    <!-- Theme Strings -->
+    <string name="theme_export_title">出題</string>
+    <string name="theme_import_title">納題</string>
+    <string name="theme_name">題名</string>
+    <string name="theme_type">題式</string>
+    <string name="theme_type_phone">手機</string>
+    <string name="theme_type_tablet">平板</string>
+    <string name="theme_version">版本</string>
+    <string name="theme_author">作者</string>
+    <string name="theme_description">述</string>
+    <string name="theme_export_action">出之</string>
+    <string name="theme_import_action">納之</string>
+    <string name="theme_import_confirm">果欲納此題乎？</string>
+    <string name="theme_info">題之消息</string>
+
+    <!-- Grid Working Card Background -->
+    <string name="settings_grid_working_card_background">工作牌之底</string>
+    <string name="settings_grid_working_card_background_enabled">自定牌底已開</string>
+    <string name="settings_grid_working_card_background_summary">工作牌之自定底圖</string>
+    <string name="settings_grid_working_card_background_selected">底圖已擇</string>
+    <string name="settings_grid_working_card_dual_opacity">開晝夜兩濃淡</string>
+    <string name="settings_grid_working_card_dual_opacity_desc">依晝夜之題，自調牌之濃淡</string>
+    <string name="settings_grid_working_card_day_opacity">晝時牌之濃淡</string>
+    <string name="settings_grid_working_card_night_opacity">夜時牌之濃淡</string>
+    <string name="settings_clear_grid_working_card_background">清牌底</string>
+    <string name="settings_clear_grid_working_card_background_confirm">果欲清其牌底之圖乎？</string>
+    <string name="settings_grid_working_card_background_saved">牌底已存</string>
+    <string name="settings_grid_working_card_background_error">存牌底而敗</string>
+    <string name="settings_grid_working_card_background_cleared">牌底已清</string>
+
+    <!-- FocusUI Card Wallpaper Strings -->
+    <string name="focus_card_background_title">牌之壁飾</string>
+    <string name="settings_focus_card_background">FocusUI 牌之壁飾</string>
+    <string name="settings_focus_card_background_enabled">FocusUI 牌之壁飾已開；長按牌以掌其壁飾</string>
+    <string name="settings_focus_card_background_summary">開 FocusUI 牌之壁飾，及長按掌壁飾之能</string>
+    <string name="focus_card_background_clear">清牌之壁飾</string>
+    <string name="focus_card_background_clear_confirm">果欲清此牌之壁飾乎？</string>
+    <string name="focus_card_background_saved">牌之壁飾已存</string>
+    <string name="focus_card_background_error">存牌之壁飾而敗</string>
+    <string name="focus_card_background_cleared">牌之壁飾已清</string>
+    <string name="focus_card_permission_required">請授儲存之柄，乃可擇壁飾</string>
+    <string name="settings_focus_card_dim">牌壁飾之晦</string>
+    <string name="settings_focus_card_dual_dim">開晝夜兩晦</string>
+    <string name="settings_focus_card_dual_dim_desc">依晝夜之題，自調牌壁飾之晦</string>
+    <string name="settings_focus_card_day_dim">晝時牌壁飾之晦</string>
+    <string name="settings_focus_card_night_dim">夜時牌壁飾之晦</string>
+    <string name="settings_focus_card_opacity">牌壁飾之濃淡</string>
+    <string name="settings_focus_card_dual_opacity">開晝夜兩濃淡</string>
+    <string name="settings_focus_card_dual_opacity_desc">依晝夜之題，自調牌壁飾之濃淡</string>
+    <string name="settings_focus_card_day_opacity">晝時牌壁飾之濃淡</string>
+    <string name="settings_focus_card_night_opacity">夜時牌壁飾之濃淡</string>
+    <string name="settings_focus_card_kernel">核牌</string>
+    <string name="settings_focus_card_app">應用之牌</string>
+    <string name="settings_focus_card_device">器況之牌</string>
+    <string name="settings_focus_card_storage">貯之牌</string>
+    <string name="settings_focus_card_wallpaper_selected">壁飾已置</string>
+    <string name="dashboard_card_background_title">DashboardUI 牌之壁飾</string>
+    <string name="settings_dashboard_card_background">DashboardUI 牌之壁飾</string>
+    <string name="settings_dashboard_card_background_enabled">DashboardUI 壁飾已開；長按其牌以掌之</string>
+    <string name="settings_dashboard_card_background_summary">為 DashboardUI 之牌開一壁飾</string>
+    <string name="dashboard_card_background_clear">清 DashboardUI 之壁飾</string>
+    <string name="dashboard_card_background_clear_confirm">果欲清其 DashboardUI 牌之壁飾乎？</string>
+    <string name="dashboard_card_background_saved">DashboardUI 壁飾已存</string>
+    <string name="dashboard_card_background_error">存 DashboardUI 壁飾而敗</string>
+    <string name="dashboard_card_background_cleared">DashboardUI 壁飾已清</string>
+    <string name="dashboard_card_background_restore">復素定</string>
+    <string name="dashboard_card_background_restored">已復素定之壁飾</string>
+    <string name="settings_dashboard_card_dual_dim">開晝夜兩晦</string>
+    <string name="settings_dashboard_card_dual_dim_desc">依晝夜之題，自調 DashboardUI 壁飾之晦</string>
+    <string name="settings_dashboard_card_day_dim">晝時 DashboardUI 壁飾之晦</string>
+    <string name="settings_dashboard_card_night_dim">夜時 DashboardUI 壁飾之晦</string>
+    <string name="settings_dashboard_card_opacity">DashboardUI 壁飾之濃淡</string>
+    <string name="settings_dashboard_card_dual_opacity">開晝夜兩濃淡</string>
+    <string name="settings_dashboard_card_dual_opacity_desc">依晝夜之題，自調 DashboardUI 壁飾之濃淡</string>
+    <string name="settings_dashboard_card_day_opacity">晝時 DashboardUI 壁飾之濃淡</string>
+    <string name="settings_dashboard_card_night_opacity">夜時 DashboardUI 壁飾之濃淡</string>
+
+    <!-- Biometric Strings -->
+    <string name="action_biometric">身驗</string>
+    <string name="msg_biometric">請驗爾之身</string>
+    <string name="msg_enable_biometric">開身驗，使啟應用之時須驗乎？</string>
+    <string name="settings_biometric_login">身驗</string>
+    <string name="settings_biometric_login_summary">啟應用之時須行身驗</string>
+    <string name="settings_strong_biometric">緊要身驗</string>
+    <string name="settings_strong_biometric_summary">裝、卸、寢件之時須驗</string>
+
+    <!-- Theme Store Strings -->
+    <string name="theme_store_title">題肆</string>
+    <string name="theme_source_official">官</string>
+    <string name="theme_source_third_party">第三方</string>
+    <string name="theme_source_local">本地</string>
+    <string name="theme_store_author">作者：%s</string>
+    <string name="theme_store_version">版本：%s</string>
+    <string name="theme_source">源</string>
+    <string name="theme_store_download_failed">下取不成</string>
+    <string name="theme_store_download">取</string>
+    <string name="theme_store_search_hint">索題...</string>
+    <string name="search_modules">索件...</string>
+    <string name="search_scripts">索腳本...</string>
+
+    <!-- Update Check Strings -->
+    <string name="settings_auto_update_check">自察更新</string>
+    <string name="settings_auto_update_check_summary">啟應用之時，自察更新</string>
+    <string name="settings_check_update">察更新</string>
+    <string name="update_available_title">有新可更新</string>
+    <string name="update_available_message">覺爾之版本過舊，欲取新版乎？</string>
+    <string name="update_action">更新</string>
+    <string name="update_close">閉</string>
+    <string name="update_latest">爾已在最新之版</string>
+    <string name="update_error">察更新有誤</string>
+    <string name="settings_category_general">通</string>
+    <string name="settings_app_list_loading_scheme">應用列之載式</string>
+    <string name="settings_app_list_loading_scheme_summary">擇應用列之載法</string>
+    <string name="app_list_loading_scheme_root_service">RootService（素定）</string>
+    <string name="app_list_loading_scheme_package_manager">PackageManager（統系 API）</string>
+    <string name="app_list_loading_scheme_dialog_title">載式</string>
+    <string name="superuser">執權者</string>
+    <string name="module">諸件</string>
+    <string name="settings_category_appearance">儀觀</string>
+    <string name="settings_category_behavior">行止</string>
+    <string name="settings_section_general_basics">語言與更新</string>
+    <string name="profile_edit_title">修己之籍</string>
+    <string name="profile_nickname_label">別號</string>
+    <string name="profile_signature_label">題辭</string>
+    <string name="profile_choose_avatar">擇像</string>
+    <string name="profile_avatar_default">素像</string>
+    <string name="profile_avatar_custom">自定之像</string>
+    <string name="profile_avatar_opacity">像之濃淡</string>
+    <string name="profile_avatar_source_title">擇像之源</string>
+    <string name="profile_avatar_source_local">自機中擇</string>
+    <string name="profile_avatar_source_qq">QQ 之像</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">QQ 之號</string>
+    <string name="profile_avatar_gravatar_hint">郵址</string>
+    <string name="profile_avatar_fetch_failed">未能取像</string>
+    <string name="profile_crop_avatar">裁像</string>
+    <string name="profile_restore_default">復素定</string>
+    <string name="settings_section_general_interface">器面與動效</string>
+    <string name="settings_section_general_root">Root 之行止</string>
+    <string name="settings_section_general_mount">統系與掛載</string>
+    <string name="settings_section_general_identity">應用之身分</string>
+    <string name="settings_section_general_maintenance">修葺</string>
+    <string name="settings_section_behavior_display">首頁之現</string>
+    <string name="settings_section_behavior_actions">行止與裝</string>
+    <string name="settings_section_function_hide">隱與隔</string>
+    <string name="settings_section_function_root">Root 之能</string>
+    <string name="settings_section_function_mount">掛載與卸掛</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">認證</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">本地之副</string>
+    <string name="settings_section_backup_cloud">雲之副</string>
+    <string name="settings_section_module_display">件之現</string>
+    <string name="settings_section_module_update">更新與裝</string>
+    <string name="settings_section_multimedia_music">底樂</string>
+    <string name="settings_section_multimedia_sound">聲與振</string>
+    
+    <!-- Appearance Sub-Categories -->
+    <string name="settings_appearance_font">書體之規制</string>
+    <string name="settings_appearance_font_summary">自定書體之設</string>
+    <string name="settings_appearance_theme">題之規制</string>
+    <string name="settings_appearance_theme_summary">題肆、存、納與復</string>
+    <string name="settings_theme_mode">式之設</string>
+    <string name="settings_theme_mode_summary">於自具之題肆與相容之式間相易</string>
+    <string name="theme_mode_builtin">自具之式</string>
+    <string name="theme_mode_builtin_desc">用自具之題肆，覽、取、施諸題</string>
+    <string name="theme_mode_compat">相容之式</string>
+    <string name="theme_mode_compat_desc">用瀏覽之器直取諸題（為有納題之患之機）</string>
+    <string name="theme_mode_onboarding_title">擇題之式</string>
+    <string name="theme_mode_onboarding_msg">欲以何法覽題、裝題？此亦可後易於規制之中。</string>
+    <string name="theme_mode_builtin_label">自具之肆</string>
+    <string name="theme_mode_compat_label">瀏覽之式</string>
+    <string name="theme_mode_switched">題之式已易為 %s</string>
+    <string name="theme_mode_current">今：%s</string>
+    <string name="theme_mode_switch_title">易題之式</string>
+    <string name="theme_mode_switch_msg">易其式，則覽題、裝題之法亦隨之而易。續乎？</string>
+    <string name="settings_nav_custom_icons">自定導符</string>
+    <string name="settings_nav_custom_icons_summary">以下欄之符，易為自定之圖</string>
+    <string name="nav_icon_home">首頁之符</string>
+    <string name="nav_icon_kpm">KPM 之符</string>
+    <string name="nav_icon_superuser">執權者之符</string>
+    <string name="nav_icon_apm">統系件之符</string>
+    <string name="nav_icon_settings">規制之符</string>
+    <string name="nav_icon_select_image">擇圖</string>
+    <string name="nav_icon_clear">復素定</string>
+    <string name="nav_icon_custom_selected">自定</string>
+    <string name="nav_icon_default">素定</string>
+    <string name="nav_icon_cleared">符已復素</string>
+    <string name="nav_icon_set">符已更新</string>
+    <string name="nav_icon_set_failed">存符而敗</string>
+    <string name="settings_appearance_banner">題圖之規制</string>
+    <string name="settings_appearance_banner_summary">件題圖之設</string>
+    <string name="settings_appearance_layout">佈置之規制</string>
+    <string name="settings_appearance_layout_summary">首頁之式、導欄與牌之自定</string>
+    <string name="settings_appearance_background">底之規制</string>
+    <string name="settings_appearance_background_summary">自定之底、影戲與多底</string>
+    <string name="settings_appearance_night_mode">夜題之規制</string>
+    <string name="settings_appearance_night_mode_summary">夜題與色之設</string>
+    <string name="settings_amoled_theme">AMOLED 玄題</string>
+    <string name="settings_amoled_theme_desc">夜題用純玄之底</string>
+    <string name="settings_switch_icon">開鈕之識</string>
+    <string name="settings_switch_icon_desc">於樞上現其況之符</string>
+    <string name="settings_discrete_slider">分度之尺</string>
+    <string name="settings_discrete_slider_desc">於尺之軌上現其刻度</string>
+    <string name="settings_category_module">諸件</string>
+    <string name="settings_category_security">安危</string>
+    <string name="settings_category_function">諸能</string>
+    
+    <!-- Background Music Strings -->
+    <string name="settings_background_music">底樂</string>
+    <string name="settings_background_music_summary">應用在前之時，奏底樂</string>
+    <string name="settings_background_music_playing">方奏：%s</string>
+    <string name="settings_background_music_enabled">底樂已開</string>
+    <string name="settings_select_music_file">擇樂之卷</string>
+    <string name="settings_music_selected">樂已擇</string>
+    <string name="settings_clear_music">清樂</string>
+    <string name="settings_clear_music_confirm">果欲清其底樂乎？</string>
+    <string name="settings_music_auto_play">自奏</string>
+    <string name="settings_music_auto_play_summary">啟應用之時，自奏樂</string>
+    <string name="settings_music_looping">循環而奏</string>
+    <string name="settings_music_looping_summary">返復奏其今曲</string>
+    <string name="settings_music_volume">聲量</string>
+    <string name="settings_music_saved">樂之卷已存</string>
+    <string name="settings_music_save_error">存樂之卷而敗</string>
+    <string name="settings_music_cleared">樂已清</string>
+    <string name="settings_category_multimedia">多媒</string>
+    <string name="settings_category_general_summary">語言、更新、SELinux、統系之調</string>
+    <string name="settings_category_appearance_summary">題、色、佈置、底、書體</string>
+    <string name="settings_category_behavior_summary">Web 之勘、裝之行、首頁之現</string>
+    <string name="settings_category_security_summary">應用之認證，與件事之驗</string>
+    <string name="settings_category_backup_summary">本地之副、雲之副、WebDAV</string>
+    <string name="settings_category_module_summary">件之消息、其序、批量之裝</string>
+    <string name="settings_category_function_summary">FolkPatch 之隱、卸掛之服務</string>
+    <string name="settings_category_multimedia_summary">底樂、聲、振</string>
+    <string name="settings_use_legacy_su_page">單頁之執權授權</string>
+    <string name="settings_use_legacy_su_page_summary">執權者之頁，易為單頁授權之式</string>
+    <string name="settings_music_playback_control">奏樂之掌</string>
+
+    <!-- Theme Store Filter -->
+    <string name="theme_store_filter_title">濾題</string>
+    <string name="theme_store_filter_author">作者</string>
+    <string name="theme_store_filter_author_hint">輸作者之名</string>
+    <string name="theme_store_filter_source">源</string>
+    <string name="theme_store_filter_source_all">皆</string>
+    <string name="theme_store_filter_type">器之式</string>
+    <string name="theme_store_filter_apply">施之</string>
+    <string name="theme_store_filter_reset">復</string>
+
+    <!-- My Themes Page -->
+    <string name="my_themes_title">吾之題</string>
+    <string name="my_themes_empty">尚未有題</string>
+    <string name="my_themes_empty_action">覽題肆</string>
+    <string name="my_themes_apply">施題</string>
+    <string name="my_themes_delete">刪題</string>
+    <string name="my_themes_delete_confirm">果欲刪此題乎？</string>
+    <string name="my_themes_deleted">題已刪</string>
+    <string name="my_themes_applied">題已施</string>
+    <string name="my_themes_apply_failed">施題而敗——長按以刪之，而後再取</string>
+    <string name="my_themes_details">題之詳</string>
+
+    <!-- Download Dialog -->
+    <string name="theme_download_title">方取題</string>
+    <string name="theme_download_completed">取畢</string>
+    <string name="theme_download_failed">取之而敗</string>
+    <string name="theme_file_corrupt">題之卷已壞，請再取之</string>
+    <string name="theme_file_incomplete">題之卷不全，請再取之</string>
+    <string name="theme_download_progress">程</string>
+    <string name="theme_download_file">題之卷</string>
+    <string name="theme_download_image">預覽之圖</string>
+    <string name="theme_download_cancel">罷</string>
+    <string name="theme_download_pause">暫止</string>
+    <string name="theme_download_resume">續之</string>
+    <string name="theme_download_retry">再試</string>
+    <string name="theme_download_apply">施題</string>
+    <string name="theme_download_go_to_my_themes">吾之題</string>
+    <string name="theme_download_retrying">方再試（%d/3）...</string>
+    <string name="theme_download_preparing">方備其取...</string>
+    <string name="theme_download_downloading_file">方取題之卷...</string>
+    <string name="theme_download_downloading_image">方取預覽之圖...</string>
+    <string name="theme_download_finalizing">方竟其事...</string>
+
+    <!-- File Picker -->
+    <string name="file_picker_permission_required">須柄</string>
+    <string name="file_picker_permission_desc">欲覽諸卷，請授「諸卷皆可入」之柄。</string>
+    <string name="file_picker_grant_permission">授柄</string>
+    <string name="file_picker_cancel">罷</string>
+    <string name="file_picker_internal_storage">內貯</string>
+    <string name="file_picker_no_files">無卷</string>
+    <string name="file_picker_filtered_files">示 %1$s 卷</string>
+    <string name="file_picker_close">閉卷擇之器</string>
+
+    <!-- HomeV3 Strings -->
+    <string name="home_device_status_title">器之況</string>
+    <string name="home_device_status_battery_temp">電池之溫</string>
+    <string name="home_device_status_cpu_load">CPU 之負</string>
+    <string name="home_device_status_battery_level">電池之量</string>
+    <string name="home_device_status_battery_charging">方充</string>
+    <string name="home_device_status_cpu_temp">CPU 之溫</string>
+    <string name="home_device_status_memory_trend">記憶之勢</string>
+    <string name="home_storage_partitions">貯之分區</string>
+    <string name="home_device_status_cpu_freq">CPU 之頻</string>
+    <string name="home_network_rx">受</string>
+    <string name="home_network_tx">授</string>
+    <string name="home_storage_title">貯</string>
+    <string name="home_storage_internal">內貯</string>
+    <string name="home_storage_ram">RAM</string>
+    <string name="home_storage_zram">ZRAM</string>
+    <string name="home_storage_swap">Swap 之卷</string>
+    <string name="home_info_kernel">核</string>
+    <string name="home_info_superkey">SuperKey</string>
+    <string name="home_info_auth_auth">認證</string>
+    <string name="home_info_auth_na">無</string>
+    <string name="home_info_device_slot">器之 Slot</string>
+    <string name="home_info_device_model">器之型</string>
+    <string name="home_info_running_mode">行法之式</string>
+    <string name="home_info_mode_full">全</string>
+    <string name="home_info_mode_half">半</string>
+    <string name="home_zygisk_implement">Zygisk 之措</string>
+    <string name="home_mount_implement">掛載之措</string>
+
+    <string name="settings_list_card_hide_status_badge">用古之繪符</string>
+    <string name="settings_list_card_hide_status_badge_summary">使首頁況之幟，變為古時之繪符</string>
+    <string name="settings_list_info_show_icons">消息之符</string>
+    <string name="settings_list_info_show_icons_summary">於消息牌中，每目之側現一符</string>
+    <string name="settings_custom_badge_text">自定幟之文</string>
+    <string name="settings_custom_badge_text_summary">改幟所現之文，聊以自娛</string>
+    <string name="settings_custom_badge_text_full_half">全/半（素定）</string>
+    <string name="settings_custom_badge_text_lkm">LKM</string>
+    <string name="settings_custom_badge_text_gki">GKI</string>
+    <string name="settings_custom_badge_text_n_gki">N-GKI</string>
+    <string name="settings_custom_badge_text_oki">OKI</string>
+    <string name="settings_custom_badge_text_built_in">自具</string>
+
+    <!-- Install Mode Select -->
+    <string name="kp_install_methods">KernelPatch 之補與裝</string>
+    <string name="restore_boot_methods">擇一 boot，以復於 boot 之分區</string>
+
+
+    <string name="su_backup_list">副之列</string>
+    <string name="su_restore_list">復之列</string>
+    <string name="backup_success">存副已成</string>
+    <string name="restore_success">復之已成</string>
+
+    <!-- SuperUser App Action Dialog -->
+    <string name="su_app_action_title">應用之事</string>
+    <string name="su_app_action_content">請擇所欲施於此應用之事</string>
+    <string name="su_app_action_launch">啟應用</string>
+    <string name="su_app_action_force_stop">強止</string>
+    <string name="su_app_action_launch_success">方啟 %s</string>
+    <string name="su_app_action_force_stop_success">已強止 %s</string>
+    <string name="su_app_action_failed">事而敗：%s</string>
+
+    <!-- SU Audit Log -->
+    <string name="su_audit_log_title">授權之籍</string>
+    <string name="su_audit_log_empty">尚未有授權之記</string>
+    <string name="su_audit_log_clear">清籍</string>
+    <string name="su_audit_log_clear_confirm">盡清授權之記乎？</string>
+    <string name="su_audit_action_grant">已授</string>
+    <string name="su_audit_action_revoke">已收</string>
+    <string name="su_audit_action_exclude">已除</string>
+    <string name="su_audit_tab_usage">用之籍</string>
+    <string name="su_audit_tab_operations">諸事</string>
+
+    <string name="patch_output_written_to"> 所出之卷已書於 </string>
+    <string name="patch_write_failed"> 書所補之 boot.img 而敗</string>
+
+    <!-- Badge Count Settings -->
+    <string name="enable_badge_count">幟數之規制</string>
+    <string name="enable_badge_count_summary">設導目中幟數之現</string>
+    <string name="badge_superuser">現執權者之幟</string>
+    <string name="badge_apm">現統系件之幟</string>
+    <string name="badge_kernel">現核件之幟</string>
+    <string name="settings_sound_effect">聲效</string>
+    <string name="settings_sound_effect_summary">點時奏聲效</string>
+    <string name="settings_sound_effect_enabled">已開</string>
+    <string name="settings_sound_effect_playing">已擇：%s</string>
+    <string name="settings_sound_effect_source">聲之源</string>
+    <string name="settings_sound_effect_source_local">本地之卷</string>
+    <string name="settings_sound_effect_source_preset">預置之聲</string>
+    <string name="settings_sound_effect_preset_title">預置之聲</string>
+    <string name="settings_select_sound_effect">擇聲效</string>
+    <string name="settings_sound_effect_selected">聲效之卷已擇</string>
+    <string name="settings_sound_effect_scope">效之界</string>
+    <string name="settings_sound_effect_scope_global">全局（無所不在）</string>
+    <string name="settings_sound_effect_scope_bottom_bar">惟下欄</string>
+    <string name="settings_clear_sound_effect">清聲效</string>
+    <string name="settings_clear_sound_effect_confirm">果欲清其聲效乎？</string>
+    <string name="settings_sound_effect_cleared">聲效已清</string>
+
+    <string name="settings_startup_sound">啟時之聲</string>
+    <string name="settings_startup_sound_summary">啟應用之時奏聲</string>
+    <string name="settings_startup_sound_enabled">啟時之聲已開</string>
+    <string name="settings_startup_sound_playing">方奏：%s</string>
+    <string name="settings_select_startup_sound">擇啟時之聲</string>
+    <string name="settings_startup_sound_selected">啟時之聲已擇</string>
+    <string name="settings_clear_startup_sound">清啟時之聲</string>
+    <string name="settings_clear_startup_sound_confirm">果欲清其啟時之聲乎？</string>
+    <string name="settings_startup_sound_cleared">啟時之聲已清</string>
+    <string name="settings_sound_effect_save_failed">存聲效而敗</string>
+    <string name="settings_startup_sound_save_failed">存啟時之聲而敗</string>
+
+    <string name="settings_vibration">觸之振</string>
+    <string name="settings_vibration_summary">觸事之時振之</string>
+    <string name="settings_vibration_enabled">開振</string>
+    <string name="settings_vibration_intensity">振之力</string>
+    <string name="settings_vibration_scope">振之界</string>
+    <string name="settings_vibration_scope_global">全局（無所不在）</string>
+    <string name="settings_vibration_scope_bottom_bar">惟下欄</string>
+
+    <!-- Backup Settings -->
+    <string name="settings_category_backup">副</string>
+    <string name="settings_enable_cloud_backup">開雲之副</string>
+    <string name="settings_enable_cloud_backup_summary">已刷之件，自存副於雲之服務</string>
+    <string name="settings_configure_webdav">設 WebDAV 之服務</string>
+    <string name="webdav_config_title">WebDAV 之設</string>
+    <string name="webdav_url">WebDAV 之址</string>
+    <string name="webdav_username">名</string>
+    <string name="webdav_password">密語</string>
+    <string name="webdav_test_success">試之而通</string>
+    <string name="webdav_test_failed">試之而敗：%s</string>
+    <string name="webdav_uploading">方致於 WebDAV...</string>
+    <string name="webdav_backup_success">WebDAV 之副已成</string>
+    <string name="webdav_backup_failed">WebDAV 之副而敗：%s</string>
+    <string name="save">存</string>
+    <string name="test">試</string>
+    <string name="webdav_path_label">徑（如 /Backup）</string>
+    <string name="webdav_view_logs">覽其籍</string>
+    <string name="webdav_backup_logs_title">副之籍</string>
+    <string name="webdav_no_logs">未得籍。</string>
+    <string name="webdav_clear_logs">清</string>
+    <string name="settings_enable_local_backup">開本地之副</string>
+    <string name="settings_enable_local_backup_summary">存件之副於本地（Downloads/FolkPatch/ModuleBackups）</string>
+    <string name="close">閉</string>
+
+
+
+    <string name="script_library">腳本之庫</string>
+    <string name="script_library_title">腳本之庫</string>
+    <string name="script_library_empty">無腳本，點增鈕以增之</string>
+    <string name="script_library_add">增腳本</string>
+    <string name="script_library_add_title">增腳本</string>
+    <string name="script_library_select_file">擇腳本之卷</string>
+    <string name="script_library_alias">別名</string>
+    <string name="script_library_alias_hint">輸腳本之別名（可略）</string>
+    <string name="script_library_run">行之</string>
+    <string name="script_library_downloaded_to">已取至：%s</string>
+    <string name="script_library_download_failed">取之而敗：%s</string>
+    <string name="script_library_delete">刪</string>
+    <string name="script_library_path">徑：%s</string>
+    <string name="script_library_confirm_delete">果欲刪此腳本乎？</string>
+    <string name="script_library_delete_success">腳本已刪</string>
+    <string name="script_library_delete_failed">刪腳本而敗</string>
+    <string name="script_library_add_success">腳本已增</string>
+    <string name="script_library_add_failed">增腳本而敗：%s</string>
+    <string name="script_library_load_failed">載腳本之庫而敗</string>
+    <string name="script_library_output">行之所出</string>
+    <string name="script_library_no_output">無所出</string>
+    <string name="script_library_save_log">存籍</string>
+    <string name="script_library_log_saved">籍已存於 %s</string>
+    <string name="script_library_log_save_failed">存籍而敗：%s</string>
+    <string name="settings_predictive_back">預知之返勢</string>
+    <string name="settings_predictive_back_summary">開 Android 14+ 之預知返勢動效</string>
+
+    <string name="app_title_superroot">SuperRoot</string>
+    <string name="backup_failed">存副而敗：%s</string>
+    <string name="delete_failed">刪之而敗：%s</string>
+    <string name="delete_remote_backup_confirm">果欲刪其雲之副乎？</string>
+    <string name="delete_success">刪之已成</string>
+    <string name="restore_failed">復之而敗：%s</string>
+    <string name="settings_auto_backup">自副</string>
+    <string name="settings_auto_backup_summary">每日自存副一次</string>
+    <string name="settings_backup_now">即副之</string>
+    <string name="settings_backup_password">副之密語</string>
+    <string name="settings_backup_password_hint">輸副之密語</string>
+    <string name="settings_delete_remote_backup">刪雲之副</string>
+    <string name="settings_encrypt_backup">密其副</string>
+    <string name="settings_encrypt_backup_summary">以密語密其副之卷</string>
+    <string name="settings_launcher_icon">桌面之符</string>
+    <string name="settings_restore_backup">復其副</string>
+    <string name="settings_show_disable_all_modules">現「盡寢諸件」之鈕</string>
+    <string name="settings_show_disable_all_modules_summary">於件之頁，現一鈕，一舉盡寢諸件</string>
+    <string name="settings_test_webdav">試 WebDAV 之通</string>
+    <string name="settings_webdav_password">WebDAV 之密語</string>
+    <string name="settings_webdav_url">WebDAV 之址</string>
+    <string name="settings_webdav_username">WebDAV 之名</string>
+    <string name="theme_download">取</string>
+    <string name="theme_install">裝</string>
+    <string name="theme_install_failed">裝之而敗</string>
+    <string name="theme_install_success">裝之而通</string>
+
+    <string name="home_stats_more_options">更多之選</string>
+    <string name="home_stats_kp_label">KP</string>
+    <string name="home_stats_manager_label">主事</string>
+    <string name="home_device_status_gpu_load">GPU</string>
+    <string name="home_stats_kernel_modules">核件</string>
+    <string name="home_stats_apm_modules">統系之件</string>
+    <string name="home_stats_superusers">執權者</string>
+
+    <string name="kernel_spoof_enabled">核之偽裝已開</string>
+    <string name="kernel_spoof_disabled_restored">核之偽裝已寢而復舊</string>
+    <string name="kernel_spoof_failed">核之偽裝而敗：%d</string>
+    <string name="kernel_spoof_applied">核之偽裝已施</string>
+
+    <string name="settings_search_title">索規制</string>
+    <string name="settings_search_hint">索規制…</string>
+    <string name="settings_search_empty_hint">輸字以索諸規制…</string>
+    <string name="settings_no_results">未得所索</string>
+
+    <!-- Color Generation -->
+    <string name="color_generation_classic">古</string>
+    <string name="color_generation_custom">自定</string>
+    <string name="color_generation_label">色之式</string>
+
+    <!-- Color Standard -->
+    <string name="color_standard_md3_2021">MD3 2021</string>
+    <string name="color_standard_m3e_2025">M3e 2025</string>
+    <string name="color_standard_label">色之準</string>
+
+    <!-- Color Style -->
+    <string name="color_style_label">色之格</string>
+    <string name="color_style_tonal_spot">調點</string>
+    <string name="color_style_vibrant">鮮明</string>
+    <string name="color_style_content">內容</string>
+    <string name="color_style_expressive">恣意</string>
+    <string name="color_style_rainbow">虹</string>
+    <string name="color_style_fruit_salad">果盤</string>
+    <string name="color_style_monochrome">單色</string>
+    <string name="color_style_neutral">中和</string>
+    <string name="color_style_fidelity">傳真</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">對比</string>
+    <string name="color_contrast_standard">常</string>
+    <string name="color_contrast_medium">中</string>
+    <string name="color_contrast_high">極</string>
+    <string name="settings_jailbreak_mode">越獄之式</string>
+    <string name="settings_jailbreak_mode_summary">"於原核之上載 KernelPatch 之件。此式不許補。"</string>
+    <string name="settings_jailbreak_soft_reboot">軟重啟</string>
+    <string name="settings_jailbreak_soft_reboot_message">"件已載。今即重啟其框架乎？"</string>
+    <string name="settings_jailbreak_restart_framework">重啟框架</string>
+    <string name="settings_jailbreak_restart_framework_message">件已載。今即重啟 Android 之框架乎？此將軟重啟其機（惟重啟框架，不及於核）。</string>
+    <string name="settings_jailbreak_loaded">越獄之件已載</string>
+    <string name="settings_jailbreak_failed">載越獄之件而敗</string>
+    <string name="jailbreak_no_patch">越獄之式，不許補。</string>
+    <string name="jailbreak">越獄</string>
+    <string name="jailbreak_triggered">越獄已發。待 root，而後軟重啟。</string>
+    <string name="reboot_soft">軟重啟</string>
+    <string name="settings_faq">常見之問</string>
+    <string name="settings_bug_feedback">報誤</string>
+    <string name="settings_clear_cache">清積貯</string>
+    <string name="settings_disclaimer">免責</string>
+    <string name="settings_disclaimer_message">Root 其機，或生險於統系之更新、第三方之件，及他外因。所生之損與失，爾自任之。明其險而後行，可也。</string>
+    <string name="theme_store_subtitle">探眾題而施之</string>
+    <string name="script_library_subtitle">掌本機簡牒</string>
+    <string name="plugin_subtitle">增廣其能</string>
+    <string name="my_themes_subtitle">汝所藏之題</string>
+    <string name="apm_api_marketplace_subtitle">覽眾所施之 API</string>
+    <string name="theme_download_paused">暫止</string>
+    <string name="settings_wallpaper_gallery">壁紙圖鑑</string>
+    <string name="wallpaper_device_phone">手機</string>
+    <string name="wallpaper_device_tablet">平板</string>
+    <string name="wallpaper_layout_waterfall">懸瀑</string>
+    <string name="wallpaper_layout_stack">疊積</string>
+    <string name="wallpaper_device_mixed">兼陳</string>
+    <string name="wallpaper_display_options">陳列之式</string>
+    <string name="wallpaper_display_layout">陳式</string>
+    <string name="wallpaper_download">取</string>
+    <string name="wallpaper_cancel">罷</string>
+    <string name="wallpaper_saved">取訖</string>
+    <string name="wallpaper_download_failed">取之不獲</string>
+    <string name="wallpaper_loading">方取圖</string>
+    <string name="wallpaper_empty">無圖可陳</string>
+    <string name="wallpaper_retry">再取</string>
+    <string name="wallpaper_preview">覽圖</string>
+    <string name="wallpaper_set_background">設為背景</string>
+    <string name="wallpaper_background_set">背景已易</string>
+</resources>

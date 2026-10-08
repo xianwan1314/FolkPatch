@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_launcher_icon">桌面图标</string>
+    <string name="launcher_icon_style_anime">动漫</string>
+    <string name="launcher_icon_style_geometry">几何</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">悬浮底栏样式</string>
+    <string name="settings_bottom_bar_standard">标准底栏</string>
+    <string name="settings_bottom_bar_drawer">抽屉底栏</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
@@ -63,6 +70,7 @@
     <string name="reboot_fastbootd">重启到 FastbootD</string>
     <string name="about">关于</string>
     <string name="developer_and_maintainer">开发者 | 维护者</string>
+    <string name="developer_profile_picture">开发者头像</string>
     <string name="settings_app_language">语言</string>
     <string name="system_default">系统默认</string>
     <string name="settings_global_namespace_mode">全局命名空间模式</string>
@@ -174,6 +182,7 @@
     <string name="patch_item_skey">超级密钥</string>
     <string name="patch_custom_superkey">自定义超级密钥</string>
     <string name="patch_custom_superkey_summary">你仍可以设置超级密钥来管理 Root 以及内核，管理器已由内置签名授权</string>
+    <string name="patch_custom_superkey_optional">可选；默认使用管理器签名授权</string>
     <string name="patch_item_set_skey_label">超级密钥长度应为 8-63 个字符，包含数字和字母，不能包含特殊字符。</string>
     <string name="patch_confirm_superkey">确认超级密钥</string>
     <string name="patch_skey_mismatch">两次输入的超级密钥不一致</string>
@@ -645,6 +654,11 @@ KernelPatch 需要修补 boot 镜像。
     <string name="shizuku_log_copied">已复制到剪贴板</string>
     <string name="shizuku_log_source_server">服务端日志</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">详细</string>
+    <string name="shizuku_log_level_debug">调试</string>
+    <string name="shizuku_log_level_info">信息</string>
+    <string name="shizuku_log_level_warn">警告</string>
+    <string name="shizuku_log_level_error">错误</string>
     <string name="shizuku_log_search_hint">搜索日志</string>
     <string name="shizuku_permission_title">允许 %1$s 使用 Shizuku 吗？</string>
     <string name="shizuku_permission_message">该应用将通过 Shizuku 以 root 权限调用系统 API</string>
@@ -698,6 +712,9 @@ KernelPatch 需要修补 boot 镜像。
     <string name="settings_title_image_offset_x">水平位置</string>
 
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">软件默认</string>
+    <string name="settings_font_mode_system">系统默认</string>
+    <string name="settings_font_mode_custom">自定义</string>
     <string name="settings_custom_font">自定义字体</string>
     <string name="settings_select_font_file">选择字体文件</string>
     <string name="settings_custom_font_enabled">已启用自定义字体</string>
@@ -723,8 +740,6 @@ KernelPatch 需要修补 boot 镜像。
     <string name="settings_clear_background">清除背景</string>
     <string name="settings_clear_background_confirm">确定要清除背景图片吗？</string>
 
-    <string name="settings_alt_icon">备用图标</string>
-    <string name="alt_icon_summary">使用备选启动器图标</string>
 
     <!-- Video Background Settings -->
     <string name="settings_video_background">视频背景</string>
@@ -946,6 +961,42 @@ KernelPatch 需要修补 boot 镜像。
     <string name="module">系统模块</string>
     <string name="settings_category_appearance">外观</string>
     <string name="settings_category_behavior">行为</string>
+    <string name="settings_section_general_basics">语言与更新</string>
+    <string name="profile_edit_title">编辑资料</string>
+    <string name="profile_nickname_label">昵称</string>
+    <string name="profile_signature_label">签名</string>
+    <string name="profile_choose_avatar">选择头像</string>
+    <string name="profile_avatar_default">默认头像</string>
+    <string name="profile_avatar_custom">自定义头像</string>
+    <string name="profile_avatar_opacity">头像透明度</string>
+    <string name="profile_avatar_source_title">选择头像来源</string>
+    <string name="profile_avatar_source_local">从本地选择</string>
+    <string name="profile_avatar_source_qq">QQ 头像</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">QQ 号</string>
+    <string name="profile_avatar_gravatar_hint">邮箱</string>
+    <string name="profile_avatar_fetch_failed">获取头像失败</string>
+    <string name="profile_crop_avatar">裁剪头像</string>
+    <string name="profile_restore_default">恢复默认</string>
+    <string name="settings_section_general_interface">界面与动效</string>
+    <string name="settings_section_general_root">Root 行为</string>
+    <string name="settings_section_general_mount">系统与挂载</string>
+    <string name="settings_section_general_identity">应用标识</string>
+    <string name="settings_section_general_maintenance">维护</string>
+    <string name="settings_section_behavior_display">首页显示</string>
+    <string name="settings_section_behavior_actions">操作与安装</string>
+    <string name="settings_section_function_hide">隐藏与隔离</string>
+    <string name="settings_section_function_root">Root 功能</string>
+    <string name="settings_section_function_mount">挂载与卸载</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">身份验证</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">本地备份</string>
+    <string name="settings_section_backup_cloud">云端备份</string>
+    <string name="settings_section_module_display">模块显示</string>
+    <string name="settings_section_module_update">更新与安装</string>
+    <string name="settings_section_multimedia_music">背景音乐</string>
+    <string name="settings_section_multimedia_sound">音效与震动</string>
     
     <!-- Appearance Sub-Categories -->
     <string name="settings_appearance_font">字体设置</string>
@@ -1259,6 +1310,8 @@ KernelPatch 需要修补 boot 镜像。
     <string name="umount_config_save_failed">配置保存失败</string>
     <string name="settings_predictive_back">预测性返回手势</string>
     <string name="settings_predictive_back_summary">启用 Android 14+ 的预测性返回手势动画</string>
+    <string name="settings_expressive_motion">实验性动效</string>
+    <string name="settings_expressive_motion_summary">使用 Material 3 Expressive 的运动曲线</string>
 
     <string name="home_device_status_battery_charging">充电中</string>
     <string name="home_device_status_cpu_temp">CPU 温度</string>
@@ -1343,6 +1396,11 @@ KernelPatch 需要修补 boot 镜像。
     <string name="color_style_monochrome">单色</string>
     <string name="color_style_neutral">中性</string>
     <string name="color_style_fidelity">保真</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">对比度</string>
+    <string name="color_contrast_standard">标准</string>
+    <string name="color_contrast_medium">中等</string>
+    <string name="color_contrast_high">高</string>
     <string name="settings_info_copy">长按复制信息</string>
     <string name="settings_info_copy_summary">长按首页信息栏中的条目即可复制其内容</string>
     <string name="home_info_copied">%1$s 已复制</string>
@@ -1358,4 +1416,33 @@ KernelPatch 需要修补 boot 镜像。
     <string name="jailbreak">越狱</string>
     <string name="jailbreak_triggered">越狱已触发，等待获取 root 后软重启。</string>
     <string name="reboot_soft">软重启</string>
+    <string name="settings_faq">常见问题</string>
+    <string name="settings_bug_feedback">Bug 反馈</string>
+    <string name="settings_clear_cache">清除缓存文件</string>
+    <string name="settings_disclaimer">免责声明</string>
+    <string name="settings_disclaimer_message">对设备进行 Root 后，系统更新、第三方模块或其它外部因素可能造成不可预期的风险与损失，需要你自行承担。请在充分了解风险后再继续使用。</string>
+    <string name="theme_store_subtitle">发现并应用社区主题</string>
+    <string name="script_library_subtitle">运行与管理本机脚本</string>
+    <string name="plugin_subtitle">扩展 FolkPatch 的能力</string>
+    <string name="my_themes_subtitle">你保存的主题</string>
+    <string name="apm_api_marketplace_subtitle">浏览社区分享的 API</string>
+    <string name="theme_download_paused">已暂停</string>
+    <string name="settings_wallpaper_gallery">壁纸图鉴</string>
+    <string name="wallpaper_device_phone">手机</string>
+    <string name="wallpaper_device_tablet">平板</string>
+    <string name="wallpaper_layout_waterfall">瀑布流</string>
+    <string name="wallpaper_layout_stack">堆叠</string>
+    <string name="wallpaper_device_mixed">融合</string>
+    <string name="wallpaper_display_options">展示方案</string>
+    <string name="wallpaper_display_layout">展示方式</string>
+    <string name="wallpaper_download">下载</string>
+    <string name="wallpaper_cancel">取消</string>
+    <string name="wallpaper_saved">已保存</string>
+    <string name="wallpaper_download_failed">下载失败</string>
+    <string name="wallpaper_loading">正在加载壁纸</string>
+    <string name="wallpaper_empty">暂无壁纸</string>
+    <string name="wallpaper_retry">重试</string>
+    <string name="wallpaper_preview">预览</string>
+    <string name="wallpaper_set_background">设为背景</string>
+    <string name="wallpaper_background_set">背景已更新</string>
 </resources>

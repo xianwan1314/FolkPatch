@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="launcher_icon_style_anime">Anime</string>
+    <string name="launcher_icon_style_geometry">Geometri</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">Gaya Bilah Bawah Mengambang</string>
+    <string name="settings_bottom_bar_standard">Bilah Bawah Standar</string>
+    <string name="settings_bottom_bar_drawer">Bilah Bawah Laci</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
@@ -68,6 +74,7 @@
     <string name="reboot_fastbootd">Mulai Ulang ke FastbootD</string>
     <string name="about">Tentang Aplikasi</string>
     <string name="developer_and_maintainer">Pengembang | Pemelihara</string>
+    <string name="developer_profile_picture">Foto profil pengembang</string>
     <string name="settings_app_language">Bahasa</string>
     <string name="system_default">Bawaan Sistem</string>
     <string name="settings_global_namespace_mode">Mode Ruang Nama Global</string>
@@ -164,6 +171,7 @@
     <string name="patch_item_skey">SuperKey</string>
     <string name="patch_custom_superkey">SuperKey kustom</string>
     <string name="patch_custom_superkey_summary">Anda masih dapat mengatur SuperKey untuk mengelola Root dan kernel, manajer telah diotorisasi oleh tanda tangan bawaan kernel</string>
+    <string name="patch_custom_superkey_optional">Opsional; manajer bertanda tangan biasanya tidak memerlukan kunci kustom</string>
     <string name="patch_item_set_skey_label">SuperKey harus berisi 8-63 karakter dan menyertakan angka dan huruf, tetapi tanpa karakter khusus.</string>
     <string name="patch_confirm_superkey">Konfirmasi SuperKey</string>
     <string name="patch_skey_mismatch">SuperKey tidak cocok</string>
@@ -659,6 +667,11 @@ Berikut adalah beberapa kemungkinan penyebab kegagalan autentikasi—silakan cek
     <string name="shizuku_log_copied">Disalin ke papan klip</string>
     <string name="shizuku_log_source_server">Log server</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">Verbose</string>
+    <string name="shizuku_log_level_debug">Debug</string>
+    <string name="shizuku_log_level_info">Info</string>
+    <string name="shizuku_log_level_warn">Peringatan</string>
+    <string name="shizuku_log_level_error">Kesalahan</string>
     <string name="shizuku_log_search_hint">Cari log</string>
 <string name="settings_app_title">Judul Aplikasi</string>
     <string name="app_title_custom">Kustom</string>
@@ -682,8 +695,6 @@ Berikut adalah beberapa kemungkinan penyebab kegagalan autentikasi—silakan cek
     <string name="settings_crop_dialog_message">Potong gambar?</string>
     <string name="settings_crop_dialog_crop">Ya</string>
     <string name="settings_crop_dialog_direct">Tidak</string>
-    <string name="settings_alt_icon">Ikon Alternatif</string>
-    <string name="alt_icon_summary">Gunakan ikon peluncur alternatif</string>
     <string name="settings_background_selected">Latar belakang dipilih</string>
     <string name="settings_background_image_cleared">Gambar latar belakang dihapus</string>
     <string name="settings_clear_background">Hapus latar belakang</string>
@@ -783,6 +794,9 @@ Berikut adalah beberapa kemungkinan penyebab kegagalan autentikasi—silakan cek
     <string name="apm_copy_list_title">Salin daftar</string>
     <string name="apm_copy_list_success">Daftar modul disalin</string>
 
+    <string name="settings_font_mode_app">Bawaan aplikasi</string>
+    <string name="settings_font_mode_system">Bawaan sistem</string>
+    <string name="settings_font_mode_custom">Kustom</string>
     <string name="settings_custom_font">Font Kustom</string>
     <string name="settings_select_font_file">Pilih file font</string>
     <string name="settings_custom_font_enabled">Font kustom diaktifkan</string>
@@ -931,6 +945,42 @@ Berikut adalah beberapa kemungkinan penyebab kegagalan autentikasi—silakan cek
     <string name="settings_discrete_slider">Penggeser Diskrit</string>
     <string name="settings_discrete_slider_desc">Tampilkan tanda pada lintasan penggeser</string>
     <string name="settings_category_behavior">Perilaku</string>
+    <string name="profile_edit_title">Edit profil</string>
+    <string name="profile_nickname_label">Nama panggilan</string>
+    <string name="profile_signature_label">Tanda tangan</string>
+    <string name="profile_choose_avatar">Pilih avatar</string>
+    <string name="profile_avatar_default">Avatar bawaan</string>
+    <string name="profile_avatar_custom">Avatar kustom</string>
+    <string name="profile_avatar_opacity">Opasitas avatar</string>
+    <string name="profile_avatar_source_title">Pilih sumber avatar</string>
+    <string name="profile_avatar_source_local">Pilih dari perangkat</string>
+    <string name="profile_avatar_source_qq">Avatar QQ</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">Nomor QQ</string>
+    <string name="profile_avatar_gravatar_hint">Email</string>
+    <string name="profile_avatar_fetch_failed">Tidak dapat mengambil avatar</string>
+    <string name="profile_crop_avatar">Potong avatar</string>
+    <string name="profile_restore_default">Pulihkan default</string>
+    <string name="settings_section_general_basics">Bahasa &amp; Pembaruan</string>
+    <string name="settings_section_general_interface">Antarmuka &amp; Animasi</string>
+    <string name="settings_section_general_root">Perilaku Root</string>
+    <string name="settings_section_general_mount">Sistem &amp; Mount</string>
+    <string name="settings_section_general_identity">Identitas Aplikasi</string>
+    <string name="settings_section_general_maintenance">Pemeliharaan</string>
+    <string name="settings_section_behavior_display">Tampilan Beranda</string>
+    <string name="settings_section_behavior_actions">Tindakan &amp; Instalasi</string>
+    <string name="settings_section_function_hide">Sembunyikan &amp; Isolasi</string>
+    <string name="settings_section_function_root">Fitur Root</string>
+    <string name="settings_section_function_mount">Mount &amp; Unmount</string>
+    <string name="settings_section_function_shizuku">Shizuku</string>
+    <string name="settings_section_security_auth">Autentikasi</string>
+    <string name="settings_section_security_key">SuperKey</string>
+    <string name="settings_section_backup_local">Cadangan Lokal</string>
+    <string name="settings_section_backup_cloud">Cadangan Cloud</string>
+    <string name="settings_section_module_display">Tampilan Modul</string>
+    <string name="settings_section_module_update">Pembaruan &amp; Instalasi</string>
+    <string name="settings_section_multimedia_music">Musik Latar</string>
+    <string name="settings_section_multimedia_sound">Suara &amp; Getaran</string>
     <string name="settings_category_function">Fungsi</string>
     <string name="settings_use_legacy_su_page">Otorisasi superuser satu halaman</string>
     <string name="settings_use_legacy_su_page_summary">Halaman superuser beralih ke desain otorisasi satu halaman</string>
@@ -1186,6 +1236,8 @@ Berikut adalah beberapa kemungkinan penyebab kegagalan autentikasi—silakan cek
     <string name="theme_download_finalizing">Menyelesaikan...</string>
     <string name="settings_predictive_back">Gestur Kembali Prediktif</string>
     <string name="settings_predictive_back_summary">Aktifkan animasi gestur kembali prediktif Android 14+</string>
+    <string name="settings_expressive_motion">Gerakan ekspresif</string>
+    <string name="settings_expressive_motion_summary">Gunakan kurva gerakan Material 3 Expressive</string>
 
     <string name="home_device_status_battery_charging">Mengisi Daya</string>
     <string name="home_device_status_cpu_temp">Suhu CPU</string>
@@ -1275,6 +1327,11 @@ Berikut adalah beberapa kemungkinan penyebab kegagalan autentikasi—silakan cek
     <string name="color_style_monochrome">Monokrom</string>
     <string name="color_style_neutral">Netral</string>
     <string name="color_style_fidelity">Fidelitas</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">Kontras</string>
+    <string name="color_contrast_standard">Standar</string>
+    <string name="color_contrast_medium">Sedang</string>
+    <string name="color_contrast_high">Tinggi</string>
     <string name="settings_focus_card_background">Latar Kartu FocusUI</string>
     <string name="settings_focus_card_background_enabled">Latar kartu FocusUI diaktifkan; tekan lama kartu untuk mengelola latarnya</string>
     <string name="settings_focus_card_background_summary">Aktifkan latar kartu FocusUI dan kelola latar dengan tekan lama</string>
@@ -1338,4 +1395,33 @@ Berikut adalah beberapa kemungkinan penyebab kegagalan autentikasi—silakan cek
     <string name="kpm_installed">Terpasang</string>
     <string name="kpm_disabled">Dinonaktifkan (berlaku setelah mulai ulang)</string>
     <string name="kpm_embedded_unload_invalid">KPM tertanam tidak dapat dibongkar; akan tetap aktif setelah mulai ulang.</string>
+    <string name="settings_faq">Pertanyaan umum</string>
+    <string name="settings_bug_feedback">Laporkan bug</string>
+    <string name="settings_clear_cache">Hapus cache</string>
+    <string name="settings_disclaimer">Penafian</string>
+    <string name="settings_disclaimer_message">Setelah melakukan root pada perangkat, pembaruan sistem, modul pihak ketiga, atau faktor eksternal lain dapat menimbulkan risiko dan kerugian yang tidak terduga, dan Anda harus menanggungnya sendiri. Pastikan Anda memahaminya sebelum melanjutkan.</string>
+    <string name="theme_store_subtitle">Temukan dan terapkan tema komunitas</string>
+    <string name="script_library_subtitle">Jalankan dan kelola skrip lokal</string>
+    <string name="plugin_subtitle">Perluas kemampuan FolkPatch</string>
+    <string name="my_themes_subtitle">Tema yang kamu simpan</string>
+    <string name="apm_api_marketplace_subtitle">Jelajahi API yang dibagikan komunitas</string>
+    <string name="theme_download_paused">Dijeda</string>
+    <string name="settings_wallpaper_gallery">Galeri Wallpaper</string>
+    <string name="wallpaper_device_phone">Ponsel</string>
+    <string name="wallpaper_device_tablet">Tablet</string>
+    <string name="wallpaper_layout_waterfall">Air Terjun</string>
+    <string name="wallpaper_layout_stack">Bertumpuk</string>
+    <string name="wallpaper_device_mixed">Campuran</string>
+    <string name="wallpaper_display_options">Opsi tampilan</string>
+    <string name="wallpaper_display_layout">Tata letak</string>
+    <string name="wallpaper_download">Unduh</string>
+    <string name="wallpaper_cancel">Batal</string>
+    <string name="wallpaper_saved">Tersimpan</string>
+    <string name="wallpaper_download_failed">Unduhan gagal</string>
+    <string name="wallpaper_loading">Memuat wallpaper</string>
+    <string name="wallpaper_empty">Tidak ada wallpaper</string>
+    <string name="wallpaper_retry">Coba lagi</string>
+    <string name="wallpaper_preview">Pratinjau</string>
+    <string name="wallpaper_set_background">Jadikan latar belakang</string>
+    <string name="wallpaper_background_set">Latar belakang diperbarui</string>
 </resources>

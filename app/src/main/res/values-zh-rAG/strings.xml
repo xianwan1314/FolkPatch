@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="launcher_icon_style_anime">动漫喵</string>
+    <string name="launcher_icon_style_geometry">几何喵</string>
+    <string name="launcher_icon_style_apatch">APatch</string>
+    <string name="settings_floating_bar_style">悬浮底栏样式喵</string>
+    <string name="settings_bottom_bar_standard">标准底栏喵</string>
+    <string name="settings_bottom_bar_drawer">抽屉底栏喵</string>
     <string name="app_name" translatable="false">FolkPatch</string>
     <string name="app_name_fpatch">FPatch</string>
     <string name="app_title_apatch">APatch</string>
@@ -75,6 +81,7 @@
     <string name="reboot_fastbootd">重启到FastbootD模式哒喵！</string>
     <string name="about">关于人家哒</string>
     <string name="developer_and_maintainer">开发者喵 | 维护者喵</string>
+    <string name="developer_profile_picture">开发者喵像</string>
     <string name="settings_app_language">语言设置喵</string>
     <string name="system_default">系统默认哒</string>
     <string name="settings_global_namespace_mode">全局命名空间模式喵</string>
@@ -185,6 +192,7 @@
     <string name="patch_item_skey">超级密钥喵</string>
     <string name="patch_custom_superkey">自定义超级密钥喵</string>
     <string name="patch_custom_superkey_summary">你仍然可以设置超级密钥来管理Root和内核喵，管理器已经由内置签名授权了喵</string>
+    <string name="patch_custom_superkey_optional">可选喵；默认用管理器签名授权就行喵</string>
     <string name="patch_item_set_skey_label">超级密钥要是8-63个字符喵，只有数字字母哦，绝对不要加奇怪符号啦喵！</string>
     <string name="patch_confirm_superkey">再确认一次超级密钥喵</string>
     <string name="patch_skey_mismatch">两次超级密钥不一样喵</string>
@@ -633,8 +641,6 @@ KernelPatch 需要修补 boot 镜像才能工作喵。
     <string name="dpi_apply_settings">确定喵</string>
     <string name="dpi_confirm_title">确认改应用DPI喵</string>
     <string name="dpi_confirm_message">要把应用DPI从%1$s改成%2$s吗喵？</string>
-    <string name="settings_alt_icon">备用图标喵</string>
-    <string name="alt_icon_summary">用备选启动器图标喵</string>
     <string name="settings_magic_mount">我要挂载喵</string>
     <string name="settings_magic_mount_summary">开内置的模块挂载系统哒喵！</string>
     <string name="settings_new_app_profile_enabled">新装应用自动授权喵</string>
@@ -687,6 +693,11 @@ KernelPatch 需要修补 boot 镜像才能工作喵。
     <string name="shizuku_log_copied">已复制到剪贴板喵</string>
     <string name="shizuku_log_source_server">服务端日志喵</string>
     <string name="shizuku_log_source_logcat">Logcat</string>
+    <string name="shizuku_log_level_verbose">详细喵</string>
+    <string name="shizuku_log_level_debug">调试喵</string>
+    <string name="shizuku_log_level_info">信息喵</string>
+    <string name="shizuku_log_level_warn">警告喵</string>
+    <string name="shizuku_log_level_error">错误喵</string>
     <string name="shizuku_log_search_hint">搜索日志喵</string>
     <string name="shizuku_manage_apps">管一管授权的应用喵</string>
     <string name="settings_app_title">应用名字喵</string>
@@ -730,6 +741,9 @@ KernelPatch 需要修补 boot 镜像才能工作喵。
     <string name="settings_title_image_offset_x">水平位置喵</string>
 
     <!-- Font Settings -->
+    <string name="settings_font_mode_app">软件默认喵</string>
+    <string name="settings_font_mode_system">系统默认喵</string>
+    <string name="settings_font_mode_custom">自定义喵</string>
     <string name="settings_custom_font">自定义字体喵</string>
     <string name="settings_select_font_file">选字体文件喵！</string>
     <string name="settings_custom_font_enabled">自定义字体开了喵！</string>
@@ -978,6 +992,42 @@ KernelPatch 需要修补 boot 镜像才能工作喵。
     <string name="settings_discrete_slider">离散滑块喵</string>
     <string name="settings_discrete_slider_desc">在滑块轨道上显示刻度标记喵</string>
     <string name="settings_category_behavior">行为喵</string>
+    <string name="profile_edit_title">编辑资料喵</string>
+    <string name="profile_nickname_label">昵称喵</string>
+    <string name="profile_signature_label">签名喵</string>
+    <string name="profile_choose_avatar">换头像喵</string>
+    <string name="profile_avatar_default">默认喵像</string>
+    <string name="profile_avatar_custom">自定义喵像</string>
+    <string name="profile_avatar_opacity">头像透明度喵</string>
+    <string name="profile_avatar_source_title">选头像来源喵</string>
+    <string name="profile_avatar_source_local">从本机选喵</string>
+    <string name="profile_avatar_source_qq">QQ 头像喵</string>
+    <string name="profile_avatar_source_gravatar">Gravatar</string>
+    <string name="profile_avatar_qq_hint">QQ 号喵</string>
+    <string name="profile_avatar_gravatar_hint">邮箱喵</string>
+    <string name="profile_avatar_fetch_failed">获取头像失败喵</string>
+    <string name="profile_crop_avatar">裁剪头像喵</string>
+    <string name="profile_restore_default">恢复默认喵</string>
+    <string name="settings_section_general_basics">语言与更新喵</string>
+    <string name="settings_section_general_interface">界面与动效喵</string>
+    <string name="settings_section_general_root">Root 行为喵</string>
+    <string name="settings_section_general_mount">系统与挂载喵</string>
+    <string name="settings_section_general_identity">应用标识喵</string>
+    <string name="settings_section_general_maintenance">维护喵</string>
+    <string name="settings_section_behavior_display">首页显示喵</string>
+    <string name="settings_section_behavior_actions">操作与安装喵</string>
+    <string name="settings_section_function_hide">隐藏与隔离喵</string>
+    <string name="settings_section_function_root">Root 功能喵</string>
+    <string name="settings_section_function_mount">挂载与卸载喵</string>
+    <string name="settings_section_function_shizuku">Shizuku 喵</string>
+    <string name="settings_section_security_auth">身份验证喵</string>
+    <string name="settings_section_security_key">SuperKey 喵</string>
+    <string name="settings_section_backup_local">本地备份喵</string>
+    <string name="settings_section_backup_cloud">云端备份喵</string>
+    <string name="settings_section_module_display">模块显示喵</string>
+    <string name="settings_section_module_update">更新与安装喵</string>
+    <string name="settings_section_multimedia_music">背景音乐喵</string>
+    <string name="settings_section_multimedia_sound">音效与震动喵</string>
     <string name="settings_category_function">功能喵</string>
     <string name="settings_category_module">模块喵</string>
     <string name="settings_category_security">安全喵</string>
@@ -1235,6 +1285,8 @@ KernelPatch 需要修补 boot 镜像才能工作喵。
     <string name="theme_download_finalizing">正在完成喵...</string>
     <string name="settings_predictive_back">预测性返回手势喵</string>
     <string name="settings_predictive_back_summary">启用 Android 14+ 的预测性返回手势动画喵</string>
+    <string name="settings_expressive_motion">实验性动效喵</string>
+    <string name="settings_expressive_motion_summary">使用 Material 3 Expressive 的动效曲线喵</string>
     <string name="theme_download">下载喵</string>
     <string name="theme_install">安装喵</string>
     <string name="theme_install_failed">安装失败了喵</string>
@@ -1329,6 +1381,11 @@ KernelPatch 需要修补 boot 镜像才能工作喵。
     <string name="color_style_monochrome">单色喵</string>
     <string name="color_style_neutral">中性喵</string>
     <string name="color_style_fidelity">保真喵</string>
+    <!-- Color Contrast -->
+    <string name="color_contrast_label">对比度喵</string>
+    <string name="color_contrast_standard">标准喵</string>
+    <string name="color_contrast_medium">中等喵</string>
+    <string name="color_contrast_high">高喵</string>
     <string name="settings_focus_card_background">FocusUI 卡片壁纸喵</string>
     <string name="settings_focus_card_background_enabled">FocusUI 卡片壁纸已开启喵，长按卡片管理壁纸喵</string>
     <string name="settings_focus_card_background_summary">启用 FocusUI 卡片壁纸及长按壁纸管理喵</string>
@@ -1396,4 +1453,33 @@ KernelPatch 需要修补 boot 镜像才能工作喵。
     <string name="jailbreak">越狱喵</string>
     <string name="jailbreak_triggered">越狱已经触发喵，等拿到 root 就软重启喵！</string>
     <string name="reboot_soft">软重启喵！</string>
+    <string name="settings_faq">常见问题喵</string>
+    <string name="settings_bug_feedback">Bug 反馈喵</string>
+    <string name="settings_clear_cache">清除缓存喵</string>
+    <string name="settings_disclaimer">免责声明喵</string>
+    <string name="settings_disclaimer_message">给设备 Root 之后喵，系统更新、第三方模块或者其它外部因素可能会造成想不到的风险和损失喵，要你自己承担喵。充分了解风险之后再继续喵。</string>
+    <string name="theme_store_subtitle">发现喵用社区主题喵</string>
+    <string name="script_library_subtitle">运行管理本机脚本喵</string>
+    <string name="plugin_subtitle">扩展喵的能力</string>
+    <string name="my_themes_subtitle">你收藏的主题喵</string>
+    <string name="apm_api_marketplace_subtitle">浏览社区分享的 API 喵</string>
+    <string name="theme_download_paused">暂停喵</string>
+    <string name="settings_wallpaper_gallery">喵圖鑑</string>
+    <string name="wallpaper_device_phone">喵手機</string>
+    <string name="wallpaper_device_tablet">喵平板</string>
+    <string name="wallpaper_layout_waterfall">喵瀑布</string>
+    <string name="wallpaper_layout_stack">喵堆疊</string>
+    <string name="wallpaper_device_mixed">喵混搭</string>
+    <string name="wallpaper_display_options">喵展示</string>
+    <string name="wallpaper_display_layout">喵排版</string>
+    <string name="wallpaper_download">喵下載</string>
+    <string name="wallpaper_cancel">喵取消</string>
+    <string name="wallpaper_saved">喵存好了</string>
+    <string name="wallpaper_download_failed">喵下載失敗</string>
+    <string name="wallpaper_loading">喵正在載圖</string>
+    <string name="wallpaper_empty">喵沒有圖</string>
+    <string name="wallpaper_retry">喵再試</string>
+    <string name="wallpaper_preview">喵預覽</string>
+    <string name="wallpaper_set_background">喵設為背景</string>
+    <string name="wallpaper_background_set">喵背景換好了</string>
 </resources>

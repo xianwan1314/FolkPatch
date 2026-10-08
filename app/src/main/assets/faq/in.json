@@ -1,0 +1,88 @@
+{
+  "items": [
+    {
+      "title": "Fitur perangkat lunak",
+      "body": "FolkPatch adalah fork dari APatch yang menggunakan KernelPatch untuk menyediakan root tingkat kernel, dan memperluasnya dengan manajer, sistem modul, dan lainnya.\n\n• Superuser: manajemen dan otorisasi izin root\n• APM: modul Android\n• KPM: modul kernel\n• Magic Mount: menyediakan pemasangan modul\n• Meta Module: memungkinkan modul meta mengambil alih pemasangan modul\n• Manajemen modul: pasang, aktifkan, nonaktifkan, dan hapus modul\n• Shizuku: menyediakan dukungan layanan Shizuku"
+    },
+    {
+      "title": "1. Apakah saya perlu membuka bootloader untuk menggunakan FolkPatch?",
+      "body": "Biasanya ya. Memasang FolkPatch biasanya memerlukan pembukaan bootloader perangkat, karena FolkPatch mem-patch dan mem-flash boot image perangkat.\n\nSebelum memasang, pastikan bootloader sudah terbuka dan cadangkan boot.img asli yang sesuai dengan versi sistem Anda saat ini. Mem-flash image yang salah atau tidak cocok dapat membuat perangkat gagal boot."
+    },
+    {
+      "title": "2. Apa hubungan antara FolkPatch, APatch, dan KernelPatch?",
+      "body": "FolkPatch adalah fork dari APatch. KernelPatch adalah komponen pem-patch kernel yang digunakan FolkPatch di bawahnya untuk menyediakan root tingkat kernel.\n\nSederhananya, KernelPatch menyediakan kemampuan pem-patch kernel tingkat rendah, APatch membangun solusi root Android di atasnya, dan FolkPatch terus memperluas APatch dengan fitur dan manajer.\n\nKarena itu, KernelPatch bukan metode root lain yang ditawarkan FolkPatch, dan KernelPatch serta FolkPatch tidak boleh dipahami sebagai dua metode pem-patch terpisah yang harus dipilih salah satunya."
+    },
+    {
+      "title": "3. Apakah perangkat saya mendukung FolkPatch?",
+      "body": "FolkPatch saat ini mendukung perangkat yang menjalankan kernel Linux 3.18 hingga 6.18, serta memerlukan arsitektur ARM64 dan lingkungan kernel yang kompatibel dengan KernelPatch.\n\nVersi kernel dalam rentang yang didukung tidak menjamin kompatibilitas. Kernel vendor, kernel pihak ketiga, dan kernel yang dimodifikasi secara khusus mungkin masih memiliki masalah kompatibilitas.\n\nJika perangkat Anda menggunakan kernel non-standar atau sangat disesuaikan, pastikan dulu kompatibilitas sebenarnya."
+    },
+    {
+      "title": "4. Partisi mana yang di-patch FolkPatch? Bisakah mem-patch init_boot?",
+      "body": "FolkPatch saat ini mem-patch boot image.\n\nGunakan boot.img asli yang sesuai dengan versi sistem Anda saat ini, dan jangan gunakan init_boot.img, vendor_boot.img, atau boot image lain sebagai target patch.\n\nJika perangkat Anda memiliki tata letak boot yang tidak biasa, pastikan dulu partisi boot mana yang sebenarnya digunakan perangkat dan image aslinya."
+    },
+    {
+      "title": "5. Bagaimana jika perangkat tidak mau boot setelah pem-patch-an atau flashing?",
+      "body": "Perangkat yang tidak mau boot biasanya disebabkan oleh boot image yang tidak cocok, kombinasi KernelPatch/kernel yang tidak kompatibel, mem-flash partisi yang salah, atau modul yang merusak proses boot.\n\nJika perangkat masih bisa masuk ke Fastboot atau Recovery, pulihkan dulu boot.img asli yang Anda cadangkan.\n\nJika masalah muncul setelah memasang atau memperbarui modul, periksa APM atau KPM yang terakhir diubah terlebih dahulu. Jangan berulang kali mem-flash tanpa cadangan boot image asli."
+    },
+    {
+      "title": "6. Bagaimana jika modul yang terpasang tidak berfungsi?",
+      "body": "Pertama pastikan modul telah terpasang dan aktif, lalu reboot perangkat sesuai yang dijelaskan oleh modul itu sendiri.\n\nAPM dan KPM dimuat secara berbeda, dan sebagian modul bergantung pada versi Android tertentu, versi kernel, atau modul lain, sehingga pemasangan yang berhasil tidak menjamin modul bekerja.\n\nJika modul tidak berdampak, reboot dulu; jika masih tidak berfungsi, periksa versi modul, kompatibilitas, dan log terkait."
+    },
+    {
+      "title": "7. Bagaimana jika perangkat tidak boot dengan benar setelah memasang modul?",
+      "body": "Jika Anda melihat animasi boot yang macet, reboot acak, atau tidak bisa masuk ke sistem setelah memasang atau memperbarui modul, curigai dulu modul yang terakhir dipasang atau diperbarui.\n\nJika Anda masih bisa boot, nonaktifkan atau hapus modul yang terakhir dipasang. Jika tidak bisa boot, tangani modul sesuai opsi pemulihan perangkat Anda, dengan memulihkan boot.img asli jika perlu.\n\nKPM khususnya berjalan di kernel, sehingga masalah kompatibilitas dapat langsung merusak proses boot sistem. Sebelum memasang KPM yang tidak jelas asalnya, pastikan sumber dan kompatibilitasnya dengan kernel Anda saat ini."
+    },
+    {
+      "title": "8. Apa perbedaan antara APM dan KPM?",
+      "body": "APM dan KPM adalah dua jenis modul yang didukung FolkPatch.\n\n• APM: modul Android, yang memodifikasi atau memperluas fitur sistem Android\n• KPM: modul kernel, yang memperluas atau memodifikasi kernel pada tingkat kernel\n\nKeduanya berjalan pada tingkat yang berbeda dan memiliki tujuan yang berbeda. Penulis modul memilih APM atau KPM berdasarkan cara modul diimplementasikan."
+    },
+    {
+      "title": "9. Root sudah diberikan tetapi aplikasi masih bilang tidak ada root. Bagaimana?",
+      "body": "Pertama buka halaman superuser dan pastikan aplikasi telah diberikan root, lalu tutup sepenuhnya dan luncurkan ulang.\n\nJika otorisasi sudah benar tetapi aplikasi masih tidak dapat mendeteksi root, aplikasi mungkin menggunakan pemeriksaan root lain, seperti jalur su, status SELinux, lingkungan mount, atau ciri sistem lainnya.\n\nSebagian perangkat mungkin juga memiliki sisa dari solusi root lain seperti KernelSU atau Magisk. Beberapa lingkungan root dapat saling bertentangan, jadi periksa apakah ada manajer root lain atau sisa terkait."
+    },
+    {
+      "title": "10. Mengapa jalur root tampil sebagai /system/bin/kp?",
+      "body": "Jika ada solusi root lain atau sisa terkait di sistem, FolkPatch mungkin menggunakan /system/bin/kp sebagai jalur root untuk menghindari konflik dengan lingkungan yang ada.\n\nJika Anda ingin menggunakan jalur tradisional /system/bin/su, pastikan dulu solusi root lain telah dihapus dan sisanya dibersihkan, lalu konfigurasikan ulang.\n\nPerhatikan bahwa mengubah jalur root dapat memengaruhi deteksi root dan kompatibilitas di sebagian aplikasi."
+    },
+    {
+      "title": "11. Mengapa permintaan root tidak muncul?",
+      "body": "Pertama pastikan status root FolkPatch sendiri normal dan halaman superuser berfungsi.\n\nJika root berfungsi tetapi aplikasi tidak menampilkan prompt, coba luncurkan ulang aplikasi dan periksa apakah aplikasi telah disetel untuk menolak root secara permanen.\n\nJika masalah muncul setelah memasang atau memperbarui KPM atau APM, nonaktifkan dulu modul yang terakhir diubah untuk mempersempit penyebabnya."
+    },
+    {
+      "title": "12. Mengapa versi KernelPatch tidak berubah setelah upgrade?",
+      "body": "Jika perangkat masih menampilkan versi lama setelah meng-upgrade KernelPatch dan reboot, periksa dulu apakah ada KPM yang memblokir penulisan ke partisi kritis.\n\nSebagian KPM anti-brick mencegat penulisan ke boot dan partisi kritis lainnya, yang membuat pembaruan KernelPatch gagal. Sebelum meng-upgrade KernelPatch, nonaktifkan sementara KPM yang mungkin memengaruhi penulisan partisi.\n\nJuga pastikan boot image saat ini cocok dengan versi sistem perangkat saat ini dan versi KernelPatch baru kompatibel dengan kernel Anda."
+    },
+    {
+      "title": "13. Mengapa root hilang setelah pembaruan Android?",
+      "body": "Dengan pembaruan mulus A/B, pembaruan sistem biasanya ditulis ke slot lainnya. Setelah beralih ke slot baru, boot image-nya mungkin tidak di-patch oleh FolkPatch, sehingga root untuk sementara hilang.\n\nJika FolkPatch mendukung pemasangan ke slot tidak aktif di perangkat Anda, Anda dapat memasangnya di sana setelah OTA selesai dan sebelum boot ke sistem baru.\n\nJika Anda sudah boot ke sistem baru dan kehilangan root, dapatkan boot.img asli yang sesuai dengan versi sistem tersebut, patch, lalu flash kembali."
+    },
+    {
+      "title": "14. Mengapa FolkPatch 4.3 dan yang lebih baru tidak lagi menggunakan SuperKey?",
+      "body": "FolkPatch 4.3 dan yang lebih baru mengautentikasi manajer dengan verifikasi tanda tangan APK alih-alih mekanisme SuperKey lama.\n\nJadi dengan versi FolkPatch saat ini Anda tidak perlu membuat atau mengonfigurasi SuperKey mengikuti panduan lama. Dengan KernelPatch lama atau manajer lama, mekanisme autentikasinya mungkin berbeda dari versi saat ini."
+    },
+    {
+      "title": "15. Mengapa autentikasi gagal setelah memasang ulang FolkPatch?",
+      "body": "FolkPatch menggunakan autentikasi tanda tangan APK untuk manajer. Jika Anda menghapus dan memasang ulang manajer, KernelPatch mungkin masih menyimpan status manajer sebelumnya, sehingga autentikasi dapat gagal sementara setelah pemasangan ulang.\n\nDalam hal itu, reboot perangkat dulu agar KernelPatch dapat mendeteksi ulang manajer saat ini. Jika masalah berlanjut, pastikan versi KernelPatch dan manajer FolkPatch Anda cocok."
+    },
+    {
+      "title": "16. Mengapa KernelPatch lama tidak dapat mengautentikasi FolkPatch saat ini?",
+      "body": "Autentikasi manajer bergantung pada verifikasi tanda tangan KernelPatch. Versi KernelPatch lama tidak memiliki kemampuan itu, sehingga tidak dapat menyelesaikan autentikasi dengan FolkPatch saat ini.\n\nJika Anda menggunakan versi FolkPatch saat ini, pastikan versi KernelPatch memenuhi persyaratan mekanisme autentikasi saat ini."
+    },
+    {
+      "title": "17. Bagaimana cara menghapus FolkPatch?",
+      "body": "Pilih metode penghapusan berdasarkan kondisi perangkat saat ini.\n\n• Penghapusan via manajer: gunakan fitur penghapusan yang disediakan FolkPatch\n• Penghapusan via Recovery: pulihkan dengan paket penghapusan untuk versi yang cocok\n• Pemulihan manual: flash kembali boot.img asli yang Anda cadangkan\n\nJika perangkat saat ini memiliki masalah terkait APM atau KPM, tangani modul tersebut sebelum menghapus atau memulihkan."
+    },
+    {
+      "title": "18. Mengapa masih dikatakan tidak didukung padahal kernel saya dalam 3.18–6.18?",
+      "body": "Rentang versi kernel hanyalah persyaratan kompatibilitas dasar FolkPatch; itu tidak menjamin setiap kernel berfungsi dengan KernelPatch.\n\nKernel vendor dan pihak ketiga yang berbeda mungkin memiliki struktur, simbol, konfigurasi, atau modifikasi yang tidak biasa, dan mungkin gagal di-patch bahkan dalam 3.18–6.18.\n\nJika Anda mengalami masalah kernel tidak didukung, pastikan dulu boot.img berasal dari sistem saat ini dan periksa masalah kompatibilitas kernel khusus yang diketahui. Jangan menilai kompatibilitas penuh hanya dari nomor versi kernel."
+    },
+    {
+      "title": "19. Informasi apa yang harus saya berikan saat melaporkan masalah?",
+      "body": "Saat melaporkan masalah, berikan sebanyak mungkin dari berikut ini:\n\n• Vendor dan model persis perangkat\n• Versi Android\n• Versi kernel Linux\n• Versi FolkPatch\n• Versi KernelPatch\n• Apakah boot.img saat ini berasal dari versi sistem saat ini\n• APM dan KPM yang terpasang\n• Pesan kesalahan atau log lengkap\n• Apa yang Anda lakukan sebelum masalah muncul\n\nJika masalah berkaitan dengan otorisasi root, pembaruan KernelPatch, atau modul, sebutkan juga apakah Anda baru-baru ini memasang, memperbarui, atau menghapus sesuatu yang terkait."
+    },
+    {
+      "title": "20. Apa yang harus saya perhatikan sebelum menggunakan FolkPatch?",
+      "body": "Root, pem-patch-an boot image, dan pemasangan APM/KPM semuanya dapat memengaruhi stabilitas sistem.\n\nSebelum memasang FolkPatch atau melakukan pembaruan penting, siapkan boot.img asli yang sesuai dengan sistem Anda saat ini, dan pastikan perangkat dapat masuk ke Fastboot atau Recovery.\n\nSebelum memasang modul pihak ketiga, pastikan sumbernya tepercaya dan periksa kompatibilitasnya dengan versi Android, kernel, dan versi FolkPatch Anda."
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import static rikka.shizuku.server.ServerConstants.PERMISSION;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.system.Os;
 import android.util.AtomicFile;
 
 import androidx.annotation.Nullable;
@@ -40,7 +41,22 @@ public class ShizukuConfigManager extends ConfigManager {
     private static final File FILE = new File("/data/user_de/0/com.android.shell/shizuku.json");
     private static final AtomicFile ATOMIC_FILE = new AtomicFile(FILE);
 
+    private static void normalizeFileOwnership() {
+        if (!FILE.exists()) {
+            return;
+        }
+        try {
+            if (Os.getuid() == 0) {
+                Os.chown(FILE.getAbsolutePath(), 2000, 2000);
+            }
+            Os.chmod(FILE.getAbsolutePath(), 0600);
+        } catch (Throwable tr) {
+            LOGGER.w(tr, "normalize config ownership");
+        }
+    }
+
     public static ShizukuConfig load() {
+        normalizeFileOwnership();
         FileInputStream stream;
         try {
             stream = ATOMIC_FILE.openRead();
@@ -65,7 +81,7 @@ public class ShizukuConfigManager extends ConfigManager {
         return new ShizukuConfig();
     }
 
-    public static void write(ShizukuConfig config) {
+    private void writeLocked() {
         synchronized (ATOMIC_FILE) {
             FileOutputStream stream;
             try {
@@ -80,10 +96,12 @@ public class ShizukuConfigManager extends ConfigManager {
                 stream.write(json.getBytes());
 
                 ATOMIC_FILE.finishWrite(stream);
+                normalizeFileOwnership();
                 LOGGER.v("config saved");
             } catch (Throwable tr) {
                 LOGGER.w(tr, "can't save %s, restoring backup.", ATOMIC_FILE.getBaseFile());
                 ATOMIC_FILE.failWrite(stream);
+                normalizeFileOwnership();
             }
         }
     }
@@ -92,7 +110,9 @@ public class ShizukuConfigManager extends ConfigManager {
 
         @Override
         public void run() {
-            write(config);
+            synchronized (ShizukuConfigManager.this) {
+                writeLocked();
+            }
         }
     };
 
@@ -206,8 +226,8 @@ public class ShizukuConfigManager extends ConfigManager {
     public void flush() {
         synchronized (this) {
             HandlerKt.getWorkerHandler().removeCallbacks(mWriteRunner);
+            writeLocked();
         }
-        write(config);
     }
 
     private ShizukuConfig.PackageEntry findLocked(int uid) {
@@ -222,7 +242,14 @@ public class ShizukuConfigManager extends ConfigManager {
     @Nullable
     public ShizukuConfig.PackageEntry find(int uid) {
         synchronized (this) {
-            return findLocked(uid);
+            ShizukuConfig.PackageEntry entry = findLocked(uid);
+            if (entry == null) {
+                return null;
+            }
+            ShizukuConfig.PackageEntry copy = new ShizukuConfig.PackageEntry(entry.uid, entry.flags);
+            copy.shellOnly = entry.shellOnly;
+            copy.packages = entry.packages == null ? null : new ArrayList<>(entry.packages);
+            return copy;
         }
     }
 

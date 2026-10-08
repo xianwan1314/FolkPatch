@@ -17,32 +17,70 @@ fn get_kp_version() -> (u32, u32, u32) {
     (parse("MAJOR"), parse("MINOR"), parse("PATCH"))
 }
 
+fn get_version_property(name: &str) -> Result<String, std::io::Error> {
+    let content = std::fs::read_to_string("../version.properties")?;
+    content
+        .lines()
+        .find_map(|line| {
+            line.strip_prefix(&format!("{name}="))
+                .map(str::trim)
+                .filter(|value| !value.is_empty())
+                .map(str::to_owned)
+        })
+        .ok_or_else(|| std::io::Error::other(format!("{name} not found in version.properties")))
+}
+
+fn get_git_version_name() -> Result<String, std::io::Error> {
+    let output = Command::new("git")
+        .args(["rev-parse", "--verify", "--short", "HEAD"])
+        .output()?;
+    let name = String::from_utf8(output.stdout)
+        .map_err(|_| std::io::Error::other("Failed to read git version name"))?
+        .trim()
+        .to_owned();
+    if name.is_empty() {
+        return Err(std::io::Error::other(
+            "Failed to determine git version name",
+        ));
+    }
+    Ok(name)
+}
+
 fn get_git_version() -> Result<(u32, String), std::io::Error> {
-    // Try to get version code from environment variable first
-    let version_code: u32 = if let Ok(env_version_code) = env::var("APATCH_VERSION_CODE") {
-        env_version_code.parse().map_err(|_| {
-            std::io::Error::new(std::io::ErrorKind::Other, "Failed to parse {version_code}")
-        })?
-    } else {
-        // Fallback to git-based calculation
-        let output = Command::new("git")
-            .args(["rev-list", "--count", "HEAD"])
-            .output()?;
-
-        let output = output.stdout;
-        let git_count = String::from_utf8(output).expect("Failed to read git count stdout");
-        let git_count: u32 = git_count.trim().parse().map_err(|_| {
-            std::io::Error::new(std::io::ErrorKind::Other, "Failed to parse git count")
-        })?;
-        std::cmp::max(11000 + 200 + git_count, 10762) // For historical reasons and ensure minimum version
+    let floor: u32 = get_version_property("managerVersionFloor")?
+        .parse()
+        .map_err(|_| std::io::Error::other("Failed to parse managerVersionFloor"))?;
+    let version_code = match env::var("APATCH_VERSION_CODE") {
+        Ok(value) => value
+            .parse()
+            .map_err(|_| std::io::Error::other("Failed to parse APATCH_VERSION_CODE"))?,
+        Err(_) => {
+            let epoch: u32 = get_version_property("managerVersionEpoch")?
+                .parse()
+                .map_err(|_| std::io::Error::other("Failed to parse managerVersionEpoch"))?;
+            let output = Command::new("git")
+                .args(["rev-list", "--count", "HEAD"])
+                .output()?;
+            let commit_count: u32 = String::from_utf8(output.stdout)
+                .map_err(|_| std::io::Error::other("Failed to read git count stdout"))?
+                .trim()
+                .parse()
+                .map_err(|_| std::io::Error::other("Failed to parse git commit count"))?;
+            epoch
+                .checked_add(commit_count)
+                .ok_or_else(|| std::io::Error::other("Version code overflow"))?
+        }
     };
+    if version_code <= floor {
+        return Err(std::io::Error::other(format!(
+            "Computed versionCode {version_code} is not greater than managerVersionFloor={floor}"
+        )));
+    }
 
-    let version_name = if let Ok(env_version_name) = env::var("APATCH_VERSION_NAME") {
-        env_version_name
-    } else {
-        "113005-Matsuzaka-yuki".to_string()
+    let version_name = match env::var("APATCH_VERSION_NAME") {
+        Ok(value) => value,
+        Err(_) => get_git_version_name()?,
     };
-
     Ok((version_code, version_name))
 }
 
@@ -51,15 +89,9 @@ fn main() {
     println!("cargo:rerun-if-changed=../.git/HEAD");
     println!("cargo:rerun-if-changed=../.git/refs/");
     println!("cargo:rerun-if-changed=../app/src/main/cpp/version");
+    println!("cargo:rerun-if-changed=../version.properties");
 
-    let (code, name) = match get_git_version() {
-        Ok((code, name)) => (code, name),
-        Err(_) => {
-            // show warning if git is not installed
-            println!("cargo:warning=Failed to get git version, using 0.0.0");
-            (0, "0.0.0".to_string())
-        }
-    };
+    let (code, name) = get_git_version().expect("Failed to determine FolkPatch version");
     let out_dir = env::var("OUT_DIR").expect("Failed to get $OUT_DIR");
     println!("out_dir: ${out_dir}");
     println!("code: ${code}");

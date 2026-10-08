@@ -1,26 +1,24 @@
 package me.bmax.apatch.ui.screen.settings.appearance
 
 import android.content.ActivityNotFoundException
-import androidx.compose.foundation.layout.*
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.FontDownload
-import androidx.compose.material.icons.filled.FormatSize
-import androidx.compose.material3.*
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.FontDownload
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.ExpressiveCard
-import me.bmax.apatch.ui.component.SplicedColumnGroup
-import me.bmax.apatch.ui.component.ToggleSettingCard
 import me.bmax.apatch.ui.component.rememberConfirmDialog
+import me.bmax.apatch.ui.component.folk.FolkPreference
+import me.bmax.apatch.ui.component.folk.FolkSettingsSectionGroup
+import me.bmax.apatch.ui.component.folk.FolkValuePreference
 import me.bmax.apatch.ui.theme.FontConfig
+import me.bmax.apatch.ui.theme.FontMode
 import me.bmax.apatch.ui.theme.refreshTheme
 import me.bmax.apatch.util.ui.showToast
 
@@ -28,56 +26,52 @@ import me.bmax.apatch.util.ui.showToast
 fun AppearanceFontSection(
     flat: Boolean,
     highlightKey: String?,
-    customFontEnabled: Boolean,
-    onCustomFontEnabledChange: (Boolean) -> Unit,
-    pickFontLauncher: androidx.activity.result.ActivityResultLauncher<String>,
+    fontMode: FontMode,
+    onFontModeChange: (FontMode) -> Unit,
+    pickFontLauncher: ActivityResultLauncher<String>,
     snackBarHost: SnackbarHostState,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    SplicedColumnGroup(title = stringResource(R.string.settings_appearance_font), flat = flat, highlightKey = highlightKey) {
-        item(key = "appearance_custom_font") {
-            ToggleSettingCard(
-                flat = flat,
-                icon = Icons.Filled.FormatSize,
-                title = stringResource(id = R.string.settings_custom_font),
-                description = if (customFontEnabled) {
-                    if (FontConfig.customFontFilename != null) stringResource(id = R.string.settings_font_selected) else stringResource(id = R.string.settings_custom_font_enabled)
-                } else {
-                    stringResource(id = R.string.settings_custom_font_summary)
-                },
-                checked = customFontEnabled,
-                onCheckedChange = {
-                    onCustomFontEnabledChange(it)
-                    FontConfig.setCustomFontEnabledState(it)
-                    FontConfig.save(context)
-                    refreshTheme.value = true
-                },
+    FolkSettingsSectionGroup(title = stringResource(R.string.settings_appearance_font), flat = flat, highlightKey = highlightKey) {
+        item(key = "appearance_font_mode_app") {
+            FontModePreference(
+                title = stringResource(R.string.settings_font_mode_app),
+                selected = fontMode == FontMode.APP_DEFAULT,
+                onSelect = { onFontModeChange(FontMode.APP_DEFAULT) },
             )
         }
 
-        if (FontConfig.isCustomFontEnabled) {
+        item(key = "appearance_font_mode_system") {
+            FontModePreference(
+                title = stringResource(R.string.settings_font_mode_system),
+                selected = fontMode == FontMode.SYSTEM_DEFAULT,
+                onSelect = { onFontModeChange(FontMode.SYSTEM_DEFAULT) },
+            )
+        }
+
+        item(key = "appearance_font_mode_custom") {
+            FontModePreference(
+                title = stringResource(R.string.settings_font_mode_custom),
+                selected = fontMode == FontMode.CUSTOM,
+                onSelect = { onFontModeChange(FontMode.CUSTOM) },
+            )
+        }
+
+        if (fontMode == FontMode.CUSTOM) {
             item(key = "appearance_select_font") {
-                ExpressiveCard(
-                    flat = flat,
+                FolkValuePreference(
+                    icon = Icons.Outlined.FontDownload,
+                    title = stringResource(id = R.string.settings_select_font_file),
                     onClick = {
                         try {
                             pickFontLauncher.launch("*/*")
                         } catch (e: ActivityNotFoundException) {
                             showToast(context, e.message ?: "")
                         }
-                    }
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(imageVector = Icons.Filled.FontDownload, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
-                        Spacer(Modifier.width(16.dp))
-                        Text(text = stringResource(id = R.string.settings_select_font_file), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
-                    }
-                }
+                    },
+                )
             }
 
             if (FontConfig.customFontFilename != null) {
@@ -93,26 +87,35 @@ fun AppearanceFontSection(
                     )
                     val clearFontTitle = stringResource(id = R.string.settings_clear_font)
                     val clearFontConfirm = context.getString(R.string.settings_clear_font_confirm)
-                    ExpressiveCard(
-                        flat = flat,
+                    FolkValuePreference(
+                        icon = Icons.Outlined.Delete,
+                        title = clearFontTitle,
                         onClick = {
                             clearFontDialog.showConfirm(
                                 title = clearFontTitle,
                                 content = clearFontConfirm,
                             )
-                        }
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Icon(imageVector = Icons.Filled.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
-                            Spacer(Modifier.width(16.dp))
-                            Text(text = clearFontTitle, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
-                        }
-                    }
+                        },
+                    )
                 }
             }
         }
     }
+}
+
+/** A radio-style settings row for picking one of the three font modes. */
+@Composable
+private fun FontModePreference(
+    title: String,
+    selected: Boolean,
+    onSelect: () -> Unit,
+) {
+    FolkPreference(
+        title = title,
+        selected = selected,
+        onClick = onSelect,
+        trailing = {
+            RadioButton(selected = selected, onClick = null)
+        },
+    )
 }

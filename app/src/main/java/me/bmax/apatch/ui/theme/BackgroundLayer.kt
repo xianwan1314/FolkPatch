@@ -33,6 +33,7 @@ import android.widget.FrameLayout
 import android.widget.VideoView
 import androidx.compose.ui.viewinterop.AndroidView
 import com.ramcosta.composedestinations.generated.destinations.APModuleScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.AppProfileScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.KPModuleScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.SettingScreenDestination
@@ -50,7 +51,36 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import me.bmax.apatch.ui.screen.BottomBarDestination
+import me.bmax.apatch.ui.navigation.BottomBarDestination
+
+/**
+ * Resolves the page wallpaper URI for [route] according to the current background mode.
+ */
+fun resolveBackgroundUriForRoute(route: String?): String? {
+    return if (BackgroundConfig.isMultiBackgroundEnabled) {
+        when (route) {
+            HomeScreenDestination.route -> BackgroundConfig.homeBackgroundUri
+            KPModuleScreenDestination.route -> BackgroundConfig.kernelBackgroundUri
+            SuperUserScreenDestination.route -> BackgroundConfig.superuserBackgroundUri
+            AppProfileScreenDestination.route -> BackgroundConfig.superuserBackgroundUri
+            APModuleScreenDestination.route -> BackgroundConfig.systemModuleBackgroundUri
+            SettingScreenDestination.route -> BackgroundConfig.settingsBackgroundUri
+            else -> BackgroundConfig.homeBackgroundUri
+        }
+    } else {
+        BackgroundConfig.customBackgroundUri
+    }
+}
+
+/**
+ * Resolves the wallpaper actually shown for [route], preferring the video background when active.
+ */
+fun activeBackgroundUriForRoute(route: String?): String? {
+    val videoActive = BackgroundConfig.isCustomBackgroundEnabled &&
+        BackgroundConfig.isVideoBackgroundEnabled &&
+        !BackgroundConfig.videoBackgroundUri.isNullOrEmpty()
+    return if (videoActive) BackgroundConfig.videoBackgroundUri else resolveBackgroundUriForRoute(route)
+}
 
 /**
  * Background Layer Component
@@ -152,7 +182,12 @@ fun BackgroundLayer(
             modifier = Modifier
                 .fillMaxSize()
                 .zIndex(-1f)
-                .background(Color.Black.copy(alpha = BackgroundConfig.getEffectiveBackgroundDim(isDarkTheme)))
+                .background(
+                    Color.Black.copy(
+                        alpha = LocalWallpaperDim.current
+                            ?: BackgroundConfig.getEffectiveBackgroundDim(isDarkTheme)
+                    )
+                )
         )
         return
     }
@@ -202,35 +237,13 @@ fun BackgroundLayer(
                 },
                 label = "BackgroundAnimation"
             ) { route ->
-                val rawTargetUri = if (BackgroundConfig.isMultiBackgroundEnabled) {
-                    when (route) {
-                        HomeScreenDestination.route -> BackgroundConfig.homeBackgroundUri
-                        KPModuleScreenDestination.route -> BackgroundConfig.kernelBackgroundUri
-                        SuperUserScreenDestination.route -> BackgroundConfig.superuserBackgroundUri
-                        APModuleScreenDestination.route -> BackgroundConfig.systemModuleBackgroundUri
-                        SettingScreenDestination.route -> BackgroundConfig.settingsBackgroundUri
-                        else -> BackgroundConfig.homeBackgroundUri
-                    }
-                } else {
-                    BackgroundConfig.customBackgroundUri
-                }
+                val rawTargetUri = resolveBackgroundUriForRoute(route)
                 
                 RenderBackgroundImage(rawTargetUri, isDarkTheme)
             }
         } else {
             // No animation or standard logic
-            val rawTargetUri = if (BackgroundConfig.isMultiBackgroundEnabled) {
-                when (currentRoute) {
-                    HomeScreenDestination.route -> BackgroundConfig.homeBackgroundUri
-                    KPModuleScreenDestination.route -> BackgroundConfig.kernelBackgroundUri
-                    SuperUserScreenDestination.route -> BackgroundConfig.superuserBackgroundUri
-                    APModuleScreenDestination.route -> BackgroundConfig.systemModuleBackgroundUri
-                    SettingScreenDestination.route -> BackgroundConfig.settingsBackgroundUri
-                    else -> BackgroundConfig.homeBackgroundUri
-                }
-            } else {
-                BackgroundConfig.customBackgroundUri
-            }
+            val rawTargetUri = resolveBackgroundUriForRoute(currentRoute)
             
             RenderBackgroundImage(rawTargetUri, isDarkTheme)
         }
@@ -271,7 +284,12 @@ private fun RenderBackgroundImage(rawTargetUri: String?, isDarkTheme: Boolean) {
             modifier = Modifier
                 .fillMaxSize()
                 .zIndex(-1f)
-                .background(Color.Black.copy(alpha = BackgroundConfig.getEffectiveBackgroundDim(isDarkTheme)))
+                .background(
+                    Color.Black.copy(
+                        alpha = LocalWallpaperDim.current
+                            ?: BackgroundConfig.getEffectiveBackgroundDim(isDarkTheme)
+                    )
+                )
         )
     }
 }

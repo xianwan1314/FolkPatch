@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_action_search">Telusuri</string>
+    <string name="core_action_clear">Hapus</string>
+    <string name="core_action_back">Kembali</string>
+    <string name="core_action_close">Tutup</string>
+    <string name="core_action_more">Lainnya</string>
+    <string name="core_action_refresh">Segarkan</string>
+    <string name="core_action_filter">Filter</string>
+    <string name="core_action_save">Simpan</string>
+    <string name="core_action_send">Kirim</string>
+    <string name="core_action_download">Unduh</string>
+    <string name="core_action_config">Konfigurasi</string>
+    <string name="core_action_delete">Hapus</string>
+    <string name="core_state_busy">Sibuk</string>
+</resources>

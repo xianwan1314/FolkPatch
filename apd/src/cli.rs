@@ -1,4 +1,6 @@
-use crate::{defs, event, insmod, late_load, lua, magica, module, module_config, plugin, supercall, utils};
+use crate::{
+    defs, event, insmod, late_load, lua, magica, module, module_config, plugin, supercall, utils,
+};
 #[cfg(target_os = "android")]
 use android_logger::Config;
 use anyhow::{Context, Result};
@@ -47,6 +49,9 @@ enum Commands {
 
     /// Apply boot-time patch features from manager boot fallback
     ManagerBootCompleted,
+
+    /// Print the current boot feature state without changing it
+    BootStatus,
 
     /// Start uid listener for synchronizing root list
     UidListener,
@@ -295,6 +300,14 @@ pub fn run() -> Result<()> {
         Commands::BootCompleted => event::on_boot_completed(cli.superkey),
 
         Commands::ManagerBootCompleted => event::on_manager_boot_completed(cli.superkey),
+
+        Commands::BootStatus => {
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&event::runtime_policy_status(&cli.superkey))?
+            );
+            Ok(())
+        }
 
         Commands::UidListener => event::start_uid_listener(),
 

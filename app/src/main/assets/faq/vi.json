@@ -1,0 +1,88 @@
+{
+  "items": [
+    {
+      "title": "Tính năng phần mềm",
+      "body": "FolkPatch là một bản fork của APatch, sử dụng KernelPatch để cung cấp root ở cấp nhân và mở rộng nó bằng trình quản lý, hệ thống mô-đun và nhiều thứ khác.\n\n• Superuser: quản lý và cấp quyền root\n• APM: mô-đun Android\n• KPM: mô-đun nhân\n• Magic Mount: cung cấp khả năng gắn kết mô-đun\n• Meta Module: cho phép một meta module tiếp quản việc gắn kết mô-đun\n• Quản lý mô-đun: cài đặt, bật, tắt và gỡ bỏ mô-đun\n• Shizuku: cung cấp hỗ trợ dịch vụ Shizuku"
+    },
+    {
+      "title": "1. Tôi có cần mở khóa bootloader để dùng FolkPatch không?",
+      "body": "Thường là có. Cài đặt FolkPatch thông thường yêu cầu mở khóa bootloader của thiết bị, vì FolkPatch vá và flash boot image của thiết bị.\n\nTrước khi cài đặt, hãy đảm bảo bootloader đã được mở khóa và sao lưu boot.img gốc khớp với phiên bản hệ thống hiện tại của bạn. Flash sai hoặc không khớp image có thể khiến thiết bị không khởi động được."
+    },
+    {
+      "title": "2. Mối quan hệ giữa FolkPatch, APatch và KernelPatch là gì?",
+      "body": "FolkPatch là một bản fork của APatch. KernelPatch là thành phần vá nhân mà FolkPatch sử dụng bên dưới để cung cấp root ở cấp nhân.\n\nNói đơn giản, KernelPatch cung cấp khả năng vá nhân cấp thấp, APatch xây dựng một giải pháp root Android trên nền đó, và FolkPatch tiếp tục mở rộng APatch bằng các tính năng và một trình quản lý.\n\nDo đó KernelPatch không phải là một phương pháp root khác do FolkPatch cung cấp, và KernelPatch với FolkPatch không nên được hiểu là hai phương pháp vá riêng biệt để lựa chọn."
+    },
+    {
+      "title": "3. Thiết bị của tôi có hỗ trợ FolkPatch không?",
+      "body": "FolkPatch hiện hỗ trợ các thiết bị chạy nhân Linux từ 3.18 đến 6.18, đồng thời yêu cầu kiến trúc ARM64 và môi trường nhân tương thích với KernelPatch.\n\nCó phiên bản nhân nằm trong khoảng được hỗ trợ không đảm bảo tương thích. Nhân của nhà sản xuất, nhân bên thứ ba và nhân được chỉnh sửa đặc biệt vẫn có thể gặp vấn đề tương thích.\n\nNếu thiết bị của bạn dùng nhân không chuẩn hoặc được tùy biến nhiều, hãy xác nhận mức tương thích thực tế trước."
+    },
+    {
+      "title": "4. FolkPatch vá phân vùng nào? Có vá được init_boot không?",
+      "body": "FolkPatch hiện vá boot image.\n\nHãy dùng boot.img gốc khớp với phiên bản hệ thống hiện tại của bạn, và không dùng init_boot.img, vendor_boot.img hay các boot image khác làm đối tượng vá.\n\nNếu thiết bị của bạn có bố cục boot khác thường, trước tiên hãy xác nhận thiết bị thực sự dùng phân vùng boot nào và image gốc của nó."
+    },
+    {
+      "title": "5. Nếu thiết bị không khởi động được sau khi vá hoặc flash thì sao?",
+      "body": "Thiết bị không khởi động thường do boot image không khớp, tổ hợp KernelPatch/nhân không tương thích, flash sai phân vùng, hoặc một mô-đun làm hỏng quá trình khởi động.\n\nNếu thiết bị vẫn vào được Fastboot hoặc Recovery, trước tiên hãy khôi phục boot.img gốc mà bạn đã sao lưu.\n\nNếu vấn đề xuất hiện sau khi cài hoặc cập nhật một mô-đun, hãy kiểm tra APM hoặc KPM được thay đổi gần nhất trước. Không flash lặp đi lặp lại khi chưa có bản sao lưu boot image gốc."
+    },
+    {
+      "title": "6. Nếu mô-đun đã cài không có tác dụng thì sao?",
+      "body": "Trước tiên hãy xác nhận mô-đun đã được cài và bật, sau đó khởi động lại thiết bị theo hướng dẫn của chính mô-đun.\n\nAPM và KPM tải khác nhau, và một số mô-đun phụ thuộc vào phiên bản Android, phiên bản nhân hoặc các mô-đun khác, nên cài đặt thành công không đảm bảo mô-đun hoạt động.\n\nNếu một mô-đun không có tác dụng, hãy khởi động lại trước; nếu vẫn không được, hãy kiểm tra phiên bản mô-đun, khả năng tương thích và nhật ký liên quan."
+    },
+    {
+      "title": "7. Nếu thiết bị không khởi động đúng sau khi cài mô-đun thì sao?",
+      "body": "Nếu bạn thấy màn hình khởi động bị kẹt, khởi động lại ngẫu nhiên hoặc không vào được hệ thống sau khi cài hay cập nhật một mô-đun, hãy nghi ngờ mô-đun được cài hoặc cập nhật gần nhất trước.\n\nNếu vẫn khởi động được, hãy tắt hoặc gỡ mô-đun được cài gần nhất. Nếu không khởi động được, hãy xử lý mô-đun theo các lựa chọn khôi phục của thiết bị, khôi phục boot.img gốc nếu cần.\n\nĐặc biệt KPM chạy trong nhân, nên vấn đề tương thích có thể trực tiếp làm hỏng khởi động hệ thống. Trước khi cài một KPM không rõ nguồn gốc, hãy xác nhận nguồn và khả năng tương thích với nhân hiện tại của bạn."
+    },
+    {
+      "title": "8. Sự khác biệt giữa APM và KPM là gì?",
+      "body": "APM và KPM là hai loại mô-đun mà FolkPatch hỗ trợ.\n\n• APM: mô-đun Android, sửa đổi hoặc mở rộng các tính năng của hệ thống Android\n• KPM: mô-đun nhân, mở rộng hoặc sửa đổi nhân ở cấp nhân\n\nChúng chạy ở các cấp khác nhau và phục vụ các mục đích khác nhau. Tác giả mô-đun chọn APM hoặc KPM dựa trên cách mô-đun được triển khai."
+    },
+    {
+      "title": "9. Đã cấp root nhưng ứng dụng vẫn báo không có root. Làm sao bây giờ?",
+      "body": "Trước tiên hãy mở trang superuser và xác nhận ứng dụng đã được cấp root, sau đó đóng hoàn toàn và mở lại ứng dụng.\n\nNếu việc cấp quyền ổn nhưng ứng dụng vẫn không phát hiện được root, có thể nó dùng các kiểm tra root khác, chẳng hạn như đường dẫn su, trạng thái SELinux, môi trường gắn kết hoặc các đặc điểm hệ thống khác.\n\nMột số thiết bị cũng có thể còn sót lại từ các giải pháp root khác như KernelSU hoặc Magisk. Nhiều môi trường root có thể xung đột, nên hãy kiểm tra xem có trình quản lý root khác hoặc phần sót lại liên quan không."
+    },
+    {
+      "title": "10. Vì sao đường dẫn root hiển thị là /system/bin/kp?",
+      "body": "Nếu trên hệ thống có giải pháp root khác hoặc phần sót lại liên quan, FolkPatch có thể dùng /system/bin/kp làm đường dẫn root để tránh xung đột với môi trường hiện có.\n\nNếu bạn muốn dùng đường dẫn /system/bin/su truyền thống, trước tiên hãy đảm bảo giải pháp root kia đã được gỡ bỏ và phần sót lại đã được dọn sạch, rồi cấu hình lại.\n\nLưu ý rằng thay đổi đường dẫn root có thể ảnh hưởng đến việc phát hiện root và khả năng tương thích trong một số ứng dụng."
+    },
+    {
+      "title": "11. Vì sao không hiện yêu cầu root?",
+      "body": "Trước tiên hãy xác nhận trạng thái root của chính FolkPatch là bình thường và trang superuser hoạt động.\n\nNếu root hoạt động nhưng ứng dụng không hiện lời nhắc, hãy thử mở lại ứng dụng và kiểm tra xem nó có bị đặt từ chối root vĩnh viễn không.\n\nNếu vấn đề xuất hiện sau khi cài hoặc cập nhật KPM hay APM, hãy tắt mô-đun được thay đổi gần nhất trước để thu hẹp phạm vi."
+    },
+    {
+      "title": "12. Vì sao phiên bản KernelPatch không thay đổi sau khi nâng cấp?",
+      "body": "Nếu thiết bị vẫn hiển thị phiên bản cũ sau khi nâng cấp KernelPatch và khởi động lại, trước tiên hãy kiểm tra xem một KPM có đang chặn ghi vào các phân vùng quan trọng không.\n\nMột số KPM chống brick chặn ghi vào boot và các phân vùng quan trọng khác, khiến việc cập nhật KernelPatch thất bại. Trước khi nâng cấp KernelPatch, hãy tạm tắt các KPM có thể ảnh hưởng đến việc ghi phân vùng.\n\nĐồng thời xác nhận boot image hiện tại khớp với phiên bản hệ thống hiện tại của thiết bị và phiên bản KernelPatch mới tương thích với nhân của bạn."
+    },
+    {
+      "title": "13. Vì sao root biến mất sau khi cập nhật Android?",
+      "body": "Với cập nhật liền mạch A/B, bản cập nhật hệ thống thường được ghi vào slot còn lại. Sau khi chuyển sang slot mới, boot image của slot đó có thể chưa được FolkPatch vá, nên root tạm thời bị mất.\n\nNếu FolkPatch hỗ trợ cài vào slot không hoạt động trên thiết bị của bạn, bạn có thể cài vào đó sau khi OTA hoàn tất và trước khi khởi động lại vào hệ thống mới.\n\nNếu bạn đã khởi động vào hệ thống mới và mất root, hãy lấy boot.img gốc khớp với phiên bản hệ thống đó, vá rồi flash lại."
+    },
+    {
+      "title": "14. Vì sao FolkPatch 4.3 trở lên không còn dùng SuperKey?",
+      "body": "FolkPatch 4.3 trở lên xác thực trình quản lý bằng xác minh chữ ký APK thay cho cơ chế SuperKey cũ.\n\nVì vậy với phiên bản FolkPatch hiện tại, bạn không cần tạo hay cấu hình SuperKey theo các hướng dẫn cũ. Với KernelPatch cũ hoặc trình quản lý cũ, cơ chế xác thực có thể khác so với phiên bản hiện tại."
+    },
+    {
+      "title": "15. Vì sao xác thực thất bại sau khi cài lại FolkPatch?",
+      "body": "FolkPatch dùng xác thực chữ ký APK cho trình quản lý. Nếu bạn gỡ rồi cài lại trình quản lý, KernelPatch có thể vẫn giữ trạng thái của trình quản lý trước đó, nên xác thực có thể tạm thời thất bại sau khi cài lại.\n\nTrong trường hợp đó, trước tiên hãy khởi động lại thiết bị để KernelPatch phát hiện lại trình quản lý hiện tại. Nếu vấn đề vẫn tiếp diễn, hãy xác nhận phiên bản KernelPatch và trình quản lý FolkPatch của bạn khớp nhau."
+    },
+    {
+      "title": "16. Vì sao KernelPatch cũ không xác thực được FolkPatch hiện tại?",
+      "body": "Xác thực trình quản lý phụ thuộc vào việc xác minh chữ ký của KernelPatch. Các phiên bản KernelPatch cũ thiếu khả năng đó, nên chúng không thể hoàn tất xác thực với FolkPatch hiện tại.\n\nNếu bạn dùng phiên bản FolkPatch hiện tại, hãy đảm bảo phiên bản KernelPatch đáp ứng yêu cầu của cơ chế xác thực hiện tại."
+    },
+    {
+      "title": "17. Làm thế nào để gỡ FolkPatch?",
+      "body": "Hãy chọn cách gỡ dựa trên trạng thái hiện tại của thiết bị.\n\n• Gỡ qua trình quản lý: dùng tính năng gỡ được FolkPatch cung cấp\n• Gỡ qua Recovery: khôi phục bằng gói gỡ của phiên bản tương ứng\n• Khôi phục thủ công: flash lại boot.img gốc mà bạn đã sao lưu\n\nNếu thiết bị hiện có vấn đề liên quan đến APM hoặc KPM, hãy xử lý các mô-đun đó trước khi gỡ hoặc khôi phục."
+    },
+    {
+      "title": "18. Vì sao vẫn báo không được hỗ trợ khi nhân của tôi nằm trong 3.18–6.18?",
+      "body": "Khoảng phiên bản nhân chỉ là yêu cầu tương thích cơ bản của FolkPatch; nó không đảm bảo mọi nhân đều hoạt động với KernelPatch.\n\nCác nhân của nhà sản xuất và bên thứ ba khác nhau có thể có cấu trúc, ký hiệu, cấu hình hoặc sửa đổi khác thường, và có thể vá thất bại ngay cả trong khoảng 3.18–6.18.\n\nNếu bạn gặp vấn đề nhân không được hỗ trợ, trước tiên hãy xác nhận boot.img đến từ hệ thống hiện tại và kiểm tra các vấn đề tương thích nhân đặc biệt đã biết. Đừng đánh giá mức tương thích đầy đủ chỉ từ số phiên bản nhân."
+    },
+    {
+      "title": "19. Tôi nên cung cấp thông tin gì khi báo cáo vấn đề?",
+      "body": "Khi báo cáo vấn đề, hãy cung cấp càng nhiều thông tin sau càng tốt:\n\n• Nhà sản xuất và model chính xác của thiết bị\n• Phiên bản Android\n• Phiên bản nhân Linux\n• Phiên bản FolkPatch\n• Phiên bản KernelPatch\n• boot.img hiện tại có đến từ phiên bản hệ thống hiện tại không\n• APM và KPM đã cài\n• Thông báo lỗi hoặc nhật ký đầy đủ\n• Những gì bạn đã làm trước khi vấn đề xuất hiện\n\nNếu vấn đề liên quan đến cấp quyền root, cập nhật KernelPatch hoặc mô-đun, hãy nêu rõ bạn có mới cài, cập nhật hay gỡ bỏ thứ gì liên quan gần đây không."
+    },
+    {
+      "title": "20. Tôi cần lưu ý gì trước khi dùng FolkPatch?",
+      "body": "Root, vá boot image và cài APM/KPM đều có thể ảnh hưởng đến độ ổn định của hệ thống.\n\nTrước khi cài FolkPatch hoặc thực hiện một bản cập nhật quan trọng, hãy chuẩn bị boot.img gốc khớp với hệ thống hiện tại của bạn, và đảm bảo thiết bị có thể vào Fastboot hoặc Recovery.\n\nTrước khi cài mô-đun bên thứ ba, hãy đảm bảo nguồn đáng tin cậy và kiểm tra khả năng tương thích với phiên bản Android, nhân và phiên bản FolkPatch của bạn."
+    }
+  ]
+}

@@ -1,7 +1,6 @@
 package me.bmax.apatch.ui.screen.settings
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,18 +8,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,7 +41,11 @@ import com.ramcosta.composedestinations.generated.destinations.MultimediaSetting
 import com.ramcosta.composedestinations.generated.destinations.FunctionSettingsScreenDestination
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.SearchAppBar
+import me.bmax.apatch.ui.component.folk.FolkScaffold
 import me.bmax.apatch.util.ui.NavigationBarsSpacer
+import me.bmax.apatch.ui.component.folk.FolkStateView
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.ui.semantics.Role
 
 @Destination<RootGraph>
 @Composable
@@ -68,7 +67,7 @@ fun SettingsSearchScreen(navigator: DestinationsNavigator) {
         }
     }
 
-    Scaffold(
+    FolkScaffold(
         topBar = {
             SearchAppBar(
                 title = { Text(stringResource(R.string.settings_search_title)) },
@@ -79,7 +78,7 @@ fun SettingsSearchScreen(navigator: DestinationsNavigator) {
                 startInSearchMode = true,
             )
         },
-        containerColor = androidx.compose.ui.graphics.Color.Transparent,
+        addBottomClearance = false,
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -88,29 +87,14 @@ fun SettingsSearchScreen(navigator: DestinationsNavigator) {
         ) {
             if (filteredResults.isEmpty()) {
                 item {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 24.dp, vertical = 48.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                            modifier = Modifier.size(48.dp),
-                        )
-                        Spacer(Modifier.height(16.dp))
-                        Text(
-                            text = if (searchQuery.isBlank())
-                                stringResource(R.string.settings_search_empty_hint)
-                            else
-                                stringResource(R.string.settings_no_results),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                        )
-                    }
+                    FolkStateView(
+                        title = if (searchQuery.isBlank())
+                            stringResource(R.string.settings_search_empty_hint)
+                        else
+                            stringResource(R.string.settings_no_results),
+                        modifier = Modifier.padding(vertical = 48.dp),
+                        icon = Icons.Outlined.Search,
+                    )
                 }
             }
 
@@ -163,8 +147,8 @@ private fun SearchResultItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 24.dp, vertical = 14.dp),
+            .clickable(role = Role.Button, onClick = onClick)
+            .padding(horizontal = 24.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {

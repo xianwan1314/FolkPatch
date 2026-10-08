@@ -78,8 +78,10 @@ internal object ThemeIO {
                     backgroundDayDim = BackgroundConfig.customBackgroundDayDim,
                     backgroundNightDim = BackgroundConfig.customBackgroundNightDim,
                     isFontEnabled = FontConfig.isCustomFontEnabled,
+                    fontMode = FontConfig.fontMode.serializedName,
                     customColor = prefs.getString("custom_color", "indigo") ?: "indigo",
-                    homeLayoutStyle = prefs.getString("home_layout_style", "dashboard_ui") ?: "dashboard_ui",
+                    homeLayoutStyle = prefs.getString("home_layout_style", APApplication.HOME_LAYOUT_STYLE_DEFAULT)
+                        ?: APApplication.HOME_LAYOUT_STYLE_DEFAULT,
                     statsTopLayout = prefs.getString("stats_top_layout", "list") ?: "list",
                     nightModeEnabled = prefs.getBoolean("night_mode_enabled", true),
                     nightModeFollowSys = prefs.getBoolean("night_mode_follow_sys", false),
@@ -87,6 +89,7 @@ internal object ThemeIO {
                     colorGenerationMode = prefs.getString("color_generation_mode", "classic") ?: "classic",
                     colorStandard = prefs.getString("color_standard", "MD3_2021") ?: "MD3_2021",
                     colorStyle = prefs.getString("color_style", "TONAL_SPOT") ?: "TONAL_SPOT",
+                    colorContrast = prefs.getString("color_contrast", "STANDARD") ?: "STANDARD",
                     appLanguage = AppCompatDelegate.getApplicationLocales().toLanguageTags(),
                     isGridWorkingCardBackgroundEnabled = BackgroundConfig.isGridWorkingCardBackgroundEnabled,
                     gridWorkingCardBackgroundOpacity = BackgroundConfig.gridWorkingCardBackgroundOpacity,
@@ -151,6 +154,7 @@ internal object ThemeIO {
                     put("backgroundDayDim", config.backgroundDayDim.toDouble())
                     put("backgroundNightDim", config.backgroundNightDim.toDouble())
                     put("isFontEnabled", config.isFontEnabled)
+                    put("fontMode", config.fontMode)
                     put("customColor", config.customColor)
                     put("homeLayoutStyle", config.homeLayoutStyle)
                     put("statsTopLayout", config.statsTopLayout)
@@ -160,6 +164,7 @@ internal object ThemeIO {
                     put("colorGenerationMode", config.colorGenerationMode)
                     put("colorStandard", config.colorStandard)
                     put("colorStyle", config.colorStyle)
+                    put("colorContrast", config.colorContrast)
                     put("appLanguage", config.appLanguage)
                     
                     // Grid Working Card Background
@@ -302,8 +307,8 @@ internal object ThemeIO {
                     }
                 }
 
-                // 4. Copy Font if enabled
-                if (config.isFontEnabled) {
+                // 4. Copy Font when the theme uses a user-imported font
+                if (config.fontMode == FontMode.CUSTOM.serializedName) {
                     val fontName = FontConfig.customFontFilename
                     if (fontName != null) {
                         val fontFile = File(context.filesDir, fontName)
@@ -559,8 +564,14 @@ internal object ThemeIO {
                 val backgroundDayDim = json.optDouble("backgroundDayDim", backgroundDim.toDouble()).toFloat()
                 val backgroundNightDim = json.optDouble("backgroundNightDim", backgroundDim.toDouble()).toFloat()
                 val isFontEnabled = json.optBoolean("isFontEnabled", false)
+                val fontModeValue = if (json.has("fontMode") && !json.isNull("fontMode")) {
+                    json.optString("fontMode", null)
+                } else {
+                    null
+                }
+                val importedFontMode = FontMode.fromSerializedName(fontModeValue)
                 val customColor = json.optString("customColor", "indigo")
-                val homeLayoutStyle = json.optString("homeLayoutStyle", "sign")
+                val homeLayoutStyle = json.optString("homeLayoutStyle", APApplication.HOME_LAYOUT_STYLE_DEFAULT)
                 val statsTopLayout = json.optString("statsTopLayout", "list")
                 val nightModeEnabled = json.optBoolean("nightModeEnabled", true)
                 val nightModeFollowSys = json.optBoolean("nightModeFollowSys", true)
@@ -568,6 +579,7 @@ internal object ThemeIO {
                 val colorGenerationMode = json.optString("colorGenerationMode", "classic")
                 val colorStandard = json.optString("colorStandard", "MD3_2021")
                 val colorStyle = json.optString("colorStyle", "TONAL_SPOT")
+                val colorContrast = json.optString("colorContrast", "STANDARD")
                 val appLanguage = json.optString("appLanguage", "")
                 
                 // Grid Working Card Background
@@ -989,13 +1001,35 @@ internal object ThemeIO {
                 BottomBarIconConfig.notifyChanged()
 
                 // 4. Apply Font
-                if (isFontEnabled) {
-                     val fontFile = File(cacheDir, FONT_FILENAME)
-                     if (fontFile.exists()) {
-                         FontConfig.applyCustomFont(context, fontFile)
-                     }
-                } else {
-                    FontConfig.clearFont(context)
+                // New themes carry an explicit fontMode. Legacy themes without
+                // it fall back to their isFontEnabled flag, and a theme with no
+                // custom font at all now defaults to the bundled app font.
+                val importedFontFile = File(cacheDir, FONT_FILENAME)
+                when {
+                    importedFontMode == FontMode.SYSTEM_DEFAULT -> {
+                        FontConfig.setFontMode(context, FontMode.SYSTEM_DEFAULT)
+                    }
+
+                    importedFontMode == FontMode.APP_DEFAULT -> {
+                        FontConfig.setFontMode(context, FontMode.APP_DEFAULT)
+                    }
+
+                    importedFontMode == FontMode.CUSTOM -> {
+                        if (importedFontFile.exists()) {
+                            FontConfig.applyCustomFont(context, importedFontFile)
+                        } else {
+                            // Broken custom theme: never leave an unusable font.
+                            FontConfig.setFontMode(context, FontMode.APP_DEFAULT)
+                        }
+                    }
+
+                    else -> {
+                        if (isFontEnabled && importedFontFile.exists()) {
+                            FontConfig.applyCustomFont(context, importedFontFile)
+                        } else {
+                            FontConfig.setFontMode(context, FontMode.APP_DEFAULT)
+                        }
+                    }
                 }
                 
                 // 5. Apply Color and Home Layout Style
@@ -1024,6 +1058,7 @@ internal object ThemeIO {
                     .putString("color_generation_mode", colorGenerationMode)
                     .putString("color_standard", colorStandard)
                     .putString("color_style", colorStyle)
+                    .putString("color_contrast", colorContrast)
                     .apply()
                 
                 // 6. Refresh Theme
@@ -1064,11 +1099,12 @@ internal object ThemeIO {
                     .putBoolean("night_mode_follow_sys", true)
                     .putBoolean("use_system_color_theme", true)
                     .putString("custom_color", "indigo")
-                    .putString("home_layout_style", "dashboard_ui")
+                    .putString("home_layout_style", APApplication.HOME_LAYOUT_STYLE_DEFAULT)
                     .putString("stats_top_layout", "list")
                     .putString("color_generation_mode", "classic")
                     .putString("color_standard", "MD3_2021")
                     .putString("color_style", "TONAL_SPOT")
+                    .putString("color_contrast", "STANDARD")
                     .remove("appLanguage")
                     .apply()
 

@@ -1,0 +1,88 @@
+{
+  "items": [
+    {
+      "title": "軟體功能說明",
+      "body": "FolkPatch 是基於 APatch 的分支，使用 KernelPatch 提供核心級 Root 能力，並在此基礎上擴充管理程式、模組系統及其它功能。\n\n• 超級使用者：提供 Root 權限管理與授權控制\n• APM：Android 模組\n• KPM：核心模組\n• Magic Mount：提供模組掛載能力\n• Meta Module：允許 Meta Module 接管模組掛載\n• 模組管理：支援模組安裝、啟用、停用、解除安裝等操作\n• Shizuku：提供 Shizuku 服務支援"
+    },
+    {
+      "title": "1. 使用 FolkPatch 需要解鎖 Bootloader 嗎？",
+      "body": "需要。安裝 FolkPatch 前通常需要解鎖裝置的 Bootloader，因為 FolkPatch 需要修補並刷入裝置的 boot 映像。\n\n安裝前請確認 Bootloader 已解鎖，並事先備份與目前系統版本相符的原始 boot.img。刷寫錯誤或使用不相符的映像可能導致裝置無法正常開機。"
+    },
+    {
+      "title": "2. FolkPatch、APatch 與 KernelPatch 是什麼關係？",
+      "body": "FolkPatch 是 APatch 的分支。KernelPatch 是 FolkPatch 底層使用的核心修補元件，為核心級 Root 能力提供基礎支援。\n\n簡單來說，KernelPatch 負責底層核心修補能力，APatch 在此基礎上提供 Android Root 方案，而 FolkPatch 則基於 APatch 繼續進行功能與管理程式方面的擴充。\n\n因此，KernelPatch 並不是 FolkPatch 提供的另一種 Root 方案，也不應將 KernelPatch 與 FolkPatch 理解為兩種需要二選一的修補方式。"
+    },
+    {
+      "title": "3. 我的裝置支援 FolkPatch 嗎？",
+      "body": "FolkPatch 目前支援執行 Linux Kernel 3.18 至 6.18 的裝置，並要求裝置採用 ARM64 架構以及與 KernelPatch 相容的核心環境。\n\n核心版本位於支援範圍內並不代表裝置一定相容。部分廠商核心、第三方核心以及經過特殊修改的核心仍可能存在相容性問題。\n\n如果裝置使用非標準或高度客製化的核心，建議先確認該裝置的實際相容情況。"
+    },
+    {
+      "title": "4. FolkPatch 修補哪個分區？可以修補 init_boot 嗎？",
+      "body": "FolkPatch 目前修補的是 boot 映像。\n\n請使用與目前系統版本相符的原始 boot.img 進行修補，不要將 init_boot.img、vendor_boot.img 等其它開機映像作為 FolkPatch 的修補對象。\n\n如果裝置的開機映像結構較為特殊，請先確認裝置實際使用的 boot 分區以及對應的原始映像。"
+    },
+    {
+      "title": "5. 修補或刷入後無法開機怎麼辦？",
+      "body": "無法開機通常與 boot 映像不相符、KernelPatch 與目前核心不相容、刷寫分區錯誤或模組導致的開機異常有關。\n\n如果裝置仍可進入 Fastboot 或 Recovery，請優先還原先前備份的原始 boot.img。\n\n如果問題是在安裝或更新模組後出現，應優先檢查最近操作過的 APM 或 KPM。不要在沒有備份原始 boot 映像的情況下反覆刷寫。"
+    },
+    {
+      "title": "6. 安裝了模組卻沒有生效怎麼辦？",
+      "body": "首先確認模組已安裝並處於啟用狀態，然後依照模組自身的說明重新啟動裝置。\n\nAPM 與 KPM 的載入方式不同，部分模組還相依於特定的 Android 版本、核心版本或其它模組環境，因此安裝成功並不代表一定能夠正常運作。\n\n如果模組安裝後沒有作用，可以先重新啟動裝置；如果仍然無效，請檢查模組版本、相容性以及相關日誌。"
+    },
+    {
+      "title": "7. 安裝模組後裝置無法正常開機怎麼辦？",
+      "body": "如果安裝或更新模組後出現卡開機動畫、自動重新開機或無法進入系統等問題，請優先懷疑最近安裝或更新的模組。\n\n能夠進入系統時，可以先停用或解除安裝最近安裝的模組。無法進入系統時，則需要依照目前裝置的還原條件處理相關模組，必要時還原原始 boot.img。\n\n尤其 KPM 直接執行於核心層，相容性問題可能會直接影響系統開機。安裝來源不明的 KPM 前，請確認模組來源以及與目前核心的相容性。"
+    },
+    {
+      "title": "8. APM 與 KPM 有什麼差別？",
+      "body": "APM 與 KPM 是 FolkPatch 支援的兩種模組類型。\n\n• APM：Android 模組，用於修改或擴充 Android 系統功能\n• KPM：核心模組，用於在核心層擴充或修改系統核心功能\n\n兩者的執行層級與使用情境不同。模組作者會依模組的實際實作方式選擇 APM 或 KPM。"
+    },
+    {
+      "title": "9. 已經授予 Root 權限，應用程式仍提示沒有 Root 怎麼辦？",
+      "body": "首先進入超級使用者頁面，確認目標應用程式已取得 Root 授權，並嘗試完全結束應用程式後重新啟動。\n\n如果授權狀態正常但應用程式仍然偵測不到 Root，可能是應用程式使用了其它 Root 偵測方式，例如檢查 su 路徑、SELinux 狀態、掛載環境或其它系統特徵。\n\n部分裝置還可能存在其它 Root 方案的殘留，例如 KernelSU 或 Magisk。多個 Root 環境同時存在時可能產生衝突，建議確認系統中是否存在其它 Root 管理程式或相關殘留。"
+    },
+    {
+      "title": "10. 為什麼 Root 路徑顯示為 /system/bin/kp？",
+      "body": "如果系統中存在其它 Root 方案或相關殘留，FolkPatch 可能使用 /system/bin/kp 作為 Root 路徑，以避免與既有環境產生衝突。\n\n如果需要使用傳統的 /system/bin/su 路徑，請先確認其它 Root 方案已經解除安裝，並清理相關殘留後再重新設定。\n\n需要注意的是，修改 Root 路徑可能影響部分應用程式的 Root 偵測與相容性。"
+    },
+    {
+      "title": "11. Root 授權請求沒有出現怎麼辦？",
+      "body": "首先確認 FolkPatch 本身的 Root 狀態正常，並檢查超級使用者頁面是否能夠正常運作。\n\n如果 Root 正常但應用程式沒有彈出授權請求，可以嘗試重新啟動應用程式，並檢查該應用程式是否已被設定為拒絕或永久拒絕 Root 權限。\n\n如果問題是在安裝或更新 KPM、APM 後出現，應優先停用最近修改過的模組進行檢查。"
+    },
+    {
+      "title": "12. 為什麼升級 KernelPatch 後版本沒有變化？",
+      "body": "如果升級 KernelPatch 後重新開機仍顯示舊版本，首先檢查是否存在阻止關鍵分區寫入的 KPM。\n\n部分防變磚類 KPM 會主動攔截對 boot 等關鍵分區的寫入操作，從而導致 KernelPatch 更新失敗。升級 KernelPatch 前，可以暫時停用可能影響分區寫入的相關 KPM。\n\n同時確認目前 boot 映像與裝置目前系統版本相符，並確認新的 KernelPatch 版本與目前核心相容。"
+    },
+    {
+      "title": "13. 為什麼 Android 更新後 Root 消失了？",
+      "body": "如果裝置使用 A/B 無縫更新，系統更新通常會將新版本寫入另一個 Slot。切換到新的 Slot 後，其中的 boot 映像可能未經 FolkPatch 修補，因此 Root 會暫時失效。\n\n如果 FolkPatch 支援在目前裝置的非活動 Slot 安裝，可以在 OTA 更新完成後、重新開機進入新系統之前，將 FolkPatch 安裝到非活動 Slot。\n\n如果已經進入新的系統並失去 Root，則需要取得對應系統版本的原始 boot.img，重新修補後刷入。"
+    },
+    {
+      "title": "14. FolkPatch 4.3 及以上版本為什麼不再使用 SuperKey？",
+      "body": "FolkPatch 4.3 及以上版本已改用 APK 簽章驗證機制進行管理程式認證，不再使用舊版本的 SuperKey 認證方式。\n\n因此，如果使用目前版本的 FolkPatch，不需要依照舊教學產生或設定 SuperKey。使用舊版 KernelPatch 或舊版管理程式時，認證機制可能與目前版本不同。"
+    },
+    {
+      "title": "15. 重新安裝 FolkPatch 後為什麼出現認證失敗？",
+      "body": "FolkPatch 目前使用 APK 簽章進行管理程式認證。如果解除安裝後重新安裝管理程式，KernelPatch 可能仍保留舊管理程式的相關狀態，因此重新安裝後可能暫時無法完成認證。\n\n遇到這種情況，可以先重新啟動裝置，讓 KernelPatch 重新偵測目前的管理程式。如果問題仍然存在，請確認目前 KernelPatch 與 FolkPatch 管理程式的版本相符。"
+    },
+    {
+      "title": "16. 為什麼舊版 KernelPatch 無法認證目前的 FolkPatch？",
+      "body": "FolkPatch 目前的管理程式認證相依於 KernelPatch 的簽章驗證機制。較早版本的 KernelPatch 不包含對應的簽章驗證能力，因此無法與目前版本的 FolkPatch 正常完成認證。\n\n如果使用目前版本的 FolkPatch，請確認 KernelPatch 版本符合目前認證機制的要求。"
+    },
+    {
+      "title": "17. 如何解除安裝 FolkPatch？",
+      "body": "可以依照裝置目前的狀態選擇合適的解除安裝方式。\n\n• 管理程式解除安裝：使用 FolkPatch 提供的解除安裝功能\n• Recovery 解除安裝：使用對應版本的解除安裝包進行還原\n• 手動還原：刷回先前備份的原始 boot.img\n\n如果裝置目前存在 APM 或 KPM 導致的問題，建議先處理相關模組，再進行解除安裝或還原。"
+    },
+    {
+      "title": "18. 為什麼核心版本在 3.18–6.18 範圍內，仍然提示不支援？",
+      "body": "Kernel 版本範圍只是 FolkPatch 的基礎相容條件，並不能保證所有核心都能正常使用 KernelPatch。\n\n不同廠商與第三方核心可能存在特殊的核心結構、符號、設定或修改，即使版本號位於 3.18–6.18 範圍內，也可能無法正常修補。\n\n如果遇到核心不支援的問題，請優先確認 boot.img 是否來自目前系統，並檢查裝置是否存在已知的特殊核心相容問題。不要僅依核心版本號判斷裝置是否完全相容。"
+    },
+    {
+      "title": "19. 遇到問題回報時應該提供什麼資訊？",
+      "body": "回報問題時，請盡可能提供以下資訊：\n\n• 裝置廠商與具體型號\n• Android 版本\n• Linux Kernel 版本\n• FolkPatch 版本\n• KernelPatch 版本\n• 目前使用的 boot.img 是否來自目前系統版本\n• 已安裝的 APM 與 KPM\n• 完整的錯誤訊息或日誌\n• 問題出現前執行過的操作\n\n如果問題與 Root 授權、KernelPatch 更新或模組有關，請同時說明最近是否安裝、更新或移除過相關元件。"
+    },
+    {
+      "title": "20. 使用 FolkPatch 前需要注意什麼？",
+      "body": "Root、修補 boot 映像以及安裝 APM、KPM 都可能影響系統穩定性。\n\n在安裝 FolkPatch 或進行重要更新前，請務必準備目前系統對應的原始 boot.img，並確認裝置可以進入 Fastboot 或 Recovery 等還原環境。\n\n安裝第三方模組前，請確認模組來源可信，並檢查模組與目前 Android、核心以及 FolkPatch 版本的相容性。"
+    }
+  ]
+}

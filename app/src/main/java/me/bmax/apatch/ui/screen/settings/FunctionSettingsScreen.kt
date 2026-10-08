@@ -21,9 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -47,36 +46,26 @@ import me.bmax.apatch.ui.component.UmountConfig
 import me.bmax.apatch.ui.component.UmountConfigManager
 import me.bmax.apatch.ui.theme.BackgroundConfig
 import me.bmax.apatch.util.isHideServiceEnabled as checkHideServiceEnabled
-import me.bmax.apatch.util.installJailbreak
 import me.bmax.apatch.util.isRealKernelPatchInstalled
-import me.bmax.apatch.util.rootShellForResult
-import me.bmax.apatch.util.restartFramework
 import me.bmax.apatch.util.isUtsSpoofEnabled as checkUtsSpoofEnabled
 import me.bmax.apatch.util.setUtsSpoofEnabled
 import me.bmax.apatch.util.writeUtsSpoofConfig
-import me.bmax.apatch.util.removeUtsSpoofConfig
 import me.bmax.apatch.util.isPathHideEnabled as checkPathHideEnabled
 import me.bmax.apatch.util.isPathHideUidModeEnabled as checkPathHideUidMode
 import me.bmax.apatch.util.isPathHideFilterSystemEnabled as checkPathHideFilterSystem
-import me.bmax.apatch.util.setPathHideEnabled
 import me.bmax.apatch.util.writePathHidePaths
 import me.bmax.apatch.util.readPathHidePaths
 import me.bmax.apatch.util.normalizePathHidePaths
 import me.bmax.apatch.util.isNetIsolateEnabled as checkNetIsolateEnabled
 import me.bmax.apatch.util.readNetIsolateUids
-import me.bmax.apatch.util.setNetIsolateEnabled
-import me.bmax.apatch.util.writeNetIsolateUids
 import me.bmax.apatch.util.writePathHideUids
-import me.bmax.apatch.util.setPathHideUidMode
-import me.bmax.apatch.util.setPathHideFilterSystem
 import me.bmax.apatch.util.ui.LocalSnackbarHost
 import me.bmax.apatch.util.ui.NavigationBarsSpacer
+import me.bmax.apatch.ui.component.folk.FolkSettingsScaffold
 import androidx.compose.ui.platform.LocalContext
-import me.bmax.apatch.util.ui.showToast
 import me.bmax.apatch.util.ShizukuServiceManager
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
-import com.ramcosta.composedestinations.generated.destinations.ShizukuManagementScreenDestination
 
 @OptIn(FlowPreview::class, ExperimentalMaterial3Api::class)
 @Destination<RootGraph>
@@ -86,30 +75,27 @@ fun FunctionSettingsScreen(navigator: DestinationsNavigator, highlightKey: Strin
     val kPatchReady = state != APApplication.State.UNKNOWN_STATE
     val aPatchReady = (state == APApplication.State.ANDROIDPATCH_INSTALLING || state == APApplication.State.ANDROIDPATCH_INSTALLED || state == APApplication.State.ANDROIDPATCH_NEED_UPDATE)
 
-    var isHideServiceEnabled by rememberSaveable { mutableStateOf(false) }
-    var isKernelSpoofEnabled by rememberSaveable { mutableStateOf(false) }
-    var kernelSpoofVersion by rememberSaveable { mutableStateOf("") }
-    var kernelSpoofBuildTime by rememberSaveable { mutableStateOf("") }
-    var isUmountEnabled by rememberSaveable { mutableStateOf(false) }
-    var umountPaths by rememberSaveable { mutableStateOf("") }
-    var isNetIsolateEnabled by rememberSaveable { mutableStateOf(false) }
-    var niSelectedUids by rememberSaveable { mutableStateOf(emptySet<Int>()) }
-    var isPathHideEnabled by rememberSaveable { mutableStateOf(false) }
-    var pathHidePaths by rememberSaveable { mutableStateOf("") }
-    var isPathHideUidMode by rememberSaveable { mutableStateOf(false) }
-    var isPathHideFilterSystem by rememberSaveable { mutableStateOf(false) }
-    val showFilterSystemWarningDialog = rememberSaveable { mutableStateOf(false) }
-    var selectedUids by rememberSaveable { mutableStateOf(emptySet<Int>()) }
-    var jailbreakEnabled by rememberSaveable {
-        mutableStateOf(APApplication.sharedPreferences.getBoolean("jailbreak_enabled", false))
-    }
-    var showJailbreakSoftRebootDialog by rememberSaveable { mutableStateOf(false) }
+    val settings = rememberFunctionSettingsState()
+    var isHideServiceEnabled by settings.isHideServiceEnabled
+    var isKernelSpoofEnabled by settings.isKernelSpoofEnabled
+    var kernelSpoofVersion by settings.kernelSpoofVersion
+    var kernelSpoofBuildTime by settings.kernelSpoofBuildTime
+    var isUmountEnabled by settings.isUmountEnabled
+    var umountPaths by settings.umountPaths
+    var isNetIsolateEnabled by settings.isNetIsolateEnabled
+    var niSelectedUids by settings.niSelectedUids
+    var isPathHideEnabled by settings.isPathHideEnabled
+    var pathHidePaths by settings.pathHidePaths
+    var isPathHideUidMode by settings.isPathHideUidMode
+    var isPathHideFilterSystem by settings.isPathHideFilterSystem
+    val showFilterSystemWarningDialog = settings.showFilterSystemWarningDialog
+    var selectedUids by settings.selectedUids
+    var jailbreakEnabled by settings.jailbreakEnabled
+    var showJailbreakSoftRebootDialog by settings.showJailbreakSoftRebootDialog
 
     // Shizuku 服务开关状态
-    var isShizukuEnabled by rememberSaveable {
-        mutableStateOf(ShizukuServiceManager.isEnabled())
-    }
-    var isShizukuRunning by rememberSaveable { mutableStateOf(false) }
+    var isShizukuEnabled by settings.isShizukuEnabled
+    var isShizukuRunning by settings.isShizukuRunning
 
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -233,6 +219,13 @@ fun FunctionSettingsScreen(navigator: DestinationsNavigator, highlightKey: Strin
     val snackBarHost = LocalSnackbarHost.current
     val flat = BackgroundConfig.isCustomBackgroundEnabled || BackgroundConfig.settingsBackgroundUri != null
 
+    val actions = remember(settings, context, scope, snackBarHost) {
+        FunctionSettingsActions(context, scope, snackBarHost, settings)
+    }
+    val serviceActions = remember(settings, context, scope, snackBarHost, navigator) {
+        FunctionSettingsServiceActions(context, scope, snackBarHost, navigator, settings)
+    }
+
     // 初始化 Shizuku 状态
     LaunchedEffect(kPatchReady, aPatchReady) {
         if (kPatchReady && aPatchReady) {
@@ -242,7 +235,7 @@ fun FunctionSettingsScreen(navigator: DestinationsNavigator, highlightKey: Strin
         }
     }
 
-    // 周期轮询 Shizuku 运行状态（pingBinder 无 root 开销，失败时回退 root 检查）
+    // 周期轮询 Shizuku Binder 状态；进程存在但 Binder 未就绪时不应显示为运行中。
     LaunchedEffect(kPatchReady, aPatchReady) {
         if (!(kPatchReady && aPatchReady)) return@LaunchedEffect
         while (true) {
@@ -256,395 +249,81 @@ fun FunctionSettingsScreen(navigator: DestinationsNavigator, highlightKey: Strin
         }
     }
 
-    fun refreshShizukuState() {
-        scope.launch(Dispatchers.IO) {
-            val running = ShizukuServiceManager.isServerRunning()
-            withContext(Dispatchers.Main) {
-                isShizukuRunning = running
-            }
-        }
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.settings_category_function), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold) },
-                navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        },
-        containerColor = Color.Transparent,
-        snackbarHost = { SnackbarHost(snackBarHost) },
-    ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier.padding(paddingValues),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
+    FolkSettingsScaffold(
+        title = stringResource(R.string.settings_category_function),
+        onBack = { navigator.popBackStack() },
+        snackbarHostState = snackBarHost,
+    ) {
             item {
                 FunctionSettingsContent(
                     kPatchReady = kPatchReady,
                     aPatchReady = aPatchReady,
                     jailbreakEnabled = jailbreakEnabled,
                     jailbreakAvailable = !isRealKernelPatchInstalled(),
-                    onJailbreakChange = { enabled ->
-                        scope.launch(Dispatchers.IO) {
-                            if (enabled) {
-                                val success = installJailbreak()
-                                withContext(Dispatchers.Main) {
-                                    if (success) {
-                                        jailbreakEnabled = true
-                                        APApplication.sharedPreferences.edit()
-                                            .putBoolean("jailbreak_enabled", true)
-                                            .apply()
-                                        showToast(context, R.string.jailbreak_triggered)
-                                        showJailbreakSoftRebootDialog = true
-                                    } else {
-                                        showToast(context, R.string.settings_jailbreak_failed)
-                                    }
-                                }
-                            } else {
-                                rootShellForResult("rm -f ${APApplication.JAILBREAK_FILE}")
-                                APApplication.sharedPreferences.edit()
-                                    .putBoolean("jailbreak_enabled", false)
-                                    .apply()
-                                withContext(Dispatchers.Main) {
-                                    jailbreakEnabled = false
-                                }
-                            }
-                        }
-                    },
+                    onJailbreakChange = serviceActions::onJailbreakChange,
                     isHideServiceEnabled = isHideServiceEnabled,
-                    onHideServiceChange = { isHideServiceEnabled = it },
+                    onHideServiceChange = actions::onHideServiceChange,
                     isKernelSpoofEnabled = isKernelSpoofEnabled,
-                    onKernelSpoofChange = { enabled ->
-                        isKernelSpoofEnabled = enabled
-                        scope.launch(Dispatchers.IO) {
-                            val prefs = APApplication.sharedPreferences
-                            prefs.edit().putBoolean(APApplication.PREF_UTS_SPOOF_ENABLED, enabled).apply()
-                            if (enabled) {
-                                setUtsSpoofEnabled(true)
-                                var release = kernelSpoofVersion
-                                var buildTime = kernelSpoofBuildTime
-                                if (release.isBlank() && buildTime.isBlank()) {
-                                    val uname = Os.uname()
-                                    release = uname.release
-                                    buildTime = uname.version
-                                    kernelSpoofVersion = release
-                                    kernelSpoofBuildTime = buildTime
-                                }
-                                writeUtsSpoofConfig(release, buildTime)
-                                Natives.utsSet(release.ifBlank { null }, buildTime.ifBlank { null })
-                                withContext(Dispatchers.Main) {
-                                    snackBarHost.showSnackbar(context.getString(R.string.kernel_spoof_enabled))
-                                }
-                            } else {
-                                Natives.utsReset()
-                                setUtsSpoofEnabled(false)
-                                removeUtsSpoofConfig()
-                                withContext(Dispatchers.Main) {
-                                    snackBarHost.showSnackbar(context.getString(R.string.kernel_spoof_disabled_restored))
-                                }
-                            }
-                        }
-                    },
+                    onKernelSpoofChange = actions::onKernelSpoofChange,
                     kernelSpoofVersion = kernelSpoofVersion,
-                    onKernelSpoofVersionChange = { kernelSpoofVersion = it },
+                    onKernelSpoofVersionChange = actions::onKernelSpoofVersionChange,
                     kernelSpoofBuildTime = kernelSpoofBuildTime,
-                    onKernelSpoofBuildTimeChange = { kernelSpoofBuildTime = it },
-                    onKernelSpoofSave = {
-                        val currentEnabled = isKernelSpoofEnabled
-                        val currentVersion = kernelSpoofVersion
-                        val currentBuildTime = kernelSpoofBuildTime
-                        scope.launch(Dispatchers.IO) {
-                            val prefs = APApplication.sharedPreferences
-                            prefs.edit()
-                                .putBoolean(APApplication.PREF_UTS_SPOOF_ENABLED, currentEnabled)
-                                .putString(APApplication.PREF_UTS_SPOOF_RELEASE, currentVersion)
-                                .putString(APApplication.PREF_UTS_SPOOF_VERSION, currentBuildTime)
-                                .apply()
-
-                            if (currentEnabled) {
-                                setUtsSpoofEnabled(true)
-                                writeUtsSpoofConfig(currentVersion, currentBuildTime)
-                                val rc = Natives.utsSet(
-                                    currentVersion.ifBlank { null },
-                                    currentBuildTime.ifBlank { null }
-                                )
-                                withContext(Dispatchers.Main) {
-                                    if (rc < 0) {
-                                        snackBarHost.showSnackbar(context.getString(R.string.kernel_spoof_failed, rc))
-                                    } else {
-                                        snackBarHost.showSnackbar(context.getString(R.string.kernel_spoof_applied))
-                                    }
-                                }
-                            } else {
-                                Natives.utsReset()
-                                setUtsSpoofEnabled(false)
-                                removeUtsSpoofConfig()
-                                withContext(Dispatchers.Main) {
-                                    snackBarHost.showSnackbar(context.getString(R.string.kernel_spoof_disabled_restored))
-                                }
-                            }
-                        }
-                    },
-                    onKernelSpoofRestore = {
-                        scope.launch(Dispatchers.IO) {
-                            Natives.utsReset()
-                            val uname = Os.uname()
-                            val realRelease = uname.release
-                            val realVersion = uname.version
-                            withContext(Dispatchers.Main) {
-                                kernelSpoofVersion = realRelease
-                                kernelSpoofBuildTime = realVersion
-                            }
-                            if (isKernelSpoofEnabled) {
-                                val prefs = APApplication.sharedPreferences
-                                val savedRelease = prefs.getString(APApplication.PREF_UTS_SPOOF_RELEASE, "") ?: ""
-                                val savedVersion = prefs.getString(APApplication.PREF_UTS_SPOOF_VERSION, "") ?: ""
-                                if (savedRelease.isNotBlank() || savedVersion.isNotBlank()) {
-                                    Natives.utsSet(
-                                        savedRelease.ifBlank { null },
-                                        savedVersion.ifBlank { null }
-                                    )
-                                }
-                            }
-                        }
-                    },
+                    onKernelSpoofBuildTimeChange = actions::onKernelSpoofBuildTimeChange,
+                    onKernelSpoofSave = actions::onKernelSpoofSave,
+                    onKernelSpoofRestore = actions::onKernelSpoofRestore,
                     snackBarHost = snackBarHost,
                     isPathHideEnabled = isPathHideEnabled,
-                    onPathHideChange = { enabled ->
-                        isPathHideEnabled = enabled
-                        scope.launch(Dispatchers.IO) {
-                            setPathHideEnabled(enabled)
-                            val rc = Natives.pathHideEnable(enabled)
-                            withContext(Dispatchers.Main) {
-                                if (rc < 0) {
-                                    snackBarHost.showSnackbar(context.getString(R.string.path_hide_failed, rc.toInt()))
-                                } else {
-                                    snackBarHost.showSnackbar(
-                                        context.getString(if (enabled) R.string.path_hide_enabled else R.string.path_hide_disabled)
-                                    )
-                                }
-                            }
-                        }
-                    },
+                    onPathHideChange = actions::onPathHideChange,
                     pathHidePaths = pathHidePaths,
-                    onPathHidePathsChange = { pathHidePaths = it },
-                    onPathHideSave = {
-                        val currentPaths = normalizePathHidePaths(pathHidePaths)
-                        scope.launch(Dispatchers.IO) {
-                            // Save to config file for persistence
-                            writePathHidePaths(currentPaths)
-                            // Clear existing kernel paths and re-add
-                            Natives.pathHideClear()
-                            if (currentPaths.isNotBlank()) {
-                                currentPaths.lines()
-                                    .map { it.trim() }
-                                    .filter { it.isNotBlank() }
-                                    .forEach { path ->
-                                        Natives.pathHideAdd(path)
-                                    }
-                            }
-                            withContext(Dispatchers.Main) {
-                                snackBarHost.showSnackbar(context.getString(R.string.path_hide_applied))
-                            }
-                        }
-                    },
+                    onPathHidePathsChange = actions::onPathHidePathsChange,
+                    onPathHideSave = actions::onPathHideSave,
                     isPathHideUidMode = isPathHideUidMode,
-                    onPathHideUidModeChange = { enabled ->
-                        isPathHideUidMode = enabled
-                        scope.launch(Dispatchers.IO) {
-                            setPathHideUidMode(enabled)
-                            Natives.pathHideUidMode(enabled)
-                            withContext(Dispatchers.Main) {
-                                snackBarHost.showSnackbar(
-                                    context.getString(if (enabled) R.string.path_hide_uid_mode_enabled else R.string.path_hide_uid_mode_disabled)
-                                )
-                            }
-                        }
-                    },
+                    onPathHideUidModeChange = actions::onPathHideUidModeChange,
                     isPathHideFilterSystem = isPathHideFilterSystem,
-                    onPathHideFilterSystemChange = { enabled ->
-                        if (enabled) {
-                            showFilterSystemWarningDialog.value = true
-                        } else {
-                            isPathHideFilterSystem = false
-                            scope.launch(Dispatchers.IO) {
-                                setPathHideFilterSystem(false)
-                                Natives.pathHideFilterSystem(false)
-                                withContext(Dispatchers.Main) {
-                                    snackBarHost.showSnackbar(
-                                        context.getString(R.string.path_hide_filter_system_disabled)
-                                    )
-                                }
-                            }
-                        }
-                    },
+                    onPathHideFilterSystemChange = actions::onPathHideFilterSystemChange,
                     selectedUids = selectedUids,
-                    onUidToggle = { uid ->
-                        scope.launch(Dispatchers.IO) {
-                            val newSet = if (uid in selectedUids) {
-                                Natives.pathHideUidRemove(uid)
-                                selectedUids - uid
-                            } else {
-                                Natives.pathHideUidAdd(uid)
-                                selectedUids + uid
-                            }
-                            writePathHideUids(newSet.joinToString("\n"))
-                            withContext(Dispatchers.Main) {
-                                selectedUids = newSet
-                            }
-                        }
-                    },
+                    onUidToggle = actions::onUidToggle,
                     onUidRemoveStale = {},
                     isUmountEnabled = isUmountEnabled,
-                    onUmountEnabledChange = { enabled ->
-                        isUmountEnabled = enabled
-                        scope.launch(Dispatchers.IO) {
-                            val config = UmountConfig(enabled = enabled, paths = umountPaths)
-                            val success = UmountConfigManager.saveConfig(context, config)
-                            withContext(Dispatchers.Main) {
-                                if (success) {
-                                    showToast(context, context.getString(R.string.umount_config_save_success))
-                                } else {
-                                    showToast(context, context.getString(R.string.umount_config_save_failed))
-                                }
-                            }
-                        }
-                    },
+                    onUmountEnabledChange = actions::onUmountEnabledChange,
                     umountPaths = umountPaths,
-                    onUmountPathsChange = { umountPaths = it },
-                    onUmountSave = {
-                        val currentEnabled = isUmountEnabled
-                        val currentPaths = umountPaths
-                        scope.launch(Dispatchers.IO) {
-                            val config = UmountConfig(enabled = currentEnabled, paths = currentPaths)
-                            val success = UmountConfigManager.saveConfig(context, config)
-                            withContext(Dispatchers.Main) {
-                                if (success) {
-                                    showToast(context, context.getString(R.string.umount_config_save_success))
-                                } else {
-                                    showToast(context, context.getString(R.string.umount_config_save_failed))
-                                }
-                            }
-                        }
-                    },
+                    onUmountPathsChange = actions::onUmountPathsChange,
+                    onUmountSave = actions::onUmountSave,
                     flat = flat,
                     highlightKey = highlightKey,
                     isNetIsolateEnabled = isNetIsolateEnabled,
-                    onNetIsolateChange = { enabled ->
-                        isNetIsolateEnabled = enabled
-                        scope.launch(Dispatchers.IO) {
-                            setNetIsolateEnabled(enabled)
-                            Natives.netIsolateEnable(enabled)
-                            withContext(Dispatchers.Main) {
-                                snackBarHost.showSnackbar(
-                                    context.getString(if (enabled) R.string.netisolate_enable else R.string.netisolate_disable)
-                                )
-                            }
-                        }
-                    },
+                    onNetIsolateChange = actions::onNetIsolateChange,
                     niSelectedUids = niSelectedUids,
-                    onNiUidToggle = { uid ->
-                        scope.launch(Dispatchers.IO) {
-                            val newSet = if (uid in niSelectedUids) {
-                                Natives.netIsolateUidRemove(uid)
-                                niSelectedUids - uid
-                            } else {
-                                Natives.netIsolateUidAdd(uid)
-                                niSelectedUids + uid
-                            }
-                            writeNetIsolateUids(newSet.joinToString("\n"))
-                            withContext(Dispatchers.Main) {
-                                niSelectedUids = newSet
-                            }
-                        }
-                    },
+                    onNiUidToggle = actions::onNiUidToggle,
                     isShizukuEnabled = isShizukuEnabled,
                     isShizukuRunning = isShizukuRunning,
-                    onShizukuToggle = { enabled ->
-                        if (enabled) {
-                            scope.launch(Dispatchers.IO) {
-                                val success = ShizukuServiceManager.start(context)
-                                if (success) {
-                                    ShizukuServiceManager.setEnabled(true)
-                                }
-                                withContext(Dispatchers.Main) {
-                                    isShizukuEnabled = success
-                                    snackBarHost.showSnackbar(
-                                        context.getString(
-                                            if (success) R.string.settings_shizuku_started
-                                            else R.string.settings_shizuku_start_failed
-                                        )
-                                    )
-                                    refreshShizukuState()
-                                }
-                            }
-                        } else {
-                            scope.launch(Dispatchers.IO) {
-                                val success = ShizukuServiceManager.stop()
-                                ShizukuServiceManager.setEnabled(false)
-                                withContext(Dispatchers.Main) {
-                                    isShizukuEnabled = false
-                                    snackBarHost.showSnackbar(
-                                        context.getString(
-                                            if (success) R.string.settings_shizuku_stopped
-                                            else R.string.settings_shizuku_stop_failed
-                                        )
-                                    )
-                                    refreshShizukuState()
-                                }
-                            }
-                        }
-                    },
-                    onShizukuManage = {
-                        navigator.navigate(ShizukuManagementScreenDestination)
-                    },
+                    onShizukuToggle = serviceActions::onShizukuToggle,
+                    onShizukuManage = serviceActions::onShizukuManage,
                 )
             }
-            item { Spacer(Modifier.height(8.dp)) }
-            item { NavigationBarsSpacer() }
-        }
     }
 
     if (showFilterSystemWarningDialog.value) {
         PathHideFilterSystemWarningDialog(
             showDialog = showFilterSystemWarningDialog,
-            onConfirm = {
-                isPathHideFilterSystem = true
-                scope.launch(Dispatchers.IO) {
-                    setPathHideFilterSystem(true)
-                    Natives.pathHideFilterSystem(true)
-                    withContext(Dispatchers.Main) {
-                        snackBarHost.showSnackbar(
-                            context.getString(R.string.path_hide_filter_system_enabled)
-                        )
-                    }
-                }
-            },
+            onConfirm = actions::onConfirmFilterSystem,
         )
     }
 
     if (showJailbreakSoftRebootDialog) {
         AlertDialog(
-            onDismissRequest = { showJailbreakSoftRebootDialog = false },
+            onDismissRequest = serviceActions::onJailbreakSoftRebootDismiss,
             title = { Text(stringResource(R.string.settings_jailbreak_restart_framework)) },
             text = { Text(stringResource(R.string.settings_jailbreak_restart_framework_message)) },
             confirmButton = {
                 TextButton(
-                    onClick = {
-                        showJailbreakSoftRebootDialog = false
-                        restartFramework()
-                    },
+                    onClick = serviceActions::onJailbreakSoftRebootConfirm,
                 ) {
                     Text(stringResource(R.string.settings_jailbreak_restart_framework))
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showJailbreakSoftRebootDialog = false }) {
+                TextButton(onClick = serviceActions::onJailbreakSoftRebootDismiss) {
                     Text(stringResource(android.R.string.cancel))
                 }
             },

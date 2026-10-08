@@ -1,115 +1,112 @@
 <div align="center">
-<img src='logo.png' width='500px' alt="FolkPatch logo">
+<img src="logo.png" width="180" alt="FolkPatch logo">
 
-[![Latest Release](https://img.shields.io/github/v/release/matsuzaka-yuki/FolkPatch?label=Release&logo=github)](https://github.com/LyraVoid/FolkPatch/releases/latest)
-[![Channel](https://img.shields.io/badge/Follow-Telegram-blue.svg?logo=telegram)](https://t.me/FolkPatch)
-[![GitHub License](https://img.shields.io/github/license/matsuzaka-yuki/FolkPatch?logo=gnu)](/LICENSE)
+[![Latest Release](https://img.shields.io/github/v/release/LyraVoid/FolkPatch?label=Release&logo=github)](https://github.com/LyraVoid/FolkPatch/releases/latest)
+[![Telegram](https://img.shields.io/badge/Telegram-FolkPatch-blue?logo=telegram)](https://t.me/FolkPatch)
+[![License](https://img.shields.io/github/license/LyraVoid/FolkPatch?logo=gnu)](/LICENSE)
 
 </div>
 
-🌏 **README の言語:** [**English**](./README_EN.md) / [**中文**](./README.md) / [**日本語**](./README_JA.md)
+**言語：** [English](./README.md) / [中文](./README_CN.md) / [日本語](./README_JA.md)
 
-FolkPatch - インターフェースの最適化と拡張機能に重視した Root 管理ツール
+FolkPatch は [KernelPatch](https://github.com/LyraVoid/KernelPatch) を基盤とする Root 管理アプリケーションです。KernelPatch による Root、システムモジュール、カーネルモジュール、Lua プラグイン、Shizuku 管理、カスタマイズ可能な最新 UI をひとつにまとめています。
 
-KernelPatch をベースに構築され、安定した Root 機能とともに、まったく新しいインターフェース体験と APM / KPM / プラグインの三段階拡張体系を提供します。包括的なドキュメントですぐに始めましょう——インストール、モジュール管理、プラグイン開発、パーソナライズ設定まで、すべてが揃っています。
-
-[📚 完全なドキュメントを読む](https://fp.mysqil.com/) →
+[ドキュメントを読む](https://fp.mysqil.com/)
 
 <table>
   <tr>
-    <td><img alt="" src="docs/1.png"></td>
-    <td><img alt="" src="docs/2.png"></td>
-    <td><img alt="" src="docs/3.png"></td>
+    <td><img alt="FolkPatch ホーム画面" src="docs/1.png"></td>
+    <td><img alt="FolkPatch モジュール画面" src="docs/2.png"></td>
+    <td><img alt="FolkPatch 設定画面" src="docs/3.png"></td>
+  </tr>
   <tr>
-  <tr>
-    <td><img alt="" src="docs/4.png"></td>
-    <td><img alt="" src="docs/5.png"></td>
-    <td><img alt="" src="docs/6.png"></td>
-  <tr>
+    <td><img alt="FolkPatch 機能画面" src="docs/4.png"></td>
+    <td><img alt="FolkPatch プラグイン画面" src="docs/5.png"></td>
+    <td><img alt="FolkPatch カスタマイズ画面" src="docs/6.png"></td>
+  </tr>
 </table>
 
 ---
 
-## ✨ 紹介
+## 概要
 
-### 🎨 コア機能
-- [x] KernelPatch ベースの Root 実装
-- [x] カーネルの再コンパイルなしでカーネル関数をフック可能
+FolkPatch は以下を提供します。
 
-### 📱 前提条件
+- カーネルを再コンパイルせずに利用できる KernelPatch ベースの Root
+- 一括インストールとバックアップに対応する APM システムモジュール
+- 自動読み込みに対応する KPM カーネルモジュール
+- 軽量な APD Lua プラグイン
+- Shizuku サービス管理と起動時の統合
+- ネットワーク分離、パス非表示、カーネル偽装、マウント非表示、アンマウント制御
+- テーマ、壁紙、カスタムフォント、複数のホームレイアウト
+- 英語、中国語、日本語、その他のコミュニティ翻訳
 
-- **必須：** ARM64 アーキテクチャベースで Linux カーネルバージョン 3.18 から 6.15 の Android デバイス
+## 動作要件
 
-### 🎨 マネージャーのインターフェースとデザイン
-- [x] 全く新しい UI とインタラクションエクスペリエンスの最適化
-- [x] パーソナライズされた壁紙サポート
-- [x] 国際化サポート
-- [x] アニメーションパフォーマンスとインタラクションの滑らかさの最適化
-- [x] インターフェースの視覚的詳細と動的効果の向上
-- [x] 自動更新チェックの手動無効化をサポートし、バージョンアップグレードの主導権をユーザーに返還
+- ARM64 Android デバイス
+- Android カーネル 3.18 から 6.15
+- 対応する KernelPatch のインストール
 
-### 📦 モジュールと拡張体系
+互換性とインストール手順の詳細は[ドキュメント](https://fp.mysqil.com/)を参照してください。
 
-FolkPatch はカーネルからユーザー空間まで、あらゆるカスタマイズニーズに対応する三段階の拡張機能を提供します：
+## インターフェース
 
-- [x] **APM**: Magisk ライクなモジュールシステム、一括フラッシュとフルバックアップをサポート
-- [x] **KPM**: カーネルモジュールシステム（inline-hook と syscall-table-hook をサポート）、自動ロードをサポート
-- [x] **プラグイン（APD Lua Plugin）**: 軽量な Lua スクリプト拡張、APM と KPM の中間に位置
-- [x] 内蔵ストアから人気のある APM、KPM、プラグインをワンクリックでダウンロード可能
+- ListUI、GridUI、FocusUI、CircleUI、DashboardUI、StatsUI に対応
+- 新規インストールでは FocusUI を既定のホームレイアウトとして使用
+- システムテーマカラー、カスタムカラー、壁紙、カスタムフォント
+- ナビゲーション方式とダッシュボードカードの設定
+- 自動更新チェックの無効化
 
-### 🧩 プラグインシステム（APD Lua Plugin）
+## モジュールと拡張機能
 
-プラグインは FolkPatch 独自の軽量なユーザー空間拡張で、APM（システムレベルモジュール）と KPM（カーネルレベルモジュール）の中間に位置します。システムファイルの変更やカーネルへの注入を行わず、`apd` ライフサイクル内で Lua スクリプトを実行します。従来のモジュールと異なり、インストール後すぐに反映され再起動は不要、開発のハードルもより低くなっています。
+### APM
 
-サポート機能：
+APM は Magisk に似たシステムモジュール機能を提供し、インストール、削除、有効化、無効化、一括操作、完全バックアップに対応します。
 
-- 有効/無効スイッチ
-- クイックアクションとユーザー設定 UI
-- 定時デーモンタスク（バックグラウンドポーリング実行）
-- 永続的な実行ログ、閲覧・エクスポート・共有をサポート
+### KPM
 
-プラグインの完全なドキュメント（パッケージ形式、API、ライフサイクル、管理コマンド）はこちら:
+KPM は `inline-hook` と `syscall-table-hook` 向けのカーネルモジュール機能を提供し、自動読み込みに対応します。
 
-- 🇬🇧 English: https://fp.mysqil.com/en/modules/plugin/
-- 🇨🇳 中文: https://fp.mysqil.com/modules/plugin/
+### APD Lua プラグイン
 
-### ⚡ 技術的特徴
-- [x] [KernelPatch](https://github.com/LyraVoid/KernelPatch/) に基づいています
+APD プラグインは `apd` のライフサイクル内で Lua スクリプトを実行します。システムファイルの変更やカーネルモジュールの注入は行いません。設定、クイックアクション、バックグラウンドデーモン、永続ログに対応します。
 
-## 🚀 ダウンロードとインストール
+プラグインドキュメント：
 
-1. **ダウンロード:**
-   [リリースページ](https://github.com/LyraVoid/FolkPatch/releases/latest)から最新のインストーラーを取得
+- 英語：https://fp.mysqil.com/en/modules/plugin/
+- 中国語：https://fp.mysqil.com/modules/plugin/
 
-2. **インストール:**
-   インストーラーを Android デバイスにインストールし、アプリ内のガイドに従って完了
+## セキュリティ
 
-3. **使用開始:**
-   [完全なドキュメント](https://fp.mysqil.com/)を読んでモジュール管理やプラグイン開発などの高度な使い方をチェック
+SuperKey は通常の Root セッションより強い権限を持ちます。弱い鍵や漏洩した鍵は、デバイスが不正に操作される原因になります。強固な鍵を使用し、外部に公開しないでください。
 
-## 🙏 オープンソースクレジット
+## 翻訳
 
-このプロジェクトは以下のオープンソースプロジェクトに基づいています:
+英語と中国語を参照言語とします。翻訳の修正は対象言語のファイルのみを送信してください。新しい言語を追加する場合は、完成した翻訳ファイルを Pull Request に含めてください。
 
-- [KernelPatch](https://github.com/LyraVoid/KernelPatch/) - コアコンポーネント
-- [Magisk](https://github.com/topjohnwu/Magisk) - magiskpolicy
-- [KernelSU](https://github.com/tiann/KernelSU) - アプリ UI と Magisk ライクなモジュールサポート
-- [Sukisu-Ultra](https://github.com/SukiSU-Ultra/SukiSU-Ultra) - 一部のインターフェースデザインを参照
-- [APatch](https://github.com/bmax121/APatch) - 上流ブランチ
-- [MMRL](https://github.com/MMRLApp/MMRL) - モジュールリポジトリのデータ形式参考およびデータソース
-- [Shizuku](https://github.com/RikkaApps/Shizuku) - 組み込み Shizuku サービス
+## ダウンロードとインストール
 
-## 📄 ライセンス
+1. [リリースページ](https://github.com/LyraVoid/FolkPatch/releases/latest)から最新パッケージをダウンロードします。
+2. Android デバイスにパッケージをインストールします。
+3. アプリ内の案内に従ってセットアップし、モジュールの導入や実行時制御の有効化前に[ドキュメント](https://fp.mysqil.com/)を確認してください。
 
-- FolkPatch は [GNU General Public License v3 (GPL-3)](http://www.gnu.org/copyleft/gpl.html) ライセンスの下でオープンソースされています。変更者または配布者として、以下の基準を遵守する必要があります:
-- コードを変更した場合、またはプロジェクトに FolkPatch を統合して第三者に配布する場合、プロジェクト全体も GPLv3 ライセンスの下でオープンソースする必要があります
-- バイナリファイルを配布する場合、完全かつ読み取り可能なソースコードを積極的に提供するか、提供することを約束する必要があります
-- ソフトウェアライセンス自体に対するライセンス料の徴収を厳禁します。配布、技術サポート、カスタム開発に対して料金を請求できます
-- 配布行為は、プロジェクトに関連するすべてのユーザーにあなたの関連特許の使用権を付与することを意味します
-- 本ソフトウェアは「現状のまま」提供され、いかなる保証もありません。原作者は本ソフトウェアの使用による損失について責任を負いません
-- 上記の条項に違反すると GPLv3 ライセンスは自動的に終了します。その際、FolkPatch を配布する正当な権利を失い、原作者は著作権侵害の責任を追求する権利（侵害停止命令の申請、経済的賠償、違反プロジェクトの削除を含むがこれらに限定されない）を留保します
+## 謝辞
 
-## 💬 コミュニティとディスカッション
+- [KernelPatch](https://github.com/LyraVoid/KernelPatch)：Root 実装の基盤
+- [Magisk](https://github.com/topjohnwu/Magisk)：magiskpolicy
+- [KernelSU](https://github.com/tiann/KernelSU)：アプリ UI とモジュールシステムの参考
+- [SukiSU-Ultra](https://github.com/SukiSU-Ultra/SukiSU-Ultra)：インターフェース設計の参考
+- [APatch](https://github.com/bmax121/APatch)：上流プロジェクト
+- [MMRL](https://github.com/MMRLApp/MMRL)：モジュールリポジトリ形式の参考
+- [Shizuku](https://github.com/RikkaApps/Shizuku)：内蔵 Shizuku サービス
+- [LoliAPI](https://www.loliapi.com/docs/acg/)：壁紙図鑑のオンライン壁紙ソース
 
-### FolkPatch ディスカッションとコミュニケーション
-- Telegram チャンネル: [@FolkPatch](https://t.me/FolkPatch)
+## ライセンス
+
+FolkPatch は [GNU General Public License v3](https://www.gnu.org/licenses/gpl-3.0.html) の下で公開されています。
+
+FolkPatch を改変した場合、または他のプロジェクトへ組み込んで配布する場合、プロジェクト全体を GPLv3 で公開する必要があります。バイナリを配布する場合は、完全で読み取り可能なソースコードを提供するか、提供を約束してください。本ソフトウェアは無保証で提供され、上記に違反した場合、GPLv3 の許諾は終了します。
+
+## コミュニティ
+
+- Telegram：[**@FolkPatch**](https://t.me/FolkPatch)

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_action_search">검색</string>
+    <string name="core_action_clear">지우기</string>
+    <string name="core_action_back">뒤로</string>
+    <string name="core_action_close">닫기</string>
+    <string name="core_action_more">더보기</string>
+    <string name="core_action_refresh">새로고침</string>
+    <string name="core_action_filter">필터</string>
+    <string name="core_action_save">저장</string>
+    <string name="core_action_send">전송</string>
+    <string name="core_action_download">다운로드</string>
+    <string name="core_action_config">설정</string>
+    <string name="core_action_delete">삭제</string>
+    <string name="core_state_busy">처리 중</string>
+</resources>
