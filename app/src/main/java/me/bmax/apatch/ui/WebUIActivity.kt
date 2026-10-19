@@ -78,6 +78,15 @@ class WebUIActivity : AppCompatActivity() {
     private var isWebViewReady by mutableStateOf(false)
     private var isInsetsEnabled by mutableStateOf(false)
     private var currentInsets by mutableStateOf(Insets(0, 0, 0, 0))
+    private var suFilePathHandler: SuFilePathHandler? = null
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Release the root shell held by the webroot file handler, otherwise
+        // every opened WebUI leaks a root shell process.
+        suFilePathHandler?.close()
+        suFilePathHandler = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -294,7 +303,11 @@ class WebUIActivity : AppCompatActivity() {
                             webRoot,
                             { currentInsets },
                             { enable -> isInsetsEnabled = enable }
-                        )
+                        ).also {
+                            // A re-created WebView must not orphan the previous shell.
+                            suFilePathHandler?.close()
+                            suFilePathHandler = it
+                        }
                     )
                     .build()
 

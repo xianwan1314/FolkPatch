@@ -29,8 +29,9 @@ class WebViewInterface(
 ) {
     @JavascriptInterface
     fun exec(cmd: String): String {
-        val shell = createRootShellStrict(reason = "WebUI exec")
-        return ShellUtils.fastCmd(shell, cmd)
+        // A WebUI lives as long as the activity, so a shell per call has to be
+        // closed again: otherwise every exec() leaks one root shell process.
+        return createRootShellStrict(reason = "WebUI exec").use { ShellUtils.fastCmd(it, cmd) }
     }
 
     @JavascriptInterface
@@ -63,8 +64,9 @@ class WebViewInterface(
         processOptions(finalCommand, options)
         finalCommand.append(cmd)
 
-        val shell = createRootShellStrict(reason = "WebUI exec callback")
-        val result = shell.newJob().add(finalCommand.toString()).to(ArrayList(), ArrayList()).exec()
+        val result = createRootShellStrict(reason = "WebUI exec callback").use { shell ->
+            shell.newJob().add(finalCommand.toString()).to(ArrayList(), ArrayList()).exec()
+        }
         val stdout = result.out.joinToString(separator = "\n")
         val stderr = result.err.joinToString(separator = "\n")
 
@@ -121,7 +123,14 @@ class WebViewInterface(
             }
         }
 
-        val future = shell.newJob().add(finalCommand.toString()).to(stdout, stderr).enqueue()
+        // If enqueue() itself throws synchronously, whenComplete below is never
+        // registered, so close the shell here instead of leaking it.
+        val future = try {
+            shell.newJob().add(finalCommand.toString()).to(stdout, stderr).enqueue()
+        } catch (t: Throwable) {
+            runCatching { shell.close() }
+            throw t
+        }
         val completableFuture = CompletableFuture.supplyAsync {
             future.get()
         }
@@ -146,6 +155,9 @@ class WebViewInterface(
                     webView.loadUrl(emitErrCode)
                 }
             }
+        }.whenComplete { _, _ ->
+            // The job has finished: release the shell (and its root process).
+            runCatching { shell.close() }
         }
     }
 
