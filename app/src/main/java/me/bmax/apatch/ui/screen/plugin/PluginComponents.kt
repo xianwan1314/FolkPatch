@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.plugin
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Article
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material.icons.outlined.Delete
@@ -22,6 +23,7 @@ import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilledTonalButton
@@ -44,7 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.ExpressiveSwitch
 import me.bmax.apatch.ui.component.WallpaperAwareDropdownMenu
@@ -76,7 +78,7 @@ fun PluginCard(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(FolkDimens.Size16)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Surface(
@@ -87,10 +89,10 @@ fun PluginCard(
                     imageVector = Icons.Outlined.Extension,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                    modifier = Modifier.padding(8.dp).size(20.dp)
+                    modifier = Modifier.padding(FolkDimens.Size8).size(FolkDimens.Size20)
                 )
             }
-            Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(FolkDimens.Size12))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = plugin.name,
@@ -104,7 +106,7 @@ fun PluginCard(
                     if (plugin.author.isNotEmpty()) add(plugin.author)
                 }.joinToString(" · ")
                 if (metadata.isNotEmpty()) {
-                    Spacer(Modifier.height(2.dp))
+                    Spacer(Modifier.height(FolkDimens.Size2))
                     Text(
                         text = metadata,
                         style = MaterialTheme.typography.bodySmall,
@@ -117,7 +119,7 @@ fun PluginCard(
             Box {
                 IconButton(onClick = { showMenu = true }) {
                     Icon(
-                        imageVector = Icons.Filled.MoreVert,
+                        imageVector = Icons.Outlined.MoreVert,
                         contentDescription = stringResource(R.string.home_stats_more_options),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -152,7 +154,7 @@ fun PluginCard(
         }
 
         if (plugin.description.isNotEmpty()) {
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(FolkDimens.Size12))
             Text(
                 text = pluginDescription(plugin),
                 style = MaterialTheme.typography.bodyMedium,
@@ -163,8 +165,8 @@ fun PluginCard(
         }
 
         if (plugin.hasAction || plugin.quickAction != null || plugin.config.isNotEmpty()) {
-            Spacer(Modifier.height(16.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Spacer(Modifier.height(FolkDimens.Size16))
+            Row(horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size8)) {
                 if (plugin.quickAction != null) {
                     // Prominent one-tap quick action button.
                     FilledTonalButton(
@@ -175,9 +177,9 @@ fun PluginCard(
                         Icon(
                             imageVector = Icons.Outlined.PlayArrow,
                             contentDescription = null,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(FolkDimens.Size16)
                         )
-                        Spacer(Modifier.width(6.dp))
+                        Spacer(Modifier.width(FolkDimens.Size6))
                         Text(
                             text = quickActionLabel(plugin.quickAction),
                             maxLines = 1,
@@ -193,9 +195,9 @@ fun PluginCard(
                         Icon(
                             imageVector = Icons.Outlined.PlayArrow,
                             contentDescription = null,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(FolkDimens.Size16)
                         )
-                        Spacer(Modifier.width(6.dp))
+                        Spacer(Modifier.width(FolkDimens.Size6))
                         Text(stringResource(R.string.plugin_action))
                     }
                 }
@@ -208,9 +210,9 @@ fun PluginCard(
                         Icon(
                             imageVector = Icons.Outlined.Settings,
                             contentDescription = null,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(FolkDimens.Size16)
                         )
-                        Spacer(Modifier.width(6.dp))
+                        Spacer(Modifier.width(FolkDimens.Size6))
                         Text(stringResource(R.string.plugin_config))
                     }
                 }
@@ -287,20 +289,20 @@ fun PluginConfigDialog(
         mutableStateMapOf<String, String>().apply { putAll(initial) }
     }
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = onDismiss,
     ) {
-        Column(modifier = Modifier.padding(24.dp)) {
+        Column(modifier = Modifier.padding(FolkDimens.Size24)) {
             Text(
                 text = stringResource(R.string.plugin_config_title, plugin.name),
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = FolkDimens.Size16)
             )
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(FolkDimens.Size12),
             ) {
                 plugin.config.forEach { field ->
                     when (field.type) {
@@ -329,7 +331,7 @@ fun PluginConfigDialog(
                             var expanded by remember(field.key) { mutableStateOf(false) }
                             val current = values[field.key] ?: field.default
                             Text(text = configFieldLabel(field), style = MaterialTheme.typography.bodyLarge)
-                            Spacer(Modifier.height(4.dp))
+                            Spacer(Modifier.height(FolkDimens.Size4))
                             ExposedDropdownMenuBox(
                                 expanded = expanded,
                                 onExpandedChange = { expanded = it },
@@ -338,7 +340,9 @@ fun PluginConfigDialog(
                                     value = current,
                                     onValueChange = {},
                                     readOnly = true,
-                                    modifier = Modifier.fillMaxWidth().menuAnchor(),
+                                    modifier = Modifier.fillMaxWidth().menuAnchor(
+                                        ExposedDropdownMenuAnchorType.PrimaryNotEditable,
+                                    ),
                                     singleLine = true,
                                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                                 )
@@ -360,7 +364,7 @@ fun PluginConfigDialog(
                         }
                         else -> {
                             Text(text = configFieldLabel(field), style = MaterialTheme.typography.bodyLarge)
-                            Spacer(Modifier.height(4.dp))
+                            Spacer(Modifier.height(FolkDimens.Size4))
                             androidx.compose.material3.OutlinedTextField(
                                 value = values[field.key] ?: field.default,
                                 onValueChange = { values[field.key] = it },
@@ -381,13 +385,13 @@ fun PluginConfigDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 24.dp),
+                    .padding(top = FolkDimens.Size24),
                 horizontalArrangement = Arrangement.End,
             ) {
                 TextButton(onClick = onDismiss) {
                     Text(stringResource(android.R.string.cancel))
                 }
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(FolkDimens.Size8))
                 TextButton(onClick = { onConfirm(values.toMap()) }) {
                     Text(stringResource(android.R.string.ok))
                 }
@@ -403,14 +407,14 @@ fun PluginLogDialog(
     output: String,
     onDismiss: () -> Unit,
 ) {
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = onDismiss,
     ) {
-        Column(modifier = Modifier.padding(24.dp)) {
+        Column(modifier = Modifier.padding(FolkDimens.Size24)) {
             Text(
                 text = stringResource(R.string.plugin_log_title),
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = FolkDimens.Size16)
             )
             Column(
                 modifier = Modifier
@@ -427,7 +431,7 @@ fun PluginLogDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 24.dp),
+                    .padding(top = FolkDimens.Size24),
                 horizontalArrangement = Arrangement.End,
             ) {
                 TextButton(onClick = onDismiss) {

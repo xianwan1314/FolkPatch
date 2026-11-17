@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.misc
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import android.content.Intent
 import android.content.ActivityNotFoundException
 import android.net.Uri
@@ -9,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,12 +26,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -41,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
@@ -66,7 +64,6 @@ import com.ramcosta.composedestinations.generated.destinations.GeneralSettingsSc
 import com.ramcosta.composedestinations.generated.destinations.ModuleSettingsScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.MultimediaSettingsScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.SecuritySettingsScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.SettingsSearchScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
@@ -74,14 +71,22 @@ import kotlinx.coroutines.withContext
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.BuildConfig
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.folk.FolkNavigationPreference
-import me.bmax.apatch.ui.component.folk.FolkSettingsGroup
+import me.bmax.apatch.ui.component.SegmentedNavigationItem
+import me.bmax.apatch.ui.component.folk.FolkScaffold
+import me.bmax.apatch.ui.component.SegmentedColumn
 import me.bmax.apatch.ui.component.folk.folkGroupColor
 import me.bmax.apatch.ui.component.folk.folkPressScale
+import me.bmax.apatch.ui.component.folk.navOrigin
 import me.bmax.apatch.ui.component.rememberLoadingDialog
 import me.bmax.apatch.ui.component.rememberSystemCropLauncher
+import me.bmax.apatch.ui.component.SearchAppBar
 import me.bmax.apatch.ui.screen.home.getDeviceInfo
-import me.bmax.apatch.ui.screen.settings.general.CleanStorageDialog
+import me.bmax.apatch.ui.screen.settings.ResolvedEntry
+import me.bmax.apatch.ui.screen.settings.SettingCategory
+import me.bmax.apatch.ui.screen.settings.SettingsRegistry
+import me.bmax.apatch.ui.screen.settings.SettingsSearchResults
+import me.bmax.apatch.ui.screen.settings.SettingsSearchShortcut
+import me.bmax.apatch.ui.screen.settings.SettingsSearchShortcuts
 import me.bmax.apatch.util.ui.showToast
 import me.bmax.apatch.util.BiometricUtils
 import me.bmax.apatch.util.SafeUriResolver
@@ -93,9 +98,6 @@ import com.ramcosta.composedestinations.generated.destinations.PluginScreenDesti
 import com.ramcosta.composedestinations.generated.destinations.FaqScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.WallpaperGalleryScreenDestination
 import androidx.compose.ui.semantics.Role
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.widthIn
-import me.bmax.apatch.ui.component.folk.FolkSettingsDimens
 import me.bmax.apatch.ui.theme.tokens.FolkShape
 
 private const val FEEDBACK_URL = "https://github.com/LyraVoid/FolkPatch/issues/new/choose"
@@ -123,13 +125,28 @@ private suspend fun persistProfileAvatar(context: android.content.Context, uri: 
     }
 
 private data class SecondaryEntry(
+    val category: SettingCategory,
     val icon: ImageVector,
     val label: String,
-    val iconSize: Dp = 24.dp,
+    val iconSize: Dp = FolkDimens.Size24,
     val onClick: () -> Unit,
 )
 
-@Destination<RootGraph>
+private fun openSettingEntry(navigator: DestinationsNavigator, entry: ResolvedEntry) {
+    val key = entry.entry.key
+    when (entry.entry.category) {
+        SettingCategory.GENERAL -> navigator.navigate(GeneralSettingsScreenDestination(key))
+        SettingCategory.APPEARANCE -> navigator.navigate(AppearanceSettingsScreenDestination(key))
+        SettingCategory.BEHAVIOR -> navigator.navigate(BehaviorSettingsScreenDestination(key))
+        SettingCategory.SECURITY -> navigator.navigate(SecuritySettingsScreenDestination(key))
+        SettingCategory.BACKUP -> navigator.navigate(BackupSettingsScreenDestination(key))
+        SettingCategory.MODULE -> navigator.navigate(ModuleSettingsScreenDestination(key))
+        SettingCategory.MULTIMEDIA -> navigator.navigate(MultimediaSettingsScreenDestination(key))
+        SettingCategory.FUNCTION -> navigator.navigate(FunctionSettingsScreenDestination(key))
+    }
+}
+
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun SettingScreen(navigator: DestinationsNavigator) {
@@ -142,6 +159,10 @@ fun SettingScreen(navigator: DestinationsNavigator) {
     val scope = rememberCoroutineScope()
     val loadingDialog = rememberLoadingDialog()
     val canAuthenticate = remember { BiometricUtils.isBiometricAvailable(context) }
+    var searchText by rememberSaveable { mutableStateOf("") }
+    val resolvedEntries = remember(context.resources) {
+        SettingsRegistry.resolveAll(context.resources)
+    }
 
     // Local-only personalisation. Nothing here needs an account: the avatar,
     // nickname and signature are stored in shared preferences and the picked
@@ -190,7 +211,6 @@ fun SettingScreen(navigator: DestinationsNavigator) {
         showDevDialog = false
     }
 
-    val cleanStorageDialogState = remember { mutableStateOf(false) }
     val disclaimerDialogState = remember { mutableStateOf(false) }
 
     // The icon grid holds our secondary entries - the settings categories. The
@@ -199,6 +219,7 @@ fun SettingScreen(navigator: DestinationsNavigator) {
     val secondaryEntries = buildList {
         add(
             SecondaryEntry(
+                category = SettingCategory.GENERAL,
                 icon = Icons.Outlined.Settings,
                 label = stringResource(R.string.settings_category_general),
                 onClick = { navigator.navigate(GeneralSettingsScreenDestination(null)) },
@@ -206,6 +227,7 @@ fun SettingScreen(navigator: DestinationsNavigator) {
         )
         add(
             SecondaryEntry(
+                category = SettingCategory.APPEARANCE,
                 icon = Icons.Outlined.Brush,
                 label = stringResource(R.string.settings_category_appearance),
                 onClick = { navigator.navigate(AppearanceSettingsScreenDestination(null)) },
@@ -213,6 +235,7 @@ fun SettingScreen(navigator: DestinationsNavigator) {
         )
         add(
             SecondaryEntry(
+                category = SettingCategory.BEHAVIOR,
                 icon = Icons.Outlined.TouchApp,
                 label = stringResource(R.string.settings_category_behavior),
                 onClick = { navigator.navigate(BehaviorSettingsScreenDestination(null)) },
@@ -220,6 +243,7 @@ fun SettingScreen(navigator: DestinationsNavigator) {
         )
         add(
             SecondaryEntry(
+                category = SettingCategory.FUNCTION,
                 icon = Icons.Outlined.Handyman,
                 label = stringResource(R.string.settings_category_function),
                 onClick = { navigator.navigate(FunctionSettingsScreenDestination(null)) },
@@ -228,6 +252,7 @@ fun SettingScreen(navigator: DestinationsNavigator) {
         if (canAuthenticate) {
             add(
                 SecondaryEntry(
+                    category = SettingCategory.SECURITY,
                     icon = Icons.Outlined.Lock,
                     label = stringResource(R.string.settings_category_security),
                     onClick = { navigator.navigate(SecuritySettingsScreenDestination(null)) },
@@ -237,6 +262,7 @@ fun SettingScreen(navigator: DestinationsNavigator) {
         if (aPatchReady) {
             add(
                 SecondaryEntry(
+                    category = SettingCategory.BACKUP,
                     icon = Icons.Outlined.CloudUpload,
                     label = stringResource(R.string.settings_category_backup),
                     onClick = { navigator.navigate(BackupSettingsScreenDestination(null)) },
@@ -244,6 +270,7 @@ fun SettingScreen(navigator: DestinationsNavigator) {
             )
             add(
                 SecondaryEntry(
+                    category = SettingCategory.MODULE,
                     icon = Icons.Outlined.Extension,
                     label = stringResource(R.string.settings_category_module),
                     onClick = { navigator.navigate(ModuleSettingsScreenDestination(null)) },
@@ -252,6 +279,7 @@ fun SettingScreen(navigator: DestinationsNavigator) {
         }
         add(
             SecondaryEntry(
+                category = SettingCategory.MULTIMEDIA,
                 icon = Icons.Outlined.LibraryMusic,
                 label = stringResource(R.string.settings_category_multimedia),
                 onClick = { navigator.navigate(MultimediaSettingsScreenDestination(null)) },
@@ -259,144 +287,157 @@ fun SettingScreen(navigator: DestinationsNavigator) {
         )
     }
 
-    Scaffold(
+    val searchShortcuts = secondaryEntries.map { entry ->
+        SettingsSearchShortcut(
+            label = entry.label,
+            icon = entry.icon,
+            onOpen = entry.onClick,
+        )
+    }
+    val visibleCategories = secondaryEntries.mapTo(mutableSetOf()) { it.category }
+
+    FolkScaffold(
         topBar = {
-            TopAppBar(
+            SearchAppBar(
                 title = {
                     Text(
                         text = stringResource(R.string.settings),
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Medium,
+                        fontWeight = FontWeight.SemiBold,
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    scrolledContainerColor = Color.Transparent,
-                ),
+                searchText = searchText,
+                onSearchTextChange = { searchText = it },
+                searchPlaceholder = stringResource(R.string.settings_search_title),
                 actions = {
-                    IconButton(onClick = dropUnlessResumed { navigator.navigate(SettingsSearchScreenDestination) }) {
-                        Icon(Icons.Outlined.Search, contentDescription = stringResource(R.string.settings_search_title))
-                    }
-                    IconButton(onClick = dropUnlessResumed { navigator.navigate(PluginScreenDestination) }) {
+                    IconButton(
+                        onClick = dropUnlessResumed { navigator.navigate(PluginScreenDestination) },
+                        modifier = Modifier.navOrigin(captureBitmap = true),
+                    ) {
                         Icon(Icons.Outlined.Extension, contentDescription = stringResource(R.string.plugin_title))
                     }
                     IconButton(onClick = { showDevDialog = true }) {
                         Icon(Icons.Outlined.Info, contentDescription = stringResource(R.string.about))
                     }
-                }
+                },
+                defaultContent = { bottomPadding, closeSearch ->
+                    SettingsSearchShortcuts(
+                        shortcuts = searchShortcuts,
+                        onOpen = { shortcut ->
+                            shortcut.onOpen()
+                            closeSearch()
+                        },
+                        contentPadding = PaddingValues(bottom = bottomPadding),
+                    )
+                },
+                searchContent = { bottomPadding, closeSearch ->
+                    SettingsSearchResults(
+                        query = searchText,
+                        entries = resolvedEntries,
+                        categories = visibleCategories,
+                        onSelect = { entry ->
+                            openSettingEntry(navigator, entry)
+                            closeSearch()
+                        },
+                        contentPadding = PaddingValues(bottom = bottomPadding),
+                    )
+                },
             )
         },
-        containerColor = Color.Transparent,
+        addBottomClearance = false,
     ) { paddingValues ->
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.TopCenter,
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .widthIn(max = FolkSettingsDimens.ContentMaxWidth)
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                item(key = "identity_header") {
-                    ProfileHeader(
-                        nickname = profileNickname.ifBlank { "FolkPatch" },
-                        signature = profileSignature,
-                        deviceName = getDeviceInfo().trim(),
-                        avatarUri = profileAvatar,
-                        avatarOpacity = profileAvatarOpacity,
-                        onAvatarClick = { showProfileEditor = true },
-                    )
-                }
+            item(key = "identity_header") {
+                ProfileHeader(
+                    nickname = profileNickname.ifBlank { "FolkPatch" },
+                    signature = profileSignature,
+                    deviceName = getDeviceInfo().trim(),
+                    avatarUri = profileAvatar,
+                    avatarOpacity = profileAvatarOpacity,
+                    onAvatarClick = { showProfileEditor = true },
+                )
+            }
 
-                item(key = "secondary_entries") {
-                    Spacer(Modifier.height(20.dp))
-                    SettingsIconGrid(entries = secondaryEntries)
-                }
+            item(key = "secondary_entries") {
+                Spacer(Modifier.height(FolkDimens.Size20))
+                SettingsIconGrid(entries = secondaryEntries)
+            }
 
-                item(key = "utility_rows") {
-                    Spacer(Modifier.height(16.dp))
-                    FolkSettingsGroup(shape = FolkShape.Corner12) {
-                        item(key = "utility_wallpaper") {
-                            FolkNavigationPreference(
-                                icon = Icons.Outlined.Wallpaper,
-                                title = stringResource(R.string.settings_wallpaper_gallery),
-                                onClick = { navigator.navigate(WallpaperGalleryScreenDestination) },
-                            )
-                        }
-                        item(key = "utility_faq") {
-                            FolkNavigationPreference(
-                                icon = Icons.Outlined.Quiz,
-                                title = stringResource(R.string.settings_faq),
-                                onClick = { navigator.navigate(FaqScreenDestination) },
-                            )
-                        }
-                        item(key = "utility_feedback") {
-                            FolkNavigationPreference(
-                                icon = Icons.Outlined.BugReport,
-                                title = stringResource(R.string.settings_bug_feedback),
-                                onClick = { uriHandler.openUri(FEEDBACK_URL) },
-                            )
-                        }
-                        item(key = "utility_clean_storage") {
-                            FolkNavigationPreference(
-                                icon = Icons.Outlined.CleaningServices,
-                                title = stringResource(R.string.settings_clear_cache),
-                                onClick = { cleanStorageDialogState.value = true },
-                            )
-                        }
-                        item(key = "utility_disclaimer") {
-                            FolkNavigationPreference(
-                                icon = Icons.Outlined.Policy,
-                                title = stringResource(R.string.settings_disclaimer),
-                                onClick = { disclaimerDialogState.value = true },
-                            )
-                        }
-                        item(key = "utility_send_log") {
-                            FolkNavigationPreference(
-                                icon = Icons.Outlined.Description,
-                                title = stringResource(R.string.send_log),
-                                onClick = {
-                                    scope.launch {
-                                        val bugreport = loadingDialog.withLoading { getBugreportFile(context) }
-                                        val uri = FileProvider.getUriForFile(
-                                            context,
-                                            "${BuildConfig.APPLICATION_ID}.fileprovider",
-                                            bugreport,
-                                        )
-                                        val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                                            putExtra(Intent.EXTRA_STREAM, uri)
-                                            type = "application/gzip"
-                                            clipData = android.content.ClipData.newRawUri(null, uri)
-                                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                        }
-                                        context.startActivity(
-                                            Intent.createChooser(shareIntent, context.getString(R.string.send_log))
-                                        )
+            item(key = "utility_rows") {
+                Spacer(Modifier.height(FolkDimens.Size16))
+                SegmentedColumn(shape = FolkShape.Corner12) {
+                    item(key = "utility_wallpaper") {
+                        SegmentedNavigationItem(
+                            icon = Icons.Outlined.Wallpaper,
+                            title = stringResource(R.string.settings_wallpaper_gallery),
+                            onClick = { navigator.navigate(WallpaperGalleryScreenDestination) },
+                        )
+                    }
+                    item(key = "utility_faq") {
+                        SegmentedNavigationItem(
+                            icon = Icons.Outlined.Quiz,
+                            title = stringResource(R.string.settings_faq),
+                            onClick = { navigator.navigate(FaqScreenDestination) },
+                        )
+                    }
+                    item(key = "utility_feedback") {
+                        SegmentedNavigationItem(
+                            icon = Icons.Outlined.BugReport,
+                            title = stringResource(R.string.settings_bug_feedback),
+                            onClick = { uriHandler.openUri(FEEDBACK_URL) },
+                        )
+                    }
+                    item(key = "utility_disclaimer") {
+                        SegmentedNavigationItem(
+                            icon = Icons.Outlined.Policy,
+                            title = stringResource(R.string.settings_disclaimer),
+                            onClick = { disclaimerDialogState.value = true },
+                        )
+                    }
+                    item(key = "utility_send_log") {
+                        SegmentedNavigationItem(
+                            icon = Icons.Outlined.Description,
+                            title = stringResource(R.string.send_log),
+                            onClick = {
+                                scope.launch {
+                                    val bugreport = loadingDialog.withLoading { getBugreportFile(context) }
+                                    val uri = FileProvider.getUriForFile(
+                                        context,
+                                        "${BuildConfig.APPLICATION_ID}.fileprovider",
+                                        bugreport,
+                                    )
+                                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                        putExtra(Intent.EXTRA_STREAM, uri)
+                                        type = "application/gzip"
+                                        clipData = android.content.ClipData.newRawUri(null, uri)
+                                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                     }
-                                },
-                            )
-                        }
-                        item(key = "utility_about") {
-                            FolkNavigationPreference(
-                                icon = Icons.Outlined.Info,
-                                title = stringResource(R.string.about),
-                                onClick = { navigator.navigate(AboutScreenDestination) },
-                            )
-                        }
+                                    context.startActivity(
+                                        Intent.createChooser(shareIntent, context.getString(R.string.send_log))
+                                    )
+                                }
+                            },
+                        )
+                    }
+                    item(key = "utility_about") {
+                        SegmentedNavigationItem(
+                            icon = Icons.Outlined.Info,
+                            title = stringResource(R.string.about),
+                            onClick = { navigator.navigate(AboutScreenDestination) },
+                        )
                     }
                 }
+            }
 
-                item(key = "settings_bottom_spacer") {
-                    Spacer(Modifier.height(16.dp))
-                    NavigationBarsSpacer()
-                }
+            item(key = "settings_bottom_spacer") {
+                Spacer(Modifier.height(FolkDimens.Size16))
+                NavigationBarsSpacer()
             }
         }
-    }
-
-    if (cleanStorageDialogState.value) {
-        CleanStorageDialog(cleanStorageDialogState, R.string.settings_clear_cache)
     }
 
     if (disclaimerDialogState.value) {
@@ -525,12 +566,12 @@ private fun SettingsIconGrid(entries: List<SecondaryEntry>) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = FolkDimens.Size16),
         shape = FolkShape.Corner12,
         color = folkGroupColor(),
-        tonalElevation = 0.dp,
+        tonalElevation = FolkDimens.Size0,
     ) {
-        Column(modifier = Modifier.padding(vertical = 8.dp)) {
+        Column(modifier = Modifier.padding(vertical = FolkDimens.Size8)) {
             entries.chunked(4).forEach { row ->
                 Row(modifier = Modifier.fillMaxWidth()) {
                     row.forEach { entry ->
@@ -558,6 +599,11 @@ private fun GridEntry(
     Column(
         modifier = modifier
             .clip(FolkShape.Corner12)
+            .navOrigin(
+                cornerRadius = FolkDimens.Size12,
+                color = folkGroupColor(),
+                interactionSource = interactionSource,
+            )
             .folkPressScale(interactionSource)
             .clickable(role = Role.Button, 
                 interactionSource = interactionSource,
@@ -567,7 +613,7 @@ private fun GridEntry(
                     entry.onClick()
                 },
             )
-            .padding(vertical = 8.dp, horizontal = 4.dp),
+            .padding(vertical = FolkDimens.Size8, horizontal = FolkDimens.Size4),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
@@ -576,7 +622,7 @@ private fun GridEntry(
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(entry.iconSize),
         )
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(FolkDimens.Size10))
         Text(
             text = entry.label,
             style = MaterialTheme.typography.bodyMedium,

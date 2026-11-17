@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.settings.appearance
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -20,7 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.ExpressiveCard
+import me.bmax.apatch.ui.component.TonalCard
 import me.bmax.apatch.ui.theme.BackgroundConfig
 import me.bmax.apatch.util.BottomBarIconConfig
 import me.bmax.apatch.util.ui.FloatingBarConfig
@@ -29,22 +30,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
 import me.bmax.apatch.ui.component.folk.FolkSettingsDimens
-import me.bmax.apatch.ui.component.folk.FolkSliderPreference
-import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
-import me.bmax.apatch.ui.component.folk.FolkValuePreference
+import me.bmax.apatch.ui.component.SegmentedSliderItem
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
+import me.bmax.apatch.ui.component.SegmentedValueItem
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import android.content.Context
 import android.content.SharedPreferences
 import kotlinx.coroutines.CoroutineScope
-import me.bmax.apatch.ui.component.folk.FolkSettingsGroupScope
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
-import me.bmax.apatch.ui.component.folk.FolkSelectableRow
+import me.bmax.apatch.ui.component.SegmentedColumnScope
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
+import me.bmax.apatch.ui.component.SegmentedSelectableItem
 
-fun FolkSettingsGroupScope.appearanceNavItems(
+fun SegmentedColumnScope.appearanceNavItems(
     kPatchReady: Boolean,
     isFloatingNav: Boolean,
     flat: Boolean,
@@ -70,21 +70,21 @@ fun FolkSettingsGroupScope.appearanceNavItems(
                 targetValue = if (expanded) 180f else 0f,
                 label = "ArrowRotation",
             )
-            ExpressiveCard(flat = flat, onClick = { expanded = !expanded }) {
+            TonalCard(flat = flat, onClick = { expanded = !expanded }) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
                             start = FolkSettingsDimens.ItemHorizontalPadding,
                             end = FolkSettingsDimens.ItemEndPadding,
-                            top = 16.dp,
-                            bottom = 16.dp,
+                            top = FolkDimens.Size16,
+                            bottom = FolkDimens.Size16,
                         ),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(imageVector = Icons.Filled.Navigation, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
-                    Spacer(Modifier.width(16.dp))
+                    Icon(imageVector = Icons.Outlined.Navigation, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(FolkDimens.Size24))
+                    Spacer(Modifier.width(FolkDimens.Size16))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = stringResource(id = R.string.settings_nav_layout_title),
@@ -98,7 +98,7 @@ fun FolkSettingsGroupScope.appearanceNavItems(
                         )
                     }
                     Icon(
-                        imageVector = Icons.Filled.KeyboardArrowDown,
+                        imageVector = Icons.Outlined.KeyboardArrowDown,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                         modifier = Modifier
@@ -112,8 +112,8 @@ fun FolkSettingsGroupScope.appearanceNavItems(
                 enter = fadeIn(MaterialTheme.motionScheme.defaultEffectsSpec()) + expandVertically(MaterialTheme.motionScheme.defaultSpatialSpec()),
                 exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut(MaterialTheme.motionScheme.fastEffectsSpec())
             ) {
-                Column(modifier = Modifier.padding(start = 16.dp, top = 8.dp)) {
-                    me.bmax.apatch.ui.component.CheckboxItem(
+                Column(modifier = Modifier.padding(start = FolkDimens.Size16, top = FolkDimens.Size8)) {
+                    me.bmax.apatch.ui.component.SegmentedCheckboxItem(
                         icon = null,
                         title = stringResource(id = R.string.settings_show_apm),
                         summary = null,
@@ -123,7 +123,7 @@ fun FolkSettingsGroupScope.appearanceNavItems(
                             prefs.edit().putBoolean("show_nav_apm", it).apply()
                         },
                     )
-                    me.bmax.apatch.ui.component.CheckboxItem(
+                    me.bmax.apatch.ui.component.SegmentedCheckboxItem(
                         icon = null,
                         title = stringResource(id = R.string.settings_show_kpm),
                         summary = null,
@@ -133,7 +133,7 @@ fun FolkSettingsGroupScope.appearanceNavItems(
                             prefs.edit().putBoolean("show_nav_kpm", it).apply()
                         },
                     )
-                    me.bmax.apatch.ui.component.CheckboxItem(
+                    me.bmax.apatch.ui.component.SegmentedCheckboxItem(
                         icon = null,
                         title = stringResource(id = R.string.settings_show_superuser),
                         summary = null,
@@ -149,7 +149,7 @@ fun FolkSettingsGroupScope.appearanceNavItems(
     }
 
     item(key = "appearance_nav_scheme") {
-        FolkValuePreference(
+        SegmentedValueItem(
         icon = Icons.Outlined.Menu,
         title = stringResource(id = R.string.settings_nav_scheme),
         summary = navSchemeLabel,
@@ -168,7 +168,7 @@ fun FolkSettingsGroupScope.appearanceNavItems(
                 prefs.registerOnSharedPreferenceChangeListener(listener)
                 onDispose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
             }
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.ViewStream,
                 title = stringResource(R.string.settings_floating_bar_style),
                 summary = stringResource(if (style == FloatingBarConfig.STYLE_DRAWER) R.string.settings_bottom_bar_drawer
@@ -176,14 +176,14 @@ fun FolkSettingsGroupScope.appearanceNavItems(
                 onClick = { showStyleDialog = true },
             )
             if (showStyleDialog) {
-                FolkAlertDialog(onDismissRequest = { showStyleDialog = false }) {
-                    Column(Modifier.padding(24.dp)) {
+                ExpressiveDialog(onDismissRequest = { showStyleDialog = false }) {
+                    Column(Modifier.padding(FolkDimens.Size24)) {
                         Text(stringResource(R.string.settings_floating_bar_style),
                             style = MaterialTheme.typography.headlineSmall,
-                            modifier = Modifier.padding(bottom = 16.dp))
+                            modifier = Modifier.padding(bottom = FolkDimens.Size16))
                         listOf(FloatingBarConfig.STYLE_STANDARD to R.string.settings_bottom_bar_standard,
                             FloatingBarConfig.STYLE_DRAWER to R.string.settings_bottom_bar_drawer).forEach { (value, title) ->
-                            FolkSelectableRow(
+                            SegmentedSelectableItem(
                                 title = stringResource(title),
                                 selected = style == value,
                                 onClick = {
@@ -197,7 +197,7 @@ fun FolkSettingsGroupScope.appearanceNavItems(
             }
         }
         item(key = "appearance_navbar_glass") {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.AutoAwesome,
                 title = stringResource(id = R.string.settings_navbar_glass_effect),
                 summary = stringResource(id = R.string.settings_navbar_glass_effect_summary),
@@ -211,7 +211,7 @@ fun FolkSettingsGroupScope.appearanceNavItems(
 
         if (BackgroundConfig.isNavBarGlassEnabled) {
             item(key = "appearance_navbar_glass_blur") {
-                FolkSliderPreference(
+                SegmentedSliderItem(
                     title = stringResource(id = R.string.settings_navbar_glass_blur_strength),
                     value = BackgroundConfig.navBarGlassBlurStrength,
                     onValueChange = { BackgroundConfig.setNavBarGlassBlurStrengthValue(it) },
@@ -220,7 +220,7 @@ fun FolkSettingsGroupScope.appearanceNavItems(
             }
 
             item(key = "appearance_navbar_glass_transparency") {
-                FolkSliderPreference(
+                SegmentedSliderItem(
                     title = stringResource(id = R.string.settings_navbar_glass_transparency),
                     value = BackgroundConfig.navBarGlassTransparency,
                     onValueChange = { BackgroundConfig.setNavBarGlassTransparencyValue(it) },
@@ -229,7 +229,7 @@ fun FolkSettingsGroupScope.appearanceNavItems(
             }
 
             item(key = "appearance_navbar_glass_highlight") {
-                FolkSliderPreference(
+                SegmentedSliderItem(
                     title = stringResource(id = R.string.settings_navbar_glass_highlight_strength),
                     value = BackgroundConfig.navBarGlassHighlightStrength,
                     onValueChange = { BackgroundConfig.setNavBarGlassHighlightStrengthValue(it) },
@@ -238,7 +238,7 @@ fun FolkSettingsGroupScope.appearanceNavItems(
             }
 
             item(key = "appearance_navbar_glass_specular") {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.LensBlur,
                     title = stringResource(id = R.string.settings_navbar_glass_specular),
                     summary = stringResource(id = R.string.settings_navbar_glass_specular_summary),
@@ -251,7 +251,7 @@ fun FolkSettingsGroupScope.appearanceNavItems(
             }
 
             item(key = "appearance_navbar_glass_glow") {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.Grain,
                     title = stringResource(id = R.string.settings_navbar_glass_inner_glow),
                     summary = stringResource(id = R.string.settings_navbar_glass_inner_glow_summary),
@@ -264,7 +264,7 @@ fun FolkSettingsGroupScope.appearanceNavItems(
             }
 
             item(key = "appearance_navbar_glass_border") {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.BorderStyle,
                     title = stringResource(id = R.string.settings_navbar_glass_border),
                     summary = stringResource(id = R.string.settings_navbar_glass_border_summary),
@@ -281,7 +281,7 @@ fun FolkSettingsGroupScope.appearanceNavItems(
         // 仅非毛玻璃模式显示（毛玻璃已有独立的外观控制）
         if (!BackgroundConfig.isNavBarGlassEnabled) {
             item(key = "appearance_compact_rounded_bar") {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.RoundedCorner,
                     title = stringResource(id = R.string.settings_compact_rounded_bar),
                     summary = stringResource(id = R.string.settings_compact_rounded_bar_summary),
@@ -295,7 +295,7 @@ fun FolkSettingsGroupScope.appearanceNavItems(
         }
 
         item(key = "appearance_floating_auto_hide") {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.VisibilityOff,
                 title = stringResource(id = R.string.settings_floating_auto_hide),
                 summary = stringResource(id = R.string.settings_floating_auto_hide_summary),
@@ -308,7 +308,7 @@ fun FolkSettingsGroupScope.appearanceNavItems(
         }
 
         item(key = "appearance_floating_swipe_hide") {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.Swipe,
                 title = stringResource(id = R.string.settings_floating_swipe_hide),
                 summary = stringResource(id = R.string.settings_floating_swipe_hide_summary),

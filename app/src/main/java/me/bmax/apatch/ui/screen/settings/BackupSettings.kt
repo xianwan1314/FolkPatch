@@ -1,5 +1,8 @@
 package me.bmax.apatch.ui.screen.settings
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
+import me.bmax.apatch.ui.component.folk.folkInsetColor
+import me.bmax.apatch.ui.component.folk.folkOverlayColor
 import android.content.Intent
 import me.bmax.apatch.util.ui.showToast
 import androidx.core.content.FileProvider
@@ -9,11 +12,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cloud
-import androidx.compose.material.icons.filled.FolderOpen
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Save
-import androidx.compose.material.icons.filled.RestartAlt
+import androidx.compose.material.icons.outlined.Cloud
+import androidx.compose.material.icons.outlined.FolderOpen
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Save
+import androidx.compose.material.icons.outlined.RestartAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,12 +30,11 @@ import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.launch
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.ExpressiveCard
-import me.bmax.apatch.ui.component.folk.FolkButtonDefaults
-import me.bmax.apatch.ui.component.folk.FolkNavigationPreference
-import me.bmax.apatch.ui.component.folk.FolkSettingsGroup
-import me.bmax.apatch.ui.component.folk.FolkSettingsSection
-import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
+import me.bmax.apatch.ui.component.TonalCard
+import me.bmax.apatch.ui.component.SegmentedNavigationItem
+import me.bmax.apatch.ui.component.SegmentedColumn
+import me.bmax.apatch.ui.component.SegmentedSection
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
 import me.bmax.apatch.ui.theme.BackupConfig
 import me.bmax.apatch.util.BackupLogManager
 import me.bmax.apatch.util.WebDavUtils
@@ -54,10 +56,10 @@ fun BackupSettingsContent(
 
     val showWebDavDialog = remember { mutableStateOf(false) }
 
-    FolkSettingsSection(title = stringResource(R.string.settings_section_backup_local)) {
-        FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+    SegmentedSection(title = stringResource(R.string.settings_section_backup_local)) {
+        SegmentedColumn(flat = flat, highlightKey = highlightKey) {
             item(key = "backup_local") {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.Save,
                     title = stringResource(id = R.string.settings_enable_local_backup),
                     summary = stringResource(id = R.string.settings_enable_local_backup_summary),
@@ -71,7 +73,7 @@ fun BackupSettingsContent(
 
             item(key = "backup_boot") {
                 var autoBackupBoot by remember { mutableStateOf(prefs.getBoolean("auto_backup_boot", false)) }
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.RestartAlt,
                     title = stringResource(id = R.string.settings_auto_backup_boot),
                     summary = stringResource(id = R.string.settings_auto_backup_boot_summary),
@@ -84,7 +86,7 @@ fun BackupSettingsContent(
             }
 
             item(key = "backup_open_dir", visible = autoBackupModule) {
-                FolkNavigationPreference(
+                SegmentedNavigationItem(
                     icon = Icons.Outlined.FolderOpen,
                     title = stringResource(id = R.string.settings_open_backup_dir),
                     onClick = {
@@ -121,10 +123,10 @@ fun BackupSettingsContent(
         }
     }
 
-    FolkSettingsSection(title = stringResource(R.string.settings_section_backup_cloud)) {
-        FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+    SegmentedSection(title = stringResource(R.string.settings_section_backup_cloud)) {
+        SegmentedColumn(flat = flat, highlightKey = highlightKey) {
             item(key = "backup_cloud") {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.Cloud,
                     title = stringResource(id = R.string.settings_enable_cloud_backup),
                     summary = stringResource(id = R.string.settings_enable_cloud_backup_summary),
@@ -137,7 +139,7 @@ fun BackupSettingsContent(
             }
 
             item(key = "backup_webdav", visible = BackupConfig.isBackupEnabled) {
-                FolkNavigationPreference(
+                SegmentedNavigationItem(
                     icon = Icons.Outlined.Settings,
                     title = stringResource(id = R.string.settings_configure_webdav),
                     onClick = { showWebDavDialog.value = true },
@@ -173,24 +175,24 @@ fun WebDavConfigDialog(showDialog: MutableState<Boolean>) {
     ) {
         Surface(
             modifier = Modifier
-                .width(400.dp)
+                .width(FolkDimens.Size400)
                 .wrapContentHeight(),
             shape = MaterialTheme.shapes.large,
             tonalElevation = AlertDialogDefaults.TonalElevation,
-            color = MaterialTheme.colorScheme.surface.copy(alpha = 1f)
+            color = folkOverlayColor()
         ) {
-            Column(modifier = Modifier.padding(24.dp)) {
+            Column(modifier = Modifier.padding(FolkDimens.Size24)) {
                 Text(
                     text = stringResource(R.string.webdav_config_title),
                     style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = FolkDimens.Size16)
                 )
 
                 OutlinedTextField(
                     value = url,
                     onValueChange = { url = it },
                     label = { Text(stringResource(R.string.webdav_url)) },
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = FolkDimens.Size8),
                     singleLine = true
                 )
 
@@ -198,7 +200,7 @@ fun WebDavConfigDialog(showDialog: MutableState<Boolean>) {
                     value = username,
                     onValueChange = { username = it },
                     label = { Text(stringResource(R.string.webdav_username)) },
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = FolkDimens.Size8),
                     singleLine = true
                 )
 
@@ -206,7 +208,7 @@ fun WebDavConfigDialog(showDialog: MutableState<Boolean>) {
                     value = password,
                     onValueChange = { password = it },
                     label = { Text(stringResource(R.string.webdav_password)) },
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = FolkDimens.Size8),
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation()
                 )
@@ -215,7 +217,7 @@ fun WebDavConfigDialog(showDialog: MutableState<Boolean>) {
                     value = path,
                     onValueChange = { path = it },
                     label = { Text(stringResource(R.string.webdav_path_label)) },
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = FolkDimens.Size16),
                     singleLine = true
                 )
 
@@ -245,7 +247,7 @@ fun WebDavConfigDialog(showDialog: MutableState<Boolean>) {
                             }
                         },
                         enabled = !isTesting,
-                        colors = FolkButtonDefaults.textColors()
+                        colors = ButtonDefaults.textButtonColors()
                     ) {
                         Text(stringResource(R.string.test))
                     }
@@ -289,29 +291,29 @@ fun BackupLogDialog(showDialog: MutableState<Boolean>, onDismiss: () -> Unit) {
     ) {
         Surface(
             modifier = Modifier
-                .width(350.dp)
-                .height(500.dp),
+                .width(FolkDimens.Size350)
+                .height(FolkDimens.Size500),
             shape = MaterialTheme.shapes.large,
             tonalElevation = AlertDialogDefaults.TonalElevation,
-            color = MaterialTheme.colorScheme.surface.copy(alpha = 1f)
+            color = folkOverlayColor()
         ) {
-            Column(modifier = Modifier.padding(24.dp)) {
+            Column(modifier = Modifier.padding(FolkDimens.Size24)) {
                 Text(
                     text = stringResource(R.string.webdav_backup_logs_title),
                     style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = FolkDimens.Size16)
                 )
 
                 Surface(
                     modifier = Modifier.weight(1f).fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant
+                    shape = RoundedCornerShape(FolkDimens.Size8),
+                    color = folkInsetColor()
                 ) {
                     val scrollState = rememberScrollState()
                     Text(
                         text = logs.ifEmpty { stringResource(R.string.webdav_no_logs) },
                         modifier = Modifier
-                            .padding(8.dp)
+                            .padding(FolkDimens.Size8)
                             .verticalScroll(scrollState),
                         style = MaterialTheme.typography.bodySmall,
                         fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace
@@ -319,7 +321,7 @@ fun BackupLogDialog(showDialog: MutableState<Boolean>, onDismiss: () -> Unit) {
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(top = FolkDimens.Size16),
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = {

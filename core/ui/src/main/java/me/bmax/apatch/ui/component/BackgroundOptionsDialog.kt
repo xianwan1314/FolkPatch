@@ -3,9 +3,10 @@ package me.bmax.apatch.ui.component
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Image
-import androidx.compose.material.icons.filled.Restore
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material.icons.outlined.Restore
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
@@ -33,8 +34,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
-import me.bmax.apatch.ui.component.folk.FolkButtonDefaults
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
 import me.bmax.apatch.ui.theme.tokens.FolkShape
 
 /**
@@ -96,7 +96,7 @@ fun BackgroundOptionsDialog(
                 surfaceContainer = scheme.surfaceContainer.copy(alpha = 1f),
             )
         ) {
-            FolkAlertDialog(
+            ExpressiveDialog(
                 onDismissRequest = onDismiss,
                 width = 320.dp,
                 shape = FolkShape.Corner20,
@@ -131,7 +131,7 @@ fun BackgroundOptionsDialog(
                                     shape = FolkShape.Corner16,
                                 ) {
                                     Icon(
-                                        Icons.Default.Image,
+                                        Icons.Outlined.Image,
                                         contentDescription = null,
                                         modifier = Modifier.size(20.dp)
                                     )
@@ -152,7 +152,7 @@ fun BackgroundOptionsDialog(
                                             .height(52.dp),
                                         shape = FolkShape.Corner16,
                                     ) {
-                                        Icon(Icons.Default.Restore, contentDescription = null, modifier = Modifier.size(20.dp))
+                                        Icon(Icons.Outlined.Restore, contentDescription = null, modifier = Modifier.size(20.dp))
                                         Text(text = restoreLabel, modifier = Modifier.padding(start = 8.dp))
                                     }
                                 }
@@ -169,7 +169,7 @@ fun BackgroundOptionsDialog(
                                         shape = FolkShape.Corner16,
                                     ) {
                                         Icon(
-                                            Icons.Default.Delete,
+                                            Icons.Outlined.Delete,
                                             contentDescription = null,
                                             modifier = Modifier.size(20.dp),
                                             tint = MaterialTheme.colorScheme.error
@@ -287,7 +287,7 @@ fun BackgroundOptionsDialog(
                                         onResetModuleInfo()
                                     },
                                     enabled = hasChanges || hasSavedCustomInfo,
-                                    colors = FolkButtonDefaults.textColors(),
+                                    colors = ButtonDefaults.textButtonColors(),
                                 ) {
                                     Text(resetLabel)
                                 }
@@ -298,7 +298,7 @@ fun BackgroundOptionsDialog(
                                         onSaveModuleInfo(ModuleInfoData(name, version, author, description))
                                     },
                                     enabled = hasNonBlank && hasChanges,
-                                    colors = FolkButtonDefaults.textColors(),
+                                    colors = ButtonDefaults.textButtonColors(),
                                 ) {
                                     Text(saveLabel)
                                 }

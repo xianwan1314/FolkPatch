@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.module
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import me.bmax.apatch.util.ui.showToast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -55,12 +58,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import me.bmax.apatch.ui.navigation.fabNavBottomClearance
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ErrorOutline
-import androidx.compose.material3.*
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import me.bmax.apatch.ui.component.folk.FolkStateView
 import me.bmax.apatch.ui.component.folk.FolkStateTone
 import androidx.compose.material.icons.outlined.Extension
@@ -79,6 +76,7 @@ fun KPModuleList(
     viewModel: KPModuleViewModel,
     moduleList: List<KPModel.KPMInfo>,
     modifier: Modifier = Modifier,
+    scrollConnection: NestedScrollConnection? = null,
     state: LazyListState,
     showMoreModuleInfo: Boolean,
     foldSystemModule: Boolean,
@@ -174,18 +172,26 @@ fun KPModuleList(
 
         if (isWideScreen) {
             TwoColumnGrid(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(
+                        if (scrollConnection != null) {
+                            Modifier.nestedScroll(scrollConnection)
+                        } else {
+                            Modifier
+                        }
+                    ),
                 items = if (moduleList.isEmpty()) emptyList() else moduleList,
                 key = { module -> module.name },
-                verticalSpacing = 16.dp,
-                horizontalSpacing = 16.dp,
+                verticalSpacing = FolkDimens.Size16,
+                horizontalSpacing = FolkDimens.Size16,
                 contentPadding = run {
                     val bottomClearance = fabNavBottomClearance()
                     remember(bottomClearance) {
                         PaddingValues(
-                            start = 16.dp,
-                            top = 16.dp,
-                            end = 16.dp,
+                            start = FolkDimens.Size16,
+                            top = FolkDimens.Size16,
+                            end = FolkDimens.Size16,
                             bottom = bottomClearance
                         )
                     }
@@ -195,7 +201,7 @@ fun KPModuleList(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .defaultMinSize(minHeight = 300.dp),
+                                .defaultMinSize(minHeight = FolkDimens.Size300),
                             contentAlignment = Alignment.Center
                         ) {
                             if (viewModel.errorMessage != null && !viewModel.isRefreshing) {
@@ -261,15 +267,23 @@ fun KPModuleList(
             )
         } else {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(
+                        if (scrollConnection != null) {
+                            Modifier.nestedScroll(scrollConnection)
+                        } else {
+                            Modifier
+                        }
+                    ),
                 state = state,
                 contentPadding = run {
                     val bottomClearance = fabNavBottomClearance()
                     remember(bottomClearance) {
                         PaddingValues(
-                            start = 0.dp,
-                            top = 16.dp,
-                            end = 0.dp,
+                            start = FolkDimens.Size0,
+                            top = FolkDimens.Size16,
+                            end = FolkDimens.Size0,
                             bottom = bottomClearance
                         )
                     }
@@ -292,17 +306,17 @@ fun KPModuleList(
                                         imageVector = Icons.Outlined.ErrorOutline,
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.error,
-                                        modifier = Modifier.size(48.dp)
+                                        modifier = Modifier.size(FolkDimens.Size48)
                                     )
-                                    Spacer(Modifier.height(12.dp))
+                                    Spacer(Modifier.height(FolkDimens.Size12))
                                     Text(
                                         text = viewModel.errorMessage ?: stringResource(R.string.kpm_load_failed),
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         textAlign = TextAlign.Center,
-                                        modifier = Modifier.padding(horizontal = 16.dp)
+                                        modifier = Modifier.padding(horizontal = FolkDimens.Size16)
                                     )
-                                    Spacer(Modifier.height(12.dp))
+                                    Spacer(Modifier.height(FolkDimens.Size12))
                                     Button(onClick = { viewModel.fetchModuleList() }) {
                                         Text(stringResource(R.string.retry))
                                     }
@@ -329,7 +343,7 @@ fun KPModuleList(
 
                     else -> {
                         if (splicedCardGroup) {
-                            item { Spacer(Modifier.height(8.dp)) }
+                            item { Spacer(Modifier.height(FolkDimens.Size8)) }
                             splicedLazyColumnGroup(
                                 items = moduleList,
                                 key = { _, module -> module.name },
@@ -373,11 +387,11 @@ fun KPModuleList(
                                     isEmbedded = if (showKpmStatusBadge) viewModel.embeddedKpmNames?.let { module.name.trim() in it } else null
                                 )
                             }
-                            item { Spacer(Modifier.height(8.dp)) } // bottom clearance handled by contentPadding
+                            item { Spacer(Modifier.height(FolkDimens.Size8)) } // bottom clearance handled by contentPadding
                         } else {
-                            item { Spacer(Modifier.height(8.dp)) }
+                            item { Spacer(Modifier.height(FolkDimens.Size8)) }
                             itemsIndexed(moduleList, key = { _, module -> module.name }) { _, module ->
-                                Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                                Box(modifier = Modifier.padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size8)) {
                                 val scope = rememberCoroutineScope()
                                 KPModuleItem(
                                     module,
@@ -417,7 +431,7 @@ fun KPModuleList(
                                 )
                                 }
                             }
-                            item { Spacer(Modifier.height(8.dp)) } // bottom clearance handled by contentPadding
+                            item { Spacer(Modifier.height(FolkDimens.Size8)) } // bottom clearance handled by contentPadding
                         }
                     }
                 }

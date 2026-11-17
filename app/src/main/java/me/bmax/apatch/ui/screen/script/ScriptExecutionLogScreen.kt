@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.script
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import android.os.Environment
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,8 +11,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.automirrored.outlined.Send
+import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +44,7 @@ import me.bmax.apatch.R
 import me.bmax.apatch.apApp
 import me.bmax.apatch.data.ScriptInfo
 import me.bmax.apatch.ui.component.folk.FolkScaffold
+import me.bmax.apatch.ui.component.folk.FolkTitleStyle
 import me.bmax.apatch.util.getSafeDownloadsDir
 import me.bmax.apatch.util.ui.AnsiUtils
 import me.bmax.apatch.util.ui.LocalSnackbarHost
@@ -53,7 +55,7 @@ import java.util.Date
 import java.util.Locale
 import me.bmax.apatch.core.ui.R as CoreR
 
-@Destination<RootGraph>
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 @Composable
 fun ScriptExecutionLogScreen(
     navigator: DestinationsNavigator,
@@ -158,6 +160,7 @@ fun ScriptExecutionLogScreen(
 
     FolkScaffold(
         title = stringResource(R.string.script_library_output),
+        titleStyle = FolkTitleStyle.Flexible,
         onBack = { navigator.popBackStack() },
         actions = {
             IconButton(
@@ -179,7 +182,7 @@ fun ScriptExecutionLogScreen(
                 }
             ) {
                 Icon(
-                    imageVector = Icons.Default.Save,
+                    imageVector = Icons.Outlined.Save,
                     contentDescription = stringResource(R.string.script_library_save_log)
                 )
             }
@@ -190,7 +193,7 @@ fun ScriptExecutionLogScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 30.dp),
+                    .padding(start = FolkDimens.Size8, end = FolkDimens.Size8, top = FolkDimens.Size8, bottom = FolkDimens.Size30),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 OutlinedTextField(
@@ -217,7 +220,7 @@ fun ScriptExecutionLogScreen(
                         }
                     }
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.Send, contentDescription = stringResource(CoreR.string.core_action_send))
+                    Icon(Icons.AutoMirrored.Outlined.Send, contentDescription = stringResource(CoreR.string.core_action_send))
                 }
             }
         }
@@ -231,7 +234,7 @@ fun ScriptExecutionLogScreen(
             itemsIndexed(logLines, key = { index, _ -> index }) { _, line ->
                 Text(
                     text = line,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                    modifier = Modifier.padding(horizontal = FolkDimens.Size8, vertical = FolkDimens.Size2),
                     fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     fontFamily = FontFamily.Monospace,
                     lineHeight = MaterialTheme.typography.bodySmall.lineHeight,

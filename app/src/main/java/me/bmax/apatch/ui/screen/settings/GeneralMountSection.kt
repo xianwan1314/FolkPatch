@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.settings
 
+import androidx.compose.material.icons.automirrored.outlined.FeaturedPlayList
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -12,10 +13,10 @@ import kotlinx.coroutines.launch
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.Natives
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.folk.FolkNavigationPreference
-import me.bmax.apatch.ui.component.folk.FolkSettingsGroup
-import me.bmax.apatch.ui.component.folk.FolkSettingsSection
-import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
+import me.bmax.apatch.ui.component.SegmentedNavigationItem
+import me.bmax.apatch.ui.component.SegmentedColumn
+import me.bmax.apatch.ui.component.SegmentedSection
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
 import me.bmax.apatch.util.getKernelVersionCode
 import me.bmax.apatch.util.isGkiKernel
 import me.bmax.apatch.util.rootShellForResult
@@ -35,11 +36,11 @@ fun GeneralMountSection(
     val prefs = APApplication.sharedPreferences
     val scope = rememberCoroutineScope()
 
-    FolkSettingsSection(title = stringResource(R.string.settings_section_general_mount)) {
-     FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+    SegmentedSection(title = stringResource(R.string.settings_section_general_mount)) {
+     SegmentedColumn(flat = flat, highlightKey = highlightKey) {
 
         item(key = "general_magic_mount", visible = true) {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.FolderSpecial,
                 title = magicMountTitle,
                 summary = magicMountSummary,
@@ -53,8 +54,8 @@ fun GeneralMountSection(
 
         item(key = "general_sucompat", visible = true) {
             var sucompatEnabled by remember { mutableStateOf(prefs.getBoolean("sucompat_enabled", false)) }
-            FolkSwitchPreference(
-                icon = Icons.Outlined.FeaturedPlayList,
+            SegmentedSwitchItem(
+                icon = Icons.AutoMirrored.Outlined.FeaturedPlayList,
                 title = stringResource(id = R.string.settings_sucompat),
                 summary = stringResource(id = R.string.settings_sucompat_summary),
                 checked = sucompatEnabled,
@@ -101,7 +102,7 @@ fun GeneralMountSection(
                 }
             }
 
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.Security,
                 title = stringResource(id = R.string.settings_selinux_hide),
                 summary = stringResource(id = R.string.settings_selinux_hide_summary),
@@ -132,7 +133,7 @@ fun GeneralMountSection(
             }
         }
         item(key = "general_reset_su_path", visible = true) {
-            FolkNavigationPreference(
+            SegmentedNavigationItem(
                 icon = Icons.Outlined.LinkOff,
                 title = resetSuPathTitle,
                 onClick = { showResetSuPathDialog.value = true },

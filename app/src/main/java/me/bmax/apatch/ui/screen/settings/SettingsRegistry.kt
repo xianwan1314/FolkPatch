@@ -42,9 +42,6 @@ object SettingsRegistry {
             add(SettingEntry("general_auto_update", R.string.settings_auto_update_check, R.string.settings_auto_update_check_summary, SettingCategory.GENERAL))
             add(SettingEntry("general_block_kp_update", R.string.settings_block_kernelpatch_update, R.string.settings_block_kernelpatch_update_summary, SettingCategory.GENERAL))
             add(SettingEntry("general_block_ap_update", R.string.settings_block_androidpatch_update, R.string.settings_block_androidpatch_update_summary, SettingCategory.GENERAL))
-            add(SettingEntry("general_folkx_engine", R.string.settings_folkx_engine_title, R.string.settings_folkx_engine_summary, SettingCategory.GENERAL))
-            add(SettingEntry("general_folkx_animation_type", R.string.settings_folkx_animation_type, category = SettingCategory.GENERAL))
-            add(SettingEntry("general_folkx_animation_speed", R.string.settings_folkx_animation_speed, category = SettingCategory.GENERAL))
             add(SettingEntry("general_predictive_back", R.string.settings_predictive_back, R.string.settings_predictive_back_summary, SettingCategory.GENERAL))
             add(SettingEntry("general_new_app_profile", R.string.settings_new_app_profile_mode, category = SettingCategory.GENERAL))
             add(SettingEntry("general_app_list_scheme", R.string.settings_app_list_loading_scheme, category = SettingCategory.GENERAL))
@@ -129,7 +126,6 @@ object SettingsRegistry {
             // === Module ===
             add(SettingEntry("module_disable_update", R.string.settings_disable_module_update_check, R.string.settings_disable_module_update_check_summary, SettingCategory.MODULE))
             add(SettingEntry("module_more_info", R.string.settings_show_more_module_info, R.string.settings_show_more_module_info_summary, SettingCategory.MODULE))
-            add(SettingEntry("module_sort_opt", R.string.settings_module_sort_optimization, R.string.settings_module_sort_optimization_summary, SettingCategory.MODULE))
             add(SettingEntry("module_fold_system", R.string.settings_fold_system_module, R.string.settings_fold_system_module_summary, SettingCategory.MODULE))
             add(SettingEntry("module_batch_install", R.string.apm_batch_install_full_process, R.string.apm_batch_install_full_process_summary, SettingCategory.MODULE))
             add(SettingEntry("module_simple_list", R.string.settings_simple_list_bottom_bar, R.string.settings_simple_list_bottom_bar_summary, SettingCategory.MODULE))

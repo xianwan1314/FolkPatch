@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledTonalIconButton
@@ -21,9 +21,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import me.bmax.apatch.ui.theme.tokens.FolkTheme
+import me.bmax.apatch.ui.component.folk.LocalWallpaperSupportingColor
+import me.bmax.apatch.ui.component.folk.folkInsetColor
+import me.bmax.apatch.ui.theme.tokens.LocalFolkWallpaperTokens
 
 @Composable
 fun OnlineModuleCard(
@@ -37,8 +42,12 @@ fun OnlineModuleCard(
     onDownload: () -> Unit,
     onClick: (() -> Unit)? = null,
 ) {
+    val wallpaper = LocalFolkWallpaperTokens.current
     if (onClick != null) {
-        Surface(onClick = onClick) {
+        Surface(
+            onClick = onClick,
+            color = if (wallpaper != null) Color.Transparent else FolkTheme.palette.groupedSurface,
+        ) {
             OnlineModuleCardContent(
                 name = name,
                 version = version,
@@ -75,11 +84,13 @@ private fun OnlineModuleCardContent(
     downloadContentDescription: String,
     onDownload: () -> Unit,
 ) {
+    val wallpaper = LocalFolkWallpaperTokens.current
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            containerColor = wallpaper?.group?.fill ?: FolkTheme.palette.groupedSurface,
+            contentColor = wallpaper?.group?.contentColor ?: MaterialTheme.colorScheme.onSurface,
         ),
     ) {
         Column(
@@ -102,7 +113,7 @@ private fun OnlineModuleCardContent(
                         )
                         ModuleLabel(
                             text = "$versionLabel $version",
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                            containerColor = folkInsetColor(),
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         capabilityLabel?.let {
@@ -132,7 +143,7 @@ private fun OnlineModuleCardContent(
                     modifier = Modifier.size(48.dp),
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Download,
+                        imageVector = Icons.Outlined.Download,
                         contentDescription = downloadContentDescription,
                     )
                 }
@@ -141,7 +152,8 @@ private fun OnlineModuleCardContent(
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = LocalWallpaperSupportingColor.current
+                    ?: MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis,
             )

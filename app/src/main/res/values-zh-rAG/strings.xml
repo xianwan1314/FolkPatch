@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_layout_variant">布局变体喵</string>
+    <string name="settings_layout_variant_summary">用超大 M3E 顶栏和能折叠的行内搜索栏，或者照旧用紧凑顶栏喵</string>
+    <string name="settings_layout_variant_traditional">传统喵</string>
+    <string name="settings_layout_variant_m3e">M3E</string>
+    <string name="apm_search_hint">搜索系统模块喵</string>
+    <string name="kpm_search_hint">搜内核模块喵</string>
+    <string name="su_search_hint">搜索应用喵</string>
     <string name="launcher_icon_style_anime">动漫喵</string>
     <string name="launcher_icon_style_geometry">几何喵</string>
     <string name="launcher_icon_style_apatch">APatch</string>
@@ -106,15 +113,6 @@
     <string name="settings_grid_working_card_hide_mode">把工作模式藏起来喵</string>
     <string name="settings_grid_working_card_hide_mode_summary">把工作卡片上那个“Full”或者“Half”藏起来嘛喵</string>
 
-    <string name="settings_folkx_engine_title">FolkX动画引擎喵</string>
-    <string name="settings_folkx_engine_summary">切页面的时候用那个弹簧动画哒，不要嫌卡哦喵</string>
-    <string name="settings_folkx_animation_type">动画类型喵</string>
-    <string name="settings_folkx_animation_speed">动画速度喵</string>
-    <string name="settings_folkx_animation_linear">直直地动喵</string>
-    <string name="settings_folkx_animation_spatial">空间感地动喵</string>
-    <string name="settings_folkx_animation_fade">变来变去喵</string>
-    <string name="settings_folkx_animation_vertical">上下滑滑喵</string>
-    <string name="settings_folkx_animation_diagonal">斜着滑滑喵</string>
 
     <string name="about_source_code"><![CDATA[<p>去 %1$s 看看人家的源码喵<p/>加人家的 %2$s 频道哦喵<p/>还要加人家的 %3$s 群呢喵]]></string>
     <string name="send_log">发送日志喵！</string>
@@ -294,7 +292,6 @@
     <string name="su_multi_select_confirm_grant">授予 ROOT 给 %d 个应用喵？</string>
     <string name="su_multi_select_confirm_revoke">撤销 %d 个应用的 ROOT 权限喵？</string>
     <string name="su_multi_select_confirm_exclude">排除 %d 个应用喵？</string>
-    <string name="su_multi_select_enter">多选喵</string>
 
     <string name="apm">系统模块</string>
     <string name="apm_not_installed">系统补丁没装喵！</string>
@@ -356,6 +353,24 @@
     <string name="settings_apm_install_confirm_summary">装模块前弹个确认框问问你喵！</string>
     <string name="settings_show_more_module_info">显示模块详情喵</string>
     <string name="settings_show_more_module_info_summary">模块列表里显示ID和大小喵！</string>
+    <string name="module_sort">排序方式喵</string>
+    <string name="module_sort_priority">排序优先级喵</string>
+    <string name="module_sort_group_metamodule">元模块喵</string>
+    <string name="module_sort_group_metamodule_summary">别的模块都挂在它身上喵</string>
+    <string name="module_sort_group_zygisk">Zygisk 模块喵</string>
+    <string name="module_sort_group_zygisk_summary">负责提供或加载 Zygisk 运行时喵</string>
+    <string name="module_sort_group_lsposed">LSPosed 模块喵</string>
+    <string name="module_sort_group_lsposed_summary">通过 Xposed 框架挂钩喵</string>
+    <string name="module_sort_group_webui">带 Web UI 的模块喵</string>
+    <string name="module_sort_group_webui_summary">自己带独立界面喵</string>
+    <string name="module_sort_group_action">带操作的模块喵</string>
+    <string name="module_sort_group_action_summary">想跑脚本随时能跑喵</string>
+    <string name="module_sort_enabled_first">开了的优先喵</string>
+    <string name="module_sort_custom_order">自定义顺序喵</string>
+    <string name="module_sort_custom_order_summary">拖拖模块就能调显示顺序喵</string>
+    <string name="module_sort_reset_custom_order">重置自定义顺序喵</string>
+    <string name="module_sort_reset_custom_order_summary">恢复成上面的优先级顺序喵</string>
+    <string name="module_sort_drag_to_reorder">拖一拖重新排喵</string>
     <string name="settings_apm_stay_on_page">留在操作页喵</string>
     <string name="settings_apm_stay_on_page_summary">系统模块操作完不要自动回去啦喵</string>
     <string name="settings_show_disable_all_modules">显示“关所有模块”按钮喵</string>
@@ -1382,10 +1397,6 @@ KernelPatch 需要修补 boot 镜像才能工作喵。
     <string name="color_style_neutral">中性喵</string>
     <string name="color_style_fidelity">保真喵</string>
     <!-- Color Contrast -->
-    <string name="color_contrast_label">对比度喵</string>
-    <string name="color_contrast_standard">标准喵</string>
-    <string name="color_contrast_medium">中等喵</string>
-    <string name="color_contrast_high">高喵</string>
     <string name="settings_focus_card_background">FocusUI 卡片壁纸喵</string>
     <string name="settings_focus_card_background_enabled">FocusUI 卡片壁纸已开启喵，长按卡片管理壁纸喵</string>
     <string name="settings_focus_card_background_summary">启用 FocusUI 卡片壁纸及长按壁纸管理喵</string>
@@ -1420,8 +1431,6 @@ KernelPatch 需要修补 boot 镜像才能工作喵。
     <string name="dashboard_card_background_saved">仪表盘壁纸保存成功喵</string>
     <string name="dashboard_card_background_error">仪表盘壁纸保存失败喵</string>
     <string name="dashboard_card_background_cleared">仪表盘壁纸已清除喵</string>
-    <string name="dashboard_card_background_restore">恢复默认喵</string>
-    <string name="dashboard_card_background_restored">已恢复默认壁纸喵</string>
     <string name="settings_dashboard_card_dual_dim">启用昼夜双暗度喵</string>
     <string name="settings_dashboard_card_dual_dim_desc">自动根据明暗主题调整仪表盘壁纸暗度喵</string>
     <string name="settings_dashboard_card_day_dim">白天模式仪表盘壁纸暗度喵</string>

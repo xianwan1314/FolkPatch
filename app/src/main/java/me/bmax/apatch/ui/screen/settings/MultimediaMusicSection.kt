@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.settings
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import android.content.ActivityNotFoundException
 import android.net.Uri
 import me.bmax.apatch.util.ui.showToast
@@ -7,7 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -20,16 +21,15 @@ import kotlinx.coroutines.launch
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.rememberConfirmDialog
 import me.bmax.apatch.ui.component.rememberLoadingDialog
-import me.bmax.apatch.ui.component.folk.FolkNavigationPreference
+import me.bmax.apatch.ui.component.SegmentedNavigationItem
 import me.bmax.apatch.ui.component.folk.FolkSettingsDimens
-import me.bmax.apatch.ui.component.folk.FolkSettingsGroup
-import me.bmax.apatch.ui.component.folk.FolkSettingsSection
-import me.bmax.apatch.ui.component.folk.FolkSliderPreference
-import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
-import me.bmax.apatch.ui.component.folk.FolkValuePreference
+import me.bmax.apatch.ui.component.SegmentedColumn
+import me.bmax.apatch.ui.component.SegmentedSection
+import me.bmax.apatch.ui.component.SegmentedSliderItem
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
+import me.bmax.apatch.ui.component.SegmentedValueItem
 import me.bmax.apatch.ui.theme.MusicConfig
 import me.bmax.apatch.util.MusicManager
-import androidx.compose.material.icons.outlined.*
 
 @Composable
 fun formatTime(millis: Int): String {
@@ -103,12 +103,12 @@ fun MultimediaMusicSection(
     )
 
 
-    FolkSettingsSection(title = stringResource(R.string.settings_section_multimedia_music)) {
-        FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+    SegmentedSection(title = stringResource(R.string.settings_section_multimedia_music)) {
+        SegmentedColumn(flat = flat, highlightKey = highlightKey) {
 
         // --- Background Music Toggle ---
         item(key = "multimedia_bg_music") {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.MusicNote,
                 title = musicTitle,
                 summary = if (MusicConfig.isMusicEnabled) {
@@ -131,7 +131,7 @@ fun MultimediaMusicSection(
 
         // --- Music: Select Music File ---
         item(key = "multimedia_select_music", visible = MusicConfig.isMusicEnabled) {
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.AudioFile,
                 title = selectMusicTitle,
                 summary = if (MusicConfig.musicFilename != null) musicSelectedText else null,
@@ -147,7 +147,7 @@ fun MultimediaMusicSection(
 
         // --- Music: Auto Play Toggle ---
         item(key = "multimedia_music_auto_play", visible = MusicConfig.isMusicEnabled) {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.PlayArrow,
                 title = autoPlayTitle,
                 summary = autoPlaySummary,
@@ -161,7 +161,7 @@ fun MultimediaMusicSection(
 
         // --- Music: Looping Toggle ---
         item(key = "multimedia_music_looping", visible = MusicConfig.isMusicEnabled) {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.Repeat,
                 title = loopingTitle,
                 summary = loopingSummary,
@@ -176,7 +176,7 @@ fun MultimediaMusicSection(
 
         // --- Music: Volume Slider ---
         item(key = "multimedia_music_volume", visible = MusicConfig.isMusicEnabled) {
-            FolkSliderPreference(
+            SegmentedSliderItem(
                 title = musicVolumeTitle,
                 value = MusicConfig.volume,
                 onValueChange = {
@@ -202,7 +202,7 @@ fun MultimediaMusicSection(
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(FolkDimens.Size8))
                     Slider(
                         value = currentPosition.toFloat(),
                         onValueChange = {
@@ -226,7 +226,7 @@ fun MultimediaMusicSection(
                         )
                         IconButton(onClick = { MusicManager.toggle() }) {
                             Icon(
-                                imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                                imageVector = if (isPlaying) Icons.Outlined.Pause else Icons.Outlined.PlayArrow,
                                 contentDescription = stringResource(R.string.settings_music_playback_control)
                             )
                         }
@@ -241,7 +241,7 @@ fun MultimediaMusicSection(
 
         // --- Music: Clear Music ---
         item(key = "multimedia_clear_music", visible = MusicConfig.isMusicEnabled && MusicConfig.musicFilename != null) {
-            FolkNavigationPreference(
+            SegmentedNavigationItem(
                 icon = Icons.Outlined.Delete,
                 title = clearMusicTitle,
                 onClick = {

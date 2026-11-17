@@ -1,7 +1,7 @@
 package me.bmax.apatch.ui.component
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Contrast
+import androidx.compose.material.icons.outlined.Contrast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import me.bmax.apatch.R
@@ -43,20 +43,18 @@ fun DualBackgroundSettings(
     showDualDim: Boolean = true,
 ) {
     if (showDualDim) {
-        ToggleSettingCard(
-            flat = flat,
-            icon = Icons.Filled.Contrast,
+        SegmentedSwitchItem(
+            icon = Icons.Outlined.Contrast,
             title = dualDimTitle,
-            description = dualDimDescription,
+            summary = dualDimDescription,
             checked = dualDimEnabled,
             onCheckedChange = { onDualDimEnabledChange(it); save() },
         )
     }
-    ToggleSettingCard(
-        flat = flat,
-        icon = Icons.Filled.Contrast,
+    SegmentedSwitchItem(
+        icon = Icons.Outlined.Contrast,
         title = dualOpacityTitle,
-        description = dualOpacityDescription,
+        summary = dualOpacityDescription,
         checked = dualOpacityEnabled,
         onCheckedChange = { onDualOpacityEnabledChange(it); save() },
     )

@@ -1,25 +1,21 @@
 @file:OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
 package me.bmax.apatch.ui.screen.home
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.InstallMobile
-import androidx.compose.material.icons.outlined.Block
-import androidx.compose.material.icons.outlined.Cached
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.InstallMobile
+import androidx.compose.material.icons.outlined.Block
+import androidx.compose.material.icons.outlined.Cached
 import androidx.compose.material.icons.outlined.SystemUpdate
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CardDefaults
-import me.bmax.apatch.ui.theme.BackgroundConfig
-import androidx.compose.material3.Card
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,28 +27,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.R
+import me.bmax.apatch.ui.component.TonalCard
 import me.bmax.apatch.core.ui.R as CoreR
-import me.bmax.apatch.ui.theme.tokens.FolkShape
 
 @Composable
 fun AStatusCard(apState: APApplication.State) {
-    Card(
-        shape = FolkShape.Corner20,
-        colors = CardDefaults.cardColors(
-            // 壁纸模式下用中性 surface/onSurface，避免把强调容器降 alpha 后
-            // onSecondaryContainer 文字直接压在壁纸上而失去对比度。
-            containerColor = if (BackgroundConfig.isCustomBackgroundEnabled) {
-                MaterialTheme.colorScheme.surface
-            } else {
-                MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
-            },
-            contentColor = MaterialTheme.colorScheme.onSurface,
-        )
-    ) {
+    TonalCard(flat = true) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(FolkDimens.Size12),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row {
@@ -64,7 +48,7 @@ fun AStatusCard(apState: APApplication.State) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp),
+                    .padding(FolkDimens.Size10),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 when (apState) {
@@ -94,7 +78,7 @@ fun AStatusCard(apState: APApplication.State) {
                 Column(
                     Modifier
                         .weight(2f)
-                        .padding(start = 16.dp)
+                        .padding(start = FolkDimens.Size16)
                 ) {
 
                     when (apState) {
@@ -183,5 +167,4 @@ fun AStatusCard(apState: APApplication.State) {
         }
     }
 }
-
 

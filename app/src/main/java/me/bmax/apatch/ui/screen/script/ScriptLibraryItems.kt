@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.script
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import me.bmax.apatch.ui.screen.misc.BannerApiService
 
 import android.net.Uri
@@ -18,7 +19,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import me.bmax.apatch.ui.theme.tokens.ContinuousCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.PlayArrow
@@ -49,6 +50,8 @@ import me.bmax.apatch.ui.component.LocalInsideSplicedGroup
 import me.bmax.apatch.ui.component.BackgroundOptionsDialog
 import me.bmax.apatch.ui.component.rememberLoadingDialog
 import me.bmax.apatch.ui.theme.BackgroundConfig
+import me.bmax.apatch.ui.theme.tokens.LocalFolkWallpaperTokens
+import me.bmax.apatch.ui.theme.tokens.WallpaperSurfaceRole
 import me.bmax.apatch.ui.theme.bannerFadeColor
 import me.bmax.apatch.util.ModuleShortcut
 import me.bmax.apatch.util.scriptBannerStorage
@@ -71,12 +74,12 @@ fun ScriptLabel(
     Surface(
         color = containerColor,
         contentColor = contentColor,
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(FolkDimens.Size8),
     ) {
         Text(
             text = text,
             style = MaterialTheme.typography.labelSmall,
-            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+            modifier = Modifier.padding(horizontal = FolkDimens.Size6, vertical = FolkDimens.Size2),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -125,8 +128,9 @@ fun ScriptItem(
         1f
     }
 
-    val cardColor = if (isWallpaperMode) {
-        MaterialTheme.colorScheme.surface.copy(alpha = opacity)
+    val wallpaper = LocalFolkWallpaperTokens.current
+    val cardColor = if (wallpaper != null) {
+        wallpaper.material(WallpaperSurfaceRole.Group, minimumAlpha = 0.35f).fill
     } else {
         MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.2f)
     }
@@ -201,9 +205,9 @@ fun ScriptItem(
     val pressed by cardInteractionSource.collectIsPressedAsState()
     val cardCorner by animateDpAsState(
         targetValue = when {
-            expanded && foldCard -> 28.dp
-            pressed -> 24.dp
-            else -> 20.dp
+            expanded && foldCard -> FolkDimens.Size28
+            pressed -> FolkDimens.Size24
+            else -> FolkDimens.Size20
         },
         animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
         label = "scriptCardCorner",
@@ -241,7 +245,7 @@ fun ScriptItem(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(FolkDimens.Size16)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -249,8 +253,8 @@ fun ScriptItem(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            modifier = Modifier.padding(bottom = 8.dp)
+                            horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size6),
+                            modifier = Modifier.padding(bottom = FolkDimens.Size8)
                         ) {
                             ScriptLabel(
                                 text = "Shell",
@@ -274,7 +278,7 @@ fun ScriptItem(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(FolkDimens.Size12))
 
                 Text(
                     text = script.path,
@@ -284,24 +288,24 @@ fun ScriptItem(
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(FolkDimens.Size16))
                 AnimatedVisibility(
                     visible = !foldCard || expanded,
                     enter = fadeIn(MaterialTheme.motionScheme.defaultEffectsSpec()) + expandVertically(MaterialTheme.motionScheme.defaultSpatialSpec()),
                     exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut(MaterialTheme.motionScheme.fastEffectsSpec())
                 ) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size8)) {
                     FilledTonalButton(
                         onClick = onRun,
-                        contentPadding = if (simpleListBottomBar) PaddingValues(12.dp) else ButtonDefaults.TextButtonContentPadding,
-                        modifier = if (simpleListBottomBar) Modifier else Modifier.height(36.dp),
+                        contentPadding = if (simpleListBottomBar) PaddingValues(FolkDimens.Size12) else ButtonDefaults.TextButtonContentPadding,
+                        modifier = if (simpleListBottomBar) Modifier else Modifier.height(FolkDimens.Size36),
                         colors = ButtonDefaults.filledTonalButtonColors(
                             containerColor = MaterialTheme.colorScheme.secondaryContainer
                         )
                     ) {
-                        Icon(Icons.Outlined.PlayArrow, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Icon(Icons.Outlined.PlayArrow, contentDescription = null, modifier = Modifier.size(FolkDimens.Size18))
                         if (!simpleListBottomBar) {
-                            Spacer(Modifier.width(8.dp))
+                            Spacer(Modifier.width(FolkDimens.Size8))
                             Text(stringResource(R.string.script_library_run))
                         }
                     }
@@ -313,16 +317,16 @@ fun ScriptItem(
                                 shortcutIconUri = null
                                 showShortcutDialog = true
                             },
-                            contentPadding = if (simpleListBottomBar) PaddingValues(12.dp) else ButtonDefaults.TextButtonContentPadding,
-                            modifier = if (simpleListBottomBar) Modifier else Modifier.height(36.dp),
+                            contentPadding = if (simpleListBottomBar) PaddingValues(FolkDimens.Size12) else ButtonDefaults.TextButtonContentPadding,
+                            modifier = if (simpleListBottomBar) Modifier else Modifier.height(FolkDimens.Size36),
                             colors = ButtonDefaults.filledTonalButtonColors(
                                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                                 contentColor = MaterialTheme.colorScheme.onTertiaryContainer
                             )
                         ) {
-                            Icon(Icons.Outlined.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Icon(Icons.Outlined.Add, contentDescription = null, modifier = Modifier.size(FolkDimens.Size18))
                             if (!simpleListBottomBar) {
-                                Spacer(Modifier.width(8.dp))
+                                Spacer(Modifier.width(FolkDimens.Size8))
                                 Text(stringResource(R.string.module_shortcut_add))
                             }
                         }
@@ -332,8 +336,8 @@ fun ScriptItem(
 
                     FilledTonalButton(
                         onClick = onDelete,
-                        contentPadding = if (simpleListBottomBar) PaddingValues(12.dp) else ButtonDefaults.TextButtonContentPadding,
-                        modifier = if (simpleListBottomBar) Modifier else Modifier.height(36.dp),
+                        contentPadding = if (simpleListBottomBar) PaddingValues(FolkDimens.Size12) else ButtonDefaults.TextButtonContentPadding,
+                        modifier = if (simpleListBottomBar) Modifier else Modifier.height(FolkDimens.Size36),
                         colors = if (simpleListBottomBar) ButtonDefaults.filledTonalButtonColors(
                             containerColor = MaterialTheme.colorScheme.secondaryContainer
                         ) else ButtonDefaults.filledTonalButtonColors(
@@ -341,9 +345,9 @@ fun ScriptItem(
                             contentColor = MaterialTheme.colorScheme.onErrorContainer
                         )
                     ) {
-                        Icon(Icons.Outlined.Delete, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Icon(Icons.Outlined.Delete, contentDescription = null, modifier = Modifier.size(FolkDimens.Size18))
                         if (!simpleListBottomBar) {
-                            Spacer(Modifier.width(8.dp))
+                            Spacer(Modifier.width(FolkDimens.Size8))
                             Text(stringResource(R.string.script_library_delete))
                         }
                     }
@@ -360,7 +364,7 @@ fun ScriptItem(
             modifier = Modifier.clip(cardShape).then(clickModifier),
             shape = cardShape,
             color = cardColor,
-            tonalElevation = 0.dp,
+            tonalElevation = FolkDimens.Size0,
         ) { contentBlock() }
     }
 
@@ -399,32 +403,32 @@ fun ScriptItem(
                         label = { Text(stringResource(R.string.module_shortcut_name)) },
                         modifier = Modifier.fillMaxWidth()
                     )
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(FolkDimens.Size12))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(stringResource(R.string.module_shortcut_icon))
-                        Spacer(Modifier.width(12.dp))
+                        Spacer(Modifier.width(FolkDimens.Size12))
                         if (shortcutPreviewBitmap != null) {
                             Image(
                                 bitmap = shortcutPreviewBitmap!!.asImageBitmap(),
                                 contentDescription = null,
-                                modifier = Modifier.size(36.dp)
+                                modifier = Modifier.size(FolkDimens.Size36)
                             )
                         } else if (shortcutIconUri != null) {
                             AsyncImage(
                                 model = shortcutIconUri,
                                 contentDescription = null,
-                                modifier = Modifier.size(36.dp)
+                                modifier = Modifier.size(FolkDimens.Size36)
                             )
                         } else {
                             AsyncImage(
                                 model = appIcon,
                                 contentDescription = null,
-                                modifier = Modifier.size(36.dp)
+                                modifier = Modifier.size(FolkDimens.Size36)
                             )
                         }
                     }
-                    Spacer(Modifier.height(8.dp))
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Spacer(Modifier.height(FolkDimens.Size8))
+                    Row(horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size12)) {
                         TextButton(onClick = { pickShortcutIconLauncher.launch("image/*") }) {
                             Text(stringResource(R.string.module_shortcut_icon_select))
                         }

@@ -26,8 +26,8 @@ import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
-import androidx.compose.material3.NavigationRailDefaults
 import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -61,7 +61,11 @@ import com.ramcosta.composedestinations.generated.NavGraphs
 import com.ramcosta.composedestinations.utils.isRouteOnBackStackAsState
 import com.ramcosta.composedestinations.utils.rememberDestinationsNavigator
 import me.bmax.apatch.APApplication
+import me.bmax.apatch.ui.component.folk.FolkChromeEdge
+import me.bmax.apatch.ui.component.folk.FolkWallpaperChromeZone
 import me.bmax.apatch.ui.theme.BackgroundConfig
+import me.bmax.apatch.ui.theme.tokens.FolkTheme
+import me.bmax.apatch.ui.theme.tokens.LocalFolkWallpaperTokens
 import me.bmax.apatch.util.BottomBarIconConfig
 import me.bmax.apatch.util.ui.FloatingBarConfig
 
@@ -85,6 +89,7 @@ fun BottomBarContent(
     isDrawer: Boolean = false,
 ) {
     val navigator = navController.rememberDestinationsNavigator()
+    val wallpaper = LocalFolkWallpaperTokens.current
     if (isDrawer) {
         DrawerBottomBarContent(
             destinations = visibleDestinations,
@@ -202,7 +207,8 @@ fun BottomBarContent(
                             .background(
                                 // secondaryContainer 与 onSecondaryContainer 必须配对；
                                 // 降 alpha 会让选中指示器失去对比度。
-                                color = MaterialTheme.colorScheme.secondaryContainer,
+                                color = wallpaper?.selection?.fill
+                                    ?: MaterialTheme.colorScheme.secondaryContainer,
                                 shape = itemShape
                             )
                             .then(
@@ -291,7 +297,8 @@ fun BottomBarContent(
                                 destination = destination,
                                 isSelected = isSelected,
                                 tint = if (isSelected) {
-                                    MaterialTheme.colorScheme.onSecondaryContainer
+                                    wallpaper?.selection?.contentColor
+                                        ?: MaterialTheme.colorScheme.onSecondaryContainer
                                 } else {
                                     MaterialTheme.colorScheme.onSurfaceVariant
                                 }
@@ -370,14 +377,16 @@ fun NavigationRailBar(navController: NavHostController) {
             else isOnBackStack.indexOfLast { it }
         }
 
-        NavigationRail(
+        val wallpaper = LocalFolkWallpaperTokens.current
+        FolkWallpaperChromeZone(
+            edge = FolkChromeEdge.Start,
             modifier = Modifier.fillMaxHeight(),
-            containerColor = if (BackgroundConfig.isCustomBackgroundEnabled) {
-                MaterialTheme.colorScheme.surface.copy(alpha = BackgroundConfig.customBackgroundOpacity)
-            } else {
-                NavigationRailDefaults.ContainerColor
-            }
         ) {
+            NavigationRail(
+                modifier = Modifier.fillMaxHeight(),
+                containerColor = if (wallpaper != null) Color.Transparent
+                else FolkTheme.palette.groupedSurface
+            ) {
             Spacer(Modifier.weight(1f))
 
             visibleDestinations.forEachIndexed { index, destination ->
@@ -429,6 +438,11 @@ fun NavigationRailBar(navController: NavHostController) {
                                 }
                             }
                         },
+                        colors = if (wallpaper != null) {
+                            NavigationRailItemDefaults.colors(indicatorColor = Color.Transparent)
+                        } else {
+                            NavigationRailItemDefaults.colors()
+                        },
                         label = {
                             Text(
                                 text = stringResource(destination.label),
@@ -442,7 +456,8 @@ fun NavigationRailBar(navController: NavHostController) {
                 }
             }
 
-            Spacer(Modifier.weight(1f))
+                Spacer(Modifier.weight(1f))
+            }
         }
     }
 }

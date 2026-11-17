@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.settings
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -15,11 +16,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FolderOff
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material.icons.filled.HideSource
-import androidx.compose.material.icons.filled.PersonPin
-import androidx.compose.material.icons.filled.WifiOff
+import androidx.compose.material.icons.outlined.FolderOff
+import androidx.compose.material.icons.outlined.VisibilityOff
+import androidx.compose.material.icons.outlined.HideSource
+import androidx.compose.material.icons.outlined.PersonPin
+import androidx.compose.material.icons.outlined.WifiOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -35,13 +36,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
 import android.content.pm.ApplicationInfo
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.ExpressiveCard
+import me.bmax.apatch.ui.component.TonalCard
 import me.bmax.apatch.ui.component.ExpressiveSwitch
 import androidx.compose.material.icons.outlined.*
 import android.content.Context
-import me.bmax.apatch.ui.component.folk.FolkSettingsGroupScope
+import me.bmax.apatch.ui.component.SegmentedColumnScope
 
-fun FolkSettingsGroupScope.functionPathHideItem(
+fun SegmentedColumnScope.functionPathHideItem(
     context: Context,
     flat: Boolean,
     kPatchReady: Boolean,
@@ -65,11 +66,11 @@ fun FolkSettingsGroupScope.functionPathHideItem(
         val pathsPlaceholder = stringResource(id = R.string.path_hide_paths_placeholder)
         val pathsHelper = stringResource(id = R.string.path_hide_paths_helper)
 
-        ExpressiveCard(flat = flat) {
+        TonalCard(flat = flat) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(FolkDimens.Size16),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -81,19 +82,19 @@ fun FolkSettingsGroupScope.functionPathHideItem(
                         modifier = Modifier.weight(1f),
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.HideSource,
+                            imageVector = Icons.Outlined.HideSource,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(24.dp),
+                            modifier = Modifier.size(FolkDimens.Size24),
                         )
-                        Spacer(Modifier.width(16.dp))
+                        Spacer(Modifier.width(FolkDimens.Size16))
                         Column {
                             Text(
                                 text = pathHideTitle,
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
-                            Spacer(modifier = Modifier.height(4.dp))
+                            Spacer(modifier = Modifier.height(FolkDimens.Size4))
                             Text(
                                 text = pathHideSummary,
                                 style = MaterialTheme.typography.bodySmall,
@@ -112,11 +113,11 @@ fun FolkSettingsGroupScope.functionPathHideItem(
                     enter = fadeIn(MaterialTheme.motionScheme.defaultEffectsSpec()) + expandVertically(MaterialTheme.motionScheme.defaultSpatialSpec()),
                     exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut(MaterialTheme.motionScheme.fastEffectsSpec())
                 ) {
-                    Column(modifier = Modifier.padding(top = 12.dp)) {
+                    Column(modifier = Modifier.padding(top = FolkDimens.Size12)) {
                         OutlinedTextField(
                             value = pathHidePaths,
                             onValueChange = onPathHidePathsChange,
-                            modifier = Modifier.fillMaxWidth().height(160.dp),
+                            modifier = Modifier.fillMaxWidth().height(FolkDimens.Size160),
                             label = { Text(pathsLabel) },
                             placeholder = { Text(pathsPlaceholder) },
                             supportingText = { Text(pathsHelper) },
@@ -125,7 +126,7 @@ fun FolkSettingsGroupScope.functionPathHideItem(
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.None),
                         )
 
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(FolkDimens.Size12))
 
                         Button(
                             onClick = onPathHideSave,
@@ -134,7 +135,7 @@ fun FolkSettingsGroupScope.functionPathHideItem(
                             Text(stringResource(R.string.path_hide_save))
                         }
 
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(FolkDimens.Size12))
 
                         val pathCount = pathHidePaths.lines().count { it.isNotBlank() }
                         val appCount = selectedUids.size
@@ -145,12 +146,12 @@ fun FolkSettingsGroupScope.functionPathHideItem(
                             ) {
                                 if (pathCount > 0) {
                                     Icon(
-                                        Icons.Filled.FolderOff,
+                                        Icons.Outlined.FolderOff,
                                         contentDescription = null,
-                                        modifier = Modifier.size(16.dp),
+                                        modifier = Modifier.size(FolkDimens.Size16),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
-                                    Spacer(Modifier.width(4.dp))
+                                    Spacer(Modifier.width(FolkDimens.Size4))
                                     Text(
                                         "$pathCount paths",
                                         style = MaterialTheme.typography.labelSmall,
@@ -158,16 +159,16 @@ fun FolkSettingsGroupScope.functionPathHideItem(
                                     )
                                 }
                                 if (pathCount > 0 && appCount > 0) {
-                                    Spacer(Modifier.width(12.dp))
+                                    Spacer(Modifier.width(FolkDimens.Size12))
                                 }
                                 if (appCount > 0) {
                                     Icon(
-                                        Icons.Filled.PersonPin,
+                                        Icons.Outlined.PersonPin,
                                         contentDescription = null,
-                                        modifier = Modifier.size(16.dp),
+                                        modifier = Modifier.size(FolkDimens.Size16),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
-                                    Spacer(Modifier.width(4.dp))
+                                    Spacer(Modifier.width(FolkDimens.Size4))
                                     Text(
                                         "$appCount apps",
                                         style = MaterialTheme.typography.labelSmall,
@@ -175,7 +176,7 @@ fun FolkSettingsGroupScope.functionPathHideItem(
                                     )
                                 }
                             }
-                            Spacer(modifier = Modifier.height(12.dp))
+                            Spacer(modifier = Modifier.height(FolkDimens.Size12))
                         }
 
                         // UID Execution Mode
@@ -192,12 +193,12 @@ fun FolkSettingsGroupScope.functionPathHideItem(
                                 modifier = Modifier.weight(1f),
                             ) {
                                 Icon(
-                                    imageVector = Icons.Filled.PersonPin,
+                                    imageVector = Icons.Outlined.PersonPin,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.size(20.dp),
+                                    modifier = Modifier.size(FolkDimens.Size20),
                                 )
-                                Spacer(Modifier.width(12.dp))
+                                Spacer(Modifier.width(FolkDimens.Size12))
                                 Column {
                                     Text(
                                         text = uidModeTitle,
@@ -231,12 +232,12 @@ fun FolkSettingsGroupScope.functionPathHideItem(
                                 modifier = Modifier.weight(1f),
                             ) {
                                 Icon(
-                                    imageVector = Icons.Filled.VisibilityOff,
+                                    imageVector = Icons.Outlined.VisibilityOff,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.size(20.dp),
+                                    modifier = Modifier.size(FolkDimens.Size20),
                                 )
-                                Spacer(Modifier.width(12.dp))
+                                Spacer(Modifier.width(FolkDimens.Size12))
                                 Column {
                                     Text(
                                         text = filterSystemTitle,
@@ -261,13 +262,13 @@ fun FolkSettingsGroupScope.functionPathHideItem(
                             enter = fadeIn(MaterialTheme.motionScheme.defaultEffectsSpec()) + expandVertically(MaterialTheme.motionScheme.defaultSpatialSpec()),
                             exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut(MaterialTheme.motionScheme.fastEffectsSpec())
                         ) {
-                            Column(modifier = Modifier.padding(top = 8.dp)) {
+                            Column(modifier = Modifier.padding(top = FolkDimens.Size8)) {
                                 val pm = context.packageManager
                                 val noAppsText = stringResource(R.string.path_hide_no_apps_selected)
 
                                 if (selectedUids.isNotEmpty()) {
                                     Column(
-                                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                                        verticalArrangement = Arrangement.spacedBy(FolkDimens.Size8),
                                     ) {
                                         selectedUids.forEach { uid ->
                                             val pkgs = pm.getPackagesForUid(uid)
@@ -311,7 +312,7 @@ fun FolkSettingsGroupScope.functionPathHideItem(
                                     )
                                 }
 
-                                Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(FolkDimens.Size8))
 
                                 AppPickerButton(
                                     selectedUids = selectedUids,
@@ -326,7 +327,7 @@ fun FolkSettingsGroupScope.functionPathHideItem(
     }
 }
 
-fun FolkSettingsGroupScope.functionNetIsolateItem(
+fun SegmentedColumnScope.functionNetIsolateItem(
     context: Context,
     flat: Boolean,
     kPatchReady: Boolean,
@@ -341,11 +342,11 @@ fun FolkSettingsGroupScope.functionNetIsolateItem(
         val niSummary = stringResource(id = R.string.netisolate_enable_summary)
         val noAppsText = stringResource(R.string.netisolate_no_uids)
 
-        ExpressiveCard(flat = flat) {
+        TonalCard(flat = flat) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(FolkDimens.Size16),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -357,19 +358,19 @@ fun FolkSettingsGroupScope.functionNetIsolateItem(
                         modifier = Modifier.weight(1f),
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.WifiOff,
+                            imageVector = Icons.Outlined.WifiOff,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(24.dp),
+                            modifier = Modifier.size(FolkDimens.Size24),
                         )
-                        Spacer(Modifier.width(16.dp))
+                        Spacer(Modifier.width(FolkDimens.Size16))
                         Column {
                             Text(
                                 text = niTitle,
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
-                            Spacer(modifier = Modifier.height(4.dp))
+                            Spacer(modifier = Modifier.height(FolkDimens.Size4))
                             Text(
                                 text = niSummary,
                                 style = MaterialTheme.typography.bodySmall,
@@ -388,12 +389,12 @@ fun FolkSettingsGroupScope.functionNetIsolateItem(
                     enter = fadeIn(MaterialTheme.motionScheme.defaultEffectsSpec()) + expandVertically(MaterialTheme.motionScheme.defaultSpatialSpec()),
                     exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut(MaterialTheme.motionScheme.fastEffectsSpec())
                 ) {
-                    Column(modifier = Modifier.padding(top = 12.dp)) {
+                    Column(modifier = Modifier.padding(top = FolkDimens.Size12)) {
                         val pm = context.packageManager
 
                         if (niSelectedUids.isNotEmpty()) {
                             Column(
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalArrangement = Arrangement.spacedBy(FolkDimens.Size8),
                             ) {
                                 niSelectedUids.forEach { uid ->
                                     val pkgs = pm.getPackagesForUid(uid)
@@ -437,7 +438,7 @@ fun FolkSettingsGroupScope.functionNetIsolateItem(
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(FolkDimens.Size8))
 
                         AppPickerButton(
                             selectedUids = niSelectedUids,

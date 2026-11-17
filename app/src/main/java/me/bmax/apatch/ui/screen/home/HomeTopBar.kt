@@ -1,16 +1,17 @@
 package me.bmax.apatch.ui.screen.home
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoFixHigh
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PowerSettingsNew
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.outlined.AutoFixHigh
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Pause
+import androidx.compose.material.icons.outlined.PowerSettingsNew
+import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material.icons.outlined.Refresh
 import me.bmax.apatch.ui.theme.MusicConfig
 import me.bmax.apatch.util.MusicManager
 import androidx.compose.material.icons.outlined.SystemUpdate
@@ -22,6 +23,7 @@ import me.bmax.apatch.ui.theme.BackgroundConfig
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import me.bmax.apatch.ui.component.folk.navOrigin
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -62,7 +64,7 @@ data class RebootOption(
 
 @Composable
 fun getRebootOptions(): List<RebootOption> = listOf(
-    RebootOption(R.string.reboot, "", Icons.Filled.Refresh),
+    RebootOption(R.string.reboot, "", Icons.Outlined.Refresh),
     RebootOption(R.string.reboot_recovery, "recovery", Icons.Outlined.SystemUpdate),
     RebootOption(R.string.reboot_bootloader, "bootloader", Icons.Outlined.Memory),
     RebootOption(R.string.reboot_download, "download", Icons.Outlined.Download),
@@ -130,7 +132,7 @@ fun HomeTopBar(
                     .build(),
                 contentDescription = titleResId?.let { stringResource(it) } ?: customAppTitle,
                 modifier = Modifier
-                    .height(40.dp)
+                    .height(FolkDimens.Size40)
                     .offset(x = titleOffsetX.dp)
                     .alpha(titleOpacity)
                     .graphicsLayer {
@@ -153,9 +155,12 @@ fun HomeTopBar(
             Text(if (isCustomTitle) customAppTitle else stringResource(titleResId!!))
         }
     }, actions = {
-        IconButton(onClick = onInstallClick) {
+        IconButton(
+            onClick = onInstallClick,
+            modifier = Modifier.navOrigin(captureBitmap = true),
+        ) {
             Icon(
-                imageVector = Icons.Filled.AutoFixHigh,
+                imageVector = Icons.Outlined.AutoFixHigh,
                 contentDescription = stringResource(id = R.string.mode_select_page_title)
             )
         }
@@ -175,7 +180,7 @@ fun HomeTopBar(
             Box {
                 IconButton(onClick = { showDropdownReboot = true }) {
                     Icon(
-                        imageVector = Icons.Filled.PowerSettingsNew,
+                        imageVector = Icons.Outlined.PowerSettingsNew,
                         contentDescription = stringResource(id = R.string.reboot)
                     )
                 }
@@ -219,7 +224,7 @@ fun HomeTopBar(
         Box {
             IconButton(onClick = { showDropdownMoreOptions = true }) {
                 Icon(
-                    imageVector = Icons.Filled.MoreVert,
+                    imageVector = Icons.Outlined.MoreVert,
                     contentDescription = stringResource(id = R.string.settings)
                 )
                 WallpaperAwareDropdownMenu(
@@ -239,7 +244,7 @@ fun HomeTopBar(
                             },
                             leadingIcon = {
                                 Icon(
-                                    imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                                    imageVector = if (isPlaying) Icons.Outlined.Pause else Icons.Outlined.PlayArrow,
                                     contentDescription = null,
                                 )
                             },

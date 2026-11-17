@@ -10,11 +10,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.automirrored.outlined.InsertDriveFile
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,6 +31,7 @@ import me.bmax.apatch.R
 import java.io.File
 import me.bmax.apatch.core.ui.R as CoreR
 import me.bmax.apatch.ui.theme.tokens.FolkShape
+import me.bmax.apatch.ui.component.folk.folkOverlayColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,7 +85,7 @@ fun FilePickerDialog(
                 .fillMaxHeight(0.88f),
             shape = FolkShape.Corner24,
             // Force opaque color to avoid transparency issues
-            color = MaterialTheme.colorScheme.surface.copy(alpha = 1f),
+            color = folkOverlayColor(),
             tonalElevation = 6.dp
         ) {
             if (!hasPermission && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -96,7 +97,7 @@ fun FilePickerDialog(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Icon(
-                        Icons.Default.Warning,
+                        Icons.Outlined.Warning,
                         contentDescription = null,
                         modifier = Modifier.size(48.dp),
                         tint = MaterialTheme.colorScheme.primary
@@ -184,14 +185,14 @@ fun FilePickerDialog(
                                         currentPath = rootPath
                                     }
                                 }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(CoreR.string.core_action_back))
+                                    Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = stringResource(CoreR.string.core_action_back))
                                 }
                             }
                         },
                         actions = {
                             IconButton(onClick = onDismissRequest) {
                                 Icon(
-                                    Icons.Default.Close,
+                                    Icons.Outlined.Close,
                                     contentDescription = stringResource(R.string.file_picker_close)
                                 )
                             }
@@ -245,7 +246,7 @@ fun FilePickerDialog(
                                         headlineContent = { Text(file.name) },
                                         leadingContent = {
                                             Icon(
-                                                Icons.Default.Folder,
+                                                Icons.Outlined.Folder,
                                                 contentDescription = null,
                                                 tint = MaterialTheme.colorScheme.primary
                                             )
@@ -265,7 +266,7 @@ fun FilePickerDialog(
                                         },
                                         leadingContent = {
                                             Icon(
-                                                Icons.AutoMirrored.Default.InsertDriveFile,
+                                                Icons.AutoMirrored.Outlined.InsertDriveFile,
                                                 contentDescription = null,
                                                 tint = MaterialTheme.colorScheme.primary
                                             )

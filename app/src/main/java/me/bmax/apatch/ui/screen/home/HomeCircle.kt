@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.home
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -19,10 +20,12 @@ import com.ramcosta.composedestinations.generated.NavGraphs
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.apApp
 import me.bmax.apatch.R
+import me.bmax.apatch.ui.component.TonalCard
 import me.bmax.apatch.ui.navigation.BottomBarDestination
 import me.bmax.apatch.util.AppData
 import me.bmax.apatch.ui.theme.BackgroundConfig
 import me.bmax.apatch.util.ui.HomeBottomSpacer
+import me.bmax.apatch.ui.theme.tokens.FolkType
 
 @Composable
 fun HomeScreenCircle(
@@ -54,11 +57,11 @@ fun HomeScreenCircle(
         modifier = Modifier
             .padding(innerPadding)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(horizontal = FolkDimens.Size16),
+        verticalArrangement = Arrangement.spacedBy(FolkDimens.Size16)
     ) {
         if (BackgroundConfig.isCustomBackgroundEnabled) {
-            Spacer(Modifier.height(0.dp))
+            Spacer(Modifier.height(FolkDimens.Size0))
         }
         
         // Status Card
@@ -76,9 +79,9 @@ fun HomeScreenCircle(
             
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size16)
             ) {
-                TonalCard(modifier = Modifier.weight(1f)) {
+                TonalCard(modifier = Modifier.weight(1f), flat = true) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -91,34 +94,34 @@ fun HomeScreenCircle(
                                     restoreState = true
                                 }
                             }
-                            .padding(horizontal = 20.dp, vertical = 16.dp),
+                            .padding(horizontal = FolkDimens.Size20, vertical = FolkDimens.Size16),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.Security,
+                            imageVector = Icons.Outlined.Person,
                             contentDescription = null,
-                            modifier = Modifier.size(20.dp),
+                            modifier = Modifier.size(FolkDimens.Size20),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        Spacer(Modifier.width(16.dp))
+                        Spacer(Modifier.width(FolkDimens.Size16))
                         Column {
                             Text(
                                 text = stringResource(R.string.superuser),
-                                style = MaterialTheme.typography.bodyLarge,
+                                style = FolkType.Summary,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
-                            Spacer(Modifier.height(4.dp))
+                            Spacer(Modifier.height(FolkDimens.Size4))
                             Text(
                                 text = superuserCount.toString(),
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = FolkType.Numeral,
                                 color = MaterialTheme.colorScheme.outline
                             )
                         }
                     }
                 }
                 
-                TonalCard(modifier = Modifier.weight(1f)) {
+                TonalCard(modifier = Modifier.weight(1f), flat = true) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -131,27 +134,27 @@ fun HomeScreenCircle(
                                     restoreState = true
                                 }
                             }
-                            .padding(horizontal = 20.dp, vertical = 16.dp),
+                            .padding(horizontal = FolkDimens.Size20, vertical = FolkDimens.Size16),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.Widgets,
+                            imageVector = Icons.Outlined.Extension,
                             contentDescription = null,
-                            modifier = Modifier.size(20.dp),
+                            modifier = Modifier.size(FolkDimens.Size20),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        Spacer(Modifier.width(16.dp))
+                        Spacer(Modifier.width(FolkDimens.Size16))
                         Column {
                             Text(
                                 text = stringResource(R.string.module),
-                                style = MaterialTheme.typography.bodyLarge,
+                                style = FolkType.Summary,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
-                            Spacer(Modifier.height(4.dp))
+                            Spacer(Modifier.height(FolkDimens.Size4))
                             Text(
                                 text = moduleCount.toString(),
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = FolkType.Numeral,
                                 color = MaterialTheme.colorScheme.outline
                             )
                         }

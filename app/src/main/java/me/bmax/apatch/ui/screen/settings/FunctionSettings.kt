@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.settings
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,9 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FolderOff
-import androidx.compose.material.icons.filled.LockOpen
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.FolderOff
+import androidx.compose.material.icons.outlined.LockOpen
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material.icons.outlined.WaterDrop
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -31,11 +32,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.ExpressiveCard
+import me.bmax.apatch.ui.component.TonalCard
 import me.bmax.apatch.ui.component.ExpressiveSwitch
-import me.bmax.apatch.ui.component.folk.FolkSettingsGroup
-import me.bmax.apatch.ui.component.folk.FolkSettingsSection
-import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
+import me.bmax.apatch.ui.component.SegmentedColumn
+import me.bmax.apatch.ui.component.SegmentedSection
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
 import me.bmax.apatch.util.setHideServiceEnabled
 import androidx.compose.material.icons.outlined.*
 
@@ -91,10 +92,10 @@ fun FunctionSettingsContent(
     val umountServiceSummary = stringResource(id = R.string.settings_umount_service_summary)
 
     if (kPatchReady && aPatchReady) {
-    FolkSettingsSection(title = stringResource(R.string.settings_section_function_root)) {
-     FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+    SegmentedSection(title = stringResource(R.string.settings_section_function_root)) {
+     SegmentedColumn(flat = flat, highlightKey = highlightKey) {
         item(key = "function_jailbreak", visible = kPatchReady && aPatchReady && jailbreakAvailable) {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.LockOpen,
                 title = stringResource(R.string.settings_jailbreak_mode),
                 summary = stringResource(R.string.settings_jailbreak_mode_summary),
@@ -104,7 +105,7 @@ fun FunctionSettingsContent(
         }
 
         item(key = "function_hide_service", visible = kPatchReady && aPatchReady) {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.VisibilityOff,
                 title = hideServiceTitle,
                 summary = hideServiceSummary,
@@ -121,8 +122,8 @@ fun FunctionSettingsContent(
     }
 
     if (kPatchReady && aPatchReady) {
-    FolkSettingsSection(title = stringResource(R.string.settings_section_function_shizuku)) {
-     FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+    SegmentedSection(title = stringResource(R.string.settings_section_function_shizuku)) {
+     SegmentedColumn(flat = flat, highlightKey = highlightKey) {
         item(key = "function_shizuku", visible = kPatchReady && aPatchReady) {
             val shizukuSummary = if (isShizukuRunning) {
                 stringResource(id = R.string.settings_shizuku_service_running)
@@ -130,7 +131,7 @@ fun FunctionSettingsContent(
                 stringResource(id = R.string.settings_shizuku_service_summary)
             }
             Column {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.WaterDrop,
                     title = stringResource(id = R.string.settings_shizuku_service),
                     summary = shizukuSummary,
@@ -153,18 +154,18 @@ fun FunctionSettingsContent(
     }
 
     if (kPatchReady && aPatchReady) {
-    FolkSettingsSection(title = stringResource(R.string.settings_section_function_mount)) {
-     FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+    SegmentedSection(title = stringResource(R.string.settings_section_function_mount)) {
+     SegmentedColumn(flat = flat, highlightKey = highlightKey) {
         item(key = "function_umount", visible = kPatchReady && aPatchReady) {
             val umountPathsLabel = stringResource(id = R.string.umount_config_paths_label)
             val umountPathsPlaceholder = stringResource(id = R.string.umount_config_paths_placeholder)
             val umountPathsHelper = stringResource(id = R.string.umount_config_paths_helper)
 
-            ExpressiveCard(flat = flat) {
+            TonalCard(flat = flat) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(FolkDimens.Size16),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -176,19 +177,19 @@ fun FunctionSettingsContent(
                             modifier = Modifier.weight(1f),
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.FolderOff,
+                                imageVector = Icons.Outlined.FolderOff,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.size(24.dp),
+                                modifier = Modifier.size(FolkDimens.Size24),
                             )
-                            Spacer(Modifier.width(16.dp))
+                            Spacer(Modifier.width(FolkDimens.Size16))
                             Column {
                                 Text(
                                     text = umountServiceTitle,
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurface,
                                 )
-                                Spacer(modifier = Modifier.height(4.dp))
+                                Spacer(modifier = Modifier.height(FolkDimens.Size4))
                                 Text(
                                     text = umountServiceSummary,
                                     style = MaterialTheme.typography.bodySmall,
@@ -203,11 +204,11 @@ fun FunctionSettingsContent(
                     }
 
                     AnimatedVisibility(visible = isUmountEnabled) {
-                        Column(modifier = Modifier.padding(top = 12.dp)) {
+                        Column(modifier = Modifier.padding(top = FolkDimens.Size12)) {
                             OutlinedTextField(
                                 value = umountPaths,
                                 onValueChange = onUmountPathsChange,
-                                modifier = Modifier.fillMaxWidth().height(160.dp),
+                                modifier = Modifier.fillMaxWidth().height(FolkDimens.Size160),
                                 label = { Text(umountPathsLabel) },
                                 placeholder = { Text(umountPathsPlaceholder) },
                                 supportingText = { Text(umountPathsHelper) },
@@ -216,7 +217,7 @@ fun FunctionSettingsContent(
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.None),
                             )
 
-                            Spacer(modifier = Modifier.height(12.dp))
+                            Spacer(modifier = Modifier.height(FolkDimens.Size12))
 
                             Button(
                                 onClick = onUmountSave,

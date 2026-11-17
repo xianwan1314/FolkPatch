@@ -13,11 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoAwesome
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Contrast
-import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.Build
+import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,14 +27,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.theme.ColorGenerationMode
 import me.bmax.apatch.ui.theme.ColorStandard
 import me.bmax.apatch.ui.theme.ColorStyle
-import me.bmax.apatch.ui.theme.ColorContrast
 import androidx.compose.ui.semantics.Role
 import me.bmax.apatch.ui.theme.tokens.FolkShape
 
@@ -62,8 +57,8 @@ fun ColorGenerationModeSelector(
                             }
                         ),
                         icon = when (mode) {
-                            ColorGenerationMode.CLASSIC -> Icons.Default.Palette
-                            ColorGenerationMode.CUSTOM -> Icons.Default.AutoAwesome
+                            ColorGenerationMode.CLASSIC -> Icons.Outlined.Palette
+                            ColorGenerationMode.CUSTOM -> Icons.Outlined.AutoAwesome
                         },
                         key = mode.name,
                     )
@@ -74,7 +69,7 @@ fun ColorGenerationModeSelector(
         }
     }
 
-    if (bare) content() else ExpressiveCard(modifier = modifier, flat = flat) { content() }
+    if (bare) content() else TonalCard(modifier = modifier, flat = flat) { content() }
 }
 
 // ─── Color Standard (MD3 2021 / M3e 2025) ────────────────────────────────────
@@ -94,8 +89,8 @@ fun ColorStandardSelector(
                     SegmentedOption(
                         label = stringResource(standard.labelRes),
                         icon = when (standard) {
-                            ColorStandard.MD3_2021 -> Icons.Default.Build
-                            ColorStandard.M3E_2025 -> Icons.Default.AutoAwesome
+                            ColorStandard.MD3_2021 -> Icons.Outlined.Build
+                            ColorStandard.M3E_2025 -> Icons.Outlined.AutoAwesome
                         },
                         key = standard.name,
                     )
@@ -106,7 +101,7 @@ fun ColorStandardSelector(
         }
     }
 
-    if (bare) content() else ExpressiveCard(modifier = modifier, flat = flat) { content() }
+    if (bare) content() else TonalCard(modifier = modifier, flat = flat) { content() }
 }
 
 // ─── Color Style (9 PaletteStyle options) ────────────────────────────────────
@@ -136,45 +131,7 @@ fun ColorStylePicker(
         }
     }
 
-    if (bare) content() else ExpressiveCard(modifier = modifier, flat = flat) { content() }
-}
-
-// ─── Color Contrast (Standard / Medium / High) ───────────────────────────────
-
-@Composable
-fun ColorContrastSelector(
-    selectedContrast: ColorContrast,
-    onContrastSelected: (ColorContrast) -> Unit,
-    modifier: Modifier = Modifier,
-    flat: Boolean = false,
-    bare: Boolean = false,
-) {
-    val contrastLabel = stringResource(R.string.color_contrast_label)
-    val content: @Composable () -> Unit = {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .semantics { contentDescription = contrastLabel },
-        ) {
-            SegmentedToggleRow(
-                options = ColorContrast.entries.map { contrast ->
-                    SegmentedOption(
-                        label = stringResource(contrast.labelRes),
-                        icon = when (contrast) {
-                            ColorContrast.STANDARD -> Icons.Default.Contrast
-                            ColorContrast.MEDIUM -> Icons.Default.Tune
-                            ColorContrast.HIGH -> Icons.Default.AutoAwesome
-                        },
-                        key = contrast.name,
-                    )
-                },
-                selectedIndex = ColorContrast.entries.indexOf(selectedContrast),
-                onOptionSelected = { index -> onContrastSelected(ColorContrast.entries[index]) },
-            )
-        }
-    }
-
-    if (bare) content() else ExpressiveCard(modifier = modifier, flat = flat) { content() }
+    if (bare) content() else TonalCard(modifier = modifier, flat = flat) { content() }
 }
 
 // ─── Segmented Toggle Row (reusable) ─────────────────────────────────────────

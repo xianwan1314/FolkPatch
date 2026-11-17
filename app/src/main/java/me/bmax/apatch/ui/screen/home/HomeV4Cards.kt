@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.home
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import android.os.Build
 import android.system.Os
 import androidx.compose.foundation.clickable
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Android
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.DeveloperBoard
@@ -25,7 +27,6 @@ import androidx.compose.material.icons.outlined.PhoneAndroid
 import androidx.compose.material.icons.outlined.SdStorage
 import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -55,6 +56,8 @@ import me.bmax.apatch.APApplication
 import me.bmax.apatch.Natives
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.copyableInfo
+import me.bmax.apatch.ui.component.TonalCard
+import me.bmax.apatch.ui.theme.tokens.FolkType
 import me.bmax.apatch.util.SystemInfoCollector
 import me.bmax.apatch.util.Version
 import me.bmax.apatch.util.getSELinuxStatus
@@ -98,7 +101,7 @@ fun InstallProgressDialog(
                     text = statusText,
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(FolkDimens.Size16))
                 LinearProgressIndicator(
                     progress = { progress },
                     modifier = Modifier.fillMaxWidth(),
@@ -129,36 +132,13 @@ internal fun SystemInfoCard(
     var hideZygisk by remember { mutableStateOf(prefs.getBoolean("hide_zygisk", false)) }
     var hideMount by remember { mutableStateOf(prefs.getBoolean("hide_mount", false)) }
 
-    TonalCard(modifier = modifier) {
+    TonalCard(modifier = modifier, flat = true) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(horizontal = FolkDimens.Size20, vertical = FolkDimens.Size24),
+            verticalArrangement = Arrangement.spacedBy(FolkDimens.Size16),
         ) {
-            // 标题
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(bottom = 12.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Info,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    text = stringResource(R.string.home_kpatch_info_title),
-                    style = MaterialTheme.typography.titleMediumEmphasized,
-                )
-            }
-
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                modifier = Modifier.padding(bottom = 12.dp)
-            )
-
-            // 信息列表
             InfoItem(Icons.Outlined.PhoneAndroid, stringResource(R.string.home_device_info), getDeviceInfo())
             if (kpState != APApplication.State.UNKNOWN_STATE && !hideKpatchVersion) {
                 InfoItem(Icons.Outlined.Extension, stringResource(R.string.home_kpatch_version), Version.installedKPVString())
@@ -193,28 +173,22 @@ fun InfoItem(icon: ImageVector, label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .copyableInfo(label, value)
-            .padding(vertical = 6.dp),
-        verticalAlignment = Alignment.Top
+            .copyableInfo(label, value),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = null,
-            modifier = Modifier
-                .size(18.dp)
-                .padding(top = 2.dp),
+            contentDescription = label,
+            modifier = Modifier.size(FolkDimens.Size20),
             tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Spacer(Modifier.width(12.dp))
+        Spacer(Modifier.width(FolkDimens.Size16))
         Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Text(text = label, style = FolkType.Summary)
             Text(
                 text = value,
-                style = MaterialTheme.typography.bodyMedium,
+                style = FolkType.Machine,
+                color = MaterialTheme.colorScheme.outline,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -238,33 +212,16 @@ fun StorageInfoCard(modifier: Modifier = Modifier) {
         }
     }
 
-    TonalCard(modifier = modifier) {
+    TonalCard(modifier = modifier, flat = true) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(horizontal = FolkDimens.Size20, vertical = FolkDimens.Size24),
         ) {
-            // 标题
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(bottom = 12.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.SdStorage,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    text = stringResource(R.string.home_storage_title),
-                    style = MaterialTheme.typography.titleMediumEmphasized,
-                )
-            }
-
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                modifier = Modifier.padding(bottom = 12.dp)
+            Text(
+                text = stringResource(R.string.home_storage_title),
+                style = FolkType.Title,
+                modifier = Modifier.padding(bottom = FolkDimens.Size16),
             )
 
             // 存储进度
@@ -275,7 +232,7 @@ fun StorageInfoCard(modifier: Modifier = Modifier) {
                 color = MaterialTheme.colorScheme.primary
             )
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(FolkDimens.Size12))
 
             StorageProgressBar(
                 label = stringResource(R.string.home_storage_ram),
@@ -318,13 +275,13 @@ fun StorageProgressBar(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        Spacer(Modifier.height(6.dp))
+        Spacer(Modifier.height(FolkDimens.Size6))
         LinearProgressIndicator(
             progress = { progress },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(6.dp)
-                .clip(RoundedCornerShape(3.dp)),
+                .height(FolkDimens.Size6)
+                .clip(RoundedCornerShape(FolkDimens.Size3)),
             color = color,
             trackColor = color.copy(alpha = 0.2f),
         )
@@ -337,36 +294,42 @@ fun StorageProgressBar(
 @Composable
 internal fun LearnMoreCardV4() {
     val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
+    val supporting = me.bmax.apatch.ui.theme.tokens.LocalFolkWallpaperTokens.current?.group?.supportingColor
+        ?: MaterialTheme.colorScheme.onSurfaceVariant
 
     TonalCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { uriHandler.openUri("https://fp.mysqil.com/") }
+        flat = true,
+        onClick = { uriHandler.openUri("https://fp.mysqil.com/") },
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(horizontal = FolkDimens.Size24, vertical = FolkDimens.Size20),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = Icons.Outlined.Info,
-                contentDescription = null,
-                modifier = Modifier.size(24.dp),
-                tint = MaterialTheme.colorScheme.primary
+                contentDescription = stringResource(R.string.home_learn_apatch),
+                modifier = Modifier.size(FolkDimens.Size20),
+                tint = supporting,
             )
-            Spacer(Modifier.width(12.dp))
-            Column {
-                Text(
-                    text = stringResource(R.string.home_learn_apatch),
-                    style = MaterialTheme.typography.titleSmallEmphasized,
-                )
+            Spacer(Modifier.width(FolkDimens.Size16))
+            Column(Modifier.weight(1f)) {
+                Text(text = stringResource(R.string.home_learn_apatch), style = FolkType.Summary)
+                Spacer(Modifier.height(FolkDimens.Size4))
                 Text(
                     text = stringResource(R.string.home_click_to_learn_apatch),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = FolkType.Caption,
+                    color = supporting,
                 )
             }
+            Spacer(Modifier.width(FolkDimens.Size12))
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                contentDescription = null,
+                modifier = Modifier.size(FolkDimens.Size20),
+                tint = supporting,
+            )
         }
     }
 }

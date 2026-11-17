@@ -86,10 +86,9 @@ internal object ThemeIO {
                     nightModeEnabled = prefs.getBoolean("night_mode_enabled", true),
                     nightModeFollowSys = prefs.getBoolean("night_mode_follow_sys", false),
                     useSystemDynamicColor = prefs.getBoolean("use_system_color_theme", false),
-                    colorGenerationMode = prefs.getString("color_generation_mode", "classic") ?: "classic",
-                    colorStandard = prefs.getString("color_standard", "MD3_2021") ?: "MD3_2021",
+                    colorGenerationMode = prefs.getString("color_generation_mode", "custom") ?: "custom",
+                    colorStandard = prefs.getString("color_standard", "M3E_2025") ?: "M3E_2025",
                     colorStyle = prefs.getString("color_style", "TONAL_SPOT") ?: "TONAL_SPOT",
-                    colorContrast = prefs.getString("color_contrast", "STANDARD") ?: "STANDARD",
                     appLanguage = AppCompatDelegate.getApplicationLocales().toLanguageTags(),
                     isGridWorkingCardBackgroundEnabled = BackgroundConfig.isGridWorkingCardBackgroundEnabled,
                     gridWorkingCardBackgroundOpacity = BackgroundConfig.gridWorkingCardBackgroundOpacity,
@@ -164,7 +163,7 @@ internal object ThemeIO {
                     put("colorGenerationMode", config.colorGenerationMode)
                     put("colorStandard", config.colorStandard)
                     put("colorStyle", config.colorStyle)
-                    put("colorContrast", config.colorContrast)
+                    put("colorContrast", "STANDARD")
                     put("appLanguage", config.appLanguage)
                     
                     // Grid Working Card Background
@@ -576,10 +575,9 @@ internal object ThemeIO {
                 val nightModeEnabled = json.optBoolean("nightModeEnabled", true)
                 val nightModeFollowSys = json.optBoolean("nightModeFollowSys", true)
                 val useSystemDynamicColor = json.optBoolean("useSystemDynamicColor", true)
-                val colorGenerationMode = json.optString("colorGenerationMode", "classic")
-                val colorStandard = json.optString("colorStandard", "MD3_2021")
+                val colorGenerationMode = json.optString("colorGenerationMode", "custom")
+                val colorStandard = json.optString("colorStandard", "M3E_2025")
                 val colorStyle = json.optString("colorStyle", "TONAL_SPOT")
-                val colorContrast = json.optString("colorContrast", "STANDARD")
                 val appLanguage = json.optString("appLanguage", "")
                 
                 // Grid Working Card Background
@@ -1058,7 +1056,7 @@ internal object ThemeIO {
                     .putString("color_generation_mode", colorGenerationMode)
                     .putString("color_standard", colorStandard)
                     .putString("color_style", colorStyle)
-                    .putString("color_contrast", colorContrast)
+                    .remove("color_contrast")
                     .apply()
                 
                 // 6. Refresh Theme
@@ -1101,112 +1099,56 @@ internal object ThemeIO {
                     .putString("custom_color", "indigo")
                     .putString("home_layout_style", APApplication.HOME_LAYOUT_STYLE_DEFAULT)
                     .putString("stats_top_layout", "list")
-                    .putString("color_generation_mode", "classic")
-                    .putString("color_standard", "MD3_2021")
+                    .putString("color_generation_mode", "custom")
+                    .putString("color_standard", "M3E_2025")
                     .putString("color_style", "TONAL_SPOT")
-                    .putString("color_contrast", "STANDARD")
+                    .remove("color_contrast")
                     .remove("appLanguage")
                     .apply()
 
            
                 BackgroundConfig.reset()
+                BackgroundManager.clearCustomBackground(context)
+                BackgroundManager.clearVideoBackground(context)
+                BackgroundManager.clearGridWorkingCardBackground(context)
+                BackgroundManager.clearHomeBackground(context)
+                BackgroundManager.clearKernelBackground(context)
+                BackgroundManager.clearSuperuserBackground(context)
+                BackgroundManager.clearSystemModuleBackground(context)
+                BackgroundManager.clearSettingsBackground(context)
+                BackgroundManager.clearAllFocusCardBackgrounds(context)
+                BackgroundManager.clearDashboardCardBackground(context)
+                BackgroundManager.clearTitleImage(context)
                 BackgroundConfig.save(context)
 
-       
                 val filesDir = context.filesDir
-                val backgroundFiles = listOf(
-                    "background.jpg",
-                    "background.png",
-                    "background.gif",
-                    "background.webp",
-                    "video_background.mp4",
-                    "video_background.webm",
-                    "video_background.mkv",
-                    "grid_working_card_background.jpg",
-                    "grid_working_card_background.png",
-                    "grid_working_card_background.gif",
-                    "grid_working_card_background.webp",
-                    "background_home.jpg",
-                    "background_home.png",
-                    "background_home.gif",
-                    "background_home.webp",
-                    "background_kernel.jpg",
-                    "background_kernel.png",
-                    "background_kernel.gif",
-                    "background_kernel.webp",
-                    "background_superuser.jpg",
-                    "background_superuser.png",
-                    "background_superuser.gif",
-                    "background_superuser.webp",
-                    "background_system_module.jpg",
-                    "background_system_module.png",
-                    "background_system_module.gif",
-                    "background_system_module.webp",
-                    "background_settings.jpg",
-                    "background_settings.png",
-                    "background_settings.gif",
-                    "background_settings.webp",
-                    "title_image.jpg",
-                    "title_image.png",
-                    "title_image.gif",
-                    "title_image.webp",
-                    "focus_card_kernel_bg.jpg",
-                    "focus_card_kernel_bg.png",
-                    "focus_card_kernel_bg.gif",
-                    "focus_card_kernel_bg.webp",
-                    "focus_card_app_bg.jpg",
-                    "focus_card_app_bg.png",
-                    "focus_card_app_bg.gif",
-                    "focus_card_app_bg.webp",
-                    "focus_card_device_bg.jpg",
-                    "focus_card_device_bg.png",
-                    "focus_card_device_bg.gif",
-                    "focus_card_device_bg.webp",
-                    "focus_card_storage_bg.jpg",
-                    "focus_card_storage_bg.png",
-                    "focus_card_storage_bg.gif",
-                    "focus_card_storage_bg.webp"
-                )
-
-                for (filename in backgroundFiles) {
-                    val file = File(filesDir, filename)
-                    if (file.exists()) {
-                        file.delete()
-                    }
-                }
-
-                // 重置后恢复内置默认仪表盘卡片壁纸
-                BackgroundManager.provisionDefaultDashboardCardBg(context)
-
-      
                 FontConfig.clearFont(context)
 
-      
                 MusicConfig.clearMusic(context)
+                MusicConfig.setVolumeValue(1f)
+                MusicConfig.setAutoPlayEnabledState(false)
+                MusicConfig.setLoopingEnabledState(false)
+                MusicConfig.save(context)
 
                 SoundEffectConfig.clearSoundEffect(context)
                 SoundEffectConfig.clearStartupSound(context)
+                SoundEffectConfig.setScopeValue(SoundEffectConfig.SCOPE_GLOBAL)
+                SoundEffectConfig.setSourceTypeValue(SoundEffectConfig.SOURCE_TYPE_LOCAL)
+                SoundEffectConfig.setPresetNameValue(SoundEffectConfig.PRESETS[0])
+                SoundEffectConfig.setStartupSourceTypeValue(SoundEffectConfig.SOURCE_TYPE_LOCAL)
+                SoundEffectConfig.setStartupPresetNameValue(SoundEffectConfig.STARTUP_PRESETS[0])
                 SoundEffectConfig.save(context)
 
-                // Reset Nav Icons
-                val navDestNames = listOf("Home", "KModule", "SuperUser", "AModule", "Settings")
-                prefs.edit()
-                    .putBoolean("nav_icon_custom_enabled", false)
-                    .also { edit ->
-                        navDestNames.forEach { destName ->
-                            edit.remove("nav_icon_$destName")
-                            File(filesDir, "nav_icon_$destName.png").takeIf { it.exists() }?.delete()
-                        }
-                    }
-                    .apply()
-                // Notify observers so nav bar icons refresh live after theme reset.
-                BottomBarIconConfig.notifyChanged()
+                BottomBarIconConfig.resetAll()
+                filesDir.listFiles()
+                    ?.filter { it.name.startsWith("nav_icon_") }
+                    ?.forEach { it.delete() }
 
                 withContext(Dispatchers.Main) {
+                    MusicManager.reload()
                     AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
                 }
 
-              
                 refreshTheme.postValue(true)
 
                 Log.i(TAG, "Theme reset to default successfully")

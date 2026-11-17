@@ -1,8 +1,10 @@
 package me.bmax.apatch.ui.screen.settings.appearance
 
+import me.bmax.apatch.ui.component.folk.navOrigin
+import me.bmax.apatch.ui.component.folk.folkGroupColor
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,15 +14,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.ExpressiveCard
+import me.bmax.apatch.ui.component.TonalCard
 import me.bmax.apatch.ui.component.LoadingDialogHandle
 import me.bmax.apatch.ui.theme.BackgroundConfig
 import me.bmax.apatch.util.ui.showToast
-import me.bmax.apatch.ui.component.folk.FolkSettingsSectionGroup
-import me.bmax.apatch.ui.component.folk.FolkSliderPreference
-import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
-import me.bmax.apatch.ui.component.folk.FolkValuePreference
-import androidx.compose.material.icons.outlined.*
+import me.bmax.apatch.ui.component.SegmentedColumn
+import me.bmax.apatch.ui.component.SegmentedSliderItem
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
+import me.bmax.apatch.ui.component.SegmentedValueItem
 
 @Composable
 fun AppearanceBannerSection(
@@ -32,9 +33,9 @@ fun AppearanceBannerSection(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    FolkSettingsSectionGroup(title = stringResource(R.string.settings_appearance_banner), flat = flat, highlightKey = highlightKey) {
+    SegmentedColumn(title = stringResource(R.string.settings_appearance_banner), flat = flat, highlightKey = highlightKey) {
         item(key = "appearance_banner") {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.Campaign,
                 title = stringResource(id = R.string.apm_enable_module_banner),
                 summary = stringResource(id = R.string.apm_enable_module_banner_summary),
@@ -48,7 +49,7 @@ fun AppearanceBannerSection(
 
         if (BackgroundConfig.isBannerEnabled) {
             item(key = "appearance_folk_banner") {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.Image,
                     title = stringResource(id = R.string.apm_enable_folk_banner),
                     summary = stringResource(id = R.string.apm_enable_folk_banner_summary),
@@ -62,7 +63,7 @@ fun AppearanceBannerSection(
 
             if (BackgroundConfig.isFolkBannerEnabled) {
                 item(key = "appearance_banner_api_mode") {
-                    FolkSwitchPreference(
+                    SegmentedSwitchItem(
                         icon = Icons.Outlined.Api,
                         title = stringResource(id = R.string.apm_banner_api_mode),
                         summary = stringResource(id = R.string.apm_banner_api_mode_summary),
@@ -88,7 +89,7 @@ fun AppearanceBannerSection(
                         }
 
                         Column {
-                            FolkValuePreference(
+                            SegmentedValueItem(
                 icon = Icons.Outlined.Api,
                 title = stringResource(id = R.string.apm_banner_api_source),
                 summary = apiSourceSummary,
@@ -114,9 +115,10 @@ fun AppearanceBannerSection(
                                 )
                             }
 
-                            FolkValuePreference(
+                            SegmentedValueItem(
                 icon = Icons.Outlined.Store,
                 title = stringResource(id = R.string.apm_api_marketplace_title),
+                modifier = androidx.compose.ui.Modifier.navOrigin(color = folkGroupColor()),
                 onClick = { onNavigateToApiMarketplace() },
             )
                         }
@@ -125,7 +127,7 @@ fun AppearanceBannerSection(
             }
 
             item(key = "appearance_banner_opacity") {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.Opacity,
                     title = stringResource(id = R.string.settings_banner_custom_opacity),
                     summary = stringResource(id = R.string.settings_banner_custom_opacity_summary),
@@ -139,7 +141,7 @@ fun AppearanceBannerSection(
 
             if (BackgroundConfig.isBannerCustomOpacityEnabled) {
                 item(key = "appearance_banner_opacity_slider") {
-                    FolkSliderPreference(
+                    SegmentedSliderItem(
                         title = stringResource(id = R.string.settings_banner_opacity),
                         value = BackgroundConfig.bannerCustomOpacity,
                         onValueChange = { BackgroundConfig.setBannerCustomOpacityValue(it) },

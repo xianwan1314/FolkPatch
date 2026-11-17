@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.module
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -46,7 +47,6 @@ import me.bmax.apatch.ui.component.AdaptiveModuleButtonRow
 import me.bmax.apatch.ui.component.ModuleButtonConfig
 import me.bmax.apatch.ui.viewmodel.APModuleViewModel
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Download
 import me.bmax.apatch.util.CustomModuleInfo
 import me.bmax.apatch.ui.theme.bannerFadeColor
 
@@ -121,7 +121,7 @@ fun ModuleItemContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(FolkDimens.Size16)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -131,8 +131,8 @@ fun ModuleItemContent(
                     val hasAnyLabel = showMoreModuleInfo || module.remove || (updateUrl.isNotEmpty() && !module.update) || module.update
                     if (hasAnyLabel) {
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            modifier = Modifier.padding(bottom = 8.dp)
+                            horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size6),
+                            modifier = Modifier.padding(bottom = FolkDimens.Size8)
                         ) {
                             if (showMoreModuleInfo) {
                                 ModuleLabel(
@@ -219,7 +219,7 @@ fun ModuleItemContent(
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(FolkDimens.Size12))
 
             Text(
                 text = customInfo?.description?.takeIf { it.isNotBlank() } ?: module.description,
@@ -229,7 +229,7 @@ fun ModuleItemContent(
                 overflow = TextOverflow.Ellipsis
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(FolkDimens.Size16))
 
             AnimatedVisibility(
                 visible = !foldSystemModule || expanded,

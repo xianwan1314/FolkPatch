@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_layout_variant">Varian tata letak</string>
+    <string name="settings_layout_variant_summary">Gunakan bilah atas M3E besar dengan pencarian sebaris yang dapat diciutkan, atau pertahankan bilah atas ringkas tradisional.</string>
+    <string name="settings_layout_variant_traditional">Tradisional</string>
+    <string name="settings_layout_variant_m3e">M3E</string>
+    <string name="apm_search_hint">Cari modul sistem</string>
+    <string name="kpm_search_hint">Cari modul kernel</string>
+    <string name="su_search_hint">Cari aplikasi</string>
     <string name="launcher_icon_style_anime">Anime</string>
     <string name="launcher_icon_style_geometry">Geometri</string>
     <string name="launcher_icon_style_apatch">APatch</string>
@@ -268,7 +275,6 @@
     <string name="su_multi_select_confirm_grant">Beri ROOT ke %d aplikasi?</string>
     <string name="su_multi_select_confirm_revoke">Cabut ROOT dari %d aplikasi?</string>
     <string name="su_multi_select_confirm_exclude">Kecualikan %d aplikasi?</string>
-    <string name="su_multi_select_enter">Pilih banyak</string>
 
     <string name="apm">Modul Sistem</string>
     <string name="apm_not_installed">AndroidPatch tidak terinstal</string>
@@ -308,15 +314,6 @@
     <string name="setting_reset_su_path">Reset jalur su</string>
     <string name="setting_reset_su_new_path">Jalur penuh baru</string>
 
-    <string name="settings_folkx_engine_title">Mesin Animasi FolkX</string>
-    <string name="settings_folkx_engine_summary">Gunakan animasi pegas fisik yang halus saat beralih halaman tingkat atas</string>
-    <string name="settings_folkx_animation_type">Jenis Animasi</string>
-    <string name="settings_folkx_animation_speed">Kecepatan Animasi</string>
-    <string name="settings_folkx_animation_linear">Gerakan Linier</string>
-    <string name="settings_folkx_animation_spatial">Gerakan Spasial</string>
-    <string name="settings_folkx_animation_fade">Muncul/Hilang Bertahap</string>
-    <string name="settings_folkx_animation_vertical">Geser Vertikal</string>
-    <string name="settings_folkx_animation_diagonal">Geser Diagonal</string>
 
     <string name="apm_webui_open">Buka</string>
     <string name="apm_action">Tindakan</string>
@@ -355,6 +352,24 @@
     <string name="settings_show_kpm_status_badge_summary">Tampilkan badge status Tersemat/Termuat di kartu KPM</string>
     <string name="settings_show_more_module_info">Tampilkan detail modul</string>
     <string name="settings_show_more_module_info_summary">Tampilkan ID dan ukuran modul dalam daftar modul</string>
+    <string name="module_sort">Urutan</string>
+    <string name="module_sort_priority">Prioritas urutan</string>
+    <string name="module_sort_group_metamodule">Modul meta</string>
+    <string name="module_sort_group_metamodule_summary">Modul tempat modul lain bergantung.</string>
+    <string name="module_sort_group_zygisk">Modul Zygisk</string>
+    <string name="module_sort_group_zygisk_summary">Menyediakan atau memuat runtime Zygisk.</string>
+    <string name="module_sort_group_lsposed">Modul LSPosed</string>
+    <string name="module_sort_group_lsposed_summary">Hook melalui kerangka Xposed.</string>
+    <string name="module_sort_group_webui">Modul dengan antarmuka web</string>
+    <string name="module_sort_group_webui_summary">Menyertakan layar tersendiri.</string>
+    <string name="module_sort_group_action">Modul dengan aksi</string>
+    <string name="module_sort_group_action_summary">Menjalankan skrip sesuai permintaan.</string>
+    <string name="module_sort_enabled_first">Urutkan (Aktif dahulu)</string>
+    <string name="module_sort_custom_order">Urutan kustom</string>
+    <string name="module_sort_custom_order_summary">Seret modul ke urutan yang Anda inginkan.</string>
+    <string name="module_sort_reset_custom_order">Atur ulang urutan kustom</string>
+    <string name="module_sort_reset_custom_order_summary">Kembali ke urutan prioritas.</string>
+    <string name="module_sort_drag_to_reorder">Seret untuk menyusun ulang</string>
     <string name="apm_install_confirm_title">Instal modul</string>
     <string name="apm_install_confirm_content">Apakah Anda yakin ingin tetap menginstal %s?</string>
     <string name="apm_disable_all_title">Nonaktifkan semua modul</string>
@@ -1328,10 +1343,6 @@ Berikut adalah beberapa kemungkinan penyebab kegagalan autentikasi—silakan cek
     <string name="color_style_neutral">Netral</string>
     <string name="color_style_fidelity">Fidelitas</string>
     <!-- Color Contrast -->
-    <string name="color_contrast_label">Kontras</string>
-    <string name="color_contrast_standard">Standar</string>
-    <string name="color_contrast_medium">Sedang</string>
-    <string name="color_contrast_high">Tinggi</string>
     <string name="settings_focus_card_background">Latar Kartu FocusUI</string>
     <string name="settings_focus_card_background_enabled">Latar kartu FocusUI diaktifkan; tekan lama kartu untuk mengelola latarnya</string>
     <string name="settings_focus_card_background_summary">Aktifkan latar kartu FocusUI dan kelola latar dengan tekan lama</string>
@@ -1359,8 +1370,6 @@ Berikut adalah beberapa kemungkinan penyebab kegagalan autentikasi—silakan cek
     <string name="dashboard_card_background_saved">Latar dasbor berhasil disimpan</string>
     <string name="dashboard_card_background_error">Gagal menyimpan latar dasbor</string>
     <string name="dashboard_card_background_cleared">Latar dasbor dihapus</string>
-    <string name="dashboard_card_background_restore">Pulihkan default</string>
-    <string name="dashboard_card_background_restored">Latar dasbor dipulihkan</string>
     <string name="settings_dashboard_card_dual_dim">Aktifkan peredupan ganda siang/malam</string>
     <string name="settings_dashboard_card_dual_dim_desc">Sesuaikan keredupan latar dasbor secara otomatis untuk tema terang dan gelap</string>
     <string name="settings_dashboard_card_day_dim">Keredupan latar dasbor mode siang</string>

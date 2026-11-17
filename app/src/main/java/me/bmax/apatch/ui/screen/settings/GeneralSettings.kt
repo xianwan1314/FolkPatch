@@ -1,10 +1,12 @@
 package me.bmax.apatch.ui.screen.settings
 
+import androidx.compose.ui.Modifier
+import androidx.compose.material.icons.automirrored.outlined.List
 import me.bmax.apatch.util.ui.showToast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
@@ -17,16 +19,17 @@ import me.bmax.apatch.APApplication
 import me.bmax.apatch.Natives
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.UpdateDialog
+import me.bmax.apatch.ui.component.folk.navOrigin
+import me.bmax.apatch.ui.component.folk.folkGroupColor
 import me.bmax.apatch.ui.component.rememberLoadingDialog
-import me.bmax.apatch.ui.component.folk.FolkNavigationPreference
-import me.bmax.apatch.ui.component.folk.FolkSettingsGroup
-import me.bmax.apatch.ui.component.folk.FolkSettingsSection
-import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
-import me.bmax.apatch.ui.component.folk.FolkValuePreference
+import me.bmax.apatch.ui.component.SegmentedNavigationItem
+import me.bmax.apatch.ui.component.SegmentedColumn
+import me.bmax.apatch.ui.component.SegmentedSection
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
+import me.bmax.apatch.ui.component.SegmentedValueItem
 import me.bmax.apatch.util.*
 import me.bmax.apatch.ui.screen.settings.general.*
 import me.bmax.apatch.util.LauncherIconUtils
-import androidx.compose.material.icons.outlined.*
 
 @Composable
 fun GeneralSettingsContent(
@@ -137,9 +140,6 @@ fun GeneralSettingsContent(
     val cleanStorageTitle = stringResource(id = R.string.settings_clear_cache)
     val cleanStorageSummary = stringResource(id = R.string.settings_clean_storage_summary)
 
-    val folkXEngineTitle = stringResource(id = R.string.settings_folkx_engine_title)
-    val folkXEngineSummary = stringResource(id = R.string.settings_folkx_engine_summary)
-
     val predictiveBackTitle = stringResource(id = R.string.settings_predictive_back)
     val predictiveBackSummary = stringResource(id = R.string.settings_predictive_back_summary)
 
@@ -161,8 +161,6 @@ fun GeneralSettingsContent(
     val showCustomAppTitleDialog = remember { mutableStateOf(false) }
     val showDesktopAppNameDialog = remember { mutableStateOf(false) }
     val showDpiDialog = remember { mutableStateOf(false) }
-    val showFolkXAnimationTypeDialog = remember { mutableStateOf(false) }
-    val showFolkXAnimationSpeedDialog = remember { mutableStateOf(false) }
     val showAppListLoadingSchemeDialog = remember { mutableStateOf(false) }
     val showNewAppProfileModeDialog = remember { mutableStateOf(false) }
     val showSELinuxModeDialog = remember { mutableStateOf(false) }
@@ -171,9 +169,6 @@ fun GeneralSettingsContent(
     var autoUpdateCheck by remember { mutableStateOf(prefs.getBoolean("auto_update_check", true)) }
     var blockUpdateChecked by remember { mutableStateOf(prefs.getBoolean(APApplication.PREF_BLOCK_KERNELPATCH_UPDATE, false)) }
     var blockApUpdateChecked by remember { mutableStateOf(prefs.getBoolean(APApplication.PREF_BLOCK_ANDROIDPATCH_UPDATE, false)) }
-    var folkXEngineEnabled by remember { mutableStateOf(prefs.getBoolean("folkx_engine_enabled", true)) }
-    var currentType by remember { mutableStateOf(prefs.getString("folkx_animation_type", "linear") ?: "linear") }
-    var currentSpeed by remember { mutableStateOf(prefs.getFloat("folkx_animation_speed", 1.0f)) }
     var predictiveBackEnabled by remember { mutableStateOf(prefs.getBoolean("predictive_back_enabled", true)) }
 
     val newAppProfileEnabledTitle = stringResource(id = R.string.settings_new_app_profile_enabled)
@@ -193,20 +188,21 @@ fun GeneralSettingsContent(
         else -> stringResource(R.string.settings_new_app_profile_normal)
     }
 
-    FolkSettingsSection(title = stringResource(R.string.settings_section_general_basics)) {
-     FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+    SegmentedSection(title = stringResource(R.string.settings_section_general_basics)) {
+     SegmentedColumn(flat = flat, highlightKey = highlightKey) {
 
         item(key = "general_language") {
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.Translate,
                 title = languageTitle,
                 summary = languageValue,
+                modifier = Modifier.navOrigin(color = folkGroupColor()),
                 onClick = { navigator.navigate(LanguagePickerScreenDestination) },
             )
         }
 
         item(key = "general_check_update") {
-            FolkNavigationPreference(
+            SegmentedNavigationItem(
                 icon = Icons.Outlined.Update,
                 title = updateTitle,
                 onClick = {
@@ -225,7 +221,7 @@ fun GeneralSettingsContent(
         }
 
         item(key = "general_auto_update") {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.Autorenew,
                 title = autoUpdateTitle,
                 summary = autoUpdateSummary,
@@ -238,7 +234,7 @@ fun GeneralSettingsContent(
         }
 
         item(key = "general_block_kp_update") {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.Block,
                 title = blockUpdateTitle,
                 summary = blockUpdateSummary,
@@ -251,7 +247,7 @@ fun GeneralSettingsContent(
         }
 
         item(key = "general_block_ap_update") {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.Block,
                 title = blockApUpdateTitle,
                 summary = blockApUpdateSummary,
@@ -269,26 +265,18 @@ fun GeneralSettingsContent(
     GeneralInterfaceSection(
         flat = flat,
         highlightKey = highlightKey,
-        folkXEngineTitle = folkXEngineTitle,
-        folkXEngineSummary = folkXEngineSummary,
-        folkXEngineEnabled = folkXEngineEnabled,
-        onFolkXEngineEnabledChange = { folkXEngineEnabled = it },
-        currentType = currentType,
-        currentSpeed = currentSpeed,
         predictiveBackTitle = predictiveBackTitle,
         predictiveBackSummary = predictiveBackSummary,
         predictiveBackEnabled = predictiveBackEnabled,
         onPredictiveBackEnabledChange = { predictiveBackEnabled = it },
-        showFolkXAnimationTypeDialog = showFolkXAnimationTypeDialog,
-        showFolkXAnimationSpeedDialog = showFolkXAnimationSpeedDialog,
     )
 
     if (kPatchReady) {
-    FolkSettingsSection(title = stringResource(R.string.settings_section_general_root)) {
-     FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+    SegmentedSection(title = stringResource(R.string.settings_section_general_root)) {
+     SegmentedColumn(flat = flat, highlightKey = highlightKey) {
 
         item(key = "general_new_app_profile_enabled", visible = kPatchReady) {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.AppRegistration,
                 title = newAppProfileEnabledTitle,
                 summary = newAppProfileEnabledSummary,
@@ -321,7 +309,7 @@ fun GeneralSettingsContent(
         }
 
         item(key = "general_new_app_profile", visible = kPatchReady && newAppProfileEnabled) {
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.SettingsApplications,
                 title = newAppProfileTitle,
                 summary = currentNewAppProfileLabel,
@@ -330,8 +318,8 @@ fun GeneralSettingsContent(
         }
 
         item(key = "general_app_list_scheme", visible = kPatchReady) {
-            FolkValuePreference(
-                icon = Icons.Outlined.List,
+            SegmentedValueItem(
+                icon = Icons.AutoMirrored.Outlined.List,
                 title = appListLoadingSchemeTitle,
                 summary = currentSchemeLabel,
                 onClick = { showAppListLoadingSchemeDialog.value = true },
@@ -339,7 +327,7 @@ fun GeneralSettingsContent(
         }
 
         item(key = "general_selinux_mode", visible = kPatchReady && aPatchReady) {
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.Security,
                 title = selinuxModeTitle,
                 summary = stringResource(R.string.settings_selinux_current_mode, selinuxModeValue),
@@ -348,7 +336,7 @@ fun GeneralSettingsContent(
         }
 
         item(key = "general_global_namespace", visible = kPatchReady && aPatchReady) {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.Public,
                 title = globalNamespaceTitle,
                 summary = globalNamespaceSummary,
@@ -460,18 +448,6 @@ fun GeneralSettingsContent(
 
     if (showDpiDialog.value) {
         DpiChooseDialog(showDpiDialog)
-    }
-
-    if (showFolkXAnimationTypeDialog.value) {
-        FolkXAnimationTypeDialog(showFolkXAnimationTypeDialog) { newType ->
-            currentType = newType
-        }
-    }
-
-    if (showFolkXAnimationSpeedDialog.value) {
-        FolkXAnimationSpeedDialog(showFolkXAnimationSpeedDialog) { newSpeed ->
-            currentSpeed = newSpeed
-        }
     }
 
     if (showAppListLoadingSchemeDialog.value) {

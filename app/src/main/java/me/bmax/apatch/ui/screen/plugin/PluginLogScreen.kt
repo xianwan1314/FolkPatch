@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.plugin
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -62,7 +63,7 @@ data class PluginLogEntry(
     val log: String,
 )
 
-@Destination<RootGraph>
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 @Composable
 fun PluginLogScreen(navigator: DestinationsNavigator) {
     val context = LocalContext.current
@@ -82,7 +83,7 @@ fun PluginLogScreen(navigator: DestinationsNavigator) {
 
     FolkScaffold(
         title = stringResource(R.string.plugin_log_page_title),
-        titleStyle = FolkTitleStyle.Inline,
+        titleStyle = FolkTitleStyle.Flexible,
         onBack = { navigator.popBackStack() },
         actions = {
             // Export button
@@ -131,8 +132,8 @@ fun PluginLogScreen(navigator: DestinationsNavigator) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
-                contentPadding = PaddingValues(top = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(top = FolkDimens.Size8),
+                verticalArrangement = Arrangement.spacedBy(FolkDimens.Size12),
             ) {
                 splicedLazyColumnGroup(
                     items = logs,
@@ -150,7 +151,7 @@ private fun PluginLogCard(entry: PluginLogEntry) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(FolkDimens.Size16),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -161,14 +162,14 @@ private fun PluginLogCard(entry: PluginLogEntry) {
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f),
             )
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(FolkDimens.Size8))
             Text(
                 text = entry.id,
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(FolkDimens.Size12))
         FolkLogText(text = entry.log)
     }
 }

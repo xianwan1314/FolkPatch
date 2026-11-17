@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_layout_variant">Variante de diseño</string>
+    <string name="settings_layout_variant_summary">Usa barras superiores grandes M3E con búsqueda integrada y plegable, o conserva las barras superiores compactas tradicionales.</string>
+    <string name="settings_layout_variant_traditional">Tradicional</string>
+    <string name="settings_layout_variant_m3e">M3E</string>
+    <string name="apm_search_hint">Buscar módulos del sistema</string>
+    <string name="kpm_search_hint">Buscar módulos del kernel</string>
+    <string name="su_search_hint">Buscar aplicaciones</string>
     <string name="launcher_icon_style_anime">Anime</string>
     <string name="launcher_icon_style_geometry">Geométrico</string>
     <string name="launcher_icon_style_apatch">APatch</string>
@@ -91,15 +98,6 @@
     <string name="settings_grid_working_card_hide_mode">Ocultar modo de trabajo</string>
     <string name="settings_grid_working_card_hide_mode_summary">Ocultar el texto \'Full\' o \'Half\' en la tarjeta de estado</string>
 
-    <string name="settings_folkx_engine_title">Motor de Animación FolkX</string>
-    <string name="settings_folkx_engine_summary">Usar animación elástica basada en física al cambiar entre páginas principales</string>
-    <string name="settings_folkx_animation_type">Tipo de animación</string>
-    <string name="settings_folkx_animation_speed">Velocidad de animación</string>
-    <string name="settings_folkx_animation_linear">Movimiento lineal</string>
-    <string name="settings_folkx_animation_spatial">Movimiento espacial</string>
-    <string name="settings_folkx_animation_fade">Desvanecer Entrada/Salida</string>
-    <string name="settings_folkx_animation_vertical">Deslizar verticalmente</string>
-    <string name="settings_folkx_animation_diagonal">Deslizar diagonalmente</string>
 
     <string name="su_exclude_all_title">Excluir todo</string>
     <string name="su_exclude_all_confirm">¿Estás seguro de que deseas excluir todas las apps no root?</string>
@@ -281,7 +279,6 @@
     <string name="su_multi_select_confirm_grant">¿Conceder ROOT a %d aplicaciones?</string>
     <string name="su_multi_select_confirm_revoke">¿Revocar ROOT de %d aplicaciones?</string>
     <string name="su_multi_select_confirm_exclude">¿Excluir %d aplicaciones?</string>
-    <string name="su_multi_select_enter">Multiselección</string>
 
     <string name="apm">Módulo del Sistema</string>
     <string name="apm_not_installed">AndroidPatch no instalado</string>
@@ -343,6 +340,24 @@
     <string name="settings_apm_install_confirm_summary">Mostrar un diálogo de confirmación antes de instalar módulos</string>
     <string name="settings_show_more_module_info">Mostrar detalles del módulo</string>
     <string name="settings_show_more_module_info_summary">Mostrar ID y tamaño del módulo en la lista</string>
+    <string name="module_sort">Orden</string>
+    <string name="module_sort_priority">Prioridad de orden</string>
+    <string name="module_sort_group_metamodule">Metamódulos</string>
+    <string name="module_sort_group_metamodule_summary">El módulo al que se adhieren los demás.</string>
+    <string name="module_sort_group_zygisk">Módulos Zygisk</string>
+    <string name="module_sort_group_zygisk_summary">Proporciona o carga el entorno de ejecución de Zygisk.</string>
+    <string name="module_sort_group_lsposed">Módulos LSPosed</string>
+    <string name="module_sort_group_lsposed_summary">Se engancha a través del framework Xposed.</string>
+    <string name="module_sort_group_webui">Módulos con interfaz web</string>
+    <string name="module_sort_group_webui_summary">Incluye una pantalla propia.</string>
+    <string name="module_sort_group_action">Módulos con una acción</string>
+    <string name="module_sort_group_action_summary">Ejecuta un script cuando se solicita.</string>
+    <string name="module_sort_enabled_first">Activados primero</string>
+    <string name="module_sort_custom_order">Orden personalizado</string>
+    <string name="module_sort_custom_order_summary">Arrastra los módulos al orden en que quieras mostrarlos.</string>
+    <string name="module_sort_reset_custom_order">Restablecer orden personalizado</string>
+    <string name="module_sort_reset_custom_order_summary">Volver al orden por prioridad.</string>
+    <string name="module_sort_drag_to_reorder">Arrastra para reordenar</string>
     <string name="settings_apm_stay_on_page">Permanecer en la página</string>
     <string name="settings_apm_stay_on_page_summary">No regresar automáticamente tras ejecutar una acción del módulo</string>
     <string name="settings_enable_module_shortcut_add">Habilitar botón de agregar acceso directo</string>
@@ -1340,10 +1355,6 @@ Aquí hay algunas posibles razones para el fallo de autenticación—por favor v
     <string name="color_style_neutral">Neutro</string>
     <string name="color_style_fidelity">Fidelidad</string>
     <!-- Color Contrast -->
-    <string name="color_contrast_label">Contraste</string>
-    <string name="color_contrast_standard">Estándar</string>
-    <string name="color_contrast_medium">Medio</string>
-    <string name="color_contrast_high">Alto</string>
     <string name="settings_focus_card_background">Fondo de tarjeta FocusUI</string>
     <string name="settings_focus_card_background_enabled">Fondos de tarjeta FocusUI activados; mantén pulsada una tarjeta para gestionar su fondo</string>
     <string name="settings_focus_card_background_summary">Activar fondos de tarjeta FocusUI y gestión de fondo con pulsación larga</string>
@@ -1371,8 +1382,6 @@ Aquí hay algunas posibles razones para el fallo de autenticación—por favor v
     <string name="dashboard_card_background_saved">Fondo del panel guardado correctamente</string>
     <string name="dashboard_card_background_error">Error al guardar el fondo del panel</string>
     <string name="dashboard_card_background_cleared">Fondo del panel borrado</string>
-    <string name="dashboard_card_background_restore">Restablecer predeterminado</string>
-    <string name="dashboard_card_background_restored">Fondo del panel restablecido</string>
     <string name="settings_dashboard_card_dual_dim">Activar atenuación dual día/noche</string>
     <string name="settings_dashboard_card_dual_dim_desc">Ajustar automáticamente el oscurecimiento del fondo del panel según el tema claro u oscuro</string>
     <string name="settings_dashboard_card_day_dim">Atenuación del fondo del panel en modo día</string>

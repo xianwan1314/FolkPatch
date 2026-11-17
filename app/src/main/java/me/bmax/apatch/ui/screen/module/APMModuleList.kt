@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.module
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
@@ -46,6 +47,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.style.TextAlign
@@ -88,6 +91,7 @@ fun ModuleList(
     splicedCardGroup: Boolean,
     checkStrongBiometric: suspend () -> Boolean,
     modifier: Modifier = Modifier,
+    scrollConnection: NestedScrollConnection? = null,
     state: LazyListState,
     onInstallModule: (Uri) -> Unit,
     onClickModule: (id: String, name: String, hasWebUi: Boolean) -> Unit,
@@ -255,18 +259,26 @@ fun ModuleList(
 
         if (isWideScreen) {
             TwoColumnGrid(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(
+                        if (scrollConnection != null) {
+                            Modifier.nestedScroll(scrollConnection)
+                        } else {
+                            Modifier
+                        }
+                    ),
                 items = if (modules.isEmpty()) emptyList() else modules,
                 key = { module -> module.id },
-                verticalSpacing = 16.dp,
-                horizontalSpacing = 16.dp,
+                verticalSpacing = FolkDimens.Size16,
+                horizontalSpacing = FolkDimens.Size16,
                 contentPadding = run {
                     val bottomClearance = fabNavBottomClearance()
                     remember(bottomClearance) {
                         PaddingValues(
-                            start = 16.dp,
-                            top = 16.dp,
-                            end = 16.dp,
+                            start = FolkDimens.Size16,
+                            top = FolkDimens.Size16,
+                            end = FolkDimens.Size16,
                             bottom = bottomClearance
                         )
                     }
@@ -283,7 +295,7 @@ fun ModuleList(
                             WarningCard(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(bottom = 16.dp),
+                                    .padding(bottom = FolkDimens.Size16),
                                 message = stringResource(R.string.apm_mount_warning_message),
                                 onClose = {
                                     prefs.edit()
@@ -298,7 +310,7 @@ fun ModuleList(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .defaultMinSize(minHeight = 300.dp),
+                                .defaultMinSize(minHeight = FolkDimens.Size300),
                             contentAlignment = Alignment.Center
                         ) {
                             if (viewModel.errorMessage != null && !viewModel.isRefreshing) {
@@ -310,17 +322,17 @@ fun ModuleList(
                                         imageVector = Icons.Outlined.ErrorOutline,
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.error,
-                                        modifier = Modifier.size(48.dp)
+                                        modifier = Modifier.size(FolkDimens.Size48)
                                     )
-                                    Spacer(Modifier.height(12.dp))
+                                    Spacer(Modifier.height(FolkDimens.Size12))
                                     Text(
                                         text = viewModel.errorMessage ?: stringResource(R.string.apm_load_failed),
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         textAlign = TextAlign.Center,
-                                        modifier = Modifier.padding(horizontal = 16.dp)
+                                        modifier = Modifier.padding(horizontal = FolkDimens.Size16)
                                     )
-                                    Spacer(Modifier.height(12.dp))
+                                    Spacer(Modifier.height(FolkDimens.Size12))
                                     Button(onClick = { viewModel.fetchModuleList() }) {
                                         Text(stringResource(R.string.retry))
                                     }
@@ -364,15 +376,23 @@ fun ModuleList(
             )
         } else {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(
+                        if (scrollConnection != null) {
+                            Modifier.nestedScroll(scrollConnection)
+                        } else {
+                            Modifier
+                        }
+                    ),
                 state = state,
                 contentPadding = run {
                     val bottomClearance = fabNavBottomClearance()
                     remember(bottomClearance) {
                         PaddingValues(
-                            start = 0.dp,
-                            top = 16.dp,
-                            end = 0.dp,
+                            start = FolkDimens.Size0,
+                            top = FolkDimens.Size16,
+                            end = FolkDimens.Size0,
                             bottom = bottomClearance
                         )
                     }
@@ -389,7 +409,7 @@ fun ModuleList(
                                 shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec())
                         ) {
                             WarningCard(
-                                modifier = Modifier.padding(horizontal = 16.dp),
+                                modifier = Modifier.padding(horizontal = FolkDimens.Size16),
                                 message = stringResource(R.string.apm_mount_warning_message),
                                 onClose = {
                                     prefs.edit()
@@ -419,17 +439,17 @@ fun ModuleList(
                                         imageVector = Icons.Outlined.ErrorOutline,
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.error,
-                                        modifier = Modifier.size(48.dp)
+                                        modifier = Modifier.size(FolkDimens.Size48)
                                     )
-                                    Spacer(Modifier.height(12.dp))
+                                    Spacer(Modifier.height(FolkDimens.Size12))
                                     Text(
                                         text = viewModel.errorMessage ?: stringResource(R.string.apm_load_failed),
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         textAlign = TextAlign.Center,
-                                        modifier = Modifier.padding(horizontal = 16.dp)
+                                        modifier = Modifier.padding(horizontal = FolkDimens.Size16)
                                     )
-                                    Spacer(Modifier.height(12.dp))
+                                    Spacer(Modifier.height(FolkDimens.Size12))
                                     Button(onClick = { viewModel.fetchModuleList() }) {
                                         Text(stringResource(R.string.retry))
                                     }
@@ -456,7 +476,7 @@ fun ModuleList(
 
                     else -> {
                         if (splicedCardGroup) {
-                            item { Spacer(Modifier.height(8.dp)) }
+                            item { Spacer(Modifier.height(FolkDimens.Size8)) }
                             splicedLazyColumnGroup(
                                 items = modules,
                                 key = { _, module -> module.id },
@@ -488,11 +508,11 @@ fun ModuleList(
                                     onClickModule = onClickModule,
                                 )
                             }
-                            item { Spacer(Modifier.height(8.dp)) } // bottom clearance handled by contentPadding
+                            item { Spacer(Modifier.height(FolkDimens.Size8)) } // bottom clearance handled by contentPadding
                         } else {
-                            item { Spacer(Modifier.height(8.dp)) }
+                            item { Spacer(Modifier.height(FolkDimens.Size8)) }
                             itemsIndexed(modules, key = { _, module -> module.id }) { _, module ->
-                                Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                                Box(modifier = Modifier.padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size8)) {
                                 ModuleRow(
                                     navigator = navigator,
                                     viewModel = viewModel,
@@ -521,7 +541,7 @@ fun ModuleList(
 
                                 }
                             }
-                            item { Spacer(Modifier.height(8.dp)) } // bottom clearance handled by contentPadding
+                            item { Spacer(Modifier.height(FolkDimens.Size8)) } // bottom clearance handled by contentPadding
                         }
                     }
                 }

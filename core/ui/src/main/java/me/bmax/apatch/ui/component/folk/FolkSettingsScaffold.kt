@@ -6,17 +6,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -24,41 +21,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
+import me.bmax.apatch.core.ui.R
 import me.bmax.apatch.ui.theme.tokens.FolkTheme
 import me.bmax.apatch.util.ui.NavigationBarsSpacer
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.Box
 
-/**
- * Colours for the settings bar.
- *
- * With a custom background the bar is fully transparent so the image reads
- * straight through it on every page.
- *
- * Otherwise the bar fades from fully transparent to the elevated panel tone.
- * Both ends use the *same* RGB with only the alpha changing - using
- * [Color.Transparent] instead would make Material interpolate the colour from
- * black, which showed up as a grey scrim washing over the title and the
- * content while scrolling.
- */
+/** Colours for settings and secondary-page bars, matching FinaSU's page chrome. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun folkTopAppBarColors(): TopAppBarColors {
-    if (FolkTheme.palette.onCustomBackground) {
-        return TopAppBarDefaults.largeTopAppBarColors(
-            containerColor = Color.Transparent,
-            scrolledContainerColor = Color.Transparent,
-        )
-    }
-    val elevated = folkGroupColor()
-    return TopAppBarDefaults.largeTopAppBarColors(
-        containerColor = elevated.copy(alpha = 0f),
-        scrolledContainerColor = elevated,
-    )
-}
+fun folkTopAppBarColors(): TopAppBarColors = folkDefaultAppBarColors()
 
 /**
  * Colours for the screens that build their own bar (home, modules, search):
@@ -74,16 +49,20 @@ fun folkDefaultAppBarColors(): TopAppBarColors =
             scrolledContainerColor = Color.Transparent,
         )
     } else {
-        TopAppBarDefaults.topAppBarColors()
+        val container = MaterialTheme.colorScheme.surfaceContainer
+        TopAppBarDefaults.topAppBarColors(
+            containerColor = container,
+            scrolledContainerColor = container,
+        )
     }
 
 /**
  * Shared chrome for every settings sub-screen.
  *
- * Uses a compact [TopAppBar] with the title beside the back button. The bar
- * stays the same height while scrolling and gains the shared elevated tone.
+ * Uses the M3E flexible title so the page starts with a clear heading and collapses to the compact
+ * height while scrolling. All settings category pages share this chrome.
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun FolkSettingsScaffold(
     title: String,
@@ -92,35 +71,34 @@ fun FolkSettingsScaffold(
     actions: @Composable RowScope.() -> Unit = {},
     content: LazyListScope.() -> Unit,
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                colors = folkTopAppBarColors(),
-                navigationIcon = {
-                    if (onBack != null) {
-                        IconButton(onClick = onBack) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                                contentDescription = null,
+            FolkWallpaperChromeZone(
+                edge = FolkChromeEdge.Top,
+            ) {
+                LargeFlexibleTopAppBar(
+                    title = {
+                        Text(
+                            text = title,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    },
+                    colors = folkTopAppBarColors(),
+                    navigationIcon = {
+                        if (onBack != null) {
+                            TopBarBackButton(
+                                onClick = onBack,
+                                contentDescription = stringResource(R.string.core_action_back),
                             )
                         }
-                    }
-                },
-                actions = actions,
-                scrollBehavior = scrollBehavior,
-            )
+                    },
+                    actions = actions,
+                    scrollBehavior = scrollBehavior,
+                )
+            }
         },
         containerColor = Color.Transparent,
         snackbarHost = {

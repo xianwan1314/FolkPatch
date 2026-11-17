@@ -1,12 +1,13 @@
 package me.bmax.apatch.ui.screen.module
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +37,7 @@ import me.bmax.apatch.APApplication
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.KeyEventBlocker
 import me.bmax.apatch.ui.component.folk.FolkScaffold
+import me.bmax.apatch.ui.component.folk.FolkTitleStyle
 import me.bmax.apatch.ui.theme.tokens.FolkMotion
 import me.bmax.apatch.util.getSafeDownloadsDir
 import me.bmax.apatch.util.runAPModuleAction
@@ -46,7 +48,7 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-@Destination<RootGraph>
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 fun ExecuteAPMActionScreen(navigator: DestinationsNavigator, moduleId: String) {
     var text by rememberSaveable { mutableStateOf("") }
     val displayBuffer = remember { StringBuffer() }
@@ -127,6 +129,7 @@ fun ExecuteAPMActionScreen(navigator: DestinationsNavigator, moduleId: String) {
 
     FolkScaffold(
         title = stringResource(R.string.apm_action),
+        titleStyle = FolkTitleStyle.Flexible,
         onBack = dropUnlessResumed {
             navigator.popBackStack()
         },
@@ -146,7 +149,7 @@ fun ExecuteAPMActionScreen(navigator: DestinationsNavigator, moduleId: String) {
                 },
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Save,
+                    imageVector = Icons.Outlined.Save,
                     contentDescription = stringResource(R.string.save_log)
                 )
             }
@@ -166,7 +169,7 @@ fun ExecuteAPMActionScreen(navigator: DestinationsNavigator, moduleId: String) {
                 scrollState.animateScrollTo(scrollState.maxValue, animationSpec = FolkMotion.ScrollIntoView)
             }
             Text(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(FolkDimens.Size8),
                 text = text,
                 fontSize = MaterialTheme.typography.bodySmall.fontSize,
                 fontFamily = FontFamily.Monospace,

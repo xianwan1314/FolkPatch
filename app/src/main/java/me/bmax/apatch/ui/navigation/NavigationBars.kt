@@ -6,6 +6,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.WindowInsets
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -31,6 +31,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,6 +44,10 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.ui.theme.BackgroundConfig
+import me.bmax.apatch.ui.component.folk.FolkChromeEdge
+import me.bmax.apatch.ui.component.folk.FolkWallpaperChromeZone
+import me.bmax.apatch.ui.theme.tokens.FolkTheme
+import me.bmax.apatch.ui.theme.tokens.LocalFolkWallpaperTokens
 import me.bmax.apatch.util.ui.FloatingBarConfig
 import me.bmax.apatch.util.ui.navBarGlassEffect
 
@@ -181,14 +187,12 @@ fun BottomBar(
             }
         }
 
-        val containerColor = if (BackgroundConfig.isCustomBackgroundEnabled) {
-            // Keep a faint floor so the capsule still reads when the custom
-            // background is pulled all the way to fully transparent.
-            MaterialTheme.colorScheme.surface.copy(
-                alpha = 0.10f + 0.85f * BackgroundConfig.customBackgroundOpacity
-            )
-        } else {
-            NavigationBarDefaults.containerColor
+        val wallpaper = LocalFolkWallpaperTokens.current
+        val containerColor = when {
+            wallpaper != null && isFloating -> wallpaper.raised.fill
+            wallpaper != null -> Color.Transparent
+            isFloating -> floatingBarContainerColor()
+            else -> FolkTheme.palette.groupedSurface
         }
 
         if (isFloating) {
@@ -266,8 +270,13 @@ fun BottomBar(
                                 MaterialTheme.shapes.large
                             },
                             color = containerColor,
-                            tonalElevation = if (isCustomBg) 0.dp else 3.dp,
-                            shadowElevation = if (isCustomBg) 0.dp else 8.dp
+                            tonalElevation = 0.dp,
+                            shadowElevation = if (isCustomBg) 0.dp else 8.dp,
+                            border = if (isCustomBg) {
+                                null
+                            } else {
+                                BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                            },
                         ) {
                             BottomBarContent(
                                 isDrawer = isDrawer,
@@ -292,20 +301,30 @@ fun BottomBar(
                 }
             }
         } else {
-            // Non-floating mode: plain docked bar.
-            PlainBottomNavigationBar(
-                visibleDestinations = visibleDestinations,
-                effectiveSelectedIndex = effectiveSelectedIndex,
-                containerColor = containerColor,
-                superuserCount = superuserCount,
-                apmModuleCount = apmModuleCount,
-                kernelModuleCount = kernelModuleCount,
-                enableSuperUserBadge = enableSuperUserBadge,
-                enableApmBadge = enableApmBadge,
-                enableKernelBadge = enableKernelBadge,
-                navController = navController,
-                onUserInteraction = onUserInteraction
-            )
+            FolkWallpaperChromeZone(edge = FolkChromeEdge.Bottom) {
+                PlainBottomNavigationBar(
+                    visibleDestinations = visibleDestinations,
+                    effectiveSelectedIndex = effectiveSelectedIndex,
+                    containerColor = containerColor,
+                    superuserCount = superuserCount,
+                    apmModuleCount = apmModuleCount,
+                    kernelModuleCount = kernelModuleCount,
+                    enableSuperUserBadge = enableSuperUserBadge,
+                    enableApmBadge = enableApmBadge,
+                    enableKernelBadge = enableKernelBadge,
+                    navController = navController,
+                    onUserInteraction = onUserInteraction
+                )
+            }
         }
     }
+}
+
+@Composable
+private fun floatingBarContainerColor(): Color =
+    resolveFloatingBarContainerColor(MaterialTheme.colorScheme.surfaceContainer)
+
+internal fun resolveFloatingBarContainerColor(canvas: Color): Color {
+    val step = if (canvas.luminance() < 0.5f) 0.16f else 0.62f
+    return lerp(canvas, Color.White, step)
 }

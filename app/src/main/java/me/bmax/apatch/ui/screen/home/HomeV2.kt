@@ -1,23 +1,34 @@
 package me.bmax.apatch.ui.screen.home
 
+import android.animation.ValueAnimator
+import me.bmax.apatch.ui.theme.tokens.FolkColors
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.LockOpen
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.LockOpen
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material.icons.outlined.RestartAlt
 import androidx.compose.material.icons.outlined.Android
 import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material3.*
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -41,21 +52,10 @@ import android.os.Build
 import me.bmax.apatch.apApp
 import me.bmax.apatch.util.Version.getManagerVersion
 import me.bmax.apatch.util.ui.HomeBottomSpacer
-import android.content.ActivityNotFoundException
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.ui.input.pointer.pointerInput
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import me.bmax.apatch.ui.component.BackgroundOptionsDialog
-import me.bmax.apatch.ui.component.rememberConfirmDialog
-import me.bmax.apatch.ui.theme.BackgroundManager
-import me.bmax.apatch.util.PermissionUtils
-import me.bmax.apatch.util.ui.showToast
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.Role
+import me.bmax.apatch.ui.component.TonalCard
 import me.bmax.apatch.ui.theme.tokens.FolkShape
 
 private val managerVersion = getManagerVersion()
@@ -92,18 +92,18 @@ fun HomeScreenV2(
     Column(
         modifier = Modifier
             .padding(paddingValues)
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = FolkDimens.Size16)
             .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(FolkDimens.Size16)
     ) {
-        Spacer(Modifier.height(0.dp))
+        Spacer(Modifier.height(FolkDimens.Size0))
         
         // Top Section: Split into Left (Status) and Right (Details)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(IntrinsicSize.Min),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size12)
         ) {
             // Left: Big Status Card
             StatusCardBig(
@@ -127,7 +127,7 @@ fun HomeScreenV2(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(FolkDimens.Size12)
             ) {
                 // Top Right: KP Version
                 SmallInfoCard(
@@ -235,63 +235,63 @@ fun StatusCardBig(
         }
     }
     
-    val containerColor = if (useCustomGridBg) Color.Transparent else baseContainerColor
+    val containerColor = if (useCustomGridBg) FolkColors.Transparent else baseContainerColor
     // If using custom grid bg, force content color to white (or based on some logic), or keep base logic?
     // Let's assume white text for image background with dimming
-    val contentColor = if (useCustomGridBg) Color.White else baseContentColor
+    val contentColor = if (useCustomGridBg) FolkColors.MediaContent else baseContentColor
 
-    // Long-press card options (only when working and card background feature enabled)
-    val scope = rememberCoroutineScope()
-    var showCardOptionsDialog by remember { mutableStateOf(false) }
-    val isLongPressEnabled = isWorking && BackgroundConfig.isGridWorkingCardBackgroundEnabled
+    val interactionSource = remember { MutableInteractionSource() }
+    val haptics = LocalHapticFeedback.current
+    val reduceMotion = !ValueAnimator.areAnimatorsEnabled()
+    var longPressActive by remember { mutableStateOf(false) }
+    var petCount by remember { mutableIntStateOf(0) }
+    val petBounce = remember { Animatable(0f) }
+    val pressed by interactionSource.collectIsPressedAsState()
+    val heldDeformation by animateFloatAsState(
+        targetValue = if (useCustomGridBg && !reduceMotion) {
+            if (longPressActive) 0.16f else if (pressed) 0.045f else 0f
+        } else 0f,
+        animationSpec = spring(dampingRatio = 0.55f, stiffness = 300f),
+        label = "petHeldDeformation",
+    )
 
-    val pickGridImageLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            scope.launch {
-                val success = BackgroundManager.saveAndApplyGridWorkingCardBackground(context, it)
-                if (success) {
-                    showToast(context, R.string.settings_grid_working_card_background_saved)
-                } else {
-                    showToast(context, R.string.settings_grid_working_card_background_error)
-                }
+    LaunchedEffect(petCount, reduceMotion, useCustomGridBg) {
+        if (petCount > 0 && !reduceMotion && useCustomGridBg) {
+            petBounce.snapTo(0.14f)
+            petBounce.animateTo(0f, spring(dampingRatio = 0.28f, stiffness = 180f))
+        } else {
+            petBounce.snapTo(0f)
+        }
+    }
+
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect { interaction ->
+            if (interaction is PressInteraction.Release || interaction is PressInteraction.Cancel) {
+                longPressActive = false
             }
         }
     }
 
-    val clearGridBackgroundDialog = rememberConfirmDialog(
-        onConfirm = {
-            scope.launch {
-                BackgroundManager.clearGridWorkingCardBackground(context)
-                showToast(context, context.getString(R.string.settings_grid_working_card_background_cleared))
-            }
-        }
-    )
-
     Card(
         modifier = modifier
-            .then(
-                if (isLongPressEnabled) {
-                    Modifier.pointerInput(Unit) {
-                        detectTapGestures(
-                            onTap = {
-                                if (isJailbreak || kpState == APApplication.State.UNKNOWN_STATE && isPermissive) {
-                                    jailbreakState.performPrimaryAction()
-                                } else {
-                                    onClick()
-                                }
-                            },
-                            onLongPress = { showCardOptionsDialog = true }
-                        )
-                    }
+            .combinedClickable(
+                interactionSource = interactionSource,
+                indication = null,
+                role = Role.Button,
+                onLongClick = if (useCustomGridBg) {
+                    { longPressActive = true }
                 } else {
-                    Modifier.clickable {
-                        if (isJailbreak || kpState == APApplication.State.UNKNOWN_STATE && isPermissive) {
-                            jailbreakState.performPrimaryAction()
-                        } else {
-                            onClick()
-                        }
+                    null
+                },
+                onClick = {
+                    if (useCustomGridBg) {
+                        haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        if (isWorking && !isJailbreak) petCount++
+                    }
+                    if (isJailbreak || kpState == APApplication.State.UNKNOWN_STATE && isPermissive) {
+                        jailbreakState.performPrimaryAction()
+                    } else {
+                        onClick()
                     }
                 }
             ),
@@ -335,16 +335,21 @@ fun StatusCardBig(
                     modifier = Modifier
                         .fillMaxSize()
                         .alpha(BackgroundConfig.getEffectiveGridBackgroundOpacity(isDarkTheme))
+                        .graphicsLayer {
+                            val deformation = heldDeformation + petBounce.value
+                            scaleX = 1f + deformation * 0.7f
+                            scaleY = 1f - deformation
+                        }
                 )
                 // Add a dim layer for readability
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color.Black.copy(alpha = BackgroundConfig.gridWorkingCardBackgroundDim))
+                        .background(FolkColors.MediaScrim.copy(alpha = BackgroundConfig.gridWorkingCardBackgroundDim))
                 )
             }
             
-            Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+            Box(modifier = Modifier.fillMaxSize().padding(FolkDimens.Size16)) {
                 Column(modifier = Modifier.align(Alignment.BottomStart)) {
                     if (!BackgroundConfig.isGridWorkingCardTextHidden) {
                         Text(
@@ -361,7 +366,7 @@ fun StatusCardBig(
                         )
                     }
                     if (!isJailbreak && isWorking && !BackgroundConfig.isGridWorkingCardModeHidden) {
-                        Spacer(Modifier.height(4.dp))
+                        Spacer(Modifier.height(FolkDimens.Size4))
                         val customText = BackgroundConfig.getCustomBadgeText()
                         Text(
                             text = if (customText != null) "<$customText>" else if (apState == APApplication.State.ANDROIDPATCH_INSTALLED) "<Full>" else "<Half>",
@@ -370,14 +375,14 @@ fun StatusCardBig(
                         )
                     }
                     if (isJailbreak && !BackgroundConfig.isGridWorkingCardTextHidden) {
-                        Spacer(Modifier.height(4.dp))
+                        Spacer(Modifier.height(FolkDimens.Size4))
                         Text(
                             text = stringResource(R.string.reboot_soft),
                             style = MaterialTheme.typography.labelMedium,
                             color = contentColor.copy(alpha = 0.78f),
                         )
                     } else if (kpState == APApplication.State.UNKNOWN_STATE && isPermissive) {
-                        Spacer(Modifier.height(4.dp))
+                        Spacer(Modifier.height(FolkDimens.Size4))
                         Text(
                             text = stringResource(R.string.jailbreak),
                             style = MaterialTheme.typography.labelMedium,
@@ -392,47 +397,42 @@ fun StatusCardBig(
                 Icon(
                     imageVector = when {
                         jailbreakState.isTriggering -> Icons.Outlined.RestartAlt
-                        isJailbreak -> Icons.Filled.LockOpen
-                        isWorking -> Icons.Filled.CheckCircle
-                        else -> Icons.Filled.Warning
+                        isJailbreak -> Icons.Outlined.LockOpen
+                        isWorking -> Icons.Outlined.CheckCircle
+                        else -> Icons.Outlined.Warning
                     },
                     contentDescription = null,
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .size(48.dp),
+                        .size(FolkDimens.Size48),
                     tint = contentColor
                 )
             }
+            if (useCustomGridBg && reduceMotion) {
+                ReducedMotionPressBorder(interactionSource, longPressActive, contentColor)
+            }
         }
     }
+}
 
-    // Card Options Dialog
-    BackgroundOptionsDialog(
-        showDialog = showCardOptionsDialog,
-        onDismiss = { showCardOptionsDialog = false },
-        title = stringResource(R.string.settings_grid_working_card_background),
-        selectLabel = stringResource(R.string.settings_select_background_image),
-        clearLabel = stringResource(R.string.settings_clear_grid_working_card_background),
-        hasExisting = !BackgroundConfig.gridWorkingCardBackgroundUri.isNullOrEmpty(),
-        onSelectImage = {
-            if (PermissionUtils.hasExternalStoragePermission(context)) {
-                try {
-                    pickGridImageLauncher.launch("image/*")
-                } catch (e: ActivityNotFoundException) {
-                    showToast(context, e.message ?: "")
-                }
-            } else {
-                showToast(context, context.getString(R.string.settings_background_permission_required))
-            }
-        },
-        onClearImage = {
-            clearGridBackgroundDialog.showConfirm(
-                title = context.getString(R.string.settings_clear_grid_working_card_background),
-                content = context.getString(R.string.settings_clear_grid_working_card_background_confirm),
-                markdown = false,
-            )
-        },
-    )
+@Composable
+private fun BoxScope.ReducedMotionPressBorder(
+    interactionSource: MutableInteractionSource,
+    longPressActive: Boolean,
+    color: Color,
+) {
+    val pressed by interactionSource.collectIsPressedAsState()
+    if (pressed) {
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .border(
+                    width = if (longPressActive) FolkDimens.Size3 else FolkDimens.Size2,
+                    color = color.copy(alpha = if (longPressActive) 1f else 0.8f),
+                    shape = FolkShape.Corner20,
+                )
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -444,37 +444,30 @@ fun SmallInfoCard(
     icon: ImageVector,
     onClick: () -> Unit
 ) {
-    val containerColor = if (BackgroundConfig.isCustomBackgroundEnabled) {
-        MaterialTheme.colorScheme.surface.copy(alpha = BackgroundConfig.customBackgroundOpacity)
-    } else {
-        MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
-    }
-    
-    Card(
+    TonalCard(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
-        shape = FolkShape.Corner20,
-        colors = CardDefaults.cardColors(containerColor = containerColor)
+        modifier = modifier,
+        flat = true,
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(FolkDimens.Size16),
             verticalArrangement = Arrangement.Center
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = icon, 
                     contentDescription = null, 
-                    modifier = Modifier.size(16.dp),
+                    modifier = Modifier.size(FolkDimens.Size16),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(FolkDimens.Size8))
                 Text(
                     text = title,
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(FolkDimens.Size4))
             Text(
                 text = value,
                 style = MaterialTheme.typography.titleMedium,

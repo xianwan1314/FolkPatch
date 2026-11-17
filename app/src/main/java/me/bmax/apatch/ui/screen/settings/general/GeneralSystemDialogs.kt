@@ -1,6 +1,8 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 package me.bmax.apatch.ui.screen.settings.general
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
+
 import android.app.Activity
 import android.content.SharedPreferences
 import androidx.compose.animation.AnimatedVisibility
@@ -10,7 +12,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,9 +29,8 @@ import kotlinx.coroutines.withContext
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.Natives
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
-import me.bmax.apatch.ui.component.folk.FolkSelectableRow
-import me.bmax.apatch.ui.component.folk.FolkButtonDefaults
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
+import me.bmax.apatch.ui.component.SegmentedSelectableItem
 import me.bmax.apatch.util.*
 import me.bmax.apatch.util.ui.showToast
 import me.bmax.apatch.ui.theme.tokens.ContinuousCornerShape
@@ -50,24 +51,24 @@ fun NewAppProfileModeDialog(
         2 to R.string.settings_new_app_profile_exclude,
     )
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = { showDialog.value = false },
     ) {
-        Column(modifier = Modifier.padding(24.dp)) {
+        Column(modifier = Modifier.padding(FolkDimens.Size24)) {
             Text(
                 text = stringResource(R.string.settings_new_app_profile_mode),
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = FolkDimens.Size16)
             )
 
             Surface(
                 shape = FolkShape.Corner12,
                 color = AlertDialogDefaults.containerColor,
-                tonalElevation = 2.dp
+                tonalElevation = FolkDimens.Size2
             ) {
                 Column {
                     options.forEach { (mode, labelId) ->
-                        FolkSelectableRow(
+                        SegmentedSelectableItem(
                             title = stringResource(labelId),
                             selected = currentMode.intValue == mode,
                             onClick = {
@@ -88,7 +89,7 @@ fun NewAppProfileModeDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 24.dp),
+                    .padding(top = FolkDimens.Size24),
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(onClick = { showDialog.value = false }) {
@@ -134,18 +135,18 @@ fun DpiChooseDialog(showDialog: MutableState<Boolean>) {
     var tempDpi by remember { mutableIntStateOf(if (savedDpi == DPIUtils.DEFAULT_DPI) DPIUtils.systemDpi else savedDpi) }
     var isSystemDefault by remember { mutableStateOf(savedDpi == DPIUtils.DEFAULT_DPI) }
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = { showDialog.value = false },
-        width = 340.dp,
+        width = FolkDimens.Size340,
     ) {
-        Column(modifier = Modifier.padding(24.dp)) {
+        Column(modifier = Modifier.padding(FolkDimens.Size24)) {
             Text(
                 text = stringResource(id = R.string.settings_app_dpi),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.SemiBold,
             )
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(FolkDimens.Size16))
 
             // System default toggle
             Row(
@@ -162,7 +163,7 @@ fun DpiChooseDialog(showDialog: MutableState<Boolean>) {
                             tempDpi = DPIUtils.systemDpi
                         }
                     }
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                    .padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size12),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
@@ -177,17 +178,17 @@ fun DpiChooseDialog(showDialog: MutableState<Boolean>) {
                 )
                 if (isSystemDefault) {
                     Icon(
-                        Icons.Filled.Check,
+                        Icons.Outlined.Check,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(FolkDimens.Size20),
                     )
                 }
             }
 
             AnimatedVisibility(visible = !isSystemDefault) {
                 Column {
-                    Spacer(Modifier.height(16.dp))
+                    Spacer(Modifier.height(FolkDimens.Size16))
 
                     // Slider
                     val sliderValue by animateFloatAsState(
@@ -212,28 +213,28 @@ fun DpiChooseDialog(showDialog: MutableState<Boolean>) {
                         text = "${DPIUtils.getDpiFriendlyName(tempDpi)} ($tempDpi DPI)",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(bottom = 12.dp),
+                        modifier = Modifier.padding(bottom = FolkDimens.Size12),
                     )
 
                     // Preset pills
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            .padding(bottom = FolkDimens.Size8),
+                        horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size6),
                     ) {
                         DPIUtils.presets.forEach { preset ->
                             val isSelected = tempDpi == preset.value
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .clip(RoundedCornerShape(8.dp))
+                                    .clip(RoundedCornerShape(FolkDimens.Size8))
                                     .background(
                                         if (isSelected) MaterialTheme.colorScheme.primaryContainer
                                         else MaterialTheme.colorScheme.surfaceVariant
                                     )
                                     .clickable { tempDpi = preset.value }
-                                    .padding(vertical = 8.dp, horizontal = 4.dp),
+                                    .padding(vertical = FolkDimens.Size8, horizontal = FolkDimens.Size4),
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Text(
@@ -251,7 +252,7 @@ fun DpiChooseDialog(showDialog: MutableState<Boolean>) {
                 }
             }
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(FolkDimens.Size16))
 
             // Apply button
             Row(
@@ -261,7 +262,7 @@ fun DpiChooseDialog(showDialog: MutableState<Boolean>) {
                 TextButton(onClick = { showDialog.value = false }) {
                     Text(stringResource(android.R.string.cancel))
                 }
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(FolkDimens.Size8))
                 Button(
                     onClick = {
                         val finalDpi = if (isSystemDefault) DPIUtils.DEFAULT_DPI else tempDpi
@@ -269,14 +270,14 @@ fun DpiChooseDialog(showDialog: MutableState<Boolean>) {
                         DPIUtils.setDpi(context, finalDpi)
                         activity?.recreate()
                     },
-                    colors = FolkButtonDefaults.filledColors(),
+                    colors = ButtonDefaults.buttonColors(),
                 ) {
                     Icon(
-                        Icons.Filled.Check,
+                        Icons.Outlined.Check,
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp),
+                        modifier = Modifier.size(FolkDimens.Size18),
                     )
-                    Spacer(Modifier.width(8.dp))
+                    Spacer(Modifier.width(FolkDimens.Size8))
                     Text(stringResource(R.string.dpi_apply_settings))
                 }
             }
@@ -295,30 +296,30 @@ fun SELinuxModeDialog(
     var selectedMode by remember { mutableStateOf(currentMode) }
     var showConfirmationDialog by remember { mutableStateOf(false) }
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = { showDialog.value = false },
     ) {
-        Column(modifier = Modifier.padding(24.dp)) {
+        Column(modifier = Modifier.padding(FolkDimens.Size24)) {
             Text(
                 text = stringResource(R.string.settings_selinux_mode),
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = FolkDimens.Size16)
             )
 
             Surface(
                 shape = FolkShape.Corner12,
                 color = AlertDialogDefaults.containerColor,
-                tonalElevation = 2.dp
+                tonalElevation = FolkDimens.Size2
             ) {
                 Column {
-                    FolkSelectableRow(
+                    SegmentedSelectableItem(
                         title = stringResource(R.string.settings_selinux_mode_enforcing),
                         summary = stringResource(R.string.settings_selinux_mode_enforcing_summary),
                         selected = selectedMode == "Enforcing",
                         onClick = { selectedMode = "Enforcing" }
                     )
 
-                    FolkSelectableRow(
+                    SegmentedSelectableItem(
                         title = stringResource(R.string.settings_selinux_mode_permissive),
                         summary = stringResource(R.string.settings_selinux_mode_permissive_summary),
                         selected = selectedMode == "Permissive",
@@ -330,7 +331,7 @@ fun SELinuxModeDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 24.dp),
+                    .padding(top = FolkDimens.Size24),
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(onClick = { showDialog.value = false }) {
@@ -342,7 +343,7 @@ fun SELinuxModeDialog(
                         showConfirmationDialog = true
                     },
                     enabled = selectedMode != currentMode,
-                    colors = FolkButtonDefaults.filledColors(),
+                    colors = ButtonDefaults.buttonColors(),
                 ) {
                     Text(stringResource(id = android.R.string.ok))
                 }

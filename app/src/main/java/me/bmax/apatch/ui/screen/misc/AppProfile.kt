@@ -1,5 +1,7 @@
 package me.bmax.apatch.ui.screen.misc
 
+import me.bmax.apatch.ui.theme.tokens.FolkColors
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -18,9 +20,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.RemoveCircle
-import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.RemoveCircle
+import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -55,8 +57,9 @@ import kotlinx.coroutines.launch
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.Natives
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.SplicedColumnGroup
+import me.bmax.apatch.ui.component.SegmentedColumn
 import me.bmax.apatch.ui.component.folk.FolkScaffold
+import me.bmax.apatch.ui.component.folk.FolkTitleStyle
 import me.bmax.apatch.ui.viewmodel.SuperUserViewModel
 import me.bmax.apatch.util.PkgConfig
 import me.bmax.apatch.util.SuAuditLog
@@ -66,7 +69,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import me.bmax.apatch.ui.component.folk.folkPressScale
 
-@Destination<RootGraph>
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 @Composable
 fun AppProfileScreen(
     navigator: DestinationsNavigator,
@@ -103,6 +106,7 @@ fun AppProfileScreen(
 
     FolkScaffold(
         title = stringResource(R.string.su_title),
+        titleStyle = FolkTitleStyle.Flexible,
         onBack = { navigator.popBackStack() },
         actions = {
             IconButton(onClick = {
@@ -132,8 +136,8 @@ fun AppProfileScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .widthIn(max = 720.dp)
-                    .padding(vertical = 12.dp),
+                    .widthIn(max = FolkDimens.Size720)
+                    .padding(vertical = FolkDimens.Size12),
             ) {
                 fun selectMode(index: Int) {
                     if (index == selectedIndex) return
@@ -184,12 +188,12 @@ fun AppProfileScreen(
                     }
                 }
 
-                SplicedColumnGroup {
+                SegmentedColumn {
                     item(key = "app") {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 20.dp, vertical = 16.dp),
+                                .padding(horizontal = FolkDimens.Size20, vertical = FolkDimens.Size16),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             AsyncImage(
@@ -197,11 +201,11 @@ fun AppProfileScreen(
                                     .crossfade(true).build(),
                                 contentDescription = appInfo.label,
                                 modifier = Modifier
-                                    .size(56.dp)
+                                    .size(FolkDimens.Size56)
                                     .clip(CircleShape),
                             )
 
-                            Spacer(Modifier.width(16.dp))
+                            Spacer(Modifier.width(FolkDimens.Size16))
 
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
@@ -210,7 +214,7 @@ fun AppProfileScreen(
                                     fontWeight = FontWeight.SemiBold,
                                     color = MaterialTheme.colorScheme.onSurface,
                                 )
-                                Spacer(Modifier.height(2.dp))
+                                Spacer(Modifier.height(FolkDimens.Size2))
                                 Text(
                                     text = appInfo.packageName,
                                     style = MaterialTheme.typography.bodyMedium,
@@ -229,7 +233,7 @@ fun AppProfileScreen(
                         AuthorizationOption(
                             title = stringResource(R.string.su_pkg_root_setting_title),
                             summary = stringResource(R.string.su_pkg_root_setting_summary),
-                            icon = Icons.Filled.Security,
+                            icon = Icons.Outlined.Security,
                             selected = selectedIndex == 0,
                             onClick = { selectMode(0) },
                         )
@@ -239,7 +243,7 @@ fun AppProfileScreen(
                         AuthorizationOption(
                             title = stringResource(R.string.su_pkg_normal_setting_title),
                             summary = stringResource(R.string.su_pkg_normal_setting_summary),
-                            icon = Icons.Filled.Info,
+                            icon = Icons.Outlined.Info,
                             selected = selectedIndex == 1,
                             onClick = { selectMode(1) },
                         )
@@ -249,7 +253,7 @@ fun AppProfileScreen(
                         AuthorizationOption(
                             title = stringResource(R.string.su_pkg_excluded_setting_title),
                             summary = stringResource(R.string.su_pkg_excluded_setting_summary),
-                            icon = Icons.Filled.RemoveCircle,
+                            icon = Icons.Outlined.RemoveCircle,
                             selected = selectedIndex == 2,
                             onClick = { selectMode(2) },
                         )
@@ -272,7 +276,7 @@ private fun AuthorizationOption(
         targetValue = if (selected) {
             MaterialTheme.colorScheme.secondaryContainer
         } else {
-            Color.Transparent
+            FolkColors.Transparent
         },
         label = "authorizationOptionColor",
     )
@@ -294,7 +298,7 @@ private fun AuthorizationOption(
                 interactionSource = interactionSource,
                 indication = null,
             )
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+            .padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size16),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Surface(
@@ -314,12 +318,12 @@ private fun AuthorizationOption(
                 imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier
-                    .padding(10.dp)
-                    .size(20.dp),
+                    .padding(FolkDimens.Size10)
+                    .size(FolkDimens.Size20),
             )
         }
 
-        Spacer(Modifier.width(16.dp))
+        Spacer(Modifier.width(FolkDimens.Size16))
 
         Column(modifier = Modifier.weight(1f)) {
             Text(
@@ -332,7 +336,7 @@ private fun AuthorizationOption(
                     MaterialTheme.colorScheme.onSurface
                 },
             )
-            Spacer(Modifier.height(2.dp))
+            Spacer(Modifier.height(FolkDimens.Size2))
             Text(
                 text = summary,
                 style = MaterialTheme.typography.bodyMedium,
@@ -344,7 +348,7 @@ private fun AuthorizationOption(
             )
         }
 
-        Spacer(Modifier.width(12.dp))
+        Spacer(Modifier.width(FolkDimens.Size12))
         RadioButton(selected = selected, onClick = null)
     }
 }

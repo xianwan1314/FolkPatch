@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_layout_variant">Düzen varyantı</string>
+    <string name="settings_layout_variant_summary">Daraltılabilir satır içi arama içeren büyük M3E üst çubuklarını kullanın veya geleneksel kompakt üst çubukları koruyun.</string>
+    <string name="settings_layout_variant_traditional">Geleneksel</string>
+    <string name="settings_layout_variant_m3e">M3E</string>
+    <string name="apm_search_hint">Sistem modüllerinde ara</string>
+    <string name="kpm_search_hint">Çekirdek modüllerinde ara</string>
+    <string name="su_search_hint">Uygulama ara</string>
     <string name="settings_launcher_icon">Launcher Simgesi</string>
     <string name="launcher_icon_style_anime">Anime</string>
     <string name="launcher_icon_style_geometry">Geometrik</string>
@@ -86,15 +93,6 @@
     <string name="settings_grid_working_card_hide_mode_summary">Çalışma kartındaki \'Tam\' veya \'Yarım\' metnini gizle</string>
 
 
-	<string name="settings_folkx_engine_title">FolkX Animasyon Motoru</string>
-    <string name="settings_folkx_engine_summary">Üst seviye sayfalar arasında geçişte yumuşak, fizik tabanlı yay animasyonu kullan</string>
-    <string name="settings_folkx_animation_type">Animasyon Türü</string>
-    <string name="settings_folkx_animation_speed">Animasyon Hızı</string>
-    <string name="settings_folkx_animation_linear">Doğrusal Hareket</string>
-    <string name="settings_folkx_animation_spatial">Mekânsal Hareket</string>
-    <string name="settings_folkx_animation_fade">Solma (Fade In/Out)</string>
-    <string name="settings_folkx_animation_vertical">Dikey Kaydırma</string>
-    <string name="settings_folkx_animation_diagonal">Çapraz Kaydırma</string>
 
     <string name="su_exclude_all_title">Tümünü Hariç Tut</string>
     <string name="su_exclude_all_confirm">Root olmayan tüm uygulamaları hariç tutmak istediğinize emin misiniz?</string>
@@ -255,7 +253,6 @@
     <string name="su_multi_select_confirm_grant">%d uygulamaya ROOT verilsin mi?</string>
     <string name="su_multi_select_confirm_revoke">%d uygulamadan ROOT kaldırılsın mı?</string>
     <string name="su_multi_select_confirm_exclude">%d uygulama hariç tutulsun mu?</string>
-    <string name="su_multi_select_enter">Çoklu Seçim</string>
     <string name="apm">Sistem Modülü</string>
 
 
@@ -312,6 +309,24 @@
     <string name="settings_apm_install_confirm_summary">Modüller kurulmadan önce onay iletişim kutusu göster</string>
     <string name="settings_show_more_module_info">Modül ayrıntılarını göster</string>
     <string name="settings_show_more_module_info_summary">Modül listesinde modül kimliğini ve boyutunu göster</string>
+    <string name="module_sort">Sıralama düzeni</string>
+    <string name="module_sort_priority">Sıralama önceliği</string>
+    <string name="module_sort_group_metamodule">Meta modüller</string>
+    <string name="module_sort_group_metamodule_summary">Diğer modüllerin bağlandığı modül.</string>
+    <string name="module_sort_group_zygisk">Zygisk modülleri</string>
+    <string name="module_sort_group_zygisk_summary">Zygisk çalışma zamanını sağlar veya yükler.</string>
+    <string name="module_sort_group_lsposed">LSPosed modülleri</string>
+    <string name="module_sort_group_lsposed_summary">Xposed çerçevesi üzerinden kanca uygular.</string>
+    <string name="module_sort_group_webui">Web arayüzü olan modüller</string>
+    <string name="module_sort_group_webui_summary">Kendine ait bir ekran içerir.</string>
+    <string name="module_sort_group_action">Aksiyonu olan modüller</string>
+    <string name="module_sort_group_action_summary">İstendiğinde bir betik çalıştırır.</string>
+    <string name="module_sort_enabled_first">Önce etkin olanlar</string>
+    <string name="module_sort_custom_order">Özel sıra</string>
+    <string name="module_sort_custom_order_summary">Modülleri gösterilmelerini istediğiniz sıraya sürükleyin.</string>
+    <string name="module_sort_reset_custom_order">Özel sırayı sıfırla</string>
+    <string name="module_sort_reset_custom_order_summary">Öncelik sırasına dön.</string>
+    <string name="module_sort_drag_to_reorder">Yeniden sıralamak için sürükleyin</string>
     <string name="settings_apm_stay_on_page">İşlem sayfasında kal</string>
     <string name="settings_apm_stay_on_page_summary">Modül işlemi tamamlandıktan sonra otomatik geri dönme</string>
     <string name="settings_enable_module_shortcut_add">Kısayol ekleme düğmesini etkinleştir</string>
@@ -1346,10 +1361,6 @@ Bol şans! Ayrıca, aşağıdaki belge butonuna tıklamak kesinlikle doğru!</st
     <string name="color_style_neutral">Nötr</string>
     <string name="color_style_fidelity">Sadakat</string>
     <!-- Color Contrast -->
-    <string name="color_contrast_label">Kontrast</string>
-    <string name="color_contrast_standard">Standart</string>
-    <string name="color_contrast_medium">Orta</string>
-    <string name="color_contrast_high">Yüksek</string>
     <string name="settings_focus_card_background">FocusUI Kart Duvar Kağıdı</string>
     <string name="settings_focus_card_background_enabled">FocusUI kart duvar kağıtları etkin; bir kartı yönetmek için uzun basın</string>
     <string name="settings_focus_card_background_summary">FocusUI kart duvar kağıtlarını ve uzun basarak duvar kağıdı yönetimini etkinleştir</string>
@@ -1377,8 +1388,6 @@ Bol şans! Ayrıca, aşağıdaki belge butonuna tıklamak kesinlikle doğru!</st
     <string name="dashboard_card_background_saved">Panel duvar kağıdı başarıyla kaydedildi</string>
     <string name="dashboard_card_background_error">Panel duvar kağıdı kaydedilemedi</string>
     <string name="dashboard_card_background_cleared">Panel duvar kağıdı temizlendi</string>
-    <string name="dashboard_card_background_restore">Varsayılanı geri yükle</string>
-    <string name="dashboard_card_background_restored">Panel duvar kağıdı geri yüklendi</string>
     <string name="settings_dashboard_card_dual_dim">Çift gün/gece karartmayı etkinleştir</string>
     <string name="settings_dashboard_card_dual_dim_desc">Açık ve koyu temalar için panel duvar kağıdı karartmasını otomatik ayarla</string>
     <string name="settings_dashboard_card_day_dim">Gündüz modunda panel duvar kağıdı karartması</string>

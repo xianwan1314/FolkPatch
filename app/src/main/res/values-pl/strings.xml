@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_layout_variant">Wariant układu</string>
+    <string name="settings_layout_variant_summary">Używaj dużych górnych pasków M3E ze zwijanym polem wyszukiwania albo zachowaj tradycyjne kompaktowe paski.</string>
+    <string name="settings_layout_variant_traditional">Tradycyjny</string>
+    <string name="settings_layout_variant_m3e">M3E</string>
+    <string name="apm_search_hint">Szukaj modułów systemowych</string>
+    <string name="kpm_search_hint">Szukaj modułów jądra</string>
+    <string name="su_search_hint">Szukaj aplikacji</string>
     <string name="settings_launcher_icon">Ikona launchera</string>
     <string name="launcher_icon_style_anime">Anime</string>
     <string name="launcher_icon_style_geometry">Geometryczny</string>
@@ -242,7 +249,6 @@
     <string name="su_multi_select_confirm_grant">Przyznać ROOT %d aplikacjom?</string>
     <string name="su_multi_select_confirm_revoke">Odebrać ROOT z %d aplikacji?</string>
     <string name="su_multi_select_confirm_exclude">Wykluczyć %d aplikacji?</string>
-    <string name="su_multi_select_enter">Zaznacz wiele</string>
     <string name="apm">Moduły AP</string>
     <string name="apm_not_installed">AndroidPatch nie jest zainstalowany</string>
     <string name="apm_failed_to_enable">Nie udało się włączyć modułu: %s</string>
@@ -278,15 +284,6 @@
     <string name="hide_apatch_manager_failure">Nie udało się ukryć. Zgłoś błąd!</string>
     <string name="setting_reset_su_path">Zresetuj ścieżkę su</string>
     <string name="setting_reset_su_new_path">Nowa pełna ścieżka</string>
-    <string name="settings_folkx_engine_title">Silnik animacji FolkX</string>
-    <string name="settings_folkx_engine_summary">Używaj płynnych fizycznych animacji sprężynowych przy przełączaniu stron najwyższego poziomu</string>
-    <string name="settings_folkx_animation_type">Typ animacji</string>
-    <string name="settings_folkx_animation_speed">Prędkość animacji</string>
-    <string name="settings_folkx_animation_linear">Ruch liniowy</string>
-    <string name="settings_folkx_animation_spatial">Ruch przestrzenny</string>
-    <string name="settings_folkx_animation_fade">Przejście (Fade in/out)</string>
-    <string name="settings_folkx_animation_vertical">Przesuwanie pionowe</string>
-    <string name="settings_folkx_animation_diagonal">Przesuwanie ukośne</string>
     <string name="apm_webui_open">Otwórz</string>
     <string name="apm_action">Akcja</string>
     <string name="module_shortcut_add">Skrót</string>
@@ -324,6 +321,24 @@
     <string name="settings_show_kpm_status_badge_summary">Wyświetl plakietkę Osadzony/Załadowany na kartach KPM</string>
     <string name="settings_show_more_module_info">Pokaż szczegóły modułu</string>
     <string name="settings_show_more_module_info_summary">Pokaż ID i rozmiar modułu na liście modułów</string>
+    <string name="module_sort">Kolejność sortowania</string>
+    <string name="module_sort_priority">Priorytet sortowania</string>
+    <string name="module_sort_group_metamodule">Moduły meta</string>
+    <string name="module_sort_group_metamodule_summary">Moduł, do którego dołączają pozostałe.</string>
+    <string name="module_sort_group_zygisk">Moduły Zygisk</string>
+    <string name="module_sort_group_zygisk_summary">Dostarcza lub wczytuje środowisko Zygisk.</string>
+    <string name="module_sort_group_lsposed">Moduły LSPosed</string>
+    <string name="module_sort_group_lsposed_summary">Podczepia się przez framework Xposed.</string>
+    <string name="module_sort_group_webui">Moduły z interfejsem webowym</string>
+    <string name="module_sort_group_webui_summary">Dostarcza własny ekran.</string>
+    <string name="module_sort_group_action">Moduły z akcją</string>
+    <string name="module_sort_group_action_summary">Uruchamia skrypt na żądanie.</string>
+    <string name="module_sort_enabled_first">Włączone najpierw</string>
+    <string name="module_sort_custom_order">Własna kolejność</string>
+    <string name="module_sort_custom_order_summary">Przeciągnij moduły w kolejności, w jakiej mają być wyświetlane.</string>
+    <string name="module_sort_reset_custom_order">Zresetuj własną kolejność</string>
+    <string name="module_sort_reset_custom_order_summary">Powrót do kolejności według priorytetu.</string>
+    <string name="module_sort_drag_to_reorder">Przeciągnij, aby zmienić kolejność</string>
     <string name="apm_install_confirm_title">Instalacja modułu</string>
     <string name="apm_install_confirm_content">Czy na pewno chcesz zainstalować %s?</string>
     <string name="apm_disable_all_title">Wyłącz wszystkie moduły</string>
@@ -1271,10 +1286,6 @@ Kontynuować mimo to?</string>
     <string name="color_style_neutral">Neutralny</string>
     <string name="color_style_fidelity">Wierność</string>
     <!-- Color Contrast -->
-    <string name="color_contrast_label">Kontrast</string>
-    <string name="color_contrast_standard">Standardowy</string>
-    <string name="color_contrast_medium">Średni</string>
-    <string name="color_contrast_high">Wysoki</string>
     <string name="settings_focus_card_background">Tapeta karty FocusUI</string>
     <string name="settings_focus_card_background_enabled">Tapety kart FocusUI włączone; przytrzymaj kartę, aby zarządzać jej tapetą</string>
     <string name="settings_focus_card_background_summary">Włącz tapety kart FocusUI i zarządzanie tapetą przez przytrzymanie</string>
@@ -1302,8 +1313,6 @@ Kontynuować mimo to?</string>
     <string name="dashboard_card_background_saved">Tapeta pulpitu zapisana pomyślnie</string>
     <string name="dashboard_card_background_error">Nie udało się zapisać tapety pulpitu</string>
     <string name="dashboard_card_background_cleared">Tapeta pulpitu wyczyszczona</string>
-    <string name="dashboard_card_background_restore">Przywróć domyślną</string>
-    <string name="dashboard_card_background_restored">Tapeta pulpitu przywrócona</string>
     <string name="settings_dashboard_card_dual_dim">Włącz podwójne przyciemnianie dzień/noc</string>
     <string name="settings_dashboard_card_dual_dim_desc">Automatycznie dostosuj przyciemnienie tapety pulpitu do jasnych i ciemnych motywów</string>
     <string name="settings_dashboard_card_day_dim">Przyciemnienie tapety pulpitu w trybie dziennym</string>

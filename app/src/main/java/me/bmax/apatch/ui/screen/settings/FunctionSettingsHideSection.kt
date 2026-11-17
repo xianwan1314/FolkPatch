@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.settings
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -15,7 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Memory
+import androidx.compose.material.icons.outlined.Memory
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,10 +30,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.ExpressiveCard
+import me.bmax.apatch.ui.component.TonalCard
 import me.bmax.apatch.ui.component.ExpressiveSwitch
-import me.bmax.apatch.ui.component.folk.FolkSettingsGroup
-import me.bmax.apatch.ui.component.folk.FolkSettingsSection
+import me.bmax.apatch.ui.component.SegmentedColumn
+import me.bmax.apatch.ui.component.SegmentedSection
 import androidx.compose.material.icons.outlined.*
 
 @Composable
@@ -67,19 +68,19 @@ fun FunctionSettingsHideSection(
 ) {
     val context = LocalContext.current
     if (kPatchReady && aPatchReady) {
-    FolkSettingsSection(title = stringResource(R.string.settings_section_function_hide)) {
-     FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+    SegmentedSection(title = stringResource(R.string.settings_section_function_hide)) {
+     SegmentedColumn(flat = flat, highlightKey = highlightKey) {
         item(key = "function_kernel_spoof", visible = kPatchReady && aPatchReady) {
             val kernelSpoofTitle = stringResource(id = R.string.settings_kernel_spoof)
             val kernelSpoofSummary = stringResource(id = R.string.settings_kernel_spoof_summary)
             val versionLabel = stringResource(id = R.string.settings_kernel_spoof_version)
             val buildTimeLabel = stringResource(id = R.string.settings_kernel_spoof_build_time)
 
-            ExpressiveCard(flat = flat) {
+            TonalCard(flat = flat) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(FolkDimens.Size16),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -91,19 +92,19 @@ fun FunctionSettingsHideSection(
                             modifier = Modifier.weight(1f),
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.Memory,
+                                imageVector = Icons.Outlined.Memory,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.size(24.dp),
+                                modifier = Modifier.size(FolkDimens.Size24),
                             )
-                            Spacer(Modifier.width(16.dp))
+                            Spacer(Modifier.width(FolkDimens.Size16))
                             Column {
                                 Text(
                                     text = kernelSpoofTitle,
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurface,
                                 )
-                                Spacer(modifier = Modifier.height(4.dp))
+                                Spacer(modifier = Modifier.height(FolkDimens.Size4))
                                 Text(
                                     text = kernelSpoofSummary,
                                     style = MaterialTheme.typography.bodySmall,
@@ -122,7 +123,7 @@ fun FunctionSettingsHideSection(
                         enter = fadeIn(MaterialTheme.motionScheme.defaultEffectsSpec()) + expandVertically(MaterialTheme.motionScheme.defaultSpatialSpec()),
                         exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut(MaterialTheme.motionScheme.fastEffectsSpec())
                     ) {
-                        Column(modifier = Modifier.padding(top = 12.dp)) {
+                        Column(modifier = Modifier.padding(top = FolkDimens.Size12)) {
                             OutlinedTextField(
                                 value = kernelSpoofVersion,
                                 onValueChange = onKernelSpoofVersionChange,
@@ -131,7 +132,7 @@ fun FunctionSettingsHideSection(
                                 singleLine = true,
                             )
 
-                            Spacer(modifier = Modifier.height(8.dp))
+                            Spacer(modifier = Modifier.height(FolkDimens.Size8))
 
                             OutlinedTextField(
                                 value = kernelSpoofBuildTime,
@@ -141,11 +142,11 @@ fun FunctionSettingsHideSection(
                                 singleLine = true,
                             )
 
-                            Spacer(modifier = Modifier.height(12.dp))
+                            Spacer(modifier = Modifier.height(FolkDimens.Size12))
 
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size8),
                             ) {
                                 Button(
                                     onClick = onKernelSpoofSave,

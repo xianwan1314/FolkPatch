@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.misc
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,19 +18,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDisclaimerDialog(showDialog: MutableState<Boolean>) {
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = { showDialog.value = false },
     ) {
-        Column(modifier = Modifier.padding(PaddingValues(all = 24.dp))) {
+        Column(modifier = Modifier.padding(PaddingValues(all = FolkDimens.Size24))) {
             Text(
                 text = stringResource(id = R.string.settings_disclaimer),
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = FolkDimens.Size16)
             )
             Text(
                 text = stringResource(id = R.string.settings_disclaimer_message),

@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_layout_variant">نمط التخطيط</string>
+    <string name="settings_layout_variant_summary">استخدم أشرطة علوية كبيرة بنمط M3E مع بحث مضمّن قابل للطي، أو أبقِ الأشرطة العلوية المدمجة التقليدية.</string>
+    <string name="settings_layout_variant_traditional">التقليدي</string>
+    <string name="settings_layout_variant_m3e">M3E</string>
+    <string name="apm_search_hint">البحث في وحدات النظام</string>
+    <string name="kpm_search_hint">البحث في وحدات النواة</string>
+    <string name="su_search_hint">ابحث عن التطبيقات</string>
     <string name="launcher_icon_style_anime">أنيمي</string>
     <string name="launcher_icon_style_geometry">هندسي</string>
     <string name="launcher_icon_style_apatch">APatch</string>
@@ -91,15 +98,6 @@
     <string name="settings_grid_working_card_hide_mode">إخفاء وضع العمل</string>
     <string name="settings_grid_working_card_hide_mode_summary">إخفاء نص "كامل" أو "نصف" في بطاقة الحالة</string>
 
-    <string name="settings_folkx_engine_title">محرك FolkX للرسوم المتحركة</string>
-    <string name="settings_folkx_engine_summary">استخدام رسوم متحركة زنبركية سلسة قائمة على الفيزياء عند التبديل بين الصفحات الرئيسية</string>
-    <string name="settings_folkx_animation_type">نوع الرسوم المتحركة</string>
-    <string name="settings_folkx_animation_speed">سرعة الرسوم المتحركة</string>
-    <string name="settings_folkx_animation_linear">حركة خطية</string>
-    <string name="settings_folkx_animation_spatial">حركة مكانية</string>
-    <string name="settings_folkx_animation_fade">تلاشي للداخل/للخارج</string>
-    <string name="settings_folkx_animation_vertical">انزلاق عمودي</string>
-    <string name="settings_folkx_animation_diagonal">انزلاق قطري</string>
 
     <string name="su_exclude_all_title">استثناء الكل</string>
     <string name="su_exclude_all_confirm">هل أنت متأكد من أنك تريد استثناء جميع التطبيقات التي لا تتطلب صلاحيات الروت؟</string>
@@ -281,7 +279,6 @@
     <string name="su_multi_select_confirm_grant">منح صلاحية ROOT لـ %d تطبيق؟</string>
     <string name="su_multi_select_confirm_revoke">سحب صلاحية ROOT من %d تطبيق؟</string>
     <string name="su_multi_select_confirm_exclude">استبعاد %d تطبيق؟</string>
-    <string name="su_multi_select_enter">تحديد متعدد</string>
 
     <string name="apm">وحدة AP</string>
     <string name="apm_not_installed">AndroidPatch غير مثبت</string>
@@ -343,6 +340,24 @@
     <string name="settings_apm_install_confirm_summary">إظهار مربع حوار تأكيد قبل تثبيت الوحدات</string>
     <string name="settings_show_more_module_info">إظهار تفاصيل الوحدة</string>
     <string name="settings_show_more_module_info_summary">إظهار معرف الوحدة وحجمها في قائمة الوحدات</string>
+    <string name="module_sort">ترتيب الفرز</string>
+    <string name="module_sort_priority">أولوية الفرز</string>
+    <string name="module_sort_group_metamodule">الوحدات الوصفية</string>
+    <string name="module_sort_group_metamodule_summary">الوحدة التي ترتبط بها الوحدات الأخرى.</string>
+    <string name="module_sort_group_zygisk">وحدات Zygisk</string>
+    <string name="module_sort_group_zygisk_summary">توفّر أو تحمّل بيئة تشغيل Zygisk.</string>
+    <string name="module_sort_group_lsposed">وحدات LSPosed</string>
+    <string name="module_sort_group_lsposed_summary">تعمل عبر إطار Xposed.</string>
+    <string name="module_sort_group_webui">وحدات ذات واجهة ويب</string>
+    <string name="module_sort_group_webui_summary">توفّر شاشة خاصة بها.</string>
+    <string name="module_sort_group_action">وحدات ذات إجراء</string>
+    <string name="module_sort_group_action_summary">تشغّل سكربتًا عند الطلب.</string>
+    <string name="module_sort_enabled_first">فرز (الممكن أولاً)</string>
+    <string name="module_sort_custom_order">ترتيب مخصص</string>
+    <string name="module_sort_custom_order_summary">اسحب الوحدات إلى الترتيب الذي تريد عرضها به.</string>
+    <string name="module_sort_reset_custom_order">إعادة ضبط الترتيب المخصص</string>
+    <string name="module_sort_reset_custom_order_summary">العودة إلى ترتيب الأولوية.</string>
+    <string name="module_sort_drag_to_reorder">اسحب لإعادة الترتيب</string>
     <string name="settings_apm_stay_on_page">البقاء في صفحة العملية</string>
     <string name="settings_apm_stay_on_page_summary">عدم الرجوع تلقائيًا بعد تنفيذ إجراء الوحدة</string>
     <string name="settings_enable_module_shortcut_add">تمكين زر إضافة اختصار</string>
@@ -1325,10 +1340,6 @@
     <string name="color_style_neutral">محايد</string>
     <string name="color_style_fidelity">دقة</string>
     <!-- Color Contrast -->
-    <string name="color_contrast_label">التباين</string>
-    <string name="color_contrast_standard">قياسي</string>
-    <string name="color_contrast_medium">متوسط</string>
-    <string name="color_contrast_high">عالٍ</string>
     <string name="settings_focus_card_background">خلفية بطاقة FocusUI</string>
     <string name="settings_focus_card_background_enabled">تم تمكين خلفيات بطاقة FocusUI؛ اضغط مطولاً على بطاقة لإدارة خلفيتها</string>
     <string name="settings_focus_card_background_summary">تمكين خلفيات بطاقة FocusUI وإدارة الخلفية بالضغط المطول</string>
@@ -1356,8 +1367,6 @@
     <string name="dashboard_card_background_saved">تم حفظ خلفية لوحة القيادة بنجاح</string>
     <string name="dashboard_card_background_error">فشل حفظ خلفية لوحة القيادة</string>
     <string name="dashboard_card_background_cleared">تم مسح خلفية لوحة القيادة</string>
-    <string name="dashboard_card_background_restore">استعادة الافتراضي</string>
-    <string name="dashboard_card_background_restored">تمت استعادة خلفية لوحة القيادة</string>
     <string name="settings_dashboard_card_dual_dim">تمكين التعتيم المزدوج للنهار/الليل</string>
     <string name="settings_dashboard_card_dual_dim_desc">ضبط تعتيم خلفية لوحة القيادة تلقائياً للسمات الفاتحة والداكنة</string>
     <string name="settings_dashboard_card_day_dim">تعتيم خلفية لوحة القيادة في الوضع النهاري</string>

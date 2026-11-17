@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_layout_variant">レイアウトの種類</string>
+    <string name="settings_layout_variant_summary">折りたたみ可能なインライン検索付きの大きな M3E トップバーを使うか、従来のコンパクトなトップバーを使います。</string>
+    <string name="settings_layout_variant_traditional">クラシック</string>
+    <string name="settings_layout_variant_m3e">M3E</string>
+    <string name="apm_search_hint">システムモジュールを検索</string>
+    <string name="kpm_search_hint">カーネルモジュールを検索</string>
+    <string name="su_search_hint">アプリを検索</string>
     <string name="settings_launcher_icon">ランチャーアイコン</string>
     <string name="launcher_icon_style_anime">アニメ</string>
     <string name="launcher_icon_style_geometry">ジオメトリ</string>
@@ -81,15 +88,6 @@
     <string name="settings_grid_working_card_hide_text_summary">動作中のカードの「動作中」または「未インストール」のテキストを非表示にします。</string>
     <string name="settings_grid_working_card_hide_mode">動作モードを非表示</string>
     <string name="settings_grid_working_card_hide_mode_summary">動作中のカードの「完全」または「一部」のテキストを非表示にします。</string>
-    <string name="settings_folkx_engine_title">FolkX アニメーションエンジン</string>
-    <string name="settings_folkx_engine_summary">トップレベルのページの切り替え時にスムーズな物理ベースのスプリングアニメーションを使用します。</string>
-    <string name="settings_folkx_animation_type">アニメーションタイプ</string>
-    <string name="settings_folkx_animation_speed">アニメーション速度</string>
-    <string name="settings_folkx_animation_linear">リニアモーション</string>
-    <string name="settings_folkx_animation_spatial">空間モーション</string>
-    <string name="settings_folkx_animation_fade">フェードイン/アウト</string>
-    <string name="settings_folkx_animation_vertical">垂直にスライド</string>
-    <string name="settings_folkx_animation_diagonal">斜めにスライド</string>
     <string name="su_exclude_all_title">すべて除外</string>
     <string name="su_exclude_all_confirm">すべての非 root アプリを除外してもよろしいですか？</string>
     <string name="su_batch_exclude_title">一括で除外</string>
@@ -233,7 +231,6 @@
     <string name="su_multi_select_confirm_grant">%d 個のアプリに ROOT を許可しますか？</string>
     <string name="su_multi_select_confirm_revoke">%d 個のアプリから ROOT を解除しますか？</string>
     <string name="su_multi_select_confirm_exclude">%d 個のアプリを除外しますか？</string>
-    <string name="su_multi_select_enter">複数選択</string>
     <string name="apm">AP モジュール</string>
     <string name="apm_not_installed">AndroidPatch はインストールされていません</string>
     <string name="apm_failed_to_enable">モジュールの有効化に失敗: %s</string>
@@ -284,6 +281,24 @@
     <string name="settings_apm_install_confirm_summary">モジュールをインストールする前に確認ダイアログを表示します。</string>
     <string name="settings_show_more_module_info">モジュールの詳細を表示</string>
     <string name="settings_show_more_module_info_summary">モジュールリストにモジュール ID とサイズを表示します。</string>
+    <string name="module_sort">並べ替え</string>
+    <string name="module_sort_priority">並べ替えの優先度</string>
+    <string name="module_sort_group_metamodule">メタモジュール</string>
+    <string name="module_sort_group_metamodule_summary">他のモジュールが依存するモジュール。</string>
+    <string name="module_sort_group_zygisk">Zygisk モジュール</string>
+    <string name="module_sort_group_zygisk_summary">Zygisk ランタイムを提供または読み込みます。</string>
+    <string name="module_sort_group_lsposed">LSPosed モジュール</string>
+    <string name="module_sort_group_lsposed_summary">Xposed フレームワーク経由でフックします。</string>
+    <string name="module_sort_group_webui">WebUI を持つモジュール</string>
+    <string name="module_sort_group_webui_summary">独自の画面を備えています。</string>
+    <string name="module_sort_group_action">アクションを持つモジュール</string>
+    <string name="module_sort_group_action_summary">必要に応じてスクリプトを実行します。</string>
+    <string name="module_sort_enabled_first">並べ替え（最初に有効）</string>
+    <string name="module_sort_custom_order">カスタム順</string>
+    <string name="module_sort_custom_order_summary">モジュールをドラッグして表示したい順に並べます。</string>
+    <string name="module_sort_reset_custom_order">カスタム順をリセット</string>
+    <string name="module_sort_reset_custom_order_summary">優先度順に戻します。</string>
+    <string name="module_sort_drag_to_reorder">ドラッグして並べ替え</string>
     <string name="settings_apm_stay_on_page">操作ページに留まる</string>
     <string name="settings_apm_stay_on_page_summary">モジュールのアクションを実行後に自動で戻らなくなります。</string>
     <string name="settings_enable_module_shortcut_add">ショートカット追加ボタンを有効化</string>
@@ -1270,10 +1285,6 @@ KernelPatch は boot イメージをパッチする必要があります。
     <string name="color_style_neutral">ニュートラル</string>
     <string name="color_style_fidelity">フィデリティ</string>
     <!-- Color Contrast -->
-    <string name="color_contrast_label">コントラスト</string>
-    <string name="color_contrast_standard">標準</string>
-    <string name="color_contrast_medium">中</string>
-    <string name="color_contrast_high">高</string>
     <string name="settings_focus_card_background">FocusUI カード壁紙</string>
     <string name="settings_focus_card_background_enabled">FocusUI カード壁紙が有効になりました。カードを長押しして壁紙を管理</string>
     <string name="settings_focus_card_background_summary">FocusUI カード壁紙と長押し壁紙管理を有効化</string>
@@ -1301,8 +1312,6 @@ KernelPatch は boot イメージをパッチする必要があります。
     <string name="dashboard_card_background_saved">ダッシュボード壁紙を保存しました</string>
     <string name="dashboard_card_background_error">ダッシュボード壁紙の保存に失敗</string>
     <string name="dashboard_card_background_cleared">ダッシュボード壁紙をクリアしました</string>
-    <string name="dashboard_card_background_restore">デフォルトに戻す</string>
-    <string name="dashboard_card_background_restored">ダッシュボード壁紙を復元しました</string>
     <string name="settings_dashboard_card_dual_dim">昼/夜デュアル調光を有効化</string>
     <string name="settings_dashboard_card_dual_dim_desc">ライトテーマとダークテーマに応じてダッシュボード壁紙の暗さを自動調整</string>
     <string name="settings_dashboard_card_day_dim">昼モードのダッシュボード壁紙の暗さ</string>

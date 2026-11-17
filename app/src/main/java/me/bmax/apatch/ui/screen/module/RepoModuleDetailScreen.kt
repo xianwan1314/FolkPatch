@@ -1,4 +1,6 @@
 package me.bmax.apatch.ui.screen.module
+
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import me.bmax.apatch.ui.screen.patches.MODULE_TYPE
 
 import android.content.Context
@@ -13,10 +15,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.HelpOutline
-import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.outlined.Code
+import androidx.compose.material.icons.outlined.Download
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
+import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -36,10 +38,12 @@ import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.InstallScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.ExpressiveCard
+import me.bmax.apatch.ui.component.TonalCard
 import me.bmax.apatch.ui.component.ModuleLabel
-import me.bmax.apatch.ui.component.SplicedColumnGroup
+import me.bmax.apatch.ui.component.SegmentedColumn
 import me.bmax.apatch.ui.component.folk.FolkScaffold
+import me.bmax.apatch.ui.component.folk.FolkTitleStyle
+import me.bmax.apatch.ui.component.folk.folkInsetColor
 import me.bmax.apatch.ui.viewmodel.RepoModuleViewModel
 import me.bmax.apatch.util.DownloadListener
 import me.bmax.apatch.util.download
@@ -48,7 +52,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import me.bmax.apatch.core.ui.R as CoreR
 
-@Destination<RootGraph>
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 @Composable
 fun RepoModuleDetailScreen(
     navigator: DestinationsNavigator,
@@ -69,24 +73,25 @@ fun RepoModuleDetailScreen(
 
     FolkScaffold(
         title = module.name,
+        titleStyle = FolkTitleStyle.Flexible,
         onBack = { navigator.popBackStack() },
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            contentPadding = PaddingValues(vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            contentPadding = PaddingValues(vertical = FolkDimens.Size16),
+            verticalArrangement = Arrangement.spacedBy(FolkDimens.Size12)
         ) {
             // Section 1: Module basic info
             item(key = "info") {
-                ExpressiveCard(flat = true) {
+                TonalCard(flat = true) {
                     Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        modifier = Modifier.padding(FolkDimens.Size16),
+                        verticalArrangement = Arrangement.spacedBy(FolkDimens.Size12)
                     ) {
                         // Label row
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size8)) {
                             ModuleLabel(
                                 text = "APM",
                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -94,7 +99,7 @@ fun RepoModuleDetailScreen(
                             )
                             ModuleLabel(
                                 text = module.version,
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                                containerColor = folkInsetColor(),
                                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                             if (module.license.isNotEmpty()) {
@@ -131,39 +136,39 @@ fun RepoModuleDetailScreen(
             val hasLinks = module.homepage.isNotEmpty() || module.source.isNotEmpty() || module.support.isNotEmpty()
             if (hasLinks) {
                 item(key = "links") {
-                    SplicedColumnGroup(title = stringResource(R.string.repo_module_detail_links)) {
+                    SegmentedColumn(title = stringResource(R.string.repo_module_detail_links)) {
                         item(key = "homepage", visible = module.homepage.isNotEmpty()) {
-                            ExpressiveCard(flat = true, onClick = { openUrl(context, module.homepage) }) {
+                            TonalCard(flat = true, onClick = { openUrl(context, module.homepage) }) {
                                 Row(
-                                    modifier = Modifier.padding(16.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                    modifier = Modifier.padding(FolkDimens.Size16),
+                                    horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size12),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Icon(Icons.Filled.Language, contentDescription = null)
+                                    Icon(Icons.Outlined.Language, contentDescription = null)
                                     Text(stringResource(R.string.repo_module_detail_homepage))
                                 }
                             }
                         }
                         item(key = "source", visible = module.source.isNotEmpty()) {
-                            ExpressiveCard(flat = true, onClick = { openUrl(context, module.source) }) {
+                            TonalCard(flat = true, onClick = { openUrl(context, module.source) }) {
                                 Row(
-                                    modifier = Modifier.padding(16.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                    modifier = Modifier.padding(FolkDimens.Size16),
+                                    horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size12),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Icon(Icons.Filled.Code, contentDescription = null)
+                                    Icon(Icons.Outlined.Code, contentDescription = null)
                                     Text(stringResource(R.string.repo_module_detail_source))
                                 }
                             }
                         }
                         item(key = "support", visible = module.support.isNotEmpty()) {
-                            ExpressiveCard(flat = true, onClick = { openUrl(context, module.support) }) {
+                            TonalCard(flat = true, onClick = { openUrl(context, module.support) }) {
                                 Row(
-                                    modifier = Modifier.padding(16.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                    modifier = Modifier.padding(FolkDimens.Size16),
+                                    horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size12),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Icon(Icons.Filled.HelpOutline, contentDescription = null)
+                                    Icon(Icons.AutoMirrored.Outlined.HelpOutline, contentDescription = null)
                                     Text(stringResource(R.string.repo_module_detail_support))
                                 }
                             }
@@ -175,10 +180,10 @@ fun RepoModuleDetailScreen(
             // Section 3: Version history
             if (module.versions.isNotEmpty()) {
                 item(key = "versions_header") {
-                    SplicedColumnGroup(title = stringResource(R.string.repo_module_detail_versions)) {
+                    SegmentedColumn(title = stringResource(R.string.repo_module_detail_versions)) {
                         module.versions.forEach { ver ->
                             item(key = ver.versionCode) {
-                                ExpressiveCard(
+                                TonalCard(
                                     flat = true,
                                     onClick = {
                                         download(
@@ -190,8 +195,8 @@ fun RepoModuleDetailScreen(
                                     }
                                 ) {
                                     Row(
-                                        modifier = Modifier.padding(16.dp),
-                                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                        modifier = Modifier.padding(FolkDimens.Size16),
+                                        horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size12),
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Column(modifier = Modifier.weight(1f)) {
@@ -212,7 +217,7 @@ fun RepoModuleDetailScreen(
                                                 module.description
                                             )
                                         }) {
-                                            Icon(Icons.Filled.Download, contentDescription = stringResource(CoreR.string.core_action_download))
+                                            Icon(Icons.Outlined.Download, contentDescription = stringResource(CoreR.string.core_action_download))
                                         }
                                     }
                                 }
@@ -238,7 +243,7 @@ fun RepoModuleDetailScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
+                        .padding(horizontal = FolkDimens.Size16)
                 ) {
                     Text(stringResource(R.string.repo_module_detail_download))
                 }

@@ -1,4 +1,6 @@
 package me.bmax.apatch.ui.screen.module
+
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import me.bmax.apatch.ui.screen.patches.MODULE_TYPE
 
 import android.net.Uri
@@ -21,8 +23,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.FolderOpen
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -52,12 +54,12 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.folk.FolkScaffold
 import me.bmax.apatch.ui.component.folk.FolkTitleStyle
-import me.bmax.apatch.ui.component.ExpressiveCard
+import me.bmax.apatch.ui.component.TonalCard
 import me.bmax.apatch.util.installModule
 import me.bmax.apatch.util.reboot
 
@@ -67,8 +69,9 @@ import com.ramcosta.composedestinations.generated.destinations.InstallScreenDest
 import me.bmax.apatch.ui.component.folk.FolkStateView
 import androidx.compose.material.icons.outlined.Extension
 import me.bmax.apatch.ui.theme.tokens.FolkShape
+import me.bmax.apatch.ui.component.folk.folkInsetColor
 
-@Destination<RootGraph>
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ApmBulkInstallScreen(navigator: DestinationsNavigator, initialUris: ArrayList<Uri>? = null) {
@@ -120,23 +123,23 @@ fun ApmBulkInstallScreen(navigator: DestinationsNavigator, initialUris: ArrayLis
 
     // First Use Dialog
     if (showFirstTimeDialog) {
-        FolkAlertDialog(
+        ExpressiveDialog(
             onDismissRequest = {
                 if (dontShowAgain) {
                     prefs.edit().putBoolean("apm_bulk_install_first_use_shown", true).apply()
                 }
                 showFirstTimeDialog = false
             },
-            width = 350.dp,
+            width = FolkDimens.Size350,
             shape = FolkShape.Corner20,
             blurBehind = false,
             dialogProperties = DialogProperties(dismissOnClickOutside = false, dismissOnBackPress = false),
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(FolkDimens.Size16)) {
                 Text(
                     text = stringResource(R.string.apm_bulk_install_title),
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = FolkDimens.Size16)
                 )
 
                 Text(
@@ -148,7 +151,7 @@ fun ApmBulkInstallScreen(navigator: DestinationsNavigator, initialUris: ArrayLis
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp),
+                        .padding(top = FolkDimens.Size16),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
@@ -158,7 +161,7 @@ fun ApmBulkInstallScreen(navigator: DestinationsNavigator, initialUris: ArrayLis
                     Text(
                         text = stringResource(R.string.dont_show_again),
                         style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.padding(start = FolkDimens.Size8)
                     )
                 }
 
@@ -189,7 +192,7 @@ fun ApmBulkInstallScreen(navigator: DestinationsNavigator, initialUris: ArrayLis
                         text = installLog,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier
-                            .height(300.dp)
+                            .height(FolkDimens.Size300)
                             .verticalScroll(rememberScrollState())
                     )
                 }
@@ -217,23 +220,23 @@ fun ApmBulkInstallScreen(navigator: DestinationsNavigator, initialUris: ArrayLis
 
     FolkScaffold(
         title = stringResource(R.string.apm_bulk_install_title),
-        titleStyle = FolkTitleStyle.Inline,
+        titleStyle = FolkTitleStyle.Flexible,
         onBack = { navigator.navigateUp() },
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
+                .padding(FolkDimens.Size16)
         ) {
-            ExpressiveCard(
+            TonalCard(
                 modifier = Modifier.weight(1f),
                 flat = true
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp)
+                        .padding(FolkDimens.Size16)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -250,14 +253,14 @@ fun ApmBulkInstallScreen(navigator: DestinationsNavigator, initialUris: ArrayLis
                             }
                         ) {
                             Icon(
-                                imageVector = Icons.Default.FolderOpen,
+                                imageVector = Icons.Outlined.FolderOpen,
                                 contentDescription = null,
-                                modifier = Modifier.padding(end = 8.dp)
+                                modifier = Modifier.padding(end = FolkDimens.Size8)
                             )
                             Text(stringResource(R.string.apm_bulk_install_add))
                         }
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(FolkDimens.Size8))
                     if (moduleUris.isEmpty()) {
                         FolkStateView(
                             title = stringResource(R.string.apm_bulk_install_empty),
@@ -266,13 +269,13 @@ fun ApmBulkInstallScreen(navigator: DestinationsNavigator, initialUris: ArrayLis
                     } else {
                         LazyColumn(
                             modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                            verticalArrangement = Arrangement.spacedBy(FolkDimens.Size8)
                         ) {
                             items(moduleUris, key = { it }) { uri ->
                                 ListItem(
                                     modifier = Modifier
                                         .clip(FolkShape.Corner16)
-                                        .background(MaterialTheme.colorScheme.surfaceContainerHighest),
+                                        .background(folkInsetColor()),
                                     headlineContent = { 
                                         Text(
                                             text = getFileName(context, uri),
@@ -286,7 +289,7 @@ fun ApmBulkInstallScreen(navigator: DestinationsNavigator, initialUris: ArrayLis
                                             }
                                         ) {
                                             Icon(
-                                                imageVector = Icons.Default.Delete,
+                                                imageVector = Icons.Outlined.Delete,
                                                 contentDescription = stringResource(R.string.apm_bulk_install_remove),
                                                 tint = MaterialTheme.colorScheme.error
                                             )
@@ -299,7 +302,7 @@ fun ApmBulkInstallScreen(navigator: DestinationsNavigator, initialUris: ArrayLis
                 }
             }
             
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(FolkDimens.Size16))
             
             Button(
                 onClick = {

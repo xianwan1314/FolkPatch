@@ -2,8 +2,10 @@
 
 package me.bmax.apatch.ui.screen.settings.general
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
+
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,12 +17,11 @@ import androidx.core.content.edit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
-import me.bmax.apatch.ui.component.folk.FolkSelectableRow
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
+import me.bmax.apatch.ui.component.SegmentedSelectableItem
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.Natives
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.folk.FolkButtonDefaults
 import me.bmax.apatch.util.*
 import me.bmax.apatch.util.ui.showToast
 import java.io.File
@@ -38,13 +39,13 @@ fun ResetSUPathDialog(showDialog: MutableState<Boolean>) {
             runCatching { me.bmax.apatch.Natives.suPath() }.getOrDefault("/system/bin/su")
         }
     }
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = { showDialog.value = false },
     ) {
-        Column(modifier = Modifier.padding(PaddingValues(all = 24.dp))) {
+        Column(modifier = Modifier.padding(PaddingValues(all = FolkDimens.Size24))) {
             Box(
                 Modifier
-                    .padding(PaddingValues(bottom = 16.dp))
+                    .padding(PaddingValues(bottom = FolkDimens.Size16))
                     .align(Alignment.Start)
             ) {
                 Text(
@@ -55,7 +56,7 @@ fun ResetSUPathDialog(showDialog: MutableState<Boolean>) {
             Box(
                 Modifier
                     .weight(weight = 1f, fill = false)
-                    .padding(PaddingValues(bottom = 12.dp))
+                    .padding(PaddingValues(bottom = FolkDimens.Size12))
                     .align(Alignment.Start)
             ) {
                 OutlinedTextField(
@@ -93,7 +94,7 @@ fun ResetSUPathDialog(showDialog: MutableState<Boolean>) {
                         }
                         showToast(context, if (success) R.string.success else R.string.failure)
                     }
-                }, colors = FolkButtonDefaults.filledColors()) {
+                }, colors = ButtonDefaults.buttonColors()) {
                     Text(stringResource(id = android.R.string.ok))
                 }
             }
@@ -114,19 +115,19 @@ fun CleanStorageDialog(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = { showDialog.value = false },
     ) {
-        Column(modifier = Modifier.padding(PaddingValues(all = 24.dp))) {
+        Column(modifier = Modifier.padding(PaddingValues(all = FolkDimens.Size24))) {
             Text(
                 text = stringResource(id = titleRes),
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = FolkDimens.Size16)
             )
             Text(
                 text = stringResource(id = R.string.settings_clean_storage_confirm),
                 style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(bottom = 12.dp)
+                modifier = Modifier.padding(bottom = FolkDimens.Size12)
             )
 
             Row(
@@ -152,68 +153,8 @@ fun CleanStorageDialog(
                         }
                         showToast(context, if (success) R.string.settings_clean_storage_done else R.string.failure)
                     }
-                }, colors = FolkButtonDefaults.filledColors()) {
+                }, colors = ButtonDefaults.buttonColors()) {
                     Text(stringResource(id = android.R.string.ok))
-                }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun FolkXAnimationSpeedDialog(showDialog: MutableState<Boolean>, onSpeedChanged: (Float) -> Unit = {}) {
-    val prefs = APApplication.sharedPreferences
-
-    FolkAlertDialog(
-        onDismissRequest = { showDialog.value = false },
-    ) {
-        Column(modifier = Modifier.padding(24.dp)) {
-            Text(
-                text = stringResource(R.string.settings_folkx_animation_speed),
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            val currentSpeed = remember { prefs.getFloat("folkx_animation_speed", 1.0f) }
-
-            Surface(
-                shape = FolkShape.Corner12,
-                color = AlertDialogDefaults.containerColor,
-                tonalElevation = 2.dp
-            ) {
-                Column {
-                    val speeds = listOf(
-                        0.5f to "0.5x",
-                        0.75f to "0.75x",
-                        1.0f to "1.0x",
-                        1.25f to "1.25x",
-                        1.5f to "1.5x",
-                        2.0f to "2.0x"
-                    )
-
-                    speeds.forEach { (speed, label) ->
-                        FolkSelectableRow(
-                            title = label,
-                            selected = currentSpeed == speed,
-                            onClick = {
-                                prefs.edit().putFloat("folkx_animation_speed", speed).apply()
-                                onSpeedChanged(speed)
-                                showDialog.value = false
-                            }
-                        )
-                    }
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-                TextButton(onClick = { showDialog.value = false }) {
-                    Text(stringResource(id = android.R.string.cancel))
                 }
             }
         }

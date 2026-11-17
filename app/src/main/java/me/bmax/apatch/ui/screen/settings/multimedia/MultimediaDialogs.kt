@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.settings.multimedia
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -8,8 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
-import me.bmax.apatch.ui.component.folk.FolkSelectableRow
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
+import me.bmax.apatch.ui.component.SegmentedSelectableItem
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.theme.SoundEffectConfig
 import me.bmax.apatch.ui.theme.VibrationConfig
@@ -43,23 +44,23 @@ fun MultimediaDialogs(
 
     // Sound Effect Source Dialog
     if (showSoundEffectSourceDialog.value) {
-        FolkAlertDialog(
+        ExpressiveDialog(
             onDismissRequest = { showSoundEffectSourceDialog.value = false },
         ) {
-            Column(modifier = Modifier.padding(24.dp)) {
+            Column(modifier = Modifier.padding(FolkDimens.Size24)) {
                 Text(
                     text = soundEffectSourceTitle,
                     style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = FolkDimens.Size16)
                 )
 
                 Surface(
                     shape = FolkShape.Corner12,
                     color = AlertDialogDefaults.containerColor,
-                    tonalElevation = 2.dp
+                    tonalElevation = FolkDimens.Size2
                 ) {
                     Column {
-                        FolkSelectableRow(
+                        SegmentedSelectableItem(
                             title = soundEffectSourceLocal,
                             selected = SoundEffectConfig.sourceType == SoundEffectConfig.SOURCE_TYPE_LOCAL,
                             onClick = {
@@ -69,7 +70,7 @@ fun MultimediaDialogs(
                             }
                         )
 
-                        FolkSelectableRow(
+                        SegmentedSelectableItem(
                             title = soundEffectSourcePreset,
                             selected = SoundEffectConfig.sourceType == SoundEffectConfig.SOURCE_TYPE_PRESET,
                             onClick = {
@@ -84,7 +85,7 @@ fun MultimediaDialogs(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 24.dp),
+                        .padding(top = FolkDimens.Size24),
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = { showSoundEffectSourceDialog.value = false }) {
@@ -97,26 +98,26 @@ fun MultimediaDialogs(
 
     // Sound Effect Preset Dialog
     if (showSoundEffectPresetDialog.value) {
-        FolkAlertDialog(
+        ExpressiveDialog(
             onDismissRequest = { showSoundEffectPresetDialog.value = false },
         ) {
-            Column(modifier = Modifier.padding(24.dp)) {
+            Column(modifier = Modifier.padding(FolkDimens.Size24)) {
                 Text(
                     text = soundEffectPresetTitle,
                     style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = FolkDimens.Size16)
                 )
 
                 Surface(
                     shape = FolkShape.Corner12,
                     color = AlertDialogDefaults.containerColor,
-                    tonalElevation = 2.dp,
-                    modifier = Modifier.heightIn(max = 400.dp)
+                    tonalElevation = FolkDimens.Size2,
+                    modifier = Modifier.heightIn(max = FolkDimens.Size400)
                 ) {
                     androidx.compose.foundation.lazy.LazyColumn {
                         items(SoundEffectConfig.PRESETS.size, key = { it }) { index ->
                             val preset = SoundEffectConfig.PRESETS[index]
-                            FolkSelectableRow(
+                            SegmentedSelectableItem(
                                 title = preset,
                                 selected = SoundEffectConfig.presetName == preset,
                                 onClick = {
@@ -132,7 +133,7 @@ fun MultimediaDialogs(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 24.dp),
+                        .padding(top = FolkDimens.Size24),
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = { showSoundEffectPresetDialog.value = false }) {
@@ -145,23 +146,23 @@ fun MultimediaDialogs(
 
     // Sound Effect Scope Dialog
     if (showSoundEffectScopeDialog.value) {
-        FolkAlertDialog(
+        ExpressiveDialog(
             onDismissRequest = { showSoundEffectScopeDialog.value = false },
         ) {
-            Column(modifier = Modifier.padding(24.dp)) {
+            Column(modifier = Modifier.padding(FolkDimens.Size24)) {
                 Text(
                     text = soundEffectScopeTitle,
                     style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = FolkDimens.Size16)
                 )
 
                 Surface(
                     shape = FolkShape.Corner12,
                     color = AlertDialogDefaults.containerColor,
-                    tonalElevation = 2.dp
+                    tonalElevation = FolkDimens.Size2
                 ) {
                     Column {
-                        FolkSelectableRow(
+                        SegmentedSelectableItem(
                             title = stringResource(R.string.settings_sound_effect_scope_global),
                             selected = SoundEffectConfig.scope == SoundEffectConfig.SCOPE_GLOBAL,
                             onClick = {
@@ -171,7 +172,7 @@ fun MultimediaDialogs(
                             }
                         )
 
-                        FolkSelectableRow(
+                        SegmentedSelectableItem(
                             title = stringResource(R.string.settings_sound_effect_scope_bottom_bar),
                             selected = SoundEffectConfig.scope == SoundEffectConfig.SCOPE_BOTTOM_BAR,
                             onClick = {
@@ -186,7 +187,7 @@ fun MultimediaDialogs(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 24.dp),
+                        .padding(top = FolkDimens.Size24),
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = { showSoundEffectScopeDialog.value = false }) {
@@ -199,23 +200,23 @@ fun MultimediaDialogs(
 
     // Startup Sound Source Dialog
     if (showStartupSourceDialog.value) {
-        FolkAlertDialog(
+        ExpressiveDialog(
             onDismissRequest = { showStartupSourceDialog.value = false },
         ) {
-            Column(modifier = Modifier.padding(24.dp)) {
+            Column(modifier = Modifier.padding(FolkDimens.Size24)) {
                 Text(
                     text = startupSourceTitle,
                     style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = FolkDimens.Size16)
                 )
 
                 Surface(
                     shape = FolkShape.Corner12,
                     color = AlertDialogDefaults.containerColor,
-                    tonalElevation = 2.dp
+                    tonalElevation = FolkDimens.Size2
                 ) {
                     Column {
-                        FolkSelectableRow(
+                        SegmentedSelectableItem(
                             title = startupSourceLocal,
                             selected = SoundEffectConfig.startupSourceType == SoundEffectConfig.SOURCE_TYPE_LOCAL,
                             onClick = {
@@ -225,7 +226,7 @@ fun MultimediaDialogs(
                             }
                         )
 
-                        FolkSelectableRow(
+                        SegmentedSelectableItem(
                             title = startupSourcePreset,
                             selected = SoundEffectConfig.startupSourceType == SoundEffectConfig.SOURCE_TYPE_PRESET,
                             onClick = {
@@ -240,7 +241,7 @@ fun MultimediaDialogs(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 24.dp),
+                        .padding(top = FolkDimens.Size24),
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = { showStartupSourceDialog.value = false }) {
@@ -253,26 +254,26 @@ fun MultimediaDialogs(
 
     // Startup Sound Preset Dialog
     if (showStartupPresetDialog.value) {
-        FolkAlertDialog(
+        ExpressiveDialog(
             onDismissRequest = { showStartupPresetDialog.value = false },
         ) {
-            Column(modifier = Modifier.padding(24.dp)) {
+            Column(modifier = Modifier.padding(FolkDimens.Size24)) {
                 Text(
                     text = startupPresetTitle,
                     style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = FolkDimens.Size16)
                 )
 
                 Surface(
                     shape = FolkShape.Corner12,
                     color = AlertDialogDefaults.containerColor,
-                    tonalElevation = 2.dp,
-                    modifier = Modifier.heightIn(max = 400.dp)
+                    tonalElevation = FolkDimens.Size2,
+                    modifier = Modifier.heightIn(max = FolkDimens.Size400)
                 ) {
                     androidx.compose.foundation.lazy.LazyColumn {
                         items(SoundEffectConfig.STARTUP_PRESETS.size, key = { it }) { index ->
                             val preset = SoundEffectConfig.STARTUP_PRESETS[index]
-                            FolkSelectableRow(
+                            SegmentedSelectableItem(
                                 title = preset,
                                 selected = SoundEffectConfig.startupPresetName == preset,
                                 onClick = {
@@ -288,7 +289,7 @@ fun MultimediaDialogs(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 24.dp),
+                        .padding(top = FolkDimens.Size24),
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = { showStartupPresetDialog.value = false }) {
@@ -301,23 +302,23 @@ fun MultimediaDialogs(
 
     // Vibration Scope Dialog
     if (showVibrationScopeDialog.value) {
-        FolkAlertDialog(
+        ExpressiveDialog(
             onDismissRequest = { showVibrationScopeDialog.value = false },
         ) {
-            Column(modifier = Modifier.padding(24.dp)) {
+            Column(modifier = Modifier.padding(FolkDimens.Size24)) {
                 Text(
                     text = vibrationScopeTitle,
                     style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = FolkDimens.Size16)
                 )
 
                 Surface(
                     shape = FolkShape.Corner12,
                     color = AlertDialogDefaults.containerColor,
-                    tonalElevation = 2.dp
+                    tonalElevation = FolkDimens.Size2
                 ) {
                     Column {
-                        FolkSelectableRow(
+                        SegmentedSelectableItem(
                             title = stringResource(R.string.settings_vibration_scope_global),
                             selected = VibrationConfig.scope == VibrationConfig.SCOPE_GLOBAL,
                             onClick = {
@@ -327,7 +328,7 @@ fun MultimediaDialogs(
                             }
                         )
 
-                        FolkSelectableRow(
+                        SegmentedSelectableItem(
                             title = stringResource(R.string.settings_vibration_scope_bottom_bar),
                             selected = VibrationConfig.scope == VibrationConfig.SCOPE_BOTTOM_BAR,
                             onClick = {
@@ -342,7 +343,7 @@ fun MultimediaDialogs(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 24.dp),
+                        .padding(top = FolkDimens.Size24),
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = { showVibrationScopeDialog.value = false }) {

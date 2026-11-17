@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.misc
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -11,7 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import me.bmax.apatch.ui.component.folk.folkPressScale
 import androidx.compose.ui.semantics.Role
 import me.bmax.apatch.ui.theme.tokens.FolkShape
+import me.bmax.apatch.ui.component.folk.folkInsetColor
 
 /**
  * One of the two avatar choices. The selected tile is tinted and carries a
@@ -57,15 +59,15 @@ internal fun AvatarOptionTile(
                 haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 onClick()
             }
-            .padding(vertical = 16.dp),
+            .padding(vertical = FolkDimens.Size16),
     ) {
         Box(contentAlignment = Alignment.Center) {
             Box(
                 modifier = Modifier
-                    .size(64.dp)
+                    .size(FolkDimens.Size64)
                     .alpha(opacity)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest),
+                    .background(folkInsetColor()),
                 contentAlignment = Alignment.Center,
             ) {
                 preview()
@@ -74,21 +76,21 @@ internal fun AvatarOptionTile(
                 Box(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
-                        .size(22.dp)
+                        .size(FolkDimens.Size22)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.primary),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Check,
+                        imageVector = Icons.Outlined.Check,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(14.dp),
+                        modifier = Modifier.size(FolkDimens.Size14),
                     )
                 }
             }
         }
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(FolkDimens.Size10))
         Text(
             text = label,
             style = MaterialTheme.typography.labelLarge,

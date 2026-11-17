@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_layout_variant">布局之制</string>
+    <string name="settings_layout_variant_summary">或取 M3E 大题与可收之寻索栏，或循紧凑旧制顶栏</string>
+    <string name="settings_layout_variant_traditional">旧制</string>
+    <string name="settings_layout_variant_m3e">M3E</string>
+    <string name="apm_search_hint">寻索系统模块</string>
+    <string name="kpm_search_hint">寻索内核模块</string>
+    <string name="su_search_hint">寻索应用</string>
     <string name="launcher_icon_style_anime">漫符</string>
     <string name="launcher_icon_style_geometry">幾何之符</string>
     <string name="launcher_icon_style_apatch">APatch</string>
@@ -92,15 +99,6 @@
     <string name="settings_grid_working_card_hide_mode_summary">隱工作牌上 \'Full\' 或 \'Half\' 之文</string>
 
 
-    <string name="settings_folkx_engine_title">FolkX 動效之機</string>
-    <string name="settings_folkx_engine_summary">於頂層諸頁互易之際，行依物理之彈簧動效</string>
-    <string name="settings_folkx_animation_type">動效之式</string>
-    <string name="settings_folkx_animation_speed">動效之速</string>
-    <string name="settings_folkx_animation_linear">直行</string>
-    <string name="settings_folkx_animation_spatial">空際之行</string>
-    <string name="settings_folkx_animation_fade">隱現</string>
-    <string name="settings_folkx_animation_vertical">上下推移</string>
-    <string name="settings_folkx_animation_diagonal">斜向推移</string>
 
     <string name="su_exclude_all_title">盡除之</string>
     <string name="su_exclude_all_confirm">果欲盡除諸非 Root 之應用乎？</string>
@@ -265,7 +263,6 @@
     <string name="su_multi_select_confirm_grant">授 ROOT 於 %d 應用乎？</string>
     <string name="su_multi_select_confirm_revoke">收 %d 應用之 ROOT 乎？</string>
     <string name="su_multi_select_confirm_exclude">除 %d 應用乎？</string>
-    <string name="su_multi_select_enter">多擇</string>
     <string name="apm">統系之件</string>
 
 
@@ -322,6 +319,24 @@
     <string name="settings_apm_install_confirm_summary">裝件之前，先示問語</string>
     <string name="settings_show_more_module_info">現件之詳</string>
     <string name="settings_show_more_module_info_summary">於件列中現其標識與大小</string>
+    <string name="module_sort">件之序</string>
+    <string name="module_sort_priority">排序之權</string>
+    <string name="module_sort_group_metamodule">元件</string>
+    <string name="module_sort_group_metamodule_summary">諸件所附之件。</string>
+    <string name="module_sort_group_zygisk">Zygisk 之件</string>
+    <string name="module_sort_group_zygisk_summary">供或載 Zygisk 之運行。</string>
+    <string name="module_sort_group_lsposed">LSPosed 之件</string>
+    <string name="module_sort_group_lsposed_summary">藉 Xposed 之架以鈎連。</string>
+    <string name="module_sort_group_webui">携 WebUI 之件</string>
+    <string name="module_sort_group_webui_summary">自携獨立之界面。</string>
+    <string name="module_sort_group_action">携術之件</string>
+    <string name="module_sort_group_action_summary">可按需行其腳本。</string>
+    <string name="module_sort_enabled_first">已啟者先</string>
+    <string name="module_sort_custom_order">自定件之序</string>
+    <string name="module_sort_custom_order_summary">曳件以定其現出之序。</string>
+    <string name="module_sort_reset_custom_order">復素定之序</string>
+    <string name="module_sort_reset_custom_order_summary">復歸上方優先之序。</string>
+    <string name="module_sort_drag_to_reorder">曳而易其序</string>
     <string name="settings_apm_stay_on_page">留於操作之頁</string>
     <string name="settings_apm_stay_on_page_summary">行件之事畢，不自返</string>
     <string name="settings_enable_module_shortcut_add">開增捷徑之鈕</string>
@@ -988,8 +1003,6 @@ KernelPatch 須用 boot 之像以補。
     <string name="dashboard_card_background_saved">DashboardUI 壁飾已存</string>
     <string name="dashboard_card_background_error">存 DashboardUI 壁飾而敗</string>
     <string name="dashboard_card_background_cleared">DashboardUI 壁飾已清</string>
-    <string name="dashboard_card_background_restore">復素定</string>
-    <string name="dashboard_card_background_restored">已復素定之壁飾</string>
     <string name="settings_dashboard_card_dual_dim">開晝夜兩晦</string>
     <string name="settings_dashboard_card_dual_dim_desc">依晝夜之題，自調 DashboardUI 壁飾之晦</string>
     <string name="settings_dashboard_card_day_dim">晝時 DashboardUI 壁飾之晦</string>
@@ -1453,10 +1466,6 @@ KernelPatch 須用 boot 之像以補。
     <string name="color_style_neutral">中和</string>
     <string name="color_style_fidelity">傳真</string>
     <!-- Color Contrast -->
-    <string name="color_contrast_label">對比</string>
-    <string name="color_contrast_standard">常</string>
-    <string name="color_contrast_medium">中</string>
-    <string name="color_contrast_high">極</string>
     <string name="settings_jailbreak_mode">越獄之式</string>
     <string name="settings_jailbreak_mode_summary">"於原核之上載 KernelPatch 之件。此式不許補。"</string>
     <string name="settings_jailbreak_soft_reboot">軟重啟</string>

@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_layout_variant">Variante de layout</string>
+    <string name="settings_layout_variant_summary">Use barras superiores grandes M3E com pesquisa embutida e recolhível, ou mantenha as barras superiores compactas tradicionais.</string>
+    <string name="settings_layout_variant_traditional">Tradicional</string>
+    <string name="settings_layout_variant_m3e">M3E</string>
+    <string name="apm_search_hint">Pesquisar módulos do sistema</string>
+    <string name="kpm_search_hint">Pesquisar módulos do kernel</string>
+    <string name="su_search_hint">Pesquisar apps</string>
     <string name="launcher_icon_style_anime">Anime</string>
     <string name="launcher_icon_style_geometry">Geométrico</string>
     <string name="launcher_icon_style_apatch">APatch</string>
@@ -91,15 +98,6 @@
     <string name="settings_grid_working_card_hide_mode">Ocultar modo de operação</string>
     <string name="settings_grid_working_card_hide_mode_summary">Ocultar o texto \'Completo\' ou \'Metade\' no cartão de status</string>
 
-    <string name="settings_folkx_engine_title">FolkX Animation Engine</string>
-    <string name="settings_folkx_engine_summary">Usar animação de mola baseada em física suave ao alternar entre páginas de nível superior</string>
-    <string name="settings_folkx_animation_type">Tipo de Animação</string>
-    <string name="settings_folkx_animation_speed">Velocidade da Animação</string>
-    <string name="settings_folkx_animation_linear">Movimento Linear</string>
-    <string name="settings_folkx_animation_spatial">Movimento Espacial</string>
-    <string name="settings_folkx_animation_fade">Fade In/Out</string>
-    <string name="settings_folkx_animation_vertical">Deslize Vertical</string>
-    <string name="settings_folkx_animation_diagonal">Deslize Diagonal</string>
 
     <string name="su_exclude_all_title">Excluir Tudo</string>
     <string name="su_exclude_all_confirm">Tem certeza de que deseja excluir todos os apps não-root?</string>
@@ -281,7 +279,6 @@
     <string name="su_multi_select_confirm_grant">Conceder ROOT a %d aplicativos?</string>
     <string name="su_multi_select_confirm_revoke">Revogar ROOT de %d aplicativos?</string>
     <string name="su_multi_select_confirm_exclude">Excluir %d aplicativos?</string>
-    <string name="su_multi_select_enter">Multisseleção</string>
 
     <string name="apm">Módulo do Sistema</string>
     <string name="apm_not_installed">AndroidPatch não instalado</string>
@@ -343,6 +340,24 @@
     <string name="settings_apm_install_confirm_summary">Mostrar uma caixa de diálogo antes de instalar módulos</string>
     <string name="settings_show_more_module_info">Mostrar detalhes do módulo</string>
     <string name="settings_show_more_module_info_summary">Mostrar ID e tamanho do módulo na lista</string>
+    <string name="module_sort">Ordem de classificação</string>
+    <string name="module_sort_priority">Prioridade de classificação</string>
+    <string name="module_sort_group_metamodule">Metamódulos</string>
+    <string name="module_sort_group_metamodule_summary">O módulo ao qual os outros se anexam.</string>
+    <string name="module_sort_group_zygisk">Módulos Zygisk</string>
+    <string name="module_sort_group_zygisk_summary">Fornece ou carrega o runtime do Zygisk.</string>
+    <string name="module_sort_group_lsposed">Módulos LSPosed</string>
+    <string name="module_sort_group_lsposed_summary">Intercepta por meio do framework Xposed.</string>
+    <string name="module_sort_group_webui">Módulos com interface web</string>
+    <string name="module_sort_group_webui_summary">Inclui uma tela própria.</string>
+    <string name="module_sort_group_action">Módulos com uma ação</string>
+    <string name="module_sort_group_action_summary">Executa um script sob demanda.</string>
+    <string name="module_sort_enabled_first">Ordenar (Ativado primeiro)</string>
+    <string name="module_sort_custom_order">Ordem personalizada</string>
+    <string name="module_sort_custom_order_summary">Arraste os módulos para a ordem em que deseja exibi-los.</string>
+    <string name="module_sort_reset_custom_order">Redefinir ordem personalizada</string>
+    <string name="module_sort_reset_custom_order_summary">Voltar à ordem de prioridade.</string>
+    <string name="module_sort_drag_to_reorder">Arraste para reordenar</string>
     <string name="settings_apm_stay_on_page">Permanecer na página</string>
     <string name="settings_apm_stay_on_page_summary">Não retornar automaticamente após execução de ação no módulo</string>
     <string name="settings_enable_module_shortcut_add">Ativar botão de adicionar atalho</string>
@@ -1347,10 +1362,6 @@ Aqui estão algumas possíveis razões para a falha de autenticação—verifiqu
     <string name="color_style_neutral">Neutro</string>
     <string name="color_style_fidelity">Fidelidade</string>
     <!-- Color Contrast -->
-    <string name="color_contrast_label">Contraste</string>
-    <string name="color_contrast_standard">Padrão</string>
-    <string name="color_contrast_medium">Médio</string>
-    <string name="color_contrast_high">Alto</string>
     <string name="settings_focus_card_background">Papel de parede do cartão FocusUI</string>
     <string name="settings_focus_card_background_enabled">Papéis de parede do cartão FocusUI ativados; pressione longamente um cartão para gerenciar seu papel de parede</string>
     <string name="settings_focus_card_background_summary">Ativar papéis de parede do cartão FocusUI e gerenciamento por pressão longa</string>
@@ -1378,8 +1389,6 @@ Aqui estão algumas possíveis razões para a falha de autenticação—verifiqu
     <string name="dashboard_card_background_saved">Papel de parede do painel salvo com sucesso</string>
     <string name="dashboard_card_background_error">Falha ao salvar papel de parede do painel</string>
     <string name="dashboard_card_background_cleared">Papel de parede do painel limpo</string>
-    <string name="dashboard_card_background_restore">Restaurar padrão</string>
-    <string name="dashboard_card_background_restored">Papel de parede do painel restaurado</string>
     <string name="settings_dashboard_card_dual_dim">Ativar escurecimento duplo dia/noite</string>
     <string name="settings_dashboard_card_dual_dim_desc">Ajustar automaticamente o escurecimento do papel de parede do painel para temas claro e escuro</string>
     <string name="settings_dashboard_card_day_dim">Escurecimento do papel de parede do painel no modo dia</string>

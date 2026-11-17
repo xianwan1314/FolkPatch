@@ -5,12 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronLeft
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.AutoAwesome
-import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
 import me.bmax.apatch.R
 import me.bmax.apatch.util.ui.APDialogBlurBehindUtils
 import me.bmax.apatch.ui.theme.tokens.FolkShape
@@ -44,29 +44,29 @@ fun WelcomeGuideDialog(
     val pages = remember {
         listOf(
             WelcomePage(
-                icon = Icons.Filled.AutoAwesome,
+                icon = Icons.Outlined.AutoAwesome,
                 titleId = R.string.welcome_title_1,
                 descId = R.string.welcome_desc_1,
             ),
             WelcomePage(
-                icon = Icons.Filled.Palette,
+                icon = Icons.Outlined.Palette,
                 titleId = R.string.welcome_title_2,
                 descId = R.string.welcome_desc_2,
             ),
             WelcomePage(
-                icon = Icons.Filled.Tune,
+                icon = Icons.Outlined.Tune,
                 titleId = R.string.welcome_title_3,
                 descId = R.string.welcome_desc_3,
             ),
             WelcomePage(
-                icon = Icons.Filled.Settings,
+                icon = Icons.Outlined.Settings,
                 titleId = R.string.welcome_title_4,
                 descId = R.string.welcome_desc_4,
             ),
         )
     }
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = { /* intentionally no-op: use buttons to dismiss */ },
         width = 340.dp,
         shape = FolkShape.Corner24,
@@ -169,7 +169,7 @@ fun WelcomeGuideDialog(
                 if (currentPage > 0) {
                     TextButton(onClick = { currentPage-- }) {
                         Icon(
-                            Icons.Filled.ChevronLeft,
+                            Icons.AutoMirrored.Outlined.KeyboardArrowLeft,
                             contentDescription = null,
                             modifier = Modifier.size(18.dp)
                         )
@@ -197,7 +197,7 @@ fun WelcomeGuideDialog(
                         Text(stringResource(R.string.welcome_next))
                         Spacer(Modifier.width(4.dp))
                         Icon(
-                            Icons.Filled.ChevronRight,
+                            Icons.AutoMirrored.Outlined.KeyboardArrowRight,
                             contentDescription = null,
                             modifier = Modifier.size(18.dp)
                         )

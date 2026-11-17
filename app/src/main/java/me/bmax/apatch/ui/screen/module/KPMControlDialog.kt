@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.module
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,9 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.folk.FolkButtonDefaults
 import me.bmax.apatch.ui.theme.tokens.ContinuousCornerShape
 import me.bmax.apatch.ui.theme.tokens.FolkShape
 
@@ -34,14 +34,14 @@ fun KPMControlDialog(showDialog: MutableState<Boolean>, onConfirm: (String) -> U
     var controlParam by remember { mutableStateOf("") }
     var enable by remember { mutableStateOf(false) }
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = { showDialog.value = false },
         blurBehind = false,
     ) {
-        Column(modifier = Modifier.padding(PaddingValues(all = 24.dp))) {
+        Column(modifier = Modifier.padding(PaddingValues(all = FolkDimens.Size24))) {
             Box(
                 Modifier
-                    .padding(PaddingValues(bottom = 16.dp))
+                    .padding(PaddingValues(bottom = FolkDimens.Size16))
                     .align(Alignment.Start)
             ) {
                 Text(
@@ -68,7 +68,7 @@ fun KPMControlDialog(showDialog: MutableState<Boolean>, onConfirm: (String) -> U
                     value = controlParam,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 6.dp),
+                        .padding(top = FolkDimens.Size6),
                     onValueChange = {
                         controlParam = it
                         enable = controlParam.isNotBlank()
@@ -79,7 +79,7 @@ fun KPMControlDialog(showDialog: MutableState<Boolean>, onConfirm: (String) -> U
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(FolkDimens.Size12))
             Row(
                 modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
             ) {
@@ -94,7 +94,7 @@ fun KPMControlDialog(showDialog: MutableState<Boolean>, onConfirm: (String) -> U
                     // leaves composition here, cancelling any scope it owns.
                     onConfirm(controlParam)
 
-                }, enabled = enable, colors = FolkButtonDefaults.filledColors()) {
+                }, enabled = enable, colors = ButtonDefaults.buttonColors()) {
                     Text(stringResource(id = android.R.string.ok))
                 }
             }

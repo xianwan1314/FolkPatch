@@ -9,7 +9,7 @@ import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalRippleConfiguration
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.RippleConfiguration
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -48,15 +48,13 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ramcosta.composedestinations.generated.destinations.SettingScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.KPModuleScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.SuperUserScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.APModuleScreenDestination
 import me.bmax.apatch.ui.theme.tokens.FolkShape
 import me.bmax.apatch.ui.theme.tokens.FolkThemeCatalog
 import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import me.bmax.apatch.ui.theme.tokens.FolkExpressiveMotionScheme
+import me.bmax.apatch.ui.theme.tokens.LocalFolkWallpaperTokens
+import me.bmax.apatch.ui.theme.tokens.resolveFolkWallpaperTokens
 
 @Composable
 private fun SystemBarStyle(
@@ -154,10 +152,9 @@ fun APatchTheme(
     }
     var customColorScheme by remember { mutableStateOf(prefs.getString("custom_color", "indigo")) }
     var amoledTheme by remember { mutableStateOf(prefs.getBoolean("amoled_theme", false)) }
-    var colorGenerationMode by remember { mutableStateOf(prefs.getString("color_generation_mode", "classic")) }
-    var colorStandard by remember { mutableStateOf(prefs.getString("color_standard", "MD3_2021")) }
+    var colorGenerationMode by remember { mutableStateOf(prefs.getString("color_generation_mode", "custom")) }
+    var colorStandard by remember { mutableStateOf(prefs.getString("color_standard", "M3E_2025")) }
     var colorStyle by remember { mutableStateOf(prefs.getString("color_style", "TONAL_SPOT")) }
-    var colorContrast by remember { mutableStateOf(prefs.getString("color_contrast", "STANDARD")) }
 
     DisposableEffect(prefs) {
         val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
@@ -167,10 +164,9 @@ fun APatchTheme(
                 "use_system_color_theme" -> dynamicColor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) prefs.getBoolean(key, false) else false
                 "custom_color" -> customColorScheme = prefs.getString(key, "indigo")
                 "amoled_theme" -> amoledTheme = prefs.getBoolean(key, false)
-                "color_generation_mode" -> colorGenerationMode = prefs.getString(key, "classic")
-                "color_standard" -> colorStandard = prefs.getString(key, "MD3_2021")
+                "color_generation_mode" -> colorGenerationMode = prefs.getString(key, "custom")
+                "color_standard" -> colorStandard = prefs.getString(key, "M3E_2025")
                 "color_style" -> colorStyle = prefs.getString(key, "TONAL_SPOT")
-                "color_contrast" -> colorContrast = prefs.getString(key, "STANDARD")
             }
         }
         prefs.registerOnSharedPreferenceChangeListener(listener)
@@ -190,10 +186,9 @@ fun APatchTheme(
             ) else false
             customColorScheme = prefs.getString("custom_color", "indigo")
             amoledTheme = prefs.getBoolean("amoled_theme", false)
-            colorGenerationMode = prefs.getString("color_generation_mode", "classic")
-            colorStandard = prefs.getString("color_standard", "MD3_2021")
+            colorGenerationMode = prefs.getString("color_generation_mode", "custom")
+            colorStandard = prefs.getString("color_standard", "M3E_2025")
             colorStyle = prefs.getString("color_style", "TONAL_SPOT")
-            colorContrast = prefs.getString("color_contrast", "STANDARD")
             BackgroundManager.loadCustomBackground(context)
             FontConfig.load(context)
             me.bmax.apatch.util.ui.FloatingBarConfig.load(context)
@@ -207,8 +202,6 @@ fun APatchTheme(
         nightModeEnabled
     }
 
-    val contrastLevel = ColorContrast.fromName(colorContrast).level
-
     val baseColorScheme = generateColorScheme(
         context = context,
         darkTheme = darkTheme,
@@ -217,7 +210,6 @@ fun APatchTheme(
         customColorScheme = customColorScheme,
         colorStandard = colorStandard,
         colorStyle = colorStyle,
-        contrastLevel = contrastLevel,
     )
 
     val useCustomBackground = allowCustomBackground && BackgroundConfig.isCustomBackgroundEnabled
@@ -233,7 +225,6 @@ fun APatchTheme(
         customColorScheme = customColorScheme,
         colorStandard = colorStandard,
         colorStyle = colorStyle,
-        contrastLevel = contrastLevel,
     )
     val colorScheme = wallpaperTheme.colorScheme
 
@@ -266,7 +257,7 @@ fun APatchTheme(
         }
     }
 
-    MaterialTheme(
+    MaterialExpressiveTheme(
         colorScheme = colorScheme,
         motionScheme = motionScheme,
         typography = typography,
@@ -286,6 +277,11 @@ fun APatchTheme(
                 LocalWallpaperContentVariant provides if (useCustomBackground) colorScheme.onSurfaceVariant else null,
                 // 对比度保护后的实际绘制 dim（仅壁纸模式非空）；BackgroundLayer 以它遮罩壁纸。
                 LocalWallpaperDim provides wallpaperTheme.renderDim,
+                LocalFolkWallpaperTokens provides if (useCustomBackground) {
+                    resolveFolkWallpaperTokens(colorScheme, BackgroundConfig.customBackgroundOpacity)
+                } else {
+                    null
+                },
             ) {
                 MonetColorsProvider.UpdateCss()
                 Box(modifier = Modifier.fillMaxSize()) {
@@ -311,16 +307,18 @@ fun APatchTheme(
 @Composable
 fun APatchThemeWithBackground(
     navController: NavHostController? = null,
-    folkXEngineEnabled: Boolean = true,
-    folkXAnimationType: String? = "linear",
-    folkXAnimationSpeed: Float = 1.0f,
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
 
     // Check current route
     val currentRoute = navController?.currentBackStackEntryAsState()?.value?.destination?.route
-    val isSettingsScreen = currentRoute == SettingScreenDestination.route
+    val wallpaperRoute = wallpaperRouteFor(
+        backStack = navController?.currentBackStack?.value.orEmpty()
+            .map { it.destination.route },
+        fallbackRoute = currentRoute,
+    )
+    val isSettingsScreen = wallpaperRoute == SettingScreenDestination.route
 
     // Load background/font config once (synchronously for first frame), then only reload on theme change
     var isConfigLoaded by remember { mutableStateOf(false) }
@@ -332,7 +330,7 @@ fun APatchThemeWithBackground(
     }
 
     // 壁纸模式下按当前路由解析实际展示的壁纸，供主题适配内容配色
-    val activeBackgroundUri = activeBackgroundUriForRoute(currentRoute)
+    val activeBackgroundUri = activeBackgroundUriForRoute(wallpaperRoute)
 
     // 为旧配置/主题导入等缺少亮度记录的壁纸补算亮度
     LaunchedEffect(
@@ -355,12 +353,7 @@ fun APatchThemeWithBackground(
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             // Always show background layer if enabled
-            BackgroundLayer(
-                currentRoute = currentRoute,
-                folkXEngineEnabled = folkXEngineEnabled,
-                folkXAnimationType = folkXAnimationType,
-                folkXAnimationSpeed = folkXAnimationSpeed
-            )
+            BackgroundLayer(currentRoute = wallpaperRoute)
             
             // Content layer - add zIndex to ensure it's above the background
             Box(modifier = Modifier.fillMaxSize().zIndex(1f)) {
@@ -369,4 +362,3 @@ fun APatchThemeWithBackground(
         }
     }
 }
-

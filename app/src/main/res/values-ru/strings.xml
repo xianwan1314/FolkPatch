@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_layout_variant">Вариант макета</string>
+    <string name="settings_layout_variant_summary">Используйте крупные верхние панели M3E со сворачиваемым встроенным поиском или оставьте традиционные компактные панели.</string>
+    <string name="settings_layout_variant_traditional">Традиционный</string>
+    <string name="settings_layout_variant_m3e">M3E</string>
+    <string name="apm_search_hint">Поиск системных модулей</string>
+    <string name="kpm_search_hint">Поиск модулей ядра</string>
+    <string name="su_search_hint">Поиск приложений</string>
     <string name="launcher_icon_style_anime">Аниме</string>
     <string name="launcher_icon_style_geometry">Геометрия</string>
     <string name="launcher_icon_style_apatch">APatch</string>
@@ -268,7 +275,6 @@
     <string name="su_multi_select_confirm_grant">Предоставить ROOT %d приложениям?</string>
     <string name="su_multi_select_confirm_revoke">Отозвать ROOT у %d приложений?</string>
     <string name="su_multi_select_confirm_exclude">Исключить %d приложений?</string>
-    <string name="su_multi_select_enter">Множественный выбор</string>
 
     <string name="apm">Системный модуль</string>
     <string name="apm_not_installed">AndroidPatch не установлен</string>
@@ -308,15 +314,6 @@
     <string name="setting_reset_su_path">Сбросить путь su</string>
     <string name="setting_reset_su_new_path">Новый полный путь</string>
 
-    <string name="settings_folkx_engine_title">Движок анимации FolkX</string>
-    <string name="settings_folkx_engine_summary">Использовать плавные физические пружинные анимации при переключении страниц верхнего уровня</string>
-    <string name="settings_folkx_animation_type">Тип анимации</string>
-    <string name="settings_folkx_animation_speed">Скорость анимации</string>
-    <string name="settings_folkx_animation_linear">Линейное движение</string>
-    <string name="settings_folkx_animation_spatial">Пространственное движение</string>
-    <string name="settings_folkx_animation_fade">Появление/Исчезновение</string>
-    <string name="settings_folkx_animation_vertical">Вертикальное скольжение</string>
-    <string name="settings_folkx_animation_diagonal">Диагональное скольжение</string>
 
     <string name="apm_webui_open">Открыть</string>
     <string name="apm_action">Действие</string>
@@ -355,6 +352,24 @@
     <string name="settings_show_kpm_status_badge_summary">Показывать значок Встроен/Загружен на карточках KPM</string>
     <string name="settings_show_more_module_info">Показать подробности о модуле</string>
     <string name="settings_show_more_module_info_summary">Показать ID и размер модуля в списке модулей</string>
+    <string name="module_sort">Порядок сортировки</string>
+    <string name="module_sort_priority">Приоритет сортировки</string>
+    <string name="module_sort_group_metamodule">Мета-модули</string>
+    <string name="module_sort_group_metamodule_summary">Модуль, к которому подключаются остальные.</string>
+    <string name="module_sort_group_zygisk">Модули Zygisk</string>
+    <string name="module_sort_group_zygisk_summary">Предоставляет или загружает среду выполнения Zygisk.</string>
+    <string name="module_sort_group_lsposed">Модули LSPosed</string>
+    <string name="module_sort_group_lsposed_summary">Перехватывают через фреймворк Xposed.</string>
+    <string name="module_sort_group_webui">Модули с WebUI</string>
+    <string name="module_sort_group_webui_summary">Поставляется с собственным экраном.</string>
+    <string name="module_sort_group_action">Модули с действием</string>
+    <string name="module_sort_group_action_summary">Запускает скрипт по требованию.</string>
+    <string name="module_sort_enabled_first">Сначала включённые</string>
+    <string name="module_sort_custom_order">Пользовательский порядок</string>
+    <string name="module_sort_custom_order_summary">Перетащите модули в желаемом порядке отображения.</string>
+    <string name="module_sort_reset_custom_order">Сбросить пользовательский порядок</string>
+    <string name="module_sort_reset_custom_order_summary">Вернуться к порядку по приоритету.</string>
+    <string name="module_sort_drag_to_reorder">Перетащите для изменения порядка</string>
     <string name="apm_install_confirm_title">Установить модуль</string>
     <string name="apm_install_confirm_content">Вы уверены, что хотите установить %s?</string>
     <string name="apm_disable_all_title">Отключить все модули</string>
@@ -1346,10 +1361,6 @@ KernelPatch требует образ boot для патча.
     <string name="color_style_neutral">Нейтральный</string>
     <string name="color_style_fidelity">Точность</string>
     <!-- Color Contrast -->
-    <string name="color_contrast_label">Контраст</string>
-    <string name="color_contrast_standard">Стандартный</string>
-    <string name="color_contrast_medium">Средний</string>
-    <string name="color_contrast_high">Высокий</string>
     <string name="settings_focus_card_background">Обои карточки FocusUI</string>
     <string name="settings_focus_card_background_enabled">Обои карточки FocusUI включены; удерживайте карточку для управления обоями</string>
     <string name="settings_focus_card_background_summary">Включить обои карточки FocusUI и управление обоями через удержание</string>
@@ -1377,8 +1388,6 @@ KernelPatch требует образ boot для патча.
     <string name="dashboard_card_background_saved">Обои панели успешно сохранены</string>
     <string name="dashboard_card_background_error">Не удалось сохранить обои панели</string>
     <string name="dashboard_card_background_cleared">Обои панели очищены</string>
-    <string name="dashboard_card_background_restore">Восстановить по умолчанию</string>
-    <string name="dashboard_card_background_restored">Обои панели восстановлены</string>
     <string name="settings_dashboard_card_dual_dim">Включить двойное затемнение день/ночь</string>
     <string name="settings_dashboard_card_dual_dim_desc">Автоматически регулировать затемнение обоев панели для светлой и тёмной темы</string>
     <string name="settings_dashboard_card_day_dim">Затемнение обоев панели в дневном режиме</string>

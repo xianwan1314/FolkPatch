@@ -1,15 +1,17 @@
 package me.bmax.apatch.ui.screen.superuser
 
+import me.bmax.apatch.ui.theme.tokens.FolkColors
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Block
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Security
-import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.outlined.Block
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Security
+import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.theme.tokens.FolkShape
+import me.bmax.apatch.ui.component.folk.folkOverlayColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +57,7 @@ fun SelectionTopBar(
         navigationIcon = {
             IconButton(onClick = onClose) {
                 Icon(
-                    imageVector = Icons.Filled.Close,
+                    imageVector = Icons.Outlined.Close,
                     contentDescription = stringResource(android.R.string.cancel),
                 )
             }
@@ -66,7 +69,7 @@ fun SelectionTopBar(
                 colors = actionColors,
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Shield,
+                    imageVector = Icons.Outlined.Shield,
                     contentDescription = stringResource(R.string.su_multi_select_grant_root),
                 )
             }
@@ -76,7 +79,7 @@ fun SelectionTopBar(
                 colors = actionColors,
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Security,
+                    imageVector = Icons.Outlined.Security,
                     contentDescription = stringResource(R.string.su_multi_select_revoke_root),
                 )
             }
@@ -86,7 +89,7 @@ fun SelectionTopBar(
                 colors = actionColors,
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Block,
+                    imageVector = Icons.Outlined.Block,
                     contentDescription = stringResource(R.string.su_multi_select_exclude),
                 )
             }
@@ -109,13 +112,13 @@ fun LabelText(
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
 ) {
     Surface(
-        modifier = Modifier.padding(end = 4.dp),
-        shape = RoundedCornerShape(4.dp),
+        modifier = Modifier.padding(end = FolkDimens.Size4),
+        shape = RoundedCornerShape(FolkDimens.Size4),
         color = containerColor,
     ) {
         Text(
             text = label,
-            modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.dp),
+            modifier = Modifier.padding(horizontal = FolkDimens.Size6, vertical = FolkDimens.Size1),
             style = MaterialTheme.typography.labelSmall,
             color = contentColorFor(containerColor),
             fontWeight = FontWeight.Medium,
@@ -140,31 +143,31 @@ fun SuperUserOptionsSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+        containerColor = folkOverlayColor(),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 32.dp),
+                .padding(horizontal = FolkDimens.Size16)
+                .padding(bottom = FolkDimens.Size32),
         ) {
             Text(
                 text = stringResource(R.string.su_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(bottom = 16.dp),
+                modifier = Modifier.padding(bottom = FolkDimens.Size16),
             )
 
             // Refresh
             Surface(
                 onClick = onRefresh,
                 shape = FolkShape.Corner12,
-                color = Color.Transparent,
+                color = FolkColors.Transparent,
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(12.dp),
+                        .padding(FolkDimens.Size12),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
@@ -178,12 +181,12 @@ fun SuperUserOptionsSheet(
             Surface(
                 onClick = onToggleSystemApps,
                 shape = FolkShape.Corner12,
-                color = Color.Transparent,
+                color = FolkColors.Transparent,
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(12.dp),
+                        .padding(FolkDimens.Size12),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
@@ -201,12 +204,12 @@ fun SuperUserOptionsSheet(
             Surface(
                 onClick = onBackup,
                 shape = FolkShape.Corner12,
-                color = Color.Transparent,
+                color = FolkColors.Transparent,
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(12.dp),
+                        .padding(FolkDimens.Size12),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
@@ -220,12 +223,12 @@ fun SuperUserOptionsSheet(
             Surface(
                 onClick = onRestore,
                 shape = FolkShape.Corner12,
-                color = Color.Transparent,
+                color = FolkColors.Transparent,
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(12.dp),
+                        .padding(FolkDimens.Size12),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(

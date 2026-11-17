@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.superuser
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.viewmodel.SuperUserViewModel
 import me.bmax.apatch.util.ui.APDialogBlurBehindUtils.Companion.setupWindowBlurListener
@@ -38,16 +39,16 @@ fun BatchExcludeDialog(
     val reverseText = stringResource(R.string.su_exclude_reverse_btn)
     val cancelText = stringResource(android.R.string.cancel)
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = onDismiss,
-        width = 320.dp,
+        width = FolkDimens.Size320,
         shape = FolkShape.Corner20,
         dialogProperties = DialogProperties(decorFitsSystemWindows = true, usePlatformDefaultWidth = false, securePolicy = SecureFlagPolicy.SecureOff, dismissOnClickOutside = false),
     ) {
-        Column(modifier = Modifier.padding(PaddingValues(all = 24.dp))) {
+        Column(modifier = Modifier.padding(PaddingValues(all = FolkDimens.Size24))) {
             Box(
                 Modifier
-                    .padding(PaddingValues(bottom = 16.dp))
+                    .padding(PaddingValues(bottom = FolkDimens.Size16))
                     .align(Alignment.Start)
             ) {
                 Text(text = title, style = MaterialTheme.typography.headlineSmall)
@@ -55,7 +56,7 @@ fun BatchExcludeDialog(
             Box(
                 Modifier
                     .weight(weight = 1f, fill = false)
-                    .padding(PaddingValues(bottom = 24.dp))
+                    .padding(PaddingValues(bottom = FolkDimens.Size24))
                     .align(Alignment.Start)
             ) {
                 Text(text = content, style = MaterialTheme.typography.bodyMedium)
@@ -99,16 +100,16 @@ fun BatchActionConfirmDialog(
     }
     val cancelText = stringResource(android.R.string.cancel)
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = onDismiss,
-        width = 320.dp,
+        width = FolkDimens.Size320,
         shape = FolkShape.Corner20,
         dialogProperties = DialogProperties(decorFitsSystemWindows = true, usePlatformDefaultWidth = false, securePolicy = SecureFlagPolicy.SecureOff, dismissOnClickOutside = false),
     ) {
-        Column(modifier = Modifier.padding(PaddingValues(all = 24.dp))) {
+        Column(modifier = Modifier.padding(PaddingValues(all = FolkDimens.Size24))) {
             Box(
                 Modifier
-                    .padding(PaddingValues(bottom = 16.dp))
+                    .padding(PaddingValues(bottom = FolkDimens.Size16))
                     .align(Alignment.Start)
             ) {
                 Text(text = title, style = MaterialTheme.typography.headlineSmall)
@@ -116,7 +117,7 @@ fun BatchActionConfirmDialog(
             Box(
                 Modifier
                     .weight(weight = 1f, fill = false)
-                    .padding(PaddingValues(bottom = 24.dp))
+                    .padding(PaddingValues(bottom = FolkDimens.Size24))
                     .align(Alignment.Start)
             ) {
                 Text(text = content, style = MaterialTheme.typography.bodyMedium)
@@ -150,16 +151,16 @@ fun AppActionDialog(
     val forceStopText = stringResource(R.string.su_app_action_force_stop)
     val cancelText = stringResource(android.R.string.cancel)
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = onDismiss,
-        width = 320.dp,
+        width = FolkDimens.Size320,
         shape = FolkShape.Corner20,
         dialogProperties = DialogProperties(decorFitsSystemWindows = true, usePlatformDefaultWidth = false, securePolicy = SecureFlagPolicy.SecureOff, dismissOnClickOutside = true),
     ) {
-        Column(modifier = Modifier.padding(PaddingValues(all = 24.dp))) {
+        Column(modifier = Modifier.padding(PaddingValues(all = FolkDimens.Size24))) {
             Box(
                 Modifier
-                    .padding(PaddingValues(bottom = 16.dp))
+                    .padding(PaddingValues(bottom = FolkDimens.Size16))
                     .align(Alignment.Start)
             ) {
                 Text(text = title, style = MaterialTheme.typography.headlineSmall)
@@ -167,7 +168,7 @@ fun AppActionDialog(
             Box(
                 Modifier
                     .weight(weight = 1f, fill = false)
-                    .padding(PaddingValues(bottom = 24.dp))
+                    .padding(PaddingValues(bottom = FolkDimens.Size24))
                     .align(Alignment.Start)
             ) {
                 Text(

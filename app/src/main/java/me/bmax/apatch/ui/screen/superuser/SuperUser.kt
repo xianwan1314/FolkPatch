@@ -1,9 +1,9 @@
 package me.bmax.apatch.ui.screen.superuser
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,28 +14,33 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.PlaylistAddCheck
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Deselect
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Terminal
+import androidx.compose.material.icons.automirrored.outlined.Article
+import androidx.compose.material.icons.automirrored.outlined.PlaylistAddCheck
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Terminal
+import androidx.compose.material3.CheckableDropdownMenuItem
+import androidx.compose.material3.DropdownMenuGroup
+import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonMenu
-import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,8 +50,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -60,19 +68,21 @@ import kotlinx.coroutines.launch
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.folk.FolkScaffold
+import me.bmax.apatch.ui.component.folk.navOrigin
 import me.bmax.apatch.ui.navigation.LocalBottomBarVisible
 import me.bmax.apatch.ui.navigation.LocalIsFloatingNavMode
 import me.bmax.apatch.ui.navigation.fabNavBottomClearance
 import me.bmax.apatch.ui.component.SearchAppBar
-import me.bmax.apatch.ui.component.WallpaperAwareDropdownMenu
-import me.bmax.apatch.ui.component.WallpaperAwareDropdownMenuItem
+import me.bmax.apatch.ui.component.rememberSearchAppBarScrollBehavior
 import me.bmax.apatch.ui.component.splicedLazyColumnGroup
+import me.bmax.apatch.ui.LayoutVariant
+import me.bmax.apatch.ui.LocalLayoutVariant
 import me.bmax.apatch.ui.viewmodel.SuperUserViewModel
 import me.bmax.apatch.util.ui.showToast
 
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
-@Destination<RootGraph>
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 @Composable
 fun SuperUserScreen(navigator: DestinationsNavigator) {
     val prefs = APApplication.sharedPreferences
@@ -87,6 +97,11 @@ private fun SuperUserScreenModern(navigator: DestinationsNavigator, useLegacySuP
     val viewModel = viewModel<SuperUserViewModel>()
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+    val m3eLayout = LocalLayoutVariant.current == LayoutVariant.M3E
+    val topAppBarScrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val searchBarScrollBehavior = rememberSearchAppBarScrollBehavior(topAppBarScrollBehavior)
 
     val backupLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/json")
@@ -185,6 +200,57 @@ private fun SuperUserScreenModern(navigator: DestinationsNavigator, useLegacySuP
     }
 
     val filteredApps = viewModel.appList
+    val searchListState = androidx.compose.foundation.lazy.rememberLazyListState()
+    val appItems: LazyListScope.() -> Unit = {
+        if (useLegacySuPage) {
+            items(
+                filteredApps,
+                key = { it.packageName + it.uid }
+            ) { app ->
+                AppItemLegacy(
+                    app = app,
+                    isSelected = viewModel.isUidSelected(app.uid),
+                    selectionMode = viewModel.isSelectionMode,
+                    onToggleSelection = { viewModel.toggleSelection(app.uid) },
+                    onLongPress = {
+                        viewModel.enterSelectionMode()
+                        viewModel.toggleSelection(app.uid)
+                    }
+                )
+            }
+        } else {
+            item { Spacer(Modifier.height(FolkDimens.Size8)) }
+            splicedLazyColumnGroup(
+                items = filteredApps,
+                key = { _, app -> app.packageName + app.uid },
+                contentType = { _, _ -> "AppItem" },
+            ) { _, app ->
+                AppItemM3E(
+                    app = app,
+                    isSelected = viewModel.isUidSelected(app.uid),
+                    selectionMode = viewModel.isSelectionMode,
+                    onClick = {
+                        if (viewModel.isSelectionMode) {
+                            viewModel.toggleSelection(app.uid)
+                        } else {
+                            navigator.navigate(AppProfileScreenDestination(app.packageName, app.uid))
+                        }
+                    },
+                    onLongClick = {
+                        if (!viewModel.isSelectionMode) {
+                            viewModel.enterSelectionMode()
+                            viewModel.toggleSelection(app.uid)
+                        } else {
+                            selectedApp = app
+                            showAppActionDialog = true
+                        }
+                    },
+                    onToggleSelection = { viewModel.toggleSelection(app.uid) }
+                )
+            }
+            item { Spacer(Modifier.height(FolkDimens.Size8)) }
+        }
+    }
 
     FolkScaffold(
         topBar = {
@@ -198,66 +264,107 @@ private fun SuperUserScreenModern(navigator: DestinationsNavigator, useLegacySuP
                 )
             } else {
                 SearchAppBar(
+                    largeTitle = m3eLayout,
+                    topSearch = !m3eLayout,
+                    collapsibleSearch = m3eLayout,
+                    searchPlaceholder = stringResource(R.string.su_search_hint),
+                    scrollBehavior = if (m3eLayout) searchBarScrollBehavior else null,
                     title = { Text(stringResource(R.string.su_title)) },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = { navigator.navigate(SuAuditLogScreenDestination) },
+                            modifier = Modifier.navOrigin(captureBitmap = true),
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Outlined.Article,
+                                contentDescription = stringResource(R.string.su_audit_log_title),
+                            )
+                        }
+                    },
                     searchText = viewModel.search,
                     onSearchTextChange = { viewModel.updateSearch(it) },
                     onClearClick = { viewModel.updateSearch("") },
+                    defaultContent = { bottomPadding, _ ->
+                        LazyColumn(
+                            state = searchListState,
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(bottom = bottomPadding),
+                            content = appItems,
+                        )
+                    },
+                    searchContent = { bottomPadding, _ ->
+                        LazyColumn(
+                            state = searchListState,
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(bottom = bottomPadding),
+                            content = appItems,
+                        )
+                    },
                     leadingActions = {
-                        IconButton(onClick = {
-                            viewModel.enterSelectionMode()
-                        }) {
-                            Icon(Icons.Filled.Deselect, contentDescription = stringResource(R.string.su_multi_select_enter))
-                        }
                         IconButton(onClick = {
                             showBatchExcludeDialog = true
                         }) {
-                            Icon(Icons.AutoMirrored.Filled.PlaylistAddCheck, contentDescription = stringResource(R.string.su_batch_exclude_title))
+                            Icon(Icons.AutoMirrored.Outlined.PlaylistAddCheck, contentDescription = stringResource(R.string.su_batch_exclude_title))
                         }
                     },
                     dropdownContent = {
                         Box {
                             IconButton(onClick = { showSuperUserMenu = !showSuperUserMenu }) {
                                 Icon(
-                                    imageVector = Icons.Filled.MoreVert,
+                                    imageVector = Icons.Outlined.MoreVert,
                                     contentDescription = stringResource(id = R.string.settings)
                                 )
                             }
 
-                            WallpaperAwareDropdownMenu(
+                            DropdownMenuPopup(
                                 expanded = showSuperUserMenu,
                                 onDismissRequest = { showSuperUserMenu = false },
                             ) {
-                                WallpaperAwareDropdownMenuItem(
-                                    text = { Text(stringResource(R.string.su_refresh)) },
-                                    onClick = {
-                                        showSuperUserMenu = false
-                                        scope.launch { viewModel.fetchAppList() }
-                                    },
-                                )
-                                WallpaperAwareDropdownMenuItem(
-                                    text = { Text(
-                                        if (viewModel.showSystemApps) stringResource(R.string.su_hide_system_apps)
-                                        else stringResource(R.string.su_show_system_apps)
-                                    ) },
-                                    onClick = {
-                                        showSuperUserMenu = false
-                                        viewModel.showSystemApps = !viewModel.showSystemApps
-                                    },
-                                )
-                                WallpaperAwareDropdownMenuItem(
-                                    text = { Text(stringResource(R.string.su_backup_list)) },
-                                    onClick = {
-                                        showSuperUserMenu = false
-                                        backupLauncher.launch("FolkPatch_list_backup.json")
-                                    },
-                                )
-                                WallpaperAwareDropdownMenuItem(
-                                    text = { Text(stringResource(R.string.su_restore_list)) },
-                                    onClick = {
-                                        showSuperUserMenu = false
-                                        restoreLauncher.launch(arrayOf("application/json", "*/*"))
-                                    },
-                                )
+                                DropdownMenuGroup(shapes = MenuDefaults.groupShapes()) {
+                                    CheckableDropdownMenuItem(
+                                        text = {
+                                            Text(
+                                                if (viewModel.showSystemApps) {
+                                                    stringResource(R.string.su_hide_system_apps)
+                                                } else {
+                                                    stringResource(R.string.su_show_system_apps)
+                                                }
+                                            )
+                                        },
+                                        checked = viewModel.showSystemApps,
+                                        checkedLeadingIcon = {
+                                            Icon(
+                                                imageVector = Icons.Outlined.Check,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(MenuDefaults.LeadingIconSize),
+                                            )
+                                        },
+                                        onCheckedChange = {
+                                            haptic.performHapticFeedback(HapticFeedbackType.VirtualKey)
+                                            showSuperUserMenu = false
+                                            viewModel.showSystemApps = !viewModel.showSystemApps
+                                        },
+                                        shapes = MenuDefaults.itemShape(index = 0, count = 3),
+                                    )
+                                    SelectableDropdownMenuItem(
+                                        text = { Text(stringResource(R.string.su_backup_list)) },
+                                        selected = false,
+                                        onClick = {
+                                            showSuperUserMenu = false
+                                            backupLauncher.launch("FolkPatch_list_backup.json")
+                                        },
+                                        shapes = MenuDefaults.itemShape(index = 1, count = 3),
+                                    )
+                                    SelectableDropdownMenuItem(
+                                        text = { Text(stringResource(R.string.su_restore_list)) },
+                                        selected = false,
+                                        onClick = {
+                                            showSuperUserMenu = false
+                                            restoreLauncher.launch(arrayOf("application/json", "*/*"))
+                                        },
+                                        shapes = MenuDefaults.itemShape(index = 2, count = 3),
+                                    )
+                                }
                             }
                         }
                     },
@@ -266,60 +373,19 @@ private fun SuperUserScreenModern(navigator: DestinationsNavigator, useLegacySuP
         },
         floatingActionButton = run {
             {
-                var fabExpanded by remember { mutableStateOf(false) }
                 val isFloatingMode = LocalIsFloatingNavMode.current
 
                 val fabContent: @Composable () -> Unit = {
-                    FloatingActionButtonMenu(
-                        expanded = fabExpanded,
-                        button = {
-                            FloatingActionButton(
-                                onClick = { fabExpanded = !fabExpanded },
-                                shape = CircleShape,
-                                contentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 1f),
-                                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 1f),
-                            ) {
-                                Crossfade(
-                                    targetState = fabExpanded,
-                                    animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
-                                    label = "fabIconCrossfade"
-                                ) { isExpanded ->
-                                    if (isExpanded) {
-                                        Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.close))
-                                    } else {
-                                        Icon(Icons.Filled.History, contentDescription = stringResource(R.string.su_audit_log_title))
-                                    }
-                                }
-                            }
-                        },
+                    FloatingActionButton(
+                        onClick = { navigator.navigate(ScriptLibraryScreenDestination) },
+                        modifier = Modifier.navOrigin(captureBitmap = true),
+                        shape = CircleShape,
+                        contentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 1f),
+                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 1f),
                     ) {
-                        FloatingActionButtonMenuItem(
-                            onClick = {
-                                fabExpanded = false
-                                navigator.navigate(ScriptLibraryScreenDestination)
-                            },
-                            icon = {
-                                Icon(
-                                    Icons.Filled.Terminal,
-                                    contentDescription = stringResource(R.string.script_library),
-                                    modifier = Modifier.size(18.dp)
-                                )
-                            },
-                            text = { Text(stringResource(R.string.script_library), style = MaterialTheme.typography.bodyMedium) },
-                        )
-                        FloatingActionButtonMenuItem(
-                            onClick = {
-                                fabExpanded = false
-                                navigator.navigate(SuAuditLogScreenDestination)
-                            },
-                            icon = {
-                                Icon(
-                                    Icons.Filled.History,
-                                    contentDescription = stringResource(R.string.su_audit_log_title),
-                                    modifier = Modifier.size(18.dp)
-                                )
-                            },
-                            text = { Text(stringResource(R.string.su_audit_log_title), style = MaterialTheme.typography.bodyMedium) },
+                        Icon(
+                            imageVector = Icons.Outlined.Terminal,
+                            contentDescription = stringResource(R.string.script_library),
                         )
                     }
                 }
@@ -328,7 +394,7 @@ private fun SuperUserScreenModern(navigator: DestinationsNavigator, useLegacySuP
                 val configuration = LocalConfiguration.current
                 val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
                 val animatedOffset by animateDpAsState(
-                    targetValue = if (isFloatingMode && bottomBarVisible && !isLandscape) (-88).dp else 0.dp,
+                    targetValue = if (isFloatingMode && bottomBarVisible && !isLandscape) (-88).dp else FolkDimens.Size0,
                     animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
                     label = "fabOffset"
                 )
@@ -345,7 +411,10 @@ private fun SuperUserScreenModern(navigator: DestinationsNavigator, useLegacySuP
         // fabNavBottomClearance, so the scaffold must not add more.
         addBottomClearance = false,
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+        ) {
             val pullToRefreshState = rememberPullToRefreshState()
             PullToRefreshBox(
             onRefresh = { scope.launch { viewModel.fetchAppList() } },
@@ -354,63 +423,21 @@ private fun SuperUserScreenModern(navigator: DestinationsNavigator, useLegacySuP
             indicator = { PullToRefreshDefaults.LoadingIndicator(state = pullToRefreshState, isRefreshing = viewModel.isRefreshing, modifier = Modifier.align(Alignment.TopCenter)) }
         ) {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(
+                        if (m3eLayout) {
+                            Modifier.nestedScroll(searchBarScrollBehavior.nestedScrollConnection)
+                        } else {
+                            Modifier
+                        }
+                    ),
                 contentPadding = run {
                     val bottomClearance = fabNavBottomClearance()
                     remember(bottomClearance) { PaddingValues(bottom = bottomClearance) }
-                }
-            ) {
-                if (useLegacySuPage) {
-                    items(
-                        filteredApps,
-                        key = { it.packageName + it.uid }
-                    ) { app ->
-                        AppItemLegacy(
-                            app = app,
-                            isSelected = viewModel.isUidSelected(app.uid),
-                            selectionMode = viewModel.isSelectionMode,
-                            onToggleSelection = { viewModel.toggleSelection(app.uid) },
-                            onLongPress = {
-                                viewModel.enterSelectionMode()
-                                viewModel.toggleSelection(app.uid)
-                            }
-                        )
-                    }
-                } else {
-                    item { Spacer(Modifier.height(8.dp)) }
-                    splicedLazyColumnGroup(
-                        items = filteredApps,
-                        key = { _, app -> app.packageName + app.uid },
-                        contentType = { _, _ -> "AppItem" },
-                    ) { _, app ->
-                        AppItemM3E(
-                            app = app,
-                            isSelected = viewModel.isUidSelected(app.uid),
-                            selectionMode = viewModel.isSelectionMode,
-                            onClick = {
-                                if (viewModel.isSelectionMode) {
-                                    viewModel.toggleSelection(app.uid)
-                                } else {
-                                    navigator.navigate(AppProfileScreenDestination(app.packageName, app.uid))
-                                }
-                            },
-                            onLongClick = {
-                                if (!viewModel.isSelectionMode) {
-                                    viewModel.enterSelectionMode()
-                                    viewModel.toggleSelection(app.uid)
-                                } else {
-                                    selectedApp = app
-                                    showAppActionDialog = true
-                                }
-                            },
-                            onToggleSelection = { viewModel.toggleSelection(app.uid) }
-                        )
-                    }
-                    item {
-                        Spacer(Modifier.height(8.dp)) // bottom clearance handled by contentPadding
-                    }
-                }
-            }
+                },
+                content = appItems,
+            )
         }
 
         }

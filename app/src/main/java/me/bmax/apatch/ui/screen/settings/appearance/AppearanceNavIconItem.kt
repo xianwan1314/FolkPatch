@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.settings.appearance
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -13,24 +14,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.ExpressiveCard
+import me.bmax.apatch.ui.component.TonalCard
 import me.bmax.apatch.ui.navigation.BottomBarDestination
 import me.bmax.apatch.util.BottomBarIconConfig
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
-import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import android.content.Context
 import android.content.SharedPreferences
 import kotlinx.coroutines.CoroutineScope
-import me.bmax.apatch.ui.component.folk.FolkSettingsGroupScope
+import me.bmax.apatch.ui.component.SegmentedColumnScope
 
-fun FolkSettingsGroupScope.appearanceNavCustomIconsItem(
+fun SegmentedColumnScope.appearanceNavCustomIconsItem(
     flat: Boolean,
     context: Context,
     prefs: SharedPreferences,
@@ -64,7 +64,7 @@ fun FolkSettingsGroupScope.appearanceNavCustomIconsItem(
             editingDestName = null
         }
 
-        FolkSwitchPreference(
+        SegmentedSwitchItem(
             icon = Icons.Outlined.Image,
             title = stringResource(R.string.settings_nav_custom_icons),
             summary = stringResource(R.string.settings_nav_custom_icons_summary),
@@ -76,7 +76,7 @@ fun FolkSettingsGroupScope.appearanceNavCustomIconsItem(
         )
 
         if (customNavIconsEnabled.value) {
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(FolkDimens.Size8))
             val navDestinations = listOf(
                 Triple("Home", R.string.nav_icon_home, BottomBarDestination.Home.iconSelected),
                 Triple("KModule", R.string.nav_icon_kpm, BottomBarDestination.KModule.iconSelected),
@@ -88,7 +88,7 @@ fun FolkSettingsGroupScope.appearanceNavCustomIconsItem(
             Column {
                 navDestinations.forEach { (destName, labelRes, defaultIcon) ->
                     val customUri = remember(iconRevision, destName) { prefs.getString("nav_icon_$destName", null) }
-                    ExpressiveCard(
+                    TonalCard(
                         flat = flat,
                         onClick = {
                             editingDestName = destName
@@ -96,14 +96,14 @@ fun FolkSettingsGroupScope.appearanceNavCustomIconsItem(
                         }
                     ) {
                         Row(
-                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+                            modifier = Modifier.fillMaxWidth().padding(FolkDimens.Size16),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             if (customUri != null) {
                                 AsyncImage(
                                     model = customUri,
                                     contentDescription = null,
-                                    modifier = Modifier.size(36.dp).clip(RoundedCornerShape(6.dp)),
+                                    modifier = Modifier.size(FolkDimens.Size36).clip(RoundedCornerShape(FolkDimens.Size6)),
                                     contentScale = ContentScale.Crop
                                 )
                             } else {
@@ -111,10 +111,10 @@ fun FolkSettingsGroupScope.appearanceNavCustomIconsItem(
                                     imageVector = defaultIcon,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.size(36.dp)
+                                    modifier = Modifier.size(FolkDimens.Size36)
                                 )
                             }
-                            Spacer(Modifier.width(16.dp))
+                            Spacer(Modifier.width(FolkDimens.Size16))
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     stringResource(labelRes),
@@ -137,12 +137,12 @@ fun FolkSettingsGroupScope.appearanceNavCustomIconsItem(
                                         }
                                     }
                                 ) {
-                                    Icon(Icons.Filled.Close, stringResource(R.string.nav_icon_clear), tint = MaterialTheme.colorScheme.error)
+                                    Icon(Icons.Outlined.Close, stringResource(R.string.nav_icon_clear), tint = MaterialTheme.colorScheme.error)
                                 }
                             }
                         }
                     }
-                    Spacer(Modifier.height(4.dp))
+                    Spacer(Modifier.height(FolkDimens.Size4))
                 }
             }
         }

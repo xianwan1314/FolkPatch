@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.settings
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.CircleShape
@@ -18,9 +19,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -52,7 +53,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
+import me.bmax.apatch.ui.component.folk.folkInsetColor
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import coil.compose.AsyncImage
@@ -76,13 +78,13 @@ fun SelectedPathHideAppItem(
         modifier = Modifier.fillMaxWidth(),
         shape = FolkShape.Corner16,
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f),
-        tonalElevation = 0.dp,
+        tonalElevation = FolkDimens.Size0,
         onClick = onRemove,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                .padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size12),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
@@ -92,15 +94,15 @@ fun SelectedPathHideAppItem(
                     .build(),
                 contentDescription = label,
                 modifier = Modifier
-                    .size(42.dp)
+                    .size(FolkDimens.Size42)
                     .clip(CircleShape),
             )
 
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp),
+                    .padding(horizontal = FolkDimens.Size12),
+                verticalArrangement = Arrangement.spacedBy(FolkDimens.Size2),
             ) {
                 Text(
                     text = label,
@@ -118,7 +120,7 @@ fun SelectedPathHideAppItem(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size8),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
@@ -135,14 +137,14 @@ fun SelectedPathHideAppItem(
             Box(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                    .padding(8.dp),
+                    .background(folkInsetColor())
+                    .padding(FolkDimens.Size8),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    Icons.Filled.Close,
+                    Icons.Outlined.Close,
                     contentDescription = null,
-                    modifier = Modifier.size(18.dp),
+                    modifier = Modifier.size(FolkDimens.Size18),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
@@ -160,7 +162,7 @@ fun MiniBadge(
         modifier = Modifier
             .clip(CircleShape)
             .background(containerColor)
-            .padding(horizontal = 8.dp, vertical = 3.dp),
+            .padding(horizontal = FolkDimens.Size8, vertical = FolkDimens.Size3),
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -192,8 +194,8 @@ fun AppPickerButton(
         onClick = { showPicker = true },
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.size(18.dp))
-        Spacer(Modifier.width(8.dp))
+        Icon(Icons.Outlined.Add, contentDescription = null, modifier = Modifier.size(FolkDimens.Size18))
+        Spacer(Modifier.width(FolkDimens.Size8))
         Text(selectText)
     }
 
@@ -256,7 +258,7 @@ fun AppPickerSheet(
     ) {
         Column(modifier = Modifier.fillMaxWidth().fillMaxHeight(0.7f)) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = FolkDimens.Size16),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
@@ -270,10 +272,10 @@ fun AppPickerSheet(
                 }
             }
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(FolkDimens.Size8))
 
             Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = FolkDimens.Size16),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 OutlinedTextField(
@@ -281,7 +283,7 @@ fun AppPickerSheet(
                     onValueChange = { searchQuery = it },
                     modifier = Modifier.weight(1f),
                     placeholder = { Text(searchHint) },
-                    leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                    leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = null) },
                     singleLine = true,
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -291,11 +293,11 @@ fun AppPickerSheet(
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size4),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Checkbox(checked = showSystem, onCheckedChange = { showSystem = it })
-                Spacer(Modifier.width(4.dp))
+                Spacer(Modifier.width(FolkDimens.Size4))
                 Text(systemLabel, style = MaterialTheme.typography.bodySmall)
             }
 
@@ -307,13 +309,13 @@ fun AppPickerSheet(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { onUidToggle(app.uid) }
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size8)
                             .drawBehind {
                                 drawLine(
                                     dividerColor,
                                     Offset(0f, size.height),
                                     Offset(size.width, size.height),
-                                    strokeWidth = 0.5.dp.toPx(),
+                                    strokeWidth = FolkDimens.SizeHalf.toPx(),
                                 )
                             },
                         verticalAlignment = Alignment.CenterVertically,
@@ -322,16 +324,16 @@ fun AppPickerSheet(
                             checked = isSelected,
                             onCheckedChange = { onUidToggle(app.uid) },
                         )
-                        Spacer(Modifier.width(8.dp))
+                        Spacer(Modifier.width(FolkDimens.Size8))
                         AsyncImage(
                             model = ImageRequest.Builder(context)
                                 .data(app.packageInfo)
                                 .crossfade(true)
                                 .build(),
                             contentDescription = null,
-                            modifier = Modifier.size(36.dp).clip(CircleShape),
+                            modifier = Modifier.size(FolkDimens.Size36).clip(CircleShape),
                         )
-                        Spacer(Modifier.width(12.dp))
+                        Spacer(Modifier.width(FolkDimens.Size12))
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 app.label,
@@ -366,20 +368,20 @@ fun PathHideFilterSystemWarningDialog(
     showDialog: MutableState<Boolean>,
     onConfirm: () -> Unit,
 ) {
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = { showDialog.value = false },
     ) {
-        Column(modifier = Modifier.padding(PaddingValues(all = 24.dp))) {
+        Column(modifier = Modifier.padding(PaddingValues(all = FolkDimens.Size24))) {
             Text(
                 text = stringResource(R.string.path_hide_filter_system_warning_title),
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = FolkDimens.Size16)
             )
             Text(
                 text = stringResource(R.string.path_hide_filter_system_warning_message),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 24.dp)
+                modifier = Modifier.padding(bottom = FolkDimens.Size24)
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -388,7 +390,7 @@ fun PathHideFilterSystemWarningDialog(
                 TextButton(onClick = { showDialog.value = false }) {
                     Text(stringResource(android.R.string.cancel))
                 }
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(FolkDimens.Size8))
                 Button(onClick = {
                     showDialog.value = false
                     onConfirm()

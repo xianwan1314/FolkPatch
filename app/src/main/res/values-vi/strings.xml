@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_layout_variant">Biến thể bố cục</string>
+    <string name="settings_layout_variant_summary">Dùng thanh trên cùng M3E lớn với tìm kiếm nội tuyến có thể thu gọn, hoặc giữ thanh trên cùng gọn nhẹ truyền thống.</string>
+    <string name="settings_layout_variant_traditional">Truyền thống</string>
+    <string name="settings_layout_variant_m3e">M3E</string>
+    <string name="apm_search_hint">Tìm mô-đun hệ thống</string>
+    <string name="kpm_search_hint">Tìm mô-đun nhân</string>
+    <string name="su_search_hint">Tìm ứng dụng</string>
     <string name="launcher_icon_style_anime">Anime</string>
     <string name="launcher_icon_style_geometry">Hình học</string>
     <string name="launcher_icon_style_apatch">APatch</string>
@@ -262,7 +269,6 @@
     <string name="su_multi_select_confirm_grant">Cấp ROOT cho %d ứng dụng?</string>
     <string name="su_multi_select_confirm_revoke">Thu hồi ROOT từ %d ứng dụng?</string>
     <string name="su_multi_select_confirm_exclude">Loại trừ %d ứng dụng?</string>
-    <string name="su_multi_select_enter">Chọn nhiều</string>
 
     <string name="apm">Module hệ thống</string>
     <string name="apm_not_installed">Chưa cài đặt bản vá hệ thống</string>
@@ -302,15 +308,6 @@
     <string name="setting_reset_su_path">Đặt lại đường dẫn su</string>
     <string name="setting_reset_su_new_path">Đường dẫn đầy đủ mới</string>
 
-    <string name="settings_folkx_engine_title">Động cơ hoạt hình FolkX</string>
-    <string name="settings_folkx_engine_summary">Sử dụng hoạt hình lò xo vật lý mượt mà khi chuyển đổi các trang cấp cao nhất</string>
-    <string name="settings_folkx_animation_type">Loại hoạt hình</string>
-    <string name="settings_folkx_animation_speed">Tốc độ hoạt hình</string>
-    <string name="settings_folkx_animation_linear">Chuyển động tuyến tính</string>
-    <string name="settings_folkx_animation_spatial">Chuyển động không gian</string>
-    <string name="settings_folkx_animation_fade">Mờ dần/Hien dần</string>
-    <string name="settings_folkx_animation_vertical">Trượt theo chiều dọc</string>
-    <string name="settings_folkx_animation_diagonal">Trượt theo đường chéo</string>
 
     <string name="apm_webui_open">Mở</string>
     <string name="apm_action">Hành động</string>
@@ -353,6 +350,24 @@
     <string name="apm_install_confirm_content">Bạn có chắc chắn muốn cài đặt %s không?</string>
     <string name="settings_show_more_module_info">Hiển thị chi tiết module</string>
     <string name="settings_show_more_module_info_summary">Hiển thị ID và kích thước module trong danh sách module</string>
+    <string name="module_sort">Thứ tự sắp xếp</string>
+    <string name="module_sort_priority">Ưu tiên sắp xếp</string>
+    <string name="module_sort_group_metamodule">Siêu module</string>
+    <string name="module_sort_group_metamodule_summary">Module mà các module khác gắn vào.</string>
+    <string name="module_sort_group_zygisk">Module Zygisk</string>
+    <string name="module_sort_group_zygisk_summary">Cung cấp hoặc tải môi trường chạy Zygisk.</string>
+    <string name="module_sort_group_lsposed">Module LSPosed</string>
+    <string name="module_sort_group_lsposed_summary">Hook thông qua framework Xposed.</string>
+    <string name="module_sort_group_webui">Module có WebUI</string>
+    <string name="module_sort_group_webui_summary">Có màn hình giao diện riêng.</string>
+    <string name="module_sort_group_action">Module có hành động</string>
+    <string name="module_sort_group_action_summary">Chạy script theo yêu cầu.</string>
+    <string name="module_sort_enabled_first">Bật trước</string>
+    <string name="module_sort_custom_order">Thứ tự tuỳ chỉnh</string>
+    <string name="module_sort_custom_order_summary">Kéo các module vào thứ tự bạn muốn hiển thị.</string>
+    <string name="module_sort_reset_custom_order">Đặt lại thứ tự tuỳ chỉnh</string>
+    <string name="module_sort_reset_custom_order_summary">Quay lại thứ tự ưu tiên.</string>
+    <string name="module_sort_drag_to_reorder">Kéo để sắp xếp lại</string>
     <string name="apm_disable_all_title">Vô hiệu hóa tất cả module</string>
     <string name="apm_disable_all_confirm">Bạn có chắc chắn muốn vô hiệu hóa tất cả module không? Điều này sẽ vô hiệu hóa tất cả các module đã cài đặt.</string>
     <string name="apm_enable_module_banner">Bật banner module</string>
@@ -1345,10 +1360,6 @@ Dưới đây là một số nguyên nhân có thể gây ra thất bại xác t
     <string name="color_style_neutral">Trung tính</string>
     <string name="color_style_fidelity">Trung thực</string>
     <!-- Color Contrast -->
-    <string name="color_contrast_label">Độ tương phản</string>
-    <string name="color_contrast_standard">Tiêu chuẩn</string>
-    <string name="color_contrast_medium">Trung bình</string>
-    <string name="color_contrast_high">Cao</string>
     <string name="settings_focus_card_background">Hình nền thẻ FocusUI</string>
     <string name="settings_focus_card_background_enabled">Hình nền thẻ FocusUI đã bật; nhấn giữ thẻ để quản lý hình nền</string>
     <string name="settings_focus_card_background_summary">Bật hình nền thẻ FocusUI và quản lý hình nền bằng nhấn giữ</string>
@@ -1376,8 +1387,6 @@ Dưới đây là một số nguyên nhân có thể gây ra thất bại xác t
     <string name="dashboard_card_background_saved">Đã lưu hình nền bảng điều khiển thành công</string>
     <string name="dashboard_card_background_error">Không thể lưu hình nền bảng điều khiển</string>
     <string name="dashboard_card_background_cleared">Đã xóa hình nền bảng điều khiển</string>
-    <string name="dashboard_card_background_restore">Khôi phục mặc định</string>
-    <string name="dashboard_card_background_restored">Đã khôi phục hình nền bảng điều khiển</string>
     <string name="settings_dashboard_card_dual_dim">Bật điều chỉnh độ mờ kép ngày/đêm</string>
     <string name="settings_dashboard_card_dual_dim_desc">Tự động điều chỉnh độ mờ hình nền bảng điều khiển cho chủ đề sáng và tối</string>
     <string name="settings_dashboard_card_day_dim">Độ mờ hình nền bảng điều khiển chế độ ngày</string>

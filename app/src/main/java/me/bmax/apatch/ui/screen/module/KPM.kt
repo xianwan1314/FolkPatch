@@ -1,4 +1,6 @@
 package me.bmax.apatch.ui.screen.module
+
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import me.bmax.apatch.ui.screen.patches.MODULE_TYPE
 
 import android.app.Activity.RESULT_OK
@@ -9,23 +11,16 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,18 +35,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
-import androidx.compose.foundation.background
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
@@ -74,32 +62,30 @@ import me.bmax.apatch.ui.navigation.LocalBottomBarVisible
 import me.bmax.apatch.ui.navigation.LocalIsFloatingNavMode
 import me.bmax.apatch.ui.navigation.fabNavBottomClearance
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.*
 import android.widget.Toast
 
 import android.content.SharedPreferences
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 
 import me.bmax.apatch.util.BiometricUtils
 import me.bmax.apatch.util.isJailbreakMode
 import me.bmax.apatch.util.kpmCustomModuleInfoStorage
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import me.bmax.apatch.ui.LocalLayoutVariant
+import me.bmax.apatch.ui.LayoutVariant
+import me.bmax.apatch.ui.component.rememberSearchAppBarScrollBehavior
 import me.bmax.apatch.core.ui.R as CoreR
 
 
 private const val TAG = "KernelPatchModule"
 private val kpmInstallMutex = Mutex()
 
-@Destination<RootGraph>
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun KPModuleScreen(navigator: DestinationsNavigator) {
@@ -113,7 +99,7 @@ fun KPModuleScreen(navigator: DestinationsNavigator) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp),
+                .padding(FolkDimens.Size12),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -128,6 +114,10 @@ fun KPModuleScreen(navigator: DestinationsNavigator) {
     }
 
     val viewModel = viewModel<KPModuleViewModel>()
+    val m3eLayout = LocalLayoutVariant.current == LayoutVariant.M3E
+    val topAppBarScrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val searchBarScrollBehavior = rememberSearchAppBarScrollBehavior(topAppBarScrollBehavior)
 
     val context = LocalContext.current
 
@@ -165,6 +155,7 @@ fun KPModuleScreen(navigator: DestinationsNavigator) {
     }
 
     val kpModuleListState = rememberLazyListState()
+    val searchKpModuleListState = rememberLazyListState()
 
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val filteredModuleList = remember(viewModel.moduleList, searchQuery) {
@@ -201,20 +192,30 @@ fun KPModuleScreen(navigator: DestinationsNavigator) {
         return true
     }
 
-    var showOrderDialog by remember { mutableStateOf(false) }
-    var orderedModules by remember { mutableStateOf(viewModel.moduleList) }
-
     FolkScaffold(
         topBar = {
             KPMTopBar(
                 navigator,
                 searchQuery,
-                showCustomOrder = viewModel.moduleList.isNotEmpty(),
-                onCustomOrderClick = {
-                    orderedModules = viewModel.moduleList
-                    showOrderDialog = true
-                }
-            ) { searchQuery = it }
+                onSearchQueryChange = { searchQuery = it },
+                scrollBehavior = if (m3eLayout) searchBarScrollBehavior else null,
+                searchContent = { bottomPadding, _ ->
+                    KPModuleList(
+                        viewModel = viewModel,
+                        moduleList = filteredModuleList,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = bottomPadding),
+                        state = searchKpModuleListState,
+                        showMoreModuleInfo = showMoreModuleInfo,
+                        foldSystemModule = foldSystemModule,
+                        simpleListBottomBar = simpleListBottomBar,
+                        splicedCardGroup = splicedCardGroup,
+                        showKpmStatusBadge = showKpmStatusBadge,
+                        checkStrongBiometric = ::checkStrongBiometric,
+                    )
+                },
+            )
         },
         floatingActionButton = run {
         {
@@ -296,7 +297,7 @@ fun KPModuleScreen(navigator: DestinationsNavigator) {
                             ) { isExpanded ->
                                 if (isExpanded) {
                                     Icon(
-                                        Icons.Filled.Close,
+                                        Icons.Outlined.Close,
                                         contentDescription = stringResource(CoreR.string.core_action_close),
                                     )
                                 } else {
@@ -321,7 +322,7 @@ fun KPModuleScreen(navigator: DestinationsNavigator) {
                                     navigator.navigate(PatchesDestination(PatchesViewModel.PatchMode.PATCH_AND_INSTALL))
                                 }
                             },
-                            icon = { Icon(Icons.Outlined.Code, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                            icon = { Icon(Icons.Outlined.Code, contentDescription = null, modifier = Modifier.size(FolkDimens.Size18)) },
                             text = { Text(text = moduleEmbed, style = MaterialTheme.typography.bodyMedium) },
                         )
                     }
@@ -334,7 +335,7 @@ fun KPModuleScreen(navigator: DestinationsNavigator) {
                             intent.addCategory(Intent.CATEGORY_OPENABLE)
                             selectInstallKpmLauncher.launch(intent)
                         },
-                        icon = { Icon(Icons.Outlined.Settings, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                        icon = { Icon(Icons.Outlined.Settings, contentDescription = null, modifier = Modifier.size(FolkDimens.Size18)) },
                         text = { Text(text = moduleInstall, style = MaterialTheme.typography.bodyMedium) },
                     )
                     // 加载 (Load)
@@ -349,7 +350,7 @@ fun KPModuleScreen(navigator: DestinationsNavigator) {
                                 selectKpmLauncher.launch(intent)
                             }
                         },
-                        icon = { Icon(Icons.Filled.Download, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                        icon = { Icon(Icons.Outlined.Download, contentDescription = null, modifier = Modifier.size(FolkDimens.Size18)) },
                         text = { Text(text = moduleLoad, style = MaterialTheme.typography.bodyMedium) },
                     )
                 }
@@ -358,7 +359,7 @@ fun KPModuleScreen(navigator: DestinationsNavigator) {
             val configuration = LocalConfiguration.current
             val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
             val animatedOffset by animateDpAsState(
-                targetValue = if (isFloatingMode && bottomBarVisible && !isLandscape) (-88).dp else 0.dp,
+                targetValue = if (isFloatingMode && bottomBarVisible && !isLandscape) (-88).dp else FolkDimens.Size0,
                 animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
                 label = "fabOffset"
             )
@@ -382,6 +383,11 @@ fun KPModuleScreen(navigator: DestinationsNavigator) {
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize(),
+            scrollConnection = if (m3eLayout) {
+                searchBarScrollBehavior.nestedScrollConnection
+            } else {
+                null
+            },
             state = kpModuleListState,
             showMoreModuleInfo = showMoreModuleInfo,
             foldSystemModule = foldSystemModule,
@@ -389,114 +395,6 @@ fun KPModuleScreen(navigator: DestinationsNavigator) {
             splicedCardGroup = splicedCardGroup,
             showKpmStatusBadge = showKpmStatusBadge,
             checkStrongBiometric = ::checkStrongBiometric
-        )
-    }
-
-
-
-    if (showOrderDialog) {
-        val reorderThreshold = with(LocalDensity.current) { 40.dp.toPx() }
-        val dragToReorderDescription = stringResource(R.string.apm_drag_to_reorder)
-        var draggedModuleName by remember { mutableStateOf<String?>(null) }
-        var draggedDistance by remember { mutableStateOf(0f) }
-        AlertDialog(
-            onDismissRequest = { showOrderDialog = false },
-            title = { Text(stringResource(R.string.apm_custom_order)) },
-            text = {
-                LazyColumn(modifier = Modifier.heightIn(max = 480.dp)) {
-                    itemsIndexed(orderedModules, key = { _, module -> module.name }) { _, module ->
-                        val isDragging = draggedModuleName == module.name
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .then(
-                                    if (isDragging) {
-                                        Modifier
-                                            .zIndex(1f)
-                                            .graphicsLayer { translationY = draggedDistance }
-                                    } else {
-                                        Modifier.animateItem(
-                                            placementSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
-                                        )
-                                    }
-                                ),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = module.name,
-                                modifier = Modifier.weight(1f),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            Column(
-                                modifier = Modifier
-                                    .padding(start = 12.dp, end = 4.dp)
-                                    .semantics { contentDescription = dragToReorderDescription }
-                                    .pointerInput(module.name) {
-                                        detectDragGestures(
-                                            onDragStart = {
-                                                draggedModuleName = module.name
-                                                draggedDistance = 0f
-                                            },
-                                            onDragEnd = {
-                                                draggedModuleName = null
-                                                draggedDistance = 0f
-                                            },
-                                            onDragCancel = {
-                                                draggedModuleName = null
-                                                draggedDistance = 0f
-                                            }
-                                        ) { change, dragAmount ->
-                                            change.consume()
-                                            draggedDistance += dragAmount.y
-                                            val currentIndex = orderedModules.indexOfFirst { it.name == module.name }
-                                            val targetIndex = when {
-                                                draggedDistance > reorderThreshold -> currentIndex + 1
-                                                draggedDistance < -reorderThreshold -> currentIndex - 1
-                                                else -> currentIndex
-                                            }
-                                            if (currentIndex >= 0 && targetIndex in orderedModules.indices && targetIndex != currentIndex) {
-                                                orderedModules = orderedModules.toMutableList().apply {
-                                                    add(targetIndex, removeAt(currentIndex))
-                                                }
-                                                viewModel.setCustomModuleOrder(orderedModules.map { it.name })
-                                                draggedDistance -= if (targetIndex > currentIndex) {
-                                                    reorderThreshold
-                                                } else {
-                                                    -reorderThreshold
-                                                }
-                                            }
-                                        }
-                                    }
-                                    .padding(vertical = 12.dp),
-                                verticalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                repeat(2) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(width = 24.dp, height = 3.dp)
-                                            .clip(RoundedCornerShape(2.dp))
-                                            .background(MaterialTheme.colorScheme.onSurfaceVariant)
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = { showOrderDialog = false }) {
-                    Text(stringResource(android.R.string.ok))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    viewModel.resetCustomModuleOrder()
-                    orderedModules = viewModel.moduleList
-                }) {
-                    Text(stringResource(R.string.apm_reset_order))
-                }
-            }
         )
     }
 }

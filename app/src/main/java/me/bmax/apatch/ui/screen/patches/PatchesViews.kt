@@ -1,6 +1,10 @@
 @file:OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
 package me.bmax.apatch.ui.screen.patches
 
+import me.bmax.apatch.ui.theme.tokens.FolkColors
+
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
+
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -25,11 +29,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import me.bmax.apatch.ui.theme.tokens.ContinuousCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Key
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Key
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -58,10 +62,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.ExpressiveCard
-import me.bmax.apatch.ui.component.SwitchItem
+import me.bmax.apatch.ui.component.TonalCard
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
 import me.bmax.apatch.ui.viewmodel.KPModel
 import me.bmax.apatch.ui.viewmodel.PatchesViewModel
 import me.bmax.apatch.util.Version
@@ -69,6 +73,7 @@ import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.foundation.layout.size
 import me.bmax.apatch.core.ui.R as CoreR
 import me.bmax.apatch.ui.theme.tokens.FolkShape
+import me.bmax.apatch.ui.component.folk.folkInsetColor
 
 @Composable
 fun StartButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
@@ -94,15 +99,15 @@ fun ExtraConfigDialog(kpmInfo: KPModel.KPMInfo, onDismiss: () -> Unit) {
     var event by remember { mutableStateOf(kpmInfo.event) }
     var args by remember { mutableStateOf(kpmInfo.args) }
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = onDismiss,
         blurBehind = false,
     ) {
-        Column(modifier = Modifier.padding(PaddingValues(all = 24.dp))) {
+        Column(modifier = Modifier.padding(PaddingValues(all = FolkDimens.Size24))) {
             Text(
                 text = stringResource(id = R.string.kpm_control_dialog_title),
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = FolkDimens.Size16)
             )
 
             OutlinedTextField(
@@ -115,7 +120,7 @@ fun ExtraConfigDialog(kpmInfo: KPModel.KPMInfo, onDismiss: () -> Unit) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(FolkDimens.Size16))
 
             OutlinedTextField(
                 value = args,
@@ -127,7 +132,7 @@ fun ExtraConfigDialog(kpmInfo: KPModel.KPMInfo, onDismiss: () -> Unit) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(FolkDimens.Size24))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -149,11 +154,11 @@ fun ExtraItem(extra: KPModel.IExtraInfo, existed: Boolean, onDelete: () -> Unit)
         ExtraConfigDialog(extra, onDismiss = { showConfigDialog = false })
     }
 
-    ExpressiveCard(flat = true) {
+    TonalCard(flat = true) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(FolkDimens.Size12),
         ) {
             Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text(
@@ -170,19 +175,19 @@ fun ExtraItem(extra: KPModel.IExtraInfo, existed: Boolean, onDelete: () -> Unit)
 
                 if (extra.type == KPModel.ExtraType.KPM) {
                     Icon(
-                        imageVector = Icons.Default.Settings,
+                        imageVector = Icons.Outlined.Settings,
                         contentDescription = stringResource(CoreR.string.core_action_config),
                         modifier = Modifier
-                            .padding(end = 8.dp)
+                            .padding(end = FolkDimens.Size8)
                             .clickable { showConfigDialog = true }
                     )
                 }
 
                 Icon(
-                    imageVector = Icons.Default.Delete,
+                    imageVector = Icons.Outlined.Delete,
                     contentDescription = stringResource(CoreR.string.core_action_delete),
                     modifier = Modifier
-                        .padding(end = 8.dp)
+                        .padding(end = FolkDimens.Size8)
                         .clickable { onDelete() })
             }
             if (extra.type == KPModel.ExtraType.KPM) {
@@ -216,11 +221,11 @@ fun ExtraItem(extra: KPModel.IExtraInfo, existed: Boolean, onDelete: () -> Unit)
 @Composable
 fun KernelPatchImageView(kpImgInfo: KPModel.KPImgInfo) {
     if (kpImgInfo.version.isEmpty()) return
-    ExpressiveCard(flat = true) {
+    TonalCard(flat = true) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 12.dp, top = 12.dp, end = 12.dp, bottom = 12.dp),
+                .padding(start = FolkDimens.Size12, top = FolkDimens.Size12, end = FolkDimens.Size12, bottom = FolkDimens.Size12),
         ) {
             Column(
                 modifier = Modifier
@@ -255,10 +260,10 @@ fun PatchSuperKeySection(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
 ) {
-    ExpressiveCard(flat = true) {
+    TonalCard(flat = true) {
         Column {
-            SwitchItem(
-                icon = Icons.Default.Key,
+            SegmentedSwitchItem(
+                icon = Icons.Outlined.Key,
                 title = stringResource(R.string.patch_custom_superkey),
                 summary = stringResource(R.string.patch_custom_superkey_optional),
                 checked = checked,
@@ -271,7 +276,7 @@ fun PatchSuperKeySection(
             ) {
                 Column {
                     HorizontalDivider(
-                        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 4.dp)
+                        modifier = Modifier.padding(start = FolkDimens.Size16, end = FolkDimens.Size16, top = FolkDimens.Size4)
                     )
                     SetSuperKeyView(viewModel)
                 }
@@ -292,8 +297,8 @@ fun SetSuperKeyView(viewModel: PatchesViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+            .padding(start = FolkDimens.Size16, top = FolkDimens.Size8, end = FolkDimens.Size16, bottom = FolkDimens.Size16),
+        verticalArrangement = Arrangement.spacedBy(FolkDimens.Size10),
     ) {
         Text(
             text = stringResource(R.string.patch_item_set_skey_label),
@@ -328,8 +333,8 @@ fun SetSuperKeyView(viewModel: PatchesViewModel) {
             trailingIcon = {
                 IconButton(onClick = { keyVisible = !keyVisible }) {
                     Icon(
-                        imageVector = if (keyVisible) Icons.Default.Visibility
-                        else Icons.Default.VisibilityOff,
+                        imageVector = if (keyVisible) Icons.Outlined.Visibility
+                        else Icons.Outlined.VisibilityOff,
                         contentDescription = null,
                     )
                 }
@@ -366,8 +371,8 @@ fun SetSuperKeyView(viewModel: PatchesViewModel) {
             trailingIcon = {
                 IconButton(onClick = { confirmVisible = !confirmVisible }) {
                     Icon(
-                        imageVector = if (confirmVisible) Icons.Default.Visibility
-                        else Icons.Default.VisibilityOff,
+                        imageVector = if (confirmVisible) Icons.Outlined.Visibility
+                        else Icons.Outlined.VisibilityOff,
                         contentDescription = null,
                     )
                 }
@@ -378,22 +383,22 @@ fun SetSuperKeyView(viewModel: PatchesViewModel) {
 
 @Composable
 fun superKeyFieldColors() = OutlinedTextFieldDefaults.colors(
-    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+    focusedContainerColor = folkInsetColor(),
+    unfocusedContainerColor = folkInsetColor(),
     errorContainerColor = MaterialTheme.colorScheme.errorContainer,
     focusedBorderColor = MaterialTheme.colorScheme.primary,
-    unfocusedBorderColor = Color.Transparent,
+    unfocusedBorderColor = FolkColors.Transparent,
     errorBorderColor = MaterialTheme.colorScheme.error,
 )
 
 @Composable
 fun CustomKPImgView(viewModel: PatchesViewModel) {
     if (!viewModel.useCustomKPImg) return
-    ExpressiveCard(flat = true) {
+    TonalCard(flat = true) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(FolkDimens.Size12),
         ) {
             Column(
                 modifier = Modifier
@@ -417,11 +422,11 @@ fun CustomKPImgView(viewModel: PatchesViewModel) {
 
 @Composable
 fun BootimgView(slot: String, boot: String) {
-    ExpressiveCard(flat = true) {
+    TonalCard(flat = true) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(FolkDimens.Size12),
         ) {
             Column(
                 modifier = Modifier
@@ -449,11 +454,11 @@ fun BootimgView(slot: String, boot: String) {
 
 @Composable
 fun KernelImageView(kImgInfo: KPModel.KImgInfo) {
-    ExpressiveCard(flat = true) {
+    TonalCard(flat = true) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(FolkDimens.Size12),
         ) {
             Column(
                 modifier = Modifier
@@ -488,12 +493,9 @@ fun SelectFileButton(
         onSelected(data, uri)
     }
 
-    // When a custom wallpaper is enabled the secondaryContainer token is made
-    // translucent (only the alpha channel changes), so restoring alpha to 1f
-    // keeps this button opaque with its original color.
     val colors = if (opaque) {
         ButtonDefaults.filledTonalButtonColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 1f)
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
         )
     } else {
         ButtonDefaults.filledTonalButtonColors()
@@ -517,20 +519,20 @@ fun SelectFileButton(
 @Composable
 fun ErrorView(error: String) {
     if (error.isEmpty()) return
-    ExpressiveCard(flat = true) {
+    TonalCard(flat = true) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 12.dp, top = 12.dp, end = 12.dp, bottom = 12.dp),
+                .padding(start = FolkDimens.Size12, top = FolkDimens.Size12, end = FolkDimens.Size12, bottom = FolkDimens.Size12),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = Icons.Outlined.Warning,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.error,
-                modifier = Modifier.size(20.dp),
+                modifier = Modifier.size(FolkDimens.Size20),
             )
-            Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(FolkDimens.Size12))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = stringResource(id = R.string.patch_item_error),

@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.settings.appearance
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -7,8 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
-import me.bmax.apatch.ui.component.folk.FolkSelectableRow
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
+import me.bmax.apatch.ui.component.SegmentedSelectableItem
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.theme.tokens.ContinuousCornerShape
@@ -31,14 +32,14 @@ fun homeLayoutStyleToString(style: String): Int {
 fun HomeLayoutChooseDialog(showDialog: MutableState<Boolean>, onLayoutSelected: (String) -> Unit) {
     val prefs = APApplication.sharedPreferences
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = { showDialog.value = false },
     ) {
-        Column(modifier = Modifier.padding(24.dp)) {
+        Column(modifier = Modifier.padding(FolkDimens.Size24)) {
             Text(
                 text = stringResource(R.string.settings_home_layout_style),
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = FolkDimens.Size16)
             )
 
             val currentStyle = prefs.getString("home_layout_style", APApplication.HOME_LAYOUT_STYLE_DEFAULT)
@@ -46,10 +47,10 @@ fun HomeLayoutChooseDialog(showDialog: MutableState<Boolean>, onLayoutSelected: 
             Surface(
                 shape = FolkShape.Corner12,
                 color = AlertDialogDefaults.containerColor,
-                tonalElevation = 2.dp
+                tonalElevation = FolkDimens.Size2
             ) {
                 Column {
-                    FolkSelectableRow(
+                    SegmentedSelectableItem(
                         title = stringResource(R.string.settings_home_layout_default),
                         selected = currentStyle == "default",
                         onClick = {
@@ -58,7 +59,7 @@ fun HomeLayoutChooseDialog(showDialog: MutableState<Boolean>, onLayoutSelected: 
                             showDialog.value = false
                         }
                     )
-                    FolkSelectableRow(
+                    SegmentedSelectableItem(
                         title = stringResource(R.string.settings_home_layout_grid),
                         selected = currentStyle == "kernelsu",
                         onClick = {
@@ -67,7 +68,7 @@ fun HomeLayoutChooseDialog(showDialog: MutableState<Boolean>, onLayoutSelected: 
                             showDialog.value = false
                         }
                     )
-                    FolkSelectableRow(
+                    SegmentedSelectableItem(
                         title = stringResource(R.string.settings_home_layout_focus),
                         selected = currentStyle == "focus",
                         onClick = {
@@ -76,7 +77,7 @@ fun HomeLayoutChooseDialog(showDialog: MutableState<Boolean>, onLayoutSelected: 
                             showDialog.value = false
                         }
                     )
-                    FolkSelectableRow(
+                    SegmentedSelectableItem(
                         title = stringResource(R.string.settings_home_layout_circle),
                         selected = currentStyle == "circle",
                         onClick = {
@@ -85,7 +86,7 @@ fun HomeLayoutChooseDialog(showDialog: MutableState<Boolean>, onLayoutSelected: 
                             showDialog.value = false
                         }
                     )
-                    FolkSelectableRow(
+                    SegmentedSelectableItem(
                         title = stringResource(R.string.settings_home_layout_dashboard_pro),
                         selected = currentStyle == "dashboard_ui",
                         onClick = {
@@ -94,7 +95,7 @@ fun HomeLayoutChooseDialog(showDialog: MutableState<Boolean>, onLayoutSelected: 
                             showDialog.value = false
                         }
                     )
-                    FolkSelectableRow(
+                    SegmentedSelectableItem(
                         title = stringResource(R.string.settings_home_layout_stats),
                         selected = currentStyle == "stats",
                         onClick = {
@@ -107,7 +108,7 @@ fun HomeLayoutChooseDialog(showDialog: MutableState<Boolean>, onLayoutSelected: 
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
+                modifier = Modifier.fillMaxWidth().padding(top = FolkDimens.Size24),
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(onClick = { showDialog.value = false }) {

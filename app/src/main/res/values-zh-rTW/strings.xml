@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_layout_variant">佈局變體</string>
+    <string name="settings_layout_variant_summary">在系統模組、超級使用者與核心模組頁面使用 Material 3 Expressive 大字標題與可收合的內嵌搜尋列，或沿用經典的緊湊頂欄。</string>
+    <string name="settings_layout_variant_traditional">傳統</string>
+    <string name="settings_layout_variant_m3e">M3E</string>
+    <string name="apm_search_hint">搜尋系統模組</string>
+    <string name="kpm_search_hint">搜尋核心模組</string>
+    <string name="su_search_hint">搜尋應用程式</string>
     <string name="launcher_icon_style_anime">動漫</string>
     <string name="launcher_icon_style_geometry">幾何</string>
     <string name="launcher_icon_style_apatch">APatch</string>
@@ -262,7 +269,6 @@
     <string name="su_multi_select_confirm_grant">授予 ROOT 給 %d 個應用？</string>
     <string name="su_multi_select_confirm_revoke">撤銷 %d 個應用的 ROOT 權限？</string>
     <string name="su_multi_select_confirm_exclude">排除 %d 個應用？</string>
-    <string name="su_multi_select_enter">多選</string>
 
     <string name="apm">系統模組</string>
     <string name="apm_not_installed">AndroidPatch 尚未安裝</string>
@@ -301,15 +307,6 @@
 
     <string name="setting_reset_su_path">重設 SU 路徑</string>
     <string name="setting_reset_su_new_path">新的完整路徑</string>
-    <string name="settings_folkx_engine_title">FolkX 動畫引擎</string>
-    <string name="settings_folkx_engine_summary">在頂層頁面切換時使用絲滑的物理彈簧動畫</string>
-    <string name="settings_folkx_animation_type">動畫類型</string>
-    <string name="settings_folkx_animation_linear">線性運動</string>
-    <string name="settings_folkx_animation_speed">動畫速度</string>
-    <string name="settings_folkx_animation_spatial">空間運動</string>
-    <string name="settings_folkx_animation_fade">漸隱漸顯</string>
-    <string name="settings_folkx_animation_vertical">垂直滑動</string>
-    <string name="settings_folkx_animation_diagonal">對角滑動</string>
 
     <string name="apm_webui_open">WebUI</string>
     <string name="apm_action">操作</string>
@@ -402,6 +399,24 @@
     <string name="settings_donot_store_superkey_summary">每次管理器啟動時驗證超級密鑰</string>
     <string name="settings_show_more_module_info">顯示模組資訊詳情</string>
     <string name="settings_show_more_module_info_summary">在模組列表中顯示模組 ID、大小等訊息</string>
+    <string name="module_sort">排序方式</string>
+    <string name="module_sort_priority">排序優先權</string>
+    <string name="module_sort_group_metamodule">元模組</string>
+    <string name="module_sort_group_metamodule_summary">其他模組所依附的模組。</string>
+    <string name="module_sort_group_zygisk">Zygisk 模組</string>
+    <string name="module_sort_group_zygisk_summary">提供或載入 Zygisk 執行環境。</string>
+    <string name="module_sort_group_lsposed">LSPosed 模組</string>
+    <string name="module_sort_group_lsposed_summary">透過 Xposed 框架掛載。</string>
+    <string name="module_sort_group_webui">帶 Web UI 的模組</string>
+    <string name="module_sort_group_webui_summary">自帶獨立介面。</string>
+    <string name="module_sort_group_action">帶操作的模組</string>
+    <string name="module_sort_group_action_summary">可按需執行指令碼。</string>
+    <string name="module_sort_enabled_first">啟用優先</string>
+    <string name="module_sort_custom_order">自訂順序</string>
+    <string name="module_sort_custom_order_summary">拖動模組調整其顯示順序。</string>
+    <string name="module_sort_reset_custom_order">重設自訂順序</string>
+    <string name="module_sort_reset_custom_order_summary">還原為上方優先權順序。</string>
+    <string name="module_sort_drag_to_reorder">拖動以重新排序</string>
     <string name="mode_select_page_title">安裝</string>
     <string name="mode_select_page_patch_and_install">直接安裝（通常選擇此項）</string>
     <string name="mode_select_page_select_file">選取要修補的「Boot 映像檔」</string>
@@ -911,8 +926,6 @@ KernelPatch 需要修補 boot 映像檔。
     <string name="dashboard_card_background_saved">儀表板桌布儲存成功</string>
     <string name="dashboard_card_background_error">儀表板桌布儲存失敗</string>
     <string name="dashboard_card_background_cleared">儀表板桌布已清除</string>
-    <string name="dashboard_card_background_restore">恢復預設桌布</string>
-    <string name="dashboard_card_background_restored">已恢復預設桌布</string>
     <string name="settings_dashboard_card_dual_dim">啟用晝夜雙暗度</string>
     <string name="settings_dashboard_card_dual_dim_desc">自動根據明暗主題調整儀表板桌布暗度</string>
     <string name="settings_dashboard_card_day_dim">白天模式儀表板桌布暗度</string>
@@ -1377,10 +1390,6 @@ KernelPatch 需要修補 boot 映像檔。
     <string name="color_style_neutral">中性</string>
     <string name="color_style_fidelity">保真</string>
     <!-- Color Contrast -->
-    <string name="color_contrast_label">對比度</string>
-    <string name="color_contrast_standard">標準</string>
-    <string name="color_contrast_medium">中等</string>
-    <string name="color_contrast_high">高</string>
     <string name="settings_title_image_permission_required">請先授予儲存空間權限才能選擇標題圖片</string>
     <string name="settings_background_permission_required">請先授予儲存空間權限才能選擇背景圖片</string>
     <string name="settings_sound_effect_save_failed">儲存音效檔案失敗</string>

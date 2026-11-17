@@ -1,4 +1,6 @@
 package me.bmax.apatch.ui.screen.module
+
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import me.bmax.apatch.ui.screen.misc.BannerApiService
 
 import android.graphics.Bitmap
@@ -41,6 +43,7 @@ import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.folk.folkPressScale
+import me.bmax.apatch.ui.component.folk.navOrigin
 import me.bmax.apatch.ui.component.BackgroundOptionsDialog
 import me.bmax.apatch.ui.component.ModuleInfoData
 import me.bmax.apatch.ui.component.rememberLoadingDialog
@@ -55,6 +58,8 @@ import me.bmax.apatch.util.clearLegacyFolkBanner
 import me.bmax.apatch.util.CustomModuleInfo
 import me.bmax.apatch.util.apmCustomModuleInfoStorage
 import me.bmax.apatch.ui.theme.BackgroundConfig
+import me.bmax.apatch.ui.theme.tokens.LocalFolkWallpaperTokens
+import me.bmax.apatch.ui.theme.tokens.WallpaperSurfaceRole
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 
@@ -293,8 +298,9 @@ fun ModuleItem(
 
     val insideSplicedGroup = LocalInsideSplicedGroup.current
 
-    val cardColor = if (isWallpaperMode) {
-        MaterialTheme.colorScheme.surface.copy(alpha = opacity)
+    val wallpaper = LocalFolkWallpaperTokens.current
+    val cardColor = if (wallpaper != null) {
+        wallpaper.material(WallpaperSurfaceRole.Group, minimumAlpha = 0.35f).fill
     } else {
         MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.2f)
     }
@@ -304,9 +310,9 @@ fun ModuleItem(
     val cardPressed by cardInteractionSource.collectIsPressedAsState()
     val cardCorner by animateDpAsState(
         targetValue = when {
-            expanded -> 28.dp
-            cardPressed -> 24.dp
-            else -> 20.dp
+            expanded -> FolkDimens.Size28
+            cardPressed -> FolkDimens.Size24
+            else -> FolkDimens.Size20
         },
         animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
         label = "moduleCardCorner",
@@ -316,6 +322,11 @@ fun ModuleItem(
     val clickModifier = Modifier
         .fillMaxWidth()
         .animateContentSize(animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec())
+        .navOrigin(
+            cornerRadius = cardCorner,
+            color = cardColor,
+            interactionSource = cardInteractionSource,
+        )
         .folkPressScale(cardInteractionSource)
         .combinedClickable(
             interactionSource = cardInteractionSource,
@@ -380,7 +391,7 @@ fun ModuleItem(
                 .then(clickModifier),
             shape = cardShape,
             color = cardColor,
-            tonalElevation = 0.dp
+            tonalElevation = FolkDimens.Size0
         ) {
             contentBlock()
         }

@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.home
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import android.os.Build
 import android.system.Os
 import androidx.compose.foundation.clickable
@@ -8,10 +9,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material.icons.automirrored.outlined.Help
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.LockOpen
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.LockOpen
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material.icons.outlined.RestartAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -34,18 +36,22 @@ import me.bmax.apatch.util.getSELinuxStatus
 import me.bmax.apatch.util.Version.getManagerVersion
 import me.bmax.apatch.ui.theme.BackgroundConfig
 import me.bmax.apatch.ui.component.copyableInfo
+import me.bmax.apatch.ui.component.TonalCard
 import androidx.compose.material3.surfaceColorAtElevation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import me.bmax.apatch.core.ui.R as CoreR
 import me.bmax.apatch.ui.theme.tokens.FolkShape
+import me.bmax.apatch.ui.theme.tokens.LocalFolkWallpaperTokens
+import me.bmax.apatch.ui.theme.tokens.FolkType
 
 @Composable
 fun StatusCardCircle(
     kpState: APApplication.State,
     apState: APApplication.State,
     navigator: DestinationsNavigator,
-    showUninstallDialog: MutableState<Boolean>
+    showUninstallDialog: MutableState<Boolean>,
+    modifier: Modifier = Modifier,
 ) {
     val isWorking = kpState == APApplication.State.KERNELPATCH_INSTALLED
     val isUpdate = kpState == APApplication.State.KERNELPATCH_NEED_UPDATE || kpState == APApplication.State.KERNELPATCH_NEED_REBOOT
@@ -59,7 +65,7 @@ fun StatusCardCircle(
     // 壁纸模式下状态卡统一用中性 surface/onSurface；强调容器降 alpha 后其 on 色
     // 会失去配对的对比度，不再在壁纸上使用。
     val finalContainerColor = if (isWallpaperMode) {
-        MaterialTheme.colorScheme.surface
+        LocalFolkWallpaperTokens.current?.group?.fill ?: MaterialTheme.colorScheme.surface
     } else if (isJailbreak) {
         MaterialTheme.colorScheme.tertiaryContainer
     } else if (isWorking) {
@@ -69,87 +75,88 @@ fun StatusCardCircle(
     }
 
     TonalCard(
+        modifier = modifier,
         containerColor = finalContainerColor,
         contentColor = if (isWallpaperMode) MaterialTheme.colorScheme.onSurface else null,
+        flat = true,
+        onClick = {
+            when {
+                isJailbreak -> jailbreakState.performPrimaryAction()
+                isWorking -> {
+                    if (apState == APApplication.State.ANDROIDPATCH_INSTALLED) {
+                        showUninstallDialog.value = true
+                    }
+                }
+                else -> navigator.navigate(com.ramcosta.composedestinations.generated.destinations.InstallModeSelectScreenDestination)
+            }
+        },
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {
-                    when {
-                        isJailbreak -> jailbreakState.performPrimaryAction()
-                        isWorking -> {
-                            if (apState == APApplication.State.ANDROIDPATCH_INSTALLED) {
-                                showUninstallDialog.value = true
-                            }
-                        }
-                        else -> navigator.navigate(com.ramcosta.composedestinations.generated.destinations.InstallModeSelectScreenDestination)
-                    }
-                }
-                .padding(24.dp),
+                .fillMaxHeight()
+                .padding(FolkDimens.Size24),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (isJailbreak) {
-                Icon(Icons.Filled.LockOpen, stringResource(R.string.settings_jailbreak_mode))
-                Column(Modifier.padding(start = 20.dp).weight(1f)) {
+                Icon(Icons.Outlined.LockOpen, stringResource(R.string.settings_jailbreak_mode))
+                Column(Modifier.padding(start = FolkDimens.Size20).weight(1f)) {
                     Text(
                         text = stringResource(R.string.settings_jailbreak_mode),
-                        style = MaterialTheme.typography.titleMedium
+                        style = FolkType.Title
                     )
-                    Spacer(Modifier.height(4.dp))
+                    Spacer(Modifier.height(FolkDimens.Size4))
                     Text(
                         text = stringResource(R.string.settings_jailbreak_mode_summary),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = FolkType.Summary,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             } else if (isWorking) {
-                 Icon(Icons.Outlined.CheckCircle, stringResource(R.string.home_working))
-                 Column(Modifier.padding(start = 20.dp).weight(1f)) {
-                     val isFull = apState == APApplication.State.ANDROIDPATCH_INSTALLED
-                    val modeTextTitle = if (isFull) "Kpm" else "Half"
-                    val modeTextCaps = if (isFull) "KPM" else "HALF"
-                    val modeText = BackgroundConfig.getCustomBadgeText() ?: modeTextCaps
-
-                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = if (classicEmojiEnabled) {
-                                stringResource(R.string.home_working) + "😋"
-                            } else {
-                                stringResource(R.string.home_working)
-                            },
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Spacer(Modifier.width(8.dp))
-
-                       // Full/Half Label
-                      if (!classicEmojiEnabled) {
-                          ModeLabelText(label = modeText)
-                      }
-                   }
-                   Spacer(Modifier.height(4.dp))
-                   Text(
-                       text = stringResource(R.string.home_version, getManagerVersion().second.toString()) +
-                               if (classicEmojiEnabled) " - $modeTextTitle" else "",
-                       style = MaterialTheme.typography.bodyMedium
-                   )
+                Icon(Icons.Outlined.CheckCircle, stringResource(R.string.home_working))
+                val isFull = apState == APApplication.State.ANDROIDPATCH_INSTALLED
+                val modeTextTitle = if (isFull) "Kpm" else "Half"
+                val modeTextCaps = if (isFull) "KPM" else "HALF"
+                val modeText = BackgroundConfig.getCustomBadgeText() ?: modeTextCaps
+                Column(Modifier.padding(start = FolkDimens.Size20).weight(1f)) {
+                    Text(
+                        text = if (classicEmojiEnabled) {
+                            stringResource(R.string.home_working) + "😋"
+                        } else {
+                            stringResource(R.string.home_working)
+                        },
+                        style = FolkType.Title
+                    )
+                    Spacer(Modifier.height(FolkDimens.Size4))
+                    Text(
+                        text = stringResource(R.string.home_version, getManagerVersion().second.toString()) +
+                                if (classicEmojiEnabled) " - $modeTextTitle" else "",
+                        style = FolkType.Summary,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                if (!classicEmojiEnabled) {
+                    Spacer(Modifier.width(FolkDimens.Size16))
+                    ModeLabelText(label = modeText)
                 }
             } else {
-                 // Not installed or error
-                 val icon = if (isUpdate) Icons.Outlined.SystemUpdate else Icons.Outlined.Warning
-                 val title = if (isUpdate) stringResource(R.string.home_kp_need_update) else stringResource(R.string.home_not_installed)
+                // Not installed or error
+                val icon = if (isUpdate) Icons.Outlined.SystemUpdate else Icons.Outlined.Warning
+                val title = if (isUpdate) stringResource(R.string.home_kp_need_update) else stringResource(R.string.home_not_installed)
 
-                 Icon(icon, title)
-                 Column(Modifier.padding(start = 20.dp).weight(1f)) {
-                     Text(
-                         text = title,
-                         style = MaterialTheme.typography.titleMedium
-                     )
-                     Spacer(Modifier.height(4.dp))
-                     Text(
-                         text = stringResource(R.string.home_click_to_install),
-                         style = MaterialTheme.typography.bodyMedium
-                     )
-                 }
+                Icon(icon, title)
+                Column(Modifier.padding(start = FolkDimens.Size20).weight(1f)) {
+                    Text(
+                        text = title,
+                        style = FolkType.Title
+                    )
+                    Spacer(Modifier.height(FolkDimens.Size4))
+                    Text(
+                        text = stringResource(R.string.home_click_to_install),
+                        style = FolkType.Summary,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
             if (isJailbreak || kpState == APApplication.State.UNKNOWN_STATE && isPermissive) {
                 IconButton(
@@ -157,10 +164,10 @@ fun StatusCardCircle(
                     enabled = !jailbreakState.isTriggering,
                 ) {
                     if (jailbreakState.isTriggering) {
-                        CircularProgressIndicator(Modifier.size(22.dp), strokeWidth = 2.dp)
+                        CircularProgressIndicator(Modifier.size(FolkDimens.Size22), strokeWidth = FolkDimens.Size2)
                     } else {
                         Icon(
-                            imageVector = if (isJailbreak) Icons.Outlined.RestartAlt else Icons.Filled.LockOpen,
+                            imageVector = if (isJailbreak) Icons.Outlined.RestartAlt else Icons.Outlined.LockOpen,
                             contentDescription = stringResource(if (isJailbreak) R.string.reboot_soft else R.string.jailbreak),
                         )
                     }
@@ -174,11 +181,11 @@ fun StatusCardCircle(
 fun InfoCardCircle(kpState: APApplication.State, apState: APApplication.State) {
     val context = LocalContext.current
 
-    TonalCard {
+    TonalCard(flat = true) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 24.dp)
+                .padding(horizontal = FolkDimens.Size20, vertical = FolkDimens.Size24)
         ) {
             val uname = Os.uname()
             val prefs = APApplication.sharedPreferences
@@ -231,12 +238,12 @@ fun InfoCardCircle(kpState: APApplication.State, apState: APApplication.State) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     icon()
-                    Spacer(Modifier.width(16.dp))
+                    Spacer(Modifier.width(FolkDimens.Size16))
                     Column {
-                        Text(text = label, style = MaterialTheme.typography.bodyLarge)
+                        Text(text = label, style = FolkType.Summary)
                         Text(
                             text = content,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = FolkType.Machine,
                             color = MaterialTheme.colorScheme.outline,
                         )
                     }
@@ -251,7 +258,7 @@ fun InfoCardCircle(kpState: APApplication.State, apState: APApplication.State) {
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(FolkDimens.Size20),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -264,14 +271,14 @@ fun InfoCardCircle(kpState: APApplication.State, apState: APApplication.State) {
                 content = managerVersion.first
             )
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(FolkDimens.Size16))
             if (kpState != APApplication.State.UNKNOWN_STATE && !hideKpatchVersion) {
                 InfoCardItem(
                     icon = Icons.Outlined.Extension,
                     label = stringResource(R.string.home_kpatch_version),
                     content = Version.installedKPVString()
                 )
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(FolkDimens.Size16))
             }
 
             if (kpState != APApplication.State.UNKNOWN_STATE && !hideSuPath) {
@@ -280,7 +287,7 @@ fun InfoCardCircle(kpState: APApplication.State, apState: APApplication.State) {
                     label = stringResource(R.string.home_su_path),
                     content = Natives.suPath()
                 )
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(FolkDimens.Size16))
             }
 
             if (apState != APApplication.State.UNKNOWN_STATE && apState != APApplication.State.ANDROIDPATCH_NOT_INSTALLED) {
@@ -289,7 +296,7 @@ fun InfoCardCircle(kpState: APApplication.State, apState: APApplication.State) {
                     label = stringResource(R.string.home_apatch_version),
                     content = managerVersion.second.toString()
                 )
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(FolkDimens.Size16))
             }
 
             InfoCardItem(
@@ -298,28 +305,28 @@ fun InfoCardCircle(kpState: APApplication.State, apState: APApplication.State) {
                 content = getDeviceInfo()
             )
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(FolkDimens.Size16))
             InfoCardItem(
                 icon = Icons.Outlined.DeveloperBoard,
                 label = stringResource(R.string.home_kernel),
                 content = uname.release
             )
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(FolkDimens.Size16))
             InfoCardItem(
                 icon = Icons.Outlined.Info,
                 label = stringResource(R.string.home_system_version),
                 content = getSystemVersion()
             )
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(FolkDimens.Size16))
             if (!hideFingerprint) {
                 InfoCardItem(
                     icon = Icons.Outlined.Fingerprint,
                     label = stringResource(R.string.home_fingerprint),
                     content = Build.FINGERPRINT
                 )
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(FolkDimens.Size16))
             }
 
             if (kpState != APApplication.State.UNKNOWN_STATE && zygiskImplement != "None" && !hideZygisk) {
@@ -328,7 +335,7 @@ fun InfoCardCircle(kpState: APApplication.State, apState: APApplication.State) {
                     label = stringResource(R.string.home_zygisk_implement),
                     content = zygiskImplement
                 )
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(FolkDimens.Size16))
             }
 
             if (kpState != APApplication.State.UNKNOWN_STATE && mountImplement != "None" && !hideMount) {
@@ -337,7 +344,7 @@ fun InfoCardCircle(kpState: APApplication.State, apState: APApplication.State) {
                     label = stringResource(R.string.home_mount_implement),
                     content = mountImplement
                 )
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(FolkDimens.Size16))
             }
 
             InfoCardItem(
@@ -358,15 +365,15 @@ fun ModeLabelText(
 ) {
     Box(
         modifier = modifier
-            .padding(end = 4.dp)
+            .padding(end = FolkDimens.Size4)
             .background(
                 color = containerColor,
-                shape = RoundedCornerShape(4.dp)
+                shape = RoundedCornerShape(FolkDimens.Size4)
             )
     ) {
         Text(
             text = label,
-            modifier = Modifier.padding(vertical = 2.dp, horizontal = 5.dp),
+            modifier = Modifier.padding(vertical = FolkDimens.Size2, horizontal = FolkDimens.Size5),
             style = MaterialTheme.typography.labelSmall.copy(
                 fontWeight = FontWeight.SemiBold,
                 color = color,
@@ -377,18 +384,18 @@ fun ModeLabelText(
 
 @Composable
 fun AStatusCardCircle(apState: APApplication.State) {
-    TonalCard {
+    TonalCard(flat = true) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp),
+                .padding(FolkDimens.Size20),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = stringResource(R.string.android_patch),
-                style = MaterialTheme.typography.titleMedium
+                style = FolkType.Title
             )
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(FolkDimens.Size12))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -412,7 +419,7 @@ fun AStatusCardCircle(apState: APApplication.State) {
 
                     else -> {
                         Icon(
-                            Icons.AutoMirrored.Outlined.Help,
+                            Icons.AutoMirrored.Outlined.HelpOutline,
                             stringResource(R.string.home_install_unknown)
                         )
                     }
@@ -420,41 +427,41 @@ fun AStatusCardCircle(apState: APApplication.State) {
                 Column(
                     Modifier
                         .weight(2f)
-                        .padding(start = 16.dp)
+                        .padding(start = FolkDimens.Size16)
                 ) {
                     when (apState) {
                         APApplication.State.ANDROIDPATCH_NOT_INSTALLED -> {
                             Text(
                                 text = stringResource(R.string.home_not_installed),
-                                style = MaterialTheme.typography.titleMedium
+                                style = FolkType.Title
                             )
                         }
 
                         APApplication.State.ANDROIDPATCH_INSTALLING -> {
                             Text(
                                 text = stringResource(R.string.home_installing),
-                                style = MaterialTheme.typography.titleMedium
+                                style = FolkType.Title
                             )
                         }
 
                         APApplication.State.ANDROIDPATCH_INSTALLED -> {
                             Text(
                                 text = stringResource(R.string.home_working),
-                                style = MaterialTheme.typography.titleMedium
+                                style = FolkType.Title
                             )
                         }
 
                         APApplication.State.ANDROIDPATCH_NEED_UPDATE -> {
                             Text(
                                 text = stringResource(R.string.home_kp_need_update),
-                                style = MaterialTheme.typography.titleMedium
+                                style = FolkType.Title
                             )
                         }
 
                         else -> {
                             Text(
                                 text = stringResource(R.string.home_install_unknown),
-                                style = MaterialTheme.typography.titleMedium
+                                style = FolkType.Title
                             )
                         }
                     }
@@ -503,58 +510,45 @@ fun AStatusCardCircle(apState: APApplication.State) {
 }
 
 @Composable
-fun TonalCard(
-    modifier: Modifier = Modifier,
-    containerColor: Color? = null,
-    contentColor: Color? = null,
-    shape: Shape = FolkShape.Corner20,
-    content: @Composable () -> Unit
-) {
-    val finalContainerColor = containerColor ?: if (BackgroundConfig.isCustomBackgroundEnabled) {
-        MaterialTheme.colorScheme.surface.copy(alpha = BackgroundConfig.customBackgroundOpacity)
-    } else {
-        MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
-    }
-
-    Card(
-        modifier = modifier,
-        colors = if (contentColor != null) {
-            CardDefaults.cardColors(containerColor = finalContainerColor, contentColor = contentColor)
-        } else {
-            CardDefaults.cardColors(containerColor = finalContainerColor)
-        },
-        shape = shape
-    ) {
-        content()
-    }
-}
-
-@Composable
 fun LearnMoreCardCircle() {
     val uriHandler = LocalUriHandler.current
 
-    TonalCard {
+    TonalCard(flat = true) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
                     uriHandler.openUri("https://fp.mysqil.com/")
                 }
-                .padding(24.dp),
+                .padding(horizontal = FolkDimens.Size24, vertical = FolkDimens.Size20),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Icon(
+                imageVector = Icons.Outlined.Info,
+                contentDescription = stringResource(R.string.home_learn_apatch),
+                modifier = Modifier.size(FolkDimens.Size20),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Spacer(Modifier.width(FolkDimens.Size16))
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = stringResource(R.string.home_learn_apatch),
-                    style = MaterialTheme.typography.titleSmall
+                    style = FolkType.Summary
                 )
-                Spacer(Modifier.height(4.dp))
+                Spacer(Modifier.height(FolkDimens.Size4))
                 Text(
                     text = stringResource(R.string.home_click_to_learn_apatch),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = FolkType.Caption,
                     color = MaterialTheme.colorScheme.outline
                 )
             }
+            Spacer(Modifier.width(FolkDimens.Size12))
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                contentDescription = null,
+                modifier = Modifier.size(FolkDimens.Size20),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
     }
 }

@@ -1,4 +1,6 @@
 package me.bmax.apatch.ui.screen.module
+
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import me.bmax.apatch.ui.screen.patches.MODULE_TYPE
 
 import android.app.Activity.RESULT_OK
@@ -33,6 +35,8 @@ import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -64,7 +68,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.folk.FolkScaffold
@@ -75,10 +79,9 @@ import me.bmax.apatch.util.hasMagisk
 import me.bmax.apatch.util.ui.LocalSnackbarHost
 
 import com.ramcosta.composedestinations.generated.destinations.ApmBulkInstallScreenDestination
-import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
+import androidx.compose.material.icons.automirrored.outlined.PlaylistAdd
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.outlined.Close
 import me.bmax.apatch.util.apmCustomModuleInfoStorage
 import me.bmax.apatch.ui.theme.BackgroundConfig
 import me.bmax.apatch.ui.navigation.LocalBottomBarVisible
@@ -88,9 +91,12 @@ import androidx.compose.ui.platform.LocalConfiguration
 
 import me.bmax.apatch.util.BiometricUtils
 import me.bmax.apatch.ui.theme.tokens.FolkShape
+import me.bmax.apatch.ui.LocalLayoutVariant
+import me.bmax.apatch.ui.LayoutVariant
+import me.bmax.apatch.ui.component.rememberSearchAppBarScrollBehavior
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
-@Destination<RootGraph>
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 @Composable
 fun APModuleScreen(navigator: DestinationsNavigator) {
     val snackBarHost = LocalSnackbarHost.current
@@ -102,6 +108,7 @@ fun APModuleScreen(navigator: DestinationsNavigator) {
         mutableStateOf(!prefs.getBoolean("apm_first_use_shown", false)) 
     }
     var dontShowAgain by remember { mutableStateOf(false) }
+    var showModuleSortSheet by remember { mutableStateOf(false) }
 
     var showMoreModuleInfo by remember { mutableStateOf(prefs.getBoolean("show_more_module_info", true)) }
     var foldSystemModule by remember { mutableStateOf(prefs.getBoolean("fold_system_module", true)) }
@@ -109,6 +116,10 @@ fun APModuleScreen(navigator: DestinationsNavigator) {
     var splicedCardGroup by remember { mutableStateOf(prefs.getBoolean("spliced_card_group", true)) }
 
     val viewModel = viewModel<APModuleViewModel>()
+    val m3eLayout = LocalLayoutVariant.current == LayoutVariant.M3E
+    val topAppBarScrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val searchBarScrollBehavior = rememberSearchAppBarScrollBehavior(topAppBarScrollBehavior)
 
     DisposableEffect(Unit) {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPrefs, key ->
@@ -148,7 +159,7 @@ fun APModuleScreen(navigator: DestinationsNavigator) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp),
+                .padding(FolkDimens.Size12),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -191,6 +202,7 @@ fun APModuleScreen(navigator: DestinationsNavigator) {
     val hideInstallButton = hasMagisk
 
     val moduleListState = rememberLazyListState()
+    val searchModuleListState = rememberLazyListState()
 
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val filteredModuleList = remember(viewModel.moduleList, searchQuery) {
@@ -226,7 +238,40 @@ fun APModuleScreen(navigator: DestinationsNavigator) {
                 val newValue = !BackgroundConfig.isBannerEnabled
                 BackgroundConfig.setBannerEnabledState(newValue)
                 BackgroundConfig.save(context)
-            }
+            },
+            onSortClick = { showModuleSortSheet = true },
+            scrollBehavior = if (m3eLayout) searchBarScrollBehavior else null,
+            searchContent = { bottomPadding, _ ->
+                ModuleList(
+                    navigator = navigator,
+                    viewModel = viewModel,
+                    modules = filteredModuleList,
+                    showMoreModuleInfo = showMoreModuleInfo,
+                    foldSystemModule = foldSystemModule,
+                    simpleListBottomBar = simpleListBottomBar,
+                    splicedCardGroup = splicedCardGroup,
+                    checkStrongBiometric = ::checkStrongBiometric,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = bottomPadding),
+                    state = searchModuleListState,
+                    onInstallModule = {
+                        navigator.navigate(InstallScreenDestination(it, MODULE_TYPE.APM))
+                    },
+                    onClickModule = { id, name, hasWebUi ->
+                        if (hasWebUi) {
+                            webUILauncher.launch(
+                                Intent(
+                                    context, WebUIActivity::class.java
+                                ).setData("apatch://webui/$id".toUri()).putExtra("id", id)
+                                    .putExtra("name", name)
+                            )
+                        }
+                    },
+                    snackBarHost = snackBarHost,
+                    context = context,
+                )
+            },
         )
     }, floatingActionButton = if (hideInstallButton) {
         { /* Empty */ }
@@ -274,7 +319,7 @@ fun APModuleScreen(navigator: DestinationsNavigator) {
             val configuration = LocalConfiguration.current
             val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
             val animatedOffset by animateDpAsState(
-                targetValue = if (isFloatingMode && bottomBarVisible && !isLandscape) (-88).dp else 0.dp,
+                targetValue = if (isFloatingMode && bottomBarVisible && !isLandscape) (-88).dp else FolkDimens.Size0,
                 animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
                 label = "fabOffset"
             )
@@ -298,7 +343,7 @@ fun APModuleScreen(navigator: DestinationsNavigator) {
                             ) { isExpanded ->
                                 if (isExpanded) {
                                     Icon(
-                                        Icons.Filled.Close,
+                                        Icons.Outlined.Close,
                                         contentDescription = null,
                                     )
                                 } else {
@@ -317,7 +362,7 @@ fun APModuleScreen(navigator: DestinationsNavigator) {
                             fabExpanded = false
                             navigator.navigate(ApmBulkInstallScreenDestination())
                         },
-                        icon = { Icon(Icons.AutoMirrored.Filled.PlaylistAdd, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                        icon = { Icon(Icons.AutoMirrored.Outlined.PlaylistAdd, contentDescription = null, modifier = Modifier.size(FolkDimens.Size18)) },
                         text = { Text(text = stringResource(R.string.apm_bulk_install_action), style = MaterialTheme.typography.bodyMedium) },
                     )
                     // 安装 (Install)
@@ -333,7 +378,7 @@ fun APModuleScreen(navigator: DestinationsNavigator) {
                                 }
                             }
                         },
-                        icon = { Icon(Icons.Outlined.Download, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                        icon = { Icon(Icons.Outlined.Download, contentDescription = null, modifier = Modifier.size(FolkDimens.Size18)) },
                         text = { Text(text = stringResource(R.string.apm_install), style = MaterialTheme.typography.bodyMedium) },
                     )
                 }
@@ -357,7 +402,7 @@ fun APModuleScreen(navigator: DestinationsNavigator) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(24.dp),
+                        .padding(FolkDimens.Size24),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -380,6 +425,11 @@ fun APModuleScreen(navigator: DestinationsNavigator) {
                     modifier = Modifier
                         .padding(innerPadding)
                         .fillMaxSize(),
+                    scrollConnection = if (m3eLayout) {
+                        searchBarScrollBehavior.nestedScrollConnection
+                    } else {
+                        null
+                    },
                     state = moduleListState,
                     onInstallModule = {
                         navigator.navigate(InstallScreenDestination(it, MODULE_TYPE.APM))
@@ -401,25 +451,38 @@ fun APModuleScreen(navigator: DestinationsNavigator) {
         }
     }
 
+    ModuleSortSheet(
+        show = showModuleSortSheet,
+        groups = viewModel.sortGroups,
+        enabledFirst = viewModel.sortEnabledFirst,
+        customOrder = viewModel.customOrder,
+        modules = viewModel.moduleList,
+        onDismiss = { showModuleSortSheet = false },
+        onGroupChange = viewModel::setSortGroup,
+        onEnabledFirstChange = viewModel::updateSortEnabledFirst,
+        onCustomOrderChange = viewModel::setCustomModuleOrder,
+        onResetCustomOrder = viewModel::resetCustomModuleOrder,
+    )
+
     // First Use Dialog
     if (showFirstTimeDialog) {
-        FolkAlertDialog(
+        ExpressiveDialog(
             onDismissRequest = {
                 if (dontShowAgain) {
                     prefs.edit().putBoolean("apm_first_use_shown", true).apply()
                 }
                 showFirstTimeDialog = false
             },
-            width = 350.dp,
+            width = FolkDimens.Size350,
             shape = FolkShape.Corner20,
             blurBehind = false,
             dialogProperties = DialogProperties(dismissOnClickOutside = false, dismissOnBackPress = false),
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(FolkDimens.Size16)) {
                 Text(
                     text = stringResource(R.string.apm_first_use_title),
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = FolkDimens.Size16)
                 )
 
                 Text(
@@ -431,7 +494,7 @@ fun APModuleScreen(navigator: DestinationsNavigator) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp),
+                        .padding(top = FolkDimens.Size16),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
@@ -441,7 +504,7 @@ fun APModuleScreen(navigator: DestinationsNavigator) {
                     Text(
                         text = stringResource(R.string.dont_show_again),
                         style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.padding(start = FolkDimens.Size8)
                     )
                 }
 

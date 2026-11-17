@@ -1,10 +1,11 @@
 package me.bmax.apatch.ui.screen.settings.appearance
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
+import androidx.compose.material.icons.automirrored.outlined.Segment
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,20 +19,18 @@ import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.ColorGenerationModeSelector
 import me.bmax.apatch.ui.component.ColorStandardSelector
 import me.bmax.apatch.ui.component.ColorStylePicker
-import me.bmax.apatch.ui.component.ColorContrastSelector
 import me.bmax.apatch.ui.component.ExpressiveSwitch
 import me.bmax.apatch.ui.component.SliderStyleConfig
 import me.bmax.apatch.ui.component.SwitchIconState
 import me.bmax.apatch.ui.component.ThemeColorPicker
 import me.bmax.apatch.ui.component.ThemeMode
 import me.bmax.apatch.ui.component.ThemeModeSelector
-import me.bmax.apatch.ui.component.folk.FolkSettingsSectionGroup
-import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
+import me.bmax.apatch.ui.component.SegmentedColumn
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
 import me.bmax.apatch.ui.theme.BackgroundConfig
 import me.bmax.apatch.ui.theme.ColorGenerationMode
 import me.bmax.apatch.ui.theme.ColorStandard
 import me.bmax.apatch.ui.theme.ColorStyle
-import me.bmax.apatch.ui.theme.ColorContrast
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import me.bmax.apatch.ui.component.folk.folkPressScale
@@ -50,7 +49,6 @@ fun AppearanceNightModeSection(
     colorGenerationMode: ColorGenerationMode,
     colorStandard: ColorStandard,
     colorStyle: ColorStyle,
-    colorContrast: ColorContrast,
     amoledTheme: Boolean,
     onThemeModeSelected: (ThemeMode) -> Unit,
     onColorSelected: (String) -> Unit,
@@ -58,12 +56,11 @@ fun AppearanceNightModeSection(
     onGenerationModeSelected: (ColorGenerationMode) -> Unit,
     onStandardSelected: (ColorStandard) -> Unit,
     onStyleSelected: (ColorStyle) -> Unit,
-    onContrastSelected: (ColorContrast) -> Unit,
     onAmoledChange: (Boolean) -> Unit,
 ) {
     val prefs = APApplication.sharedPreferences
 
-    FolkSettingsSectionGroup(title = stringResource(R.string.settings_appearance_night_mode), flat = flat, highlightKey = highlightKey) {
+    SegmentedColumn(title = stringResource(R.string.settings_appearance_night_mode), flat = flat, highlightKey = highlightKey) {
         if (isNightModeSupported) {
             item(key = "appearance_theme_mode") {
                 ThemeModeSelector(
@@ -117,14 +114,6 @@ fun AppearanceNightModeSection(
                 )
             }
 
-            item(key = "appearance_color_contrast") {
-                ColorContrastSelector(
-                    selectedContrast = colorContrast,
-                    onContrastSelected = onContrastSelected,
-                    flat = flat,
-                    bare = true,
-                )
-            }
         }
 
         if (isDarkTheme) {
@@ -149,20 +138,20 @@ fun AppearanceNightModeSection(
                             interactionSource = amoledInteractionSource,
                             indication = null,
                         )
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                        .padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size12),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(imageVector = Icons.Filled.DarkMode, contentDescription = null, tint = if (!isWallpaperEnabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f), modifier = Modifier.size(24.dp))
-                    Spacer(Modifier.width(16.dp))
-                    Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
+                    Icon(imageVector = Icons.Outlined.DarkMode, contentDescription = null, tint = if (!isWallpaperEnabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f), modifier = Modifier.size(FolkDimens.Size24))
+                    Spacer(Modifier.width(FolkDimens.Size16))
+                    Column(modifier = Modifier.weight(1f).padding(end = FolkDimens.Size16)) {
                         Text(
                             text = stringResource(R.string.settings_amoled_theme),
                             style = MaterialTheme.typography.bodyLarge,
                             color = if (!isWallpaperEnabled) MaterialTheme.colorScheme.onSurface
                             else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
                         )
-                        Spacer(Modifier.height(4.dp))
+                        Spacer(Modifier.height(FolkDimens.Size4))
                         Text(
                             text = stringResource(R.string.settings_amoled_theme_desc),
                             style = MaterialTheme.typography.bodySmall,
@@ -181,7 +170,7 @@ fun AppearanceNightModeSection(
 
         item(key = "appearance_switch_icon") {
             var showSwitchIcon by remember { mutableStateOf(SwitchIconState.showIcon) }
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.ToggleOn,
                 title = stringResource(R.string.settings_switch_icon),
                 summary = stringResource(R.string.settings_switch_icon_desc),
@@ -196,8 +185,8 @@ fun AppearanceNightModeSection(
 
         item(key = "appearance_discrete_slider") {
             var isDiscreteSlider by remember { mutableStateOf(SliderStyleConfig.isDiscrete) }
-            FolkSwitchPreference(
-                icon = Icons.Outlined.Segment,
+            SegmentedSwitchItem(
+                icon = Icons.AutoMirrored.Outlined.Segment,
                 title = stringResource(R.string.settings_discrete_slider),
                 summary = stringResource(R.string.settings_discrete_slider_desc),
                 checked = isDiscreteSlider,

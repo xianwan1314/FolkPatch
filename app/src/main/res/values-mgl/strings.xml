@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_layout_variant">布局变体</string>
+    <string name="settings_layout_variant_summary">使用带可折叠内嵌搜索的大号 M3E 顶栏，或保留传统紧凑顶栏。</string>
+    <string name="settings_layout_variant_traditional">古典</string>
+    <string name="settings_layout_variant_m3e">M3E</string>
+    <string name="apm_search_hint">搜寻系统魔法阵</string>
+    <string name="kpm_search_hint">搜寻内核法器</string>
+    <string name="su_search_hint">搜索应用</string>
     <string name="launcher_icon_style_anime">魔法少女</string>
     <string name="launcher_icon_style_geometry">几何魔法阵</string>
     <string name="launcher_icon_style_apatch">APatch</string>
@@ -265,7 +272,6 @@
     <string name="su_multi_select_confirm_grant">授予 ROOT 给 %d 个应用？</string>
     <string name="su_multi_select_confirm_revoke">撤销 %d 个应用的 ROOT 权限？</string>
     <string name="su_multi_select_confirm_exclude">排除 %d 个应用？</string>
-    <string name="su_multi_select_enter">多选</string>
 
     <string name="apm">星之魔法阵</string>
     <string name="apm_not_installed">星之守护尚未觉醒</string>
@@ -305,15 +311,6 @@
     <string name="setting_reset_su_path">重置魔法使路径</string>
     <string name="setting_reset_su_new_path">新完整魔法路径</string>
 
-    <string name="settings_folkx_engine_title">FolkX魔法动画引擎</string>
-    <string name="settings_folkx_engine_summary">在顶层魔法页面切换时使用流畅的物理弹簧动画</string>
-    <string name="settings_folkx_animation_type">魔法动画类型</string>
-    <string name="settings_folkx_animation_speed">异次元速度</string>
-    <string name="settings_folkx_animation_linear">魔法线性运动</string>
-    <string name="settings_folkx_animation_spatial">魔法空间运动</string>
-    <string name="settings_folkx_animation_fade">魔法渐隐渐显</string>
-    <string name="settings_folkx_animation_vertical">魔法垂直滑动</string>
-    <string name="settings_folkx_animation_diagonal">魔法对角滑动</string>
 
     <string name="apm_webui_open">开启</string>
     <string name="apm_action">魔法操作</string>
@@ -354,6 +351,24 @@
     <string name="settings_show_kpm_status_badge_summary">在心之结晶卡片上显示已融合/已激活状态徽章</string>
     <string name="settings_show_more_module_info">显示魔法阵详细信息</string>
     <string name="settings_show_more_module_info_summary">在魔法阵列表中显示魔法阵 ID 和大小</string>
+    <string name="module_sort">排序方式</string>
+    <string name="module_sort_priority">排序优先级</string>
+    <string name="module_sort_group_metamodule">元魔法阵</string>
+    <string name="module_sort_group_metamodule_summary">其他魔法阵所依附的魔法阵。</string>
+    <string name="module_sort_group_zygisk">Zygisk 魔法阵</string>
+    <string name="module_sort_group_zygisk_summary">提供或召唤 Zygisk 运行时。</string>
+    <string name="module_sort_group_lsposed">LSPosed 魔法阵</string>
+    <string name="module_sort_group_lsposed_summary">经由 Xposed 框架施法。</string>
+    <string name="module_sort_group_webui">带 WebUI 的魔法阵</string>
+    <string name="module_sort_group_webui_summary">自带独立星界面。</string>
+    <string name="module_sort_group_action">带操作的魔法阵</string>
+    <string name="module_sort_group_action_summary">可按需运行咒式。</string>
+    <string name="module_sort_enabled_first">已点亮优先</string>
+    <string name="module_sort_custom_order">自定义顺序</string>
+    <string name="module_sort_custom_order_summary">拖动魔法阵调整其现出顺序。</string>
+    <string name="module_sort_reset_custom_order">重置自定义顺序</string>
+    <string name="module_sort_reset_custom_order_summary">恢复为上方优先级顺序。</string>
+    <string name="module_sort_drag_to_reorder">拖动以重新排序</string>
     <string name="apm_install_confirm_title">安装魔法阵</string>
     <string name="apm_install_confirm_content">确定要契约%s魔法阵吗？</string>
     <string name="apm_disable_all_title">禁用所有魔法阵</string>
@@ -1335,10 +1350,6 @@ KernelPatch 魔法阵需要 boot 核心来施展。
     <string name="color_style_neutral">中立魔法</string>
     <string name="color_style_fidelity">保真魔法</string>
     <!-- Color Contrast -->
-    <string name="color_contrast_label">对比度魔法</string>
-    <string name="color_contrast_standard">标准魔法</string>
-    <string name="color_contrast_medium">中等魔法</string>
-    <string name="color_contrast_high">高魔法</string>
     <string name="settings_focus_card_background">FocusUI 卡片壁纸</string>
     <string name="settings_focus_card_background_enabled">FocusUI 卡片壁纸已开启，长按卡片管理壁纸</string>
     <string name="settings_focus_card_background_summary">启用 FocusUI 卡片壁纸及长按壁纸管理</string>
@@ -1366,8 +1377,6 @@ KernelPatch 魔法阵需要 boot 核心来施展。
     <string name="dashboard_card_background_saved">仪表盘壁纸保存成功</string>
     <string name="dashboard_card_background_error">仪表盘壁纸保存失败</string>
     <string name="dashboard_card_background_cleared">仪表盘壁纸已清除</string>
-    <string name="dashboard_card_background_restore">恢复默认壁纸</string>
-    <string name="dashboard_card_background_restored">已恢复默认壁纸</string>
     <string name="settings_dashboard_card_dual_dim">启用昼夜双暗度</string>
     <string name="settings_dashboard_card_dual_dim_desc">自动根据明暗主题调整仪表盘壁纸暗度</string>
     <string name="settings_dashboard_card_day_dim">白天模式仪表盘壁纸暗度</string>

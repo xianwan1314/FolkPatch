@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_layout_variant">레이아웃 변형</string>
+    <string name="settings_layout_variant_summary">접을 수 있는 인라인 검색이 있는 큰 M3E 상단 표시줄을 사용하거나 기존의 간결한 상단 표시줄을 유지합니다.</string>
+    <string name="settings_layout_variant_traditional">클래식</string>
+    <string name="settings_layout_variant_m3e">M3E</string>
+    <string name="apm_search_hint">시스템 모듈 검색</string>
+    <string name="kpm_search_hint">커널 모듈 검색</string>
+    <string name="su_search_hint">앱 검색</string>
     <string name="settings_launcher_icon">런처 아이콘</string>
     <string name="launcher_icon_style_anime">애니메</string>
     <string name="launcher_icon_style_geometry">지오메트리</string>
@@ -91,15 +98,6 @@
     <string name="settings_grid_working_card_hide_mode_summary">작업 카드에서 \'Full\' 또는 \'Half\' 텍스트를 숨깁니다.</string>
 
 
-    <string name="settings_folkx_engine_title">FolkX 애니메이션 엔진</string>
-    <string name="settings_folkx_engine_summary">최상위 페이지 전환 시 부드러운 물리 기반 스프링 애니메이션을 사용합니다.</string>
-    <string name="settings_folkx_animation_type">애니메이션 유형</string>
-    <string name="settings_folkx_animation_speed">애니메이션 속도</string>
-    <string name="settings_folkx_animation_linear">선형 이동</string>
-    <string name="settings_folkx_animation_spatial">공간 이동</string>
-    <string name="settings_folkx_animation_fade">페이드 인/아웃</string>
-    <string name="settings_folkx_animation_vertical">수직 슬라이드</string>
-    <string name="settings_folkx_animation_diagonal">대각선 슬라이드</string>
 
     <string name="su_exclude_all_title">모두 제외</string>
     <string name="su_exclude_all_confirm">Root 권한이 없는 모든 앱을 제외할까요?</string>
@@ -259,7 +257,6 @@
     <string name="su_multi_select_confirm_grant">%d개 앱에 ROOT 부여?</string>
     <string name="su_multi_select_confirm_revoke">%d개 앱에서 ROOT 취소?</string>
     <string name="su_multi_select_confirm_exclude">%d개 앱 제외?</string>
-    <string name="su_multi_select_enter">다중 선택</string>
     <string name="apm">시스템 모듈</string>
 
 
@@ -316,6 +313,24 @@
     <string name="settings_apm_install_confirm_summary">모듈을 설치하기 전에 확인 대화상자를 표시합니다.</string>
     <string name="settings_show_more_module_info">모듈 상세 정보 표시</string>
     <string name="settings_show_more_module_info_summary">모듈 목록에 모듈 ID와 크기를 표시합니다.</string>
+    <string name="module_sort">정렬 순서</string>
+    <string name="module_sort_priority">정렬 우선순위</string>
+    <string name="module_sort_group_metamodule">메타 모듈</string>
+    <string name="module_sort_group_metamodule_summary">다른 모듈이 연결되는 모듈입니다.</string>
+    <string name="module_sort_group_zygisk">Zygisk 모듈</string>
+    <string name="module_sort_group_zygisk_summary">Zygisk 런타임을 제공하거나 로드합니다.</string>
+    <string name="module_sort_group_lsposed">LSPosed 모듈</string>
+    <string name="module_sort_group_lsposed_summary">Xposed 프레임워크를 통해 후킹합니다.</string>
+    <string name="module_sort_group_webui">WebUI가 있는 모듈</string>
+    <string name="module_sort_group_webui_summary">자체 화면을 제공합니다.</string>
+    <string name="module_sort_group_action">액션이 있는 모듈</string>
+    <string name="module_sort_group_action_summary">요청 시 스크립트를 실행합니다.</string>
+    <string name="module_sort_enabled_first">활성화 우선</string>
+    <string name="module_sort_custom_order">사용자 지정 순서</string>
+    <string name="module_sort_custom_order_summary">모듈을 원하는 순서로 끌어다 놓으세요.</string>
+    <string name="module_sort_reset_custom_order">사용자 지정 순서 초기화</string>
+    <string name="module_sort_reset_custom_order_summary">우선순위 순서로 되돌립니다.</string>
+    <string name="module_sort_drag_to_reorder">끌어서 순서 변경</string>
     <string name="settings_apm_stay_on_page">작업 페이지에 머무르기</string>
     <string name="settings_apm_stay_on_page_summary">모듈 작업 실행 후 자동으로 돌아가지 않습니다.</string>
     <string name="settings_enable_module_shortcut_add">바로가기 추가 버튼 활성화</string>
@@ -1361,10 +1376,6 @@ KernelPatch는 boot 이미지를 패치해야 합니다.
     <string name="color_style_neutral">중립</string>
     <string name="color_style_fidelity">충실도</string>
     <!-- Color Contrast -->
-    <string name="color_contrast_label">대비</string>
-    <string name="color_contrast_standard">표준</string>
-    <string name="color_contrast_medium">중간</string>
-    <string name="color_contrast_high">높음</string>
     <string name="settings_focus_card_background">FocusUI 카드 배경</string>
     <string name="settings_focus_card_background_enabled">FocusUI 카드 배경 활성화됨; 카드를 길게 눌러 배경 관리</string>
     <string name="settings_focus_card_background_summary">FocusUI 카드 배경 및 길게 눌러 배경 관리 활성화</string>
@@ -1392,8 +1403,6 @@ KernelPatch는 boot 이미지를 패치해야 합니다.
     <string name="dashboard_card_background_saved">대시보드 배경 저장 성공</string>
     <string name="dashboard_card_background_error">대시보드 배경 저장 실패</string>
     <string name="dashboard_card_background_cleared">대시보드 배경 지워짐</string>
-    <string name="dashboard_card_background_restore">기본값 복원</string>
-    <string name="dashboard_card_background_restored">대시보드 배경 복원됨</string>
     <string name="settings_dashboard_card_dual_dim">주/야 이중 어두움 활성화</string>
     <string name="settings_dashboard_card_dual_dim_desc">밝은 테마와 어두운 테마에 따라 대시보드 배경 어두움 자동 조정</string>
     <string name="settings_dashboard_card_day_dim">주간 모드 대시보드 배경 어두움</string>

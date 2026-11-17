@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.settings
 
+import androidx.compose.material.icons.automirrored.outlined.Input
 import android.content.ActivityNotFoundException
 import android.net.Uri
 import me.bmax.apatch.util.ui.showToast
@@ -7,7 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
@@ -17,15 +18,14 @@ import me.bmax.apatch.R
 import me.bmax.apatch.ui.screen.settings.multimedia.MultimediaDialogs
 import me.bmax.apatch.ui.component.rememberConfirmDialog
 import me.bmax.apatch.ui.component.rememberLoadingDialog
-import me.bmax.apatch.ui.component.folk.FolkNavigationPreference
-import me.bmax.apatch.ui.component.folk.FolkSettingsGroup
-import me.bmax.apatch.ui.component.folk.FolkSettingsSection
-import me.bmax.apatch.ui.component.folk.FolkSliderPreference
-import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
-import me.bmax.apatch.ui.component.folk.FolkValuePreference
+import me.bmax.apatch.ui.component.SegmentedNavigationItem
+import me.bmax.apatch.ui.component.SegmentedColumn
+import me.bmax.apatch.ui.component.SegmentedSection
+import me.bmax.apatch.ui.component.SegmentedSliderItem
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
+import me.bmax.apatch.ui.component.SegmentedValueItem
 import me.bmax.apatch.ui.theme.SoundEffectConfig
 import me.bmax.apatch.ui.theme.VibrationConfig
-import androidx.compose.material.icons.outlined.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -146,12 +146,12 @@ fun MultimediaSoundSection(
     val showVibrationScopeDialogState = remember { mutableStateOf(false) }
 
 
-    FolkSettingsSection(title = stringResource(R.string.settings_section_multimedia_sound)) {
-        FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+    SegmentedSection(title = stringResource(R.string.settings_section_multimedia_sound)) {
+        SegmentedColumn(flat = flat, highlightKey = highlightKey) {
 
         // --- Sound Effect Toggle ---
         item(key = "multimedia_sound_effect") {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.SurroundSound,
                 title = soundEffectTitle,
                 summary = if (SoundEffectConfig.isSoundEffectEnabled) {
@@ -173,8 +173,8 @@ fun MultimediaSoundSection(
 
         // --- Sound Effect: Source Selector ---
         item(key = "multimedia_sound_effect_source", visible = SoundEffectConfig.isSoundEffectEnabled) {
-            FolkValuePreference(
-                icon = Icons.Outlined.Input,
+            SegmentedValueItem(
+                icon = Icons.AutoMirrored.Outlined.Input,
                 title = soundEffectSourceTitle,
                 summary = if (SoundEffectConfig.sourceType == SoundEffectConfig.SOURCE_TYPE_LOCAL) soundEffectSourceLocal else soundEffectSourcePreset,
                 onClick = { showSoundEffectSourceDialogState.value = true },
@@ -183,7 +183,7 @@ fun MultimediaSoundSection(
 
         // --- Sound Effect: Select Local File (local source) ---
         item(key = "multimedia_select_sound_effect", visible = SoundEffectConfig.isSoundEffectEnabled && SoundEffectConfig.sourceType == SoundEffectConfig.SOURCE_TYPE_LOCAL) {
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.AudioFile,
                 title = selectSoundEffectTitle,
                 summary = if (SoundEffectConfig.soundEffectFilename != null) soundEffectSelectedText else null,
@@ -199,7 +199,7 @@ fun MultimediaSoundSection(
 
         // --- Sound Effect: Clear Sound Effect (local source with file) ---
         item(key = "multimedia_clear_sound_effect", visible = SoundEffectConfig.isSoundEffectEnabled && SoundEffectConfig.sourceType == SoundEffectConfig.SOURCE_TYPE_LOCAL && SoundEffectConfig.soundEffectFilename != null) {
-            FolkNavigationPreference(
+            SegmentedNavigationItem(
                 icon = Icons.Outlined.Delete,
                 title = clearSoundEffectTitle,
                 onClick = {
@@ -213,7 +213,7 @@ fun MultimediaSoundSection(
 
         // --- Sound Effect: Preset Selector (preset source) ---
         item(key = "multimedia_sound_effect_preset", visible = SoundEffectConfig.isSoundEffectEnabled && SoundEffectConfig.sourceType == SoundEffectConfig.SOURCE_TYPE_PRESET) {
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.MusicNote,
                 title = soundEffectPresetTitle,
                 summary = SoundEffectConfig.presetName,
@@ -223,7 +223,7 @@ fun MultimediaSoundSection(
 
         // --- Sound Effect: Scope Selector ---
         item(key = "multimedia_sound_effect_scope", visible = SoundEffectConfig.isSoundEffectEnabled) {
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.Tune,
                 title = soundEffectScopeTitle,
                 summary = if (SoundEffectConfig.scope == SoundEffectConfig.SCOPE_GLOBAL)
@@ -236,7 +236,7 @@ fun MultimediaSoundSection(
 
         // --- Startup Sound Toggle ---
         item(key = "multimedia_startup_sound") {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.Alarm,
                 title = startupSoundTitle,
                 summary = if (SoundEffectConfig.isStartupSoundEnabled) {
@@ -258,8 +258,8 @@ fun MultimediaSoundSection(
 
         // --- Startup Sound: Source Selector ---
         item(key = "multimedia_startup_sound_source", visible = SoundEffectConfig.isStartupSoundEnabled) {
-            FolkValuePreference(
-                icon = Icons.Outlined.Input,
+            SegmentedValueItem(
+                icon = Icons.AutoMirrored.Outlined.Input,
                 title = startupSourceTitle,
                 summary = if (SoundEffectConfig.startupSourceType == SoundEffectConfig.SOURCE_TYPE_LOCAL) startupSourceLocal else startupSourcePreset,
                 onClick = { showStartupSourceDialogState.value = true },
@@ -268,7 +268,7 @@ fun MultimediaSoundSection(
 
         // --- Startup Sound: Select Local File (local source) ---
         item(key = "multimedia_select_startup_sound", visible = SoundEffectConfig.isStartupSoundEnabled && SoundEffectConfig.startupSourceType == SoundEffectConfig.SOURCE_TYPE_LOCAL) {
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.AudioFile,
                 title = selectStartupSoundTitle,
                 summary = if (SoundEffectConfig.startupSoundFilename != null) startupSoundSelectedText else null,
@@ -284,7 +284,7 @@ fun MultimediaSoundSection(
 
         // --- Startup Sound: Clear Startup Sound (local source with file) ---
         item(key = "multimedia_clear_startup_sound", visible = SoundEffectConfig.isStartupSoundEnabled && SoundEffectConfig.startupSourceType == SoundEffectConfig.SOURCE_TYPE_LOCAL && SoundEffectConfig.startupSoundFilename != null) {
-            FolkNavigationPreference(
+            SegmentedNavigationItem(
                 icon = Icons.Outlined.Delete,
                 title = clearStartupSoundTitle,
                 onClick = {
@@ -298,7 +298,7 @@ fun MultimediaSoundSection(
 
         // --- Startup Sound: Preset Selector (preset source) ---
         item(key = "multimedia_startup_sound_preset", visible = SoundEffectConfig.isStartupSoundEnabled && SoundEffectConfig.startupSourceType == SoundEffectConfig.SOURCE_TYPE_PRESET) {
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.MusicNote,
                 title = startupPresetTitle,
                 summary = SoundEffectConfig.startupPresetName,
@@ -308,7 +308,7 @@ fun MultimediaSoundSection(
 
         // --- Vibration Toggle ---
         item(key = "multimedia_vibration") {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.Vibration,
                 title = vibrationTitle,
                 summary = if (VibrationConfig.isVibrationEnabled) vibrationEnabledText else vibrationSummary,
@@ -322,7 +322,7 @@ fun MultimediaSoundSection(
 
         // --- Vibration: Scope Selector ---
         item(key = "multimedia_vibration_scope", visible = VibrationConfig.isVibrationEnabled) {
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.Tune,
                 title = vibrationScopeTitle,
                 summary = if (VibrationConfig.scope == VibrationConfig.SCOPE_GLOBAL)
@@ -335,7 +335,7 @@ fun MultimediaSoundSection(
 
         // --- Vibration: Intensity Slider ---
         item(key = "multimedia_vibration_intensity", visible = VibrationConfig.isVibrationEnabled) {
-            FolkSliderPreference(
+            SegmentedSliderItem(
                 title = vibrationIntensityTitle,
                 value = VibrationConfig.vibrationIntensity,
                 onValueChange = {

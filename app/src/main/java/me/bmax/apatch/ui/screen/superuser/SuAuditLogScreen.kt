@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.superuser
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,13 +19,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Article
-import androidx.compose.material.icons.filled.DeleteOutline
+import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -53,12 +52,14 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.folk.FolkScaffold
 import me.bmax.apatch.ui.component.folk.FolkLogEmptyState
 import me.bmax.apatch.ui.component.folk.folkLogTextStyle
 import me.bmax.apatch.ui.component.folk.FolkTitleStyle
+import me.bmax.apatch.ui.component.folk.folkInsetColor
+import me.bmax.apatch.ui.component.SegmentedChoiceRow
 import me.bmax.apatch.ui.component.splicedLazyColumnGroup
 import me.bmax.apatch.util.SuAuditLog
 import java.text.SimpleDateFormat
@@ -67,7 +68,7 @@ import java.util.Locale
 import me.bmax.apatch.ui.theme.tokens.FolkShape
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Destination<RootGraph>
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 @Composable
 fun SuAuditLogScreen(navigator: DestinationsNavigator) {
     val context = LocalContext.current
@@ -110,12 +111,12 @@ fun SuAuditLogScreen(navigator: DestinationsNavigator) {
 
     FolkScaffold(
         title = stringResource(R.string.su_audit_log_title),
-        titleStyle = FolkTitleStyle.Inline,
+        titleStyle = FolkTitleStyle.Flexible,
         onBack = { navigator.popBackStack() },
         actions = {
             if (kernelEntries.isNotEmpty() || appEntries.isNotEmpty()) {
                 IconButton(onClick = { showClearDialog = true }) {
-                    Icon(Icons.Filled.DeleteOutline, contentDescription = stringResource(R.string.su_audit_log_clear))
+                    Icon(Icons.Outlined.DeleteOutline, contentDescription = stringResource(R.string.su_audit_log_clear))
                 }
             }
         },
@@ -125,17 +126,18 @@ fun SuAuditLogScreen(navigator: DestinationsNavigator) {
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            TabRow(selectedTabIndex = selectedTab) {
-                tabs.forEachIndexed { index, title ->
-                    Tab(
-                        selected = selectedTab == index,
-                        onClick = { selectedTab = index },
-                        text = { Text(title, style = MaterialTheme.typography.bodyMedium) },
-                    )
-                }
-            }
+            SegmentedChoiceRow(
+                items = tabs,
+                selectedIndex = selectedTab,
+                onItemSelection = { selectedTab = it },
+                modifier = Modifier.padding(vertical = FolkDimens.Size8),
+            )
 
-            Crossfade(targetState = selectedTab, label = "auditTab") { tab ->
+            Crossfade(
+                targetState = selectedTab,
+                modifier = Modifier.weight(1f),
+                label = "auditTab",
+            ) { tab ->
                 when (tab) {
                     0 -> KernelAuditList(entries = kernelEntries)
                     1 -> AppAuditList(entries = appEntries)
@@ -152,7 +154,7 @@ private fun KernelAuditList(entries: List<SuAuditLog.AuditEntry.KernelEntry>) {
     } else {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(top = 8.dp, bottom = 16.dp),
+            contentPadding = PaddingValues(top = FolkDimens.Size8, bottom = FolkDimens.Size16),
         ) {
             splicedLazyColumnGroup(
                 items = entries,
@@ -176,7 +178,7 @@ private fun KernelAuditList(entries: List<SuAuditLog.AuditEntry.KernelEntry>) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                        .padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size12),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     // Icon
@@ -195,14 +197,14 @@ private fun KernelAuditList(entries: List<SuAuditLog.AuditEntry.KernelEntry>) {
                             model = ImageRequest.Builder(LocalContext.current).data(appInfo)
                                 .crossfade(true).build(),
                             contentDescription = null,
-                            modifier = Modifier.size(40.dp).clip(CircleShape),
+                            modifier = Modifier.size(FolkDimens.Size40).clip(CircleShape),
                         )
                     } else {
                         Box(
                             modifier = Modifier
-                                .size(40.dp)
+                                .size(FolkDimens.Size40)
                                 .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.surfaceContainerHigh),
+                                .background(folkInsetColor()),
                             contentAlignment = Alignment.Center,
                         ) {
                             Text(
@@ -213,7 +215,7 @@ private fun KernelAuditList(entries: List<SuAuditLog.AuditEntry.KernelEntry>) {
                         }
                     }
 
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(FolkDimens.Size16))
 
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
@@ -246,7 +248,7 @@ private fun AppAuditList(entries: List<SuAuditLog.AuditEntry.AppEntry>) {
     } else {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(top = 8.dp, bottom = 16.dp),
+            contentPadding = PaddingValues(top = FolkDimens.Size8, bottom = FolkDimens.Size16),
         ) {
             splicedLazyColumnGroup(
                 items = entries,
@@ -275,7 +277,7 @@ private fun AppAuditList(entries: List<SuAuditLog.AuditEntry.AppEntry>) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                        .padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size12),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     // Icon
@@ -291,14 +293,14 @@ private fun AppAuditList(entries: List<SuAuditLog.AuditEntry.AppEntry>) {
                             model = ImageRequest.Builder(LocalContext.current).data(appInfo)
                                 .crossfade(true).build(),
                             contentDescription = null,
-                            modifier = Modifier.size(40.dp).clip(CircleShape),
+                            modifier = Modifier.size(FolkDimens.Size40).clip(CircleShape),
                         )
                     } else {
                         Box(
                             modifier = Modifier
-                                .size(40.dp)
+                                .size(FolkDimens.Size40)
                                 .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.surfaceContainerHigh),
+                                .background(folkInsetColor()),
                             contentAlignment = Alignment.Center,
                         ) {
                             Text(
@@ -309,7 +311,7 @@ private fun AppAuditList(entries: List<SuAuditLog.AuditEntry.AppEntry>) {
                         }
                     }
 
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(FolkDimens.Size16))
 
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
@@ -349,23 +351,23 @@ private fun SuAuditClearDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = onDismiss,
-        width = 320.dp,
+        width = FolkDimens.Size320,
         shape = FolkShape.Corner20,
         blurBehind = false,
     ) {
-        Column(modifier = Modifier.padding(24.dp)) {
+        Column(modifier = Modifier.padding(FolkDimens.Size24)) {
             Text(
                 text = stringResource(R.string.su_audit_log_clear),
                 style = MaterialTheme.typography.headlineSmall,
             )
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(FolkDimens.Size16))
             Text(
                 text = stringResource(R.string.su_audit_log_clear_confirm),
                 style = MaterialTheme.typography.bodyMedium,
             )
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(FolkDimens.Size24))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,

@@ -1,5 +1,7 @@
 package me.bmax.apatch.ui.screen.superuser
 
+import me.bmax.apatch.ui.theme.tokens.FolkColors
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -14,7 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -31,7 +33,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import me.bmax.apatch.ui.component.folk.FolkChevron
+import me.bmax.apatch.ui.component.SegmentedChevron
+import me.bmax.apatch.ui.component.folk.navOrigin
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -41,7 +44,7 @@ import me.bmax.apatch.APApplication
 import me.bmax.apatch.Natives
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.ExpressiveSwitch
-import me.bmax.apatch.ui.component.SwitchItem
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
 import me.bmax.apatch.ui.viewmodel.SuperUserViewModel
 import me.bmax.apatch.util.PkgConfig
 import me.bmax.apatch.util.SuAuditLog
@@ -63,16 +66,17 @@ fun AppItemM3E(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .navOrigin(cornerRadius = FolkDimens.Size20)
             .background(
                 if (isSelected && selectionMode) 
                     MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.12f)
-                else Color.Transparent
+                else FolkColors.Transparent
             )
             .combinedClickable(
                 onClick = onClick,
                 onLongClick = onLongClick,
             )
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size12),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         AsyncImage(
@@ -82,14 +86,14 @@ fun AppItemM3E(
                 .build(),
             contentDescription = app.label,
             modifier = Modifier
-                .size(48.dp)
+                .size(FolkDimens.Size48)
                 .clip(CircleShape),
         )
 
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = FolkDimens.Size16),
         ) {
             Text(
                 text = app.label,
@@ -102,7 +106,7 @@ fun AppItemM3E(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            FlowRow(modifier = Modifier.padding(top = 4.dp)) {
+            FlowRow(modifier = Modifier.padding(top = FolkDimens.Size4)) {
                 if (rootGranted) {
                     LabelText(label = "ROOT", containerColor = MaterialTheme.colorScheme.primaryContainer)
                 }
@@ -121,7 +125,7 @@ fun AppItemM3E(
                 onCheckedChange = { onToggleSelection?.invoke() },
             )
         } else {
-            FolkChevron()
+            SegmentedChevron()
         }
     }
 }
@@ -147,7 +151,7 @@ fun AppItemLegacy(
             .background(
                 if (isSelected && selectionMode)
                     MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.12f)
-                else Color.Transparent
+                else FolkColors.Transparent
             )
             .combinedClickable(
                 onClick = {
@@ -167,7 +171,7 @@ fun AppItemLegacy(
                     }
                 }
             ),
-        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+        colors = ListItemDefaults.colors(containerColor = FolkColors.Transparent),
         headlineContent = { Text(app.label) },
         leadingContent = {
             AsyncImage(
@@ -175,9 +179,9 @@ fun AppItemLegacy(
                     .crossfade(true).build(),
                 contentDescription = app.label,
                 modifier = Modifier
-                    .padding(4.dp)
-                    .width(48.dp)
-                    .height(48.dp)
+                    .padding(FolkDimens.Size4)
+                    .width(FolkDimens.Size48)
+                    .height(FolkDimens.Size48)
             )
         },
         supportingContent = {
@@ -239,8 +243,8 @@ fun AppItemLegacy(
         visible = showEditProfile && !rootGranted,
         modifier = Modifier.fillMaxWidth()
     ) {
-        SwitchItem(
-            icon = Icons.Filled.Security,
+        SegmentedSwitchItem(
+            icon = Icons.Outlined.Security,
             title = stringResource(id = R.string.su_pkg_excluded_setting_title),
             summary = stringResource(id = R.string.su_pkg_excluded_setting_summary),
             checked = excludeApp == 1,

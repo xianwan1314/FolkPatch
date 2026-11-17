@@ -1,11 +1,14 @@
 package me.bmax.apatch.ui.screen.settings.appearance
 
+import androidx.compose.material.icons.automirrored.outlined.LabelOff
+import androidx.compose.material.icons.automirrored.outlined.ViewList
 import android.content.ActivityNotFoundException
 import android.net.Uri
 import me.bmax.apatch.util.ui.showToast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.edit
@@ -19,12 +22,15 @@ import me.bmax.apatch.ui.theme.BackgroundManager
 import me.bmax.apatch.ui.theme.refreshTheme
 import me.bmax.apatch.ui.screen.settings.appearance.homeLayoutStyleToString
 import me.bmax.apatch.util.PermissionUtils
-import me.bmax.apatch.ui.component.folk.FolkSettingsSectionGroup
-import me.bmax.apatch.ui.component.folk.FolkSliderPreference
-import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
-import me.bmax.apatch.ui.component.folk.FolkValuePreference
+import me.bmax.apatch.ui.component.SegmentedColumn
+import me.bmax.apatch.ui.component.SegmentedSliderItem
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
+import me.bmax.apatch.ui.component.SegmentedValueItem
+import me.bmax.apatch.ui.component.SegmentedSelectableItem
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
+import me.bmax.apatch.ui.LayoutVariant
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -63,6 +69,21 @@ fun AppearanceLayoutSection(
     val prefs = APApplication.sharedPreferences
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    var layoutVariant by remember {
+        mutableStateOf(LayoutVariant.fromValue(prefs.getString("layout_variant", LayoutVariant.M3E)))
+    }
+
+    DisposableEffect(prefs) {
+        val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { preferences, key ->
+            if (key == "layout_variant") {
+                layoutVariant = LayoutVariant.fromValue(
+                    preferences.getString("layout_variant", LayoutVariant.M3E)
+                )
+            }
+        }
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        onDispose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
+    }
 
         val pickTitleImageLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
@@ -82,9 +103,52 @@ fun AppearanceLayoutSection(
         }
     }
 
-    FolkSettingsSectionGroup(title = stringResource(R.string.settings_appearance_layout), flat = flat, highlightKey = highlightKey) {
+    SegmentedColumn(title = stringResource(R.string.settings_appearance_layout), flat = flat, highlightKey = highlightKey) {
+        item(key = "appearance_layout_variant") {
+            var showDialog by remember { mutableStateOf(false) }
+            SegmentedValueItem(
+                icon = Icons.Outlined.ViewAgenda,
+                title = stringResource(R.string.settings_layout_variant),
+                summary = stringResource(
+                    if (layoutVariant == LayoutVariant.TRADITIONAL) {
+                        R.string.settings_layout_variant_traditional
+                    } else {
+                        R.string.settings_layout_variant_m3e
+                    }
+                ),
+                onClick = { showDialog = true },
+            )
+            if (showDialog) {
+                ExpressiveDialog(onDismissRequest = { showDialog = false }) {
+                    Column(Modifier.padding(FolkDimens.Size24)) {
+                        Text(
+                            text = stringResource(R.string.settings_layout_variant),
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier.padding(bottom = FolkDimens.Size16),
+                        )
+                        LayoutVariant.supported.forEach { variant ->
+                            SegmentedSelectableItem(
+                                title = stringResource(
+                                    if (variant == LayoutVariant.TRADITIONAL) {
+                                        R.string.settings_layout_variant_traditional
+                                    } else {
+                                        R.string.settings_layout_variant_m3e
+                                    }
+                                ),
+                                selected = layoutVariant == variant,
+                                onClick = {
+                                    prefs.edit().putString("layout_variant", variant).apply()
+                                    showDialog = false
+                                },
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
         item(key = "appearance_home_layout") {
-            FolkValuePreference(
+            SegmentedValueItem(
             icon = Icons.Outlined.Dashboard,
             title = stringResource(id = R.string.settings_home_layout_style),
             summary = stringResource(homeLayoutStyleToString(currentStyle.toString())),
@@ -93,7 +157,7 @@ fun AppearanceLayoutSection(
         }
 
         item(key = "appearance_stats_top_layout", visible = isStatsLayout) {
-            FolkValuePreference(
+            SegmentedValueItem(
             icon = Icons.Outlined.GridView,
             title = stringResource(id = R.string.settings_stats_top_layout),
             summary = statsTopLayoutValue,
@@ -130,8 +194,8 @@ fun AppearanceLayoutSection(
         )
 
         item(key = "appearance_list_card_badge", visible = isListStyle) {
-            FolkSwitchPreference(
-                icon = Icons.Outlined.LabelOff,
+            SegmentedSwitchItem(
+                icon = Icons.AutoMirrored.Outlined.LabelOff,
                 title = stringResource(id = R.string.settings_list_card_hide_status_badge),
                 summary = stringResource(id = R.string.settings_list_card_hide_status_badge_summary),
                 checked = BackgroundConfig.isListWorkingCardModeHidden,
@@ -143,7 +207,7 @@ fun AppearanceLayoutSection(
         }
 
         item(key = "appearance_custom_badge_text_list", visible = isListStyle && !BackgroundConfig.isListWorkingCardModeHidden) {
-            FolkValuePreference(
+            SegmentedValueItem(
             icon = Icons.Outlined.Badge,
             title = stringResource(id = R.string.settings_custom_badge_text),
             summary = currentBadgeTextMode,
@@ -153,8 +217,8 @@ fun AppearanceLayoutSection(
 
         item(key = "appearance_list_info_icons", visible = isDefaultStyle) {
             var showListInfoIcons by remember { mutableStateOf(prefs.getBoolean("list_info_show_icons", false)) }
-            FolkSwitchPreference(
-                icon = Icons.Outlined.ViewList,
+            SegmentedSwitchItem(
+                icon = Icons.AutoMirrored.Outlined.ViewList,
                 title = stringResource(id = R.string.settings_list_info_show_icons),
                 summary = stringResource(id = R.string.settings_list_info_show_icons_summary),
                 checked = showListInfoIcons,
@@ -167,7 +231,7 @@ fun AppearanceLayoutSection(
         }
 
         item(key = "appearance_advanced_title") {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.Title,
                 title = stringResource(id = R.string.settings_advanced_title_style),
                 summary = if (BackgroundConfig.isAdvancedTitleStyleEnabled) stringResource(id = R.string.settings_advanced_title_style_enabled) else stringResource(id = R.string.settings_advanced_title_style_summary),
@@ -182,7 +246,7 @@ fun AppearanceLayoutSection(
 
         if (BackgroundConfig.isAdvancedTitleStyleEnabled) {
             item(key = "appearance_title_day_opacity") {
-                FolkSliderPreference(
+                SegmentedSliderItem(
                     title = stringResource(id = R.string.settings_title_image_day_opacity),
                     value = BackgroundConfig.titleImageDayOpacity,
                     onValueChange = { BackgroundConfig.setTitleImageDayOpacityValue(it) },
@@ -191,7 +255,7 @@ fun AppearanceLayoutSection(
             }
 
             item(key = "appearance_title_night_opacity") {
-                FolkSliderPreference(
+                SegmentedSliderItem(
                     title = stringResource(id = R.string.settings_title_image_night_opacity),
                     value = BackgroundConfig.titleImageNightOpacity,
                     onValueChange = { BackgroundConfig.setTitleImageNightOpacityValue(it) },
@@ -200,7 +264,7 @@ fun AppearanceLayoutSection(
             }
 
             item(key = "appearance_title_image_dim") {
-                FolkSliderPreference(
+                SegmentedSliderItem(
                     title = stringResource(id = R.string.settings_title_image_dim),
                     value = BackgroundConfig.titleImageDim,
                     onValueChange = { BackgroundConfig.setTitleImageDimValue(it) },
@@ -209,7 +273,7 @@ fun AppearanceLayoutSection(
             }
 
             item(key = "appearance_title_image_offset_x") {
-                FolkSliderPreference(
+                SegmentedSliderItem(
                     title = stringResource(id = R.string.settings_title_image_offset_x),
                     value = BackgroundConfig.titleImageOffsetX,
                     valueRange = -1f..1f,
@@ -219,7 +283,7 @@ fun AppearanceLayoutSection(
             }
 
             item(key = "appearance_select_title_image") {
-                FolkValuePreference(
+                SegmentedValueItem(
             icon = Icons.Outlined.Image,
             title = stringResource(id = R.string.settings_select_title_image),
             summary = if (!BackgroundConfig.titleImageUri.isNullOrEmpty()) stringResource(id = R.string.settings_title_image_selected) else null,
@@ -249,7 +313,7 @@ fun AppearanceLayoutSection(
                             }
                         }
                     )
-                    FolkValuePreference(
+                    SegmentedValueItem(
             icon = Icons.Outlined.Delete,
             title = stringResource(id = R.string.settings_clear_title_image),
             onClick = {                                clearTitleImageDialog.showConfirm(

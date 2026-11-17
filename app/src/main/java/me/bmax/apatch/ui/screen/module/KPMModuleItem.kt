@@ -1,4 +1,6 @@
 package me.bmax.apatch.ui.screen.module
+
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import me.bmax.apatch.ui.screen.misc.BannerApiService
 
 import android.net.Uri
@@ -56,19 +58,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import me.bmax.apatch.R
+import me.bmax.apatch.ui.component.ExpressiveSwitch
 import me.bmax.apatch.ui.component.folk.folkPressScale
+import me.bmax.apatch.ui.component.folk.navOrigin
 import me.bmax.apatch.ui.component.ModuleLabel
 import me.bmax.apatch.ui.component.rememberLoadingDialog
 import me.bmax.apatch.ui.viewmodel.KPModel
 import me.bmax.apatch.ui.viewmodel.KPModuleViewModel
 import me.bmax.apatch.ui.theme.BackgroundConfig
+import me.bmax.apatch.ui.theme.tokens.LocalFolkWallpaperTokens
+import me.bmax.apatch.ui.theme.tokens.WallpaperSurfaceRole
 import me.bmax.apatch.ui.theme.bannerFadeColor
-import androidx.compose.material3.*
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import me.bmax.apatch.util.kpmBannerStorage
 import me.bmax.apatch.util.CustomModuleInfo
 import me.bmax.apatch.util.kpmCustomModuleInfoStorage
@@ -147,8 +148,9 @@ fun KPModuleItem(
         1f
     }
     
-    val cardColor = if (isWallpaperMode) {
-        MaterialTheme.colorScheme.surface.copy(alpha = opacity)
+    val wallpaper = LocalFolkWallpaperTokens.current
+    val cardColor = if (wallpaper != null) {
+        wallpaper.material(WallpaperSurfaceRole.Group, minimumAlpha = 0.35f).fill
     } else {
         MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.2f)
     }
@@ -222,6 +224,11 @@ fun KPModuleItem(
     val clickModifier = Modifier
         .fillMaxWidth()
         .animateContentSize(animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec())
+        .navOrigin(
+            cornerRadius = FolkDimens.Size20,
+            color = cardColor,
+            interactionSource = cardInteractionSource,
+        )
         .folkPressScale(cardInteractionSource)
         .combinedClickable(
             interactionSource = cardInteractionSource,
@@ -277,7 +284,7 @@ fun KPModuleItem(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(FolkDimens.Size16)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -287,8 +294,8 @@ fun KPModuleItem(
                         val hasAnyLabel = showMoreModuleInfo || isEmbedded != null
                         if (hasAnyLabel) {
                             Row(
-                                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                modifier = Modifier.padding(bottom = 8.dp)
+                                horizontalArrangement = Arrangement.spacedBy(FolkDimens.Size6),
+                                modifier = Modifier.padding(bottom = FolkDimens.Size8)
                             ) {
                                  if (showMoreModuleInfo) {
                                      ModuleLabel(
@@ -350,13 +357,13 @@ fun KPModuleItem(
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 textDecoration = decoration,
-                                modifier = Modifier.padding(top = 2.dp)
+                                modifier = Modifier.padding(top = FolkDimens.Size2)
                             )
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(FolkDimens.Size12))
 
                 Text(
                     text = customInfo?.description?.takeIf { it.isNotBlank() } ?: module.description,
@@ -366,7 +373,7 @@ fun KPModuleItem(
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(FolkDimens.Size16))
 
                 AnimatedVisibility(
                     visible = !foldSystemModule || expanded,
@@ -377,24 +384,24 @@ fun KPModuleItem(
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(if (simpleListBottomBar) 12.dp else 8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(if (simpleListBottomBar) FolkDimens.Size12 else FolkDimens.Size8)
                     ) {
                         FilledTonalButton(
                             onClick = { onControl(module) },
                             enabled = true,
-                            contentPadding = if (simpleListBottomBar) PaddingValues(12.dp) else PaddingValues(horizontal = 12.dp),
-                            modifier = if (simpleListBottomBar) Modifier else Modifier.height(36.dp),
+                            contentPadding = if (simpleListBottomBar) PaddingValues(FolkDimens.Size12) else PaddingValues(horizontal = FolkDimens.Size12),
+                            modifier = if (simpleListBottomBar) Modifier else Modifier.height(FolkDimens.Size36),
                             colors = ButtonDefaults.filledTonalButtonColors(
                                 containerColor = MaterialTheme.colorScheme.secondaryContainer
                             )
                         ) {
                             Icon(
-                                modifier = Modifier.size(20.dp),
+                                modifier = Modifier.size(FolkDimens.Size20),
                                 painter = painterResource(id = R.drawable.settings),
                                 contentDescription = stringResource(id = R.string.kpm_control)
                             )
                             if (!simpleListBottomBar) {
-                                Spacer(modifier = Modifier.width(8.dp))
+                                Spacer(modifier = Modifier.width(FolkDimens.Size8))
                                 Text(stringResource(id = R.string.kpm_control))
                             }
                         }
@@ -402,15 +409,15 @@ fun KPModuleItem(
                         Spacer(modifier = Modifier.weight(1f))
 
                         if (module.installed && module.loadSource != "embedded") {
-                            Switch(checked = !module.disabled, onCheckedChange = onToggle)
-                            Spacer(modifier = Modifier.width(8.dp))
+                            ExpressiveSwitch(checked = !module.disabled, onCheckedChange = onToggle)
+                            Spacer(modifier = Modifier.width(FolkDimens.Size8))
                         }
 
                         FilledTonalButton(
                             onClick = { onUninstall(module) },
                             enabled = true,
-                            contentPadding = if (simpleListBottomBar) PaddingValues(12.dp) else PaddingValues(horizontal = 12.dp),
-                            modifier = if (simpleListBottomBar) Modifier else Modifier.height(36.dp),
+                            contentPadding = if (simpleListBottomBar) PaddingValues(FolkDimens.Size12) else PaddingValues(horizontal = FolkDimens.Size12),
+                            modifier = if (simpleListBottomBar) Modifier else Modifier.height(FolkDimens.Size36),
                             colors = if (simpleListBottomBar) ButtonDefaults.filledTonalButtonColors(
                                 containerColor = MaterialTheme.colorScheme.secondaryContainer
                             ) else ButtonDefaults.filledTonalButtonColors(
@@ -419,12 +426,12 @@ fun KPModuleItem(
                             )
                         ) {
                             Icon(
-                                modifier = Modifier.size(20.dp),
+                                modifier = Modifier.size(FolkDimens.Size20),
                                 painter = painterResource(id = R.drawable.trash),
                                 contentDescription = stringResource(id = R.string.kpm_unload)
                             )
                             if (!simpleListBottomBar) {
-                                Spacer(modifier = Modifier.width(8.dp))
+                                Spacer(modifier = Modifier.width(FolkDimens.Size8))
                                 Text(stringResource(id = R.string.kpm_unload))
                             }
                         }
@@ -446,7 +453,7 @@ fun KPModuleItem(
                 .then(clickModifier),
             shape = cardShape,
             color = cardColor,
-            tonalElevation = 0.dp
+            tonalElevation = FolkDimens.Size0
         ) {
             contentBlock()
         }

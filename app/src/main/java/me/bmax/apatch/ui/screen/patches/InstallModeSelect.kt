@@ -1,5 +1,7 @@
 package me.bmax.apatch.ui.screen.patches
 
+import me.bmax.apatch.ui.theme.tokens.FolkColors
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -25,12 +27,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoFixHigh
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.FileUpload
+import androidx.compose.material.icons.outlined.AutoFixHigh
+import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -61,10 +64,10 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.folk.FolkButtonDefaults
 import me.bmax.apatch.ui.component.folk.FolkScaffold
 import me.bmax.apatch.ui.component.folk.FolkTitleStyle
-import me.bmax.apatch.ui.component.SplicedColumnGroup
+import me.bmax.apatch.ui.component.folk.folkGroupColor
+import me.bmax.apatch.ui.component.SegmentedColumn
 import me.bmax.apatch.ui.component.rememberConfirmDialog
 import me.bmax.apatch.ui.viewmodel.PatchesViewModel
 import me.bmax.apatch.util.getFileNameFromUri
@@ -78,7 +81,7 @@ import me.bmax.apatch.ui.component.folk.folkPressScale
 var selectedBootImage: Uri? = null
 var selectedKPImg: Uri? = null
 
-@Destination<RootGraph>
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 @Composable
 fun InstallModeSelectScreen(navigator: DestinationsNavigator) {
     var installMethod by remember {
@@ -87,7 +90,7 @@ fun InstallModeSelectScreen(navigator: DestinationsNavigator) {
 
     FolkScaffold(
         title = stringResource(R.string.mode_select_page_title),
-        titleStyle = FolkTitleStyle.Inline,
+        titleStyle = FolkTitleStyle.Flexible,
         onBack = dropUnlessResumed { navigator.popBackStack() },
     ) { padding ->
         Column(
@@ -335,8 +338,8 @@ private fun SelectInstallMethod(
                 text = stringResource(R.string.jailbreak_no_patch),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .widthIn(max = 720.dp)
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                    .widthIn(max = FolkDimens.Size720)
+                    .padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size4),
             )
         }
         if (!rootAvailable) {
@@ -344,26 +347,26 @@ private fun SelectInstallMethod(
                 text = stringResource(R.string.home_install_unknown_summary),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .widthIn(max = 720.dp)
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                    .widthIn(max = FolkDimens.Size720)
+                    .padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size4),
             )
         }
         Column(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .widthIn(max = 720.dp)
+                .widthIn(max = FolkDimens.Size720)
                 .verticalScroll(rememberScrollState())
-                .padding(vertical = 8.dp)
+                .padding(vertical = FolkDimens.Size8)
         ) {
-            SplicedColumnGroup {
+            SegmentedColumn {
                 // KernelPatch Patching/Installing
                 if (!jailbreakBlocked) item(key = "kp_install") {
                     ListItem(
-                        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                        colors = ListItemDefaults.colors(containerColor = FolkColors.Transparent),
                         leadingContent = {
                             Icon(
-                                Icons.Filled.AutoFixHigh,
+                                Icons.Outlined.AutoFixHigh,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary
                             )
@@ -376,7 +379,7 @@ private fun SelectInstallMethod(
                         },
                         trailingContent = {
                             Icon(
-                                imageVector = if (kpExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                                imageVector = if (kpExpanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
                                 contentDescription = null
                             )
                         },
@@ -390,9 +393,9 @@ private fun SelectInstallMethod(
                     ) {
                         Column(
                             modifier = Modifier.padding(
-                                start = 12.dp,
-                                end = 12.dp,
-                                bottom = 12.dp
+                                start = FolkDimens.Size12,
+                                end = FolkDimens.Size12,
+                                bottom = FolkDimens.Size12
                             )
                         ) {
                             kpOptions.forEach { option ->
@@ -410,10 +413,10 @@ private fun SelectInstallMethod(
                 // TODO(TEMPORARY): re-enable the restore entry when jailbreak mode is exited.
                 if (!jailbreakBlocked) item(key = "restore") {
                     ListItem(
-                        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                        colors = ListItemDefaults.colors(containerColor = FolkColors.Transparent),
                         leadingContent = {
                             Icon(
-                                Icons.Filled.FileUpload,
+                                Icons.Outlined.FileUpload,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary
                             )
@@ -426,7 +429,7 @@ private fun SelectInstallMethod(
                         },
                         trailingContent = {
                             Icon(
-                                imageVector = if (restoreExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                                imageVector = if (restoreExpanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
                                 contentDescription = null
                             )
                         },
@@ -440,9 +443,9 @@ private fun SelectInstallMethod(
                     ) {
                         Column(
                             modifier = Modifier.padding(
-                                start = 12.dp,
-                                end = 12.dp,
-                                bottom = 12.dp
+                                start = FolkDimens.Size12,
+                                end = FolkDimens.Size12,
+                                bottom = FolkDimens.Size12
                             )
                         ) {
                             restoreOptions.forEach { option ->
@@ -461,12 +464,12 @@ private fun SelectInstallMethod(
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .widthIn(max = 720.dp)
-                .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 16.dp),
+                .widthIn(max = FolkDimens.Size720)
+                .padding(start = FolkDimens.Size16, end = FolkDimens.Size16, top = FolkDimens.Size12, bottom = FolkDimens.Size16),
             enabled = selectedOption != null,
             onClick = { onNext() },
             shape = MaterialTheme.shapes.large,
-            colors = FolkButtonDefaults.filledColors(),
+            colors = ButtonDefaults.buttonColors(),
         ) {
             Text(
                 stringResource(id = R.string.home_patch_next_step),
@@ -483,15 +486,15 @@ private fun InstallStatusItem(
 ) {
     Surface(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        color = folkGroupColor(),
         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
         shape = MaterialTheme.shapes.large,
     ) {
         ListItem(
             modifier = Modifier
-                .defaultMinSize(minHeight = 80.dp)
-                .padding(vertical = 6.dp),
-            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                .defaultMinSize(minHeight = FolkDimens.Size80)
+                .padding(vertical = FolkDimens.Size6),
+            colors = ListItemDefaults.colors(containerColor = FolkColors.Transparent),
             leadingContent = {
                 Icon(
                     imageVector = Icons.Outlined.Info,
@@ -519,12 +522,12 @@ fun InstallMethodOption(
     val haptics = LocalHapticFeedback.current
     val isSelected = option.javaClass == selectedOption?.javaClass
     Surface(
-        color = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
+        color = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else FolkColors.Transparent,
         contentColor = if (isSelected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurface,
         shape = MaterialTheme.shapes.large,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(vertical = FolkDimens.Size4)
             .clip(MaterialTheme.shapes.large)
     ) {
         Row(
@@ -542,7 +545,7 @@ fun InstallMethodOption(
                     indication = null,
                     interactionSource = interactionSource
                 )
-                .padding(vertical = 8.dp, horizontal = 12.dp)
+                .padding(vertical = FolkDimens.Size8, horizontal = FolkDimens.Size12)
         ) {
             RadioButton(
                 selected = isSelected,
@@ -555,7 +558,7 @@ fun InstallMethodOption(
             )
             Column(
                 modifier = Modifier
-                    .padding(start = 10.dp)
+                    .padding(start = FolkDimens.Size10)
                     .weight(1f)
             ) {
                 Text(

@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.settings.appearance
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import android.content.ActivityNotFoundException
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -13,8 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Wallpaper
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,11 +36,11 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.DualBackgroundSettings
-import me.bmax.apatch.ui.component.ExpressiveCard
+import me.bmax.apatch.ui.component.TonalCard
 import me.bmax.apatch.ui.component.LoadingDialogHandle
 import me.bmax.apatch.ui.component.rememberConfirmDialog
-import me.bmax.apatch.ui.component.folk.FolkSettingsSectionGroup
-import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
+import me.bmax.apatch.ui.component.SegmentedColumn
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
 import me.bmax.apatch.ui.theme.BackgroundConfig
 import me.bmax.apatch.ui.theme.BackgroundManager
 import me.bmax.apatch.util.PermissionUtils
@@ -77,13 +78,13 @@ fun AppearanceFocusCardSection(
         }
     }
 
-    FolkSettingsSectionGroup(
+    SegmentedColumn(
         title = stringResource(R.string.focus_card_background_title),
         flat = flat,
         highlightKey = highlightKey,
     ) {
         item(key = "appearance_focus_card_background_enabled") {
-            FolkSwitchPreference(
+            SegmentedSwitchItem(
                 icon = Icons.Outlined.Wallpaper,
                 title = stringResource(R.string.settings_focus_card_background),
                 summary = if (BackgroundConfig.isFocusCardBackgroundEnabled) {
@@ -158,7 +159,7 @@ fun AppearanceFocusCardSection(
                         }
                     }
                 )
-                ExpressiveCard(
+                TonalCard(
                     flat = flat,
                     // 点击卡片主体：调起系统图片选择器，保存到对应卡片
                     onClick = {
@@ -175,11 +176,11 @@ fun AppearanceFocusCardSection(
                     }
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        modifier = Modifier.fillMaxWidth().padding(FolkDimens.Size16),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Icon(imageVector = Icons.Filled.Image, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
-                        Spacer(Modifier.width(16.dp))
+                        Icon(imageVector = Icons.Outlined.Image, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(FolkDimens.Size24))
+                        Spacer(Modifier.width(FolkDimens.Size16))
                         Column(modifier = Modifier.weight(1f)) {
                             Text(text = stringResource(id = nameRes), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
                             Text(
@@ -191,13 +192,13 @@ fun AppearanceFocusCardSection(
                         // 右侧叉叉清除按钮：仅在已设置壁纸时显示，点击弹出确认对话框
                         // （嵌套clickable会消费点击事件，不会触发卡片的选图onClick）
                         if (hasWallpaper) {
-                            Spacer(Modifier.width(8.dp))
+                            Spacer(Modifier.width(FolkDimens.Size8))
                             Icon(
-                                imageVector = Icons.Filled.Close,
+                                imageVector = Icons.Outlined.Close,
                                 contentDescription = stringResource(id = R.string.focus_card_background_clear),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier
-                                    .size(24.dp)
+                                    .size(FolkDimens.Size24)
                                     .clickable {
                                         clearFocusBgDialog.showConfirm(
                                             title = context.getString(R.string.focus_card_background_clear),

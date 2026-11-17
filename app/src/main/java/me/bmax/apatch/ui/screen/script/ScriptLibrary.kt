@@ -1,12 +1,14 @@
 package me.bmax.apatch.ui.screen.script
 
+import me.bmax.apatch.ui.component.folk.navOrigin
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import android.content.SharedPreferences
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Storefront
 import androidx.compose.material3.*
@@ -33,7 +35,6 @@ import me.bmax.apatch.data.ScriptInfo
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import me.bmax.apatch.ui.component.FilePickerDialog
-import me.bmax.apatch.ui.component.folk.FolkButtonDefaults
 import me.bmax.apatch.ui.component.folk.FolkScaffold
 import me.bmax.apatch.ui.component.folk.FolkTitleStyle
 import me.bmax.apatch.ui.component.TwoColumnGrid
@@ -46,7 +47,7 @@ import me.bmax.apatch.ui.component.folk.FolkStateView
 import androidx.compose.material.icons.outlined.Code
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Destination<RootGraph>
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 @Composable
 fun ScriptLibraryScreen(navigator: DestinationsNavigator) {
     val viewModel = viewModel<ScriptLibraryViewModel>()
@@ -103,16 +104,21 @@ fun ScriptLibraryScreen(navigator: DestinationsNavigator) {
         onBack = { navigator.navigateUp() },
         actions = {
             IconButton(onClick = { showAddDialog = true }) {
-                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.script_library_add))
+                Icon(Icons.Outlined.Add, contentDescription = stringResource(R.string.script_library_add))
             }
-            IconButton(onClick = { navigator.navigate(OnlineScriptScreenDestination) }) {
+            IconButton(
+                onClick = { navigator.navigate(OnlineScriptScreenDestination) },
+                modifier = Modifier.navOrigin(captureBitmap = true),
+            ) {
                 Icon(Icons.Outlined.Storefront, contentDescription = stringResource(R.string.online_script_title))
             }
         },
     ) { innerPadding ->
         val pullToRefreshState = rememberPullToRefreshState()
         PullToRefreshBox(
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
             onRefresh = { viewModel.loadScripts() },
             isRefreshing = isLoading,
             state = pullToRefreshState,
@@ -130,9 +136,9 @@ fun ScriptLibraryScreen(navigator: DestinationsNavigator) {
                         modifier = Modifier.fillMaxSize(),
                         items = scripts,
                         key = { it.id },
-                        verticalSpacing = 16.dp,
-                        horizontalSpacing = 16.dp,
-                        contentPadding = PaddingValues(16.dp),
+                        verticalSpacing = FolkDimens.Size16,
+                        horizontalSpacing = FolkDimens.Size16,
+                        contentPadding = PaddingValues(FolkDimens.Size16),
                     ) { script ->
                         ScriptItem(
                             script = script,
@@ -179,7 +185,7 @@ fun ScriptLibraryScreen(navigator: DestinationsNavigator) {
                 } else {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(top = 24.dp, bottom = 16.dp)
+                        contentPadding = PaddingValues(top = FolkDimens.Size24, bottom = FolkDimens.Size16)
                     ) {
                         if (splicedCardGroup) {
                             splicedLazyColumnGroup(
@@ -221,7 +227,7 @@ fun ScriptLibraryScreen(navigator: DestinationsNavigator) {
                             }
                         } else {
                             items(scripts, key = { it.id }) { script ->
-                                Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                                Box(modifier = Modifier.padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size8)) {
                                     ScriptItem(
                                         script = script,
                                         enableShortcut = enableModuleShortcutAdd,
@@ -329,13 +335,13 @@ private fun AddScriptDialog(
                     onClick = { showFilePicker = true },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(Icons.Default.FolderOpen, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(Icons.Outlined.FolderOpen, contentDescription = null)
+                    Spacer(modifier = Modifier.width(FolkDimens.Size8))
                     Text(stringResource(R.string.script_library_select_file))
                 }
 
                 if (selectedFile != null) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(FolkDimens.Size8))
                     Text(
                         text = selectedFile?.absolutePath ?: "",
                         style = MaterialTheme.typography.bodySmall,
@@ -343,7 +349,7 @@ private fun AddScriptDialog(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(FolkDimens.Size16))
 
                 OutlinedTextField(
                     value = scriptAlias,
@@ -361,7 +367,7 @@ private fun AddScriptDialog(
                     selectedFile?.let { onConfirm(it, scriptAlias) }
                 },
                 enabled = selectedFile != null,
-                colors = FolkButtonDefaults.filledColors()
+                colors = ButtonDefaults.buttonColors()
             ) {
                 Text(stringResource(android.R.string.ok))
             }

@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.patches
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
@@ -19,7 +20,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -51,7 +52,8 @@ import me.bmax.apatch.APApplication
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.folk.FolkScaffold
 import me.bmax.apatch.ui.component.folk.FolkTitleStyle
-import me.bmax.apatch.ui.component.ExpressiveCard
+import me.bmax.apatch.ui.component.folk.folkInsetColor
+import me.bmax.apatch.ui.component.TonalCard
 import me.bmax.apatch.ui.component.WarningCard
 import me.bmax.apatch.ui.theme.tokens.FolkMotion
 import me.bmax.apatch.ui.viewmodel.PatchesViewModel
@@ -60,7 +62,7 @@ import me.bmax.apatch.util.reboot
 
 private const val TAG = "Patches"
 
-@Destination<RootGraph>
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 @Composable
 fun Patches(mode: PatchesViewModel.PatchMode) {
     var jailbreakBlocked by remember { mutableStateOf(false) }
@@ -71,12 +73,12 @@ fun Patches(mode: PatchesViewModel.PatchMode) {
     if (jailbreakBlocked) {
         FolkScaffold(
             title = stringResource(R.string.patch_config_title),
-            titleStyle = FolkTitleStyle.Inline,
+            titleStyle = FolkTitleStyle.Flexible,
         ) { innerPadding ->
             Box(
                 modifier = Modifier
                     .padding(innerPadding)
-                    .padding(12.dp)
+                    .padding(FolkDimens.Size12)
             ) {
                 WarningCard(
                     message = stringResource(R.string.jailbreak_no_patch),
@@ -102,7 +104,7 @@ fun Patches(mode: PatchesViewModel.PatchMode) {
 
     FolkScaffold(
         title = stringResource(R.string.patch_config_title),
-        titleStyle = FolkTitleStyle.Inline,
+        titleStyle = FolkTitleStyle.Flexible,
         floatingActionButton = {
         if (viewModel.needReboot) {
             val reboot = stringResource(id = R.string.reboot)
@@ -114,7 +116,7 @@ fun Patches(mode: PatchesViewModel.PatchMode) {
                         }
                     }
                 },
-                icon = { Icon(Icons.Filled.Refresh, reboot) },
+                icon = { Icon(Icons.Outlined.Refresh, reboot) },
                 text = { Text(text = reboot) },
                 containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 1f),
                 contentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 1f),
@@ -131,10 +133,10 @@ fun Patches(mode: PatchesViewModel.PatchMode) {
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
-                    .widthIn(max = 720.dp)
+                    .widthIn(max = FolkDimens.Size720)
                     .verticalScroll(scrollState)
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                    .padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size8),
+                verticalArrangement = Arrangement.spacedBy(FolkDimens.Size12)
             ) {
                 val context = LocalContext.current
 
@@ -245,17 +247,17 @@ fun Patches(mode: PatchesViewModel.PatchMode) {
                 // patch log
                 if (viewModel.patching || viewModel.patchdone) {
                     Surface(
-                        color = MaterialTheme.colorScheme.surfaceContainerLow,
+                        color = folkInsetColor(),
                         shape = MaterialTheme.shapes.large,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(min = 160.dp, max = 360.dp)
+                            .heightIn(min = FolkDimens.Size160, max = FolkDimens.Size360)
                     ) {
                         SelectionContainer {
                             Text(
                                 modifier = Modifier
                                     .verticalScroll(logScrollState)
-                                    .padding(16.dp),
+                                    .padding(FolkDimens.Size16),
                                 text = viewModel.patchLog,
                                 fontSize = MaterialTheme.typography.bodySmall.fontSize,
                                 fontFamily = FontFamily.Monospace,
@@ -276,13 +278,13 @@ fun Patches(mode: PatchesViewModel.PatchMode) {
                 if (viewModel.running) {
                     CircularProgressIndicator(
                         modifier = Modifier
-                            .padding(16.dp)
-                            .size(32.dp)
+                            .padding(FolkDimens.Size16)
+                            .size(FolkDimens.Size32)
                             .align(Alignment.CenterHorizontally)
                     )
                 }
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(FolkDimens.Size4))
             }
 
             val keyReady = mode == PatchesViewModel.PatchMode.UNPATCH ||
@@ -302,8 +304,8 @@ fun Patches(mode: PatchesViewModel.PatchMode) {
                     text = actionText,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .widthIn(max = 720.dp)
-                        .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 16.dp)
+                        .widthIn(max = FolkDimens.Size720)
+                        .padding(start = FolkDimens.Size16, end = FolkDimens.Size16, top = FolkDimens.Size12, bottom = FolkDimens.Size16)
                 ) {
                     if (mode == PatchesViewModel.PatchMode.UNPATCH) {
                         viewModel.doUnpatch()
@@ -319,11 +321,11 @@ fun Patches(mode: PatchesViewModel.PatchMode) {
 
 @Composable
 private fun PatchMode(mode: PatchesViewModel.PatchMode) {
-    ExpressiveCard(flat = true) {
+    TonalCard(flat = true) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(FolkDimens.Size12),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = stringResource(id = mode.sId), style = MaterialTheme.typography.bodyLarge)

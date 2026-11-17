@@ -1,21 +1,20 @@
 package me.bmax.apatch.ui.screen.settings
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Archive
-import androidx.compose.material.icons.filled.Dock
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Sort
-import androidx.compose.material.icons.filled.Update
-import androidx.compose.material.icons.filled.ViewAgenda
+import androidx.compose.material.icons.outlined.Archive
+import androidx.compose.material.icons.outlined.Dock
+import androidx.compose.material.icons.outlined.Download
+import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Update
+import androidx.compose.material.icons.outlined.ViewAgenda
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.folk.FolkSettingsGroup
-import me.bmax.apatch.ui.component.folk.FolkSettingsSection
-import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
+import me.bmax.apatch.ui.component.SegmentedColumn
+import me.bmax.apatch.ui.component.SegmentedSection
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
 import androidx.compose.material.icons.outlined.*
 
 @Composable
@@ -31,9 +30,6 @@ fun ModuleSettingsContent(
 
     val moreInfoTitle = stringResource(id = R.string.settings_show_more_module_info)
     val moreInfoSummary = stringResource(id = R.string.settings_show_more_module_info_summary)
-
-    val moduleSortOptimizationTitle = stringResource(id = R.string.settings_module_sort_optimization)
-    val moduleSortOptimizationSummary = stringResource(id = R.string.settings_module_sort_optimization_summary)
 
     val foldSystemModuleTitle = stringResource(id = R.string.settings_fold_system_module)
     val foldSystemModuleSummary = stringResource(id = R.string.settings_fold_system_module_summary)
@@ -52,17 +48,16 @@ fun ModuleSettingsContent(
 
     var disableModuleUpdateCheck by remember { mutableStateOf(prefs.getBoolean("disable_module_update_check", false)) }
     var showMoreModuleInfo by remember { mutableStateOf(prefs.getBoolean("show_more_module_info", true)) }
-    var moduleSortOptimization by remember { mutableStateOf(prefs.getBoolean("module_sort_optimization", true)) }
     var foldSystemModule by remember { mutableStateOf(prefs.getBoolean("fold_system_module", true)) }
     var apmBatchInstallFullProcess by remember { mutableStateOf(prefs.getBoolean("apm_batch_install_full_process", false)) }
     var simpleListBottomBar by remember { mutableStateOf(prefs.getBoolean("simple_list_bottom_bar", false)) }
     var splicedCardGroup by remember { mutableStateOf(prefs.getBoolean("spliced_card_group", true)) }
     var showKpmStatusBadge by remember { mutableStateOf(prefs.getBoolean("show_kpm_status_badge", true)) }
 
-    FolkSettingsSection(title = stringResource(R.string.settings_section_module_display)) {
-        FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+    SegmentedSection(title = stringResource(R.string.settings_section_module_display)) {
+        SegmentedColumn(flat = flat, highlightKey = highlightKey) {
             item(key = "module_more_info") {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.Info,
                     title = moreInfoTitle,
                     summary = moreInfoSummary,
@@ -74,21 +69,8 @@ fun ModuleSettingsContent(
                 )
             }
 
-            item(key = "module_sort_opt") {
-                FolkSwitchPreference(
-                    icon = Icons.Outlined.Sort,
-                    title = moduleSortOptimizationTitle,
-                    summary = moduleSortOptimizationSummary,
-                    checked = moduleSortOptimization,
-                    onCheckedChange = {
-                        moduleSortOptimization = it
-                        prefs.edit().putBoolean("module_sort_optimization", it).apply()
-                    },
-                )
-            }
-
             item(key = "module_fold_system") {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.Folder,
                     title = foldSystemModuleTitle,
                     summary = foldSystemModuleSummary,
@@ -101,7 +83,7 @@ fun ModuleSettingsContent(
             }
 
             item(key = "module_kpm_status_badge") {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.Archive,
                     title = showKpmStatusBadgeTitle,
                     summary = showKpmStatusBadgeSummary,
@@ -115,10 +97,10 @@ fun ModuleSettingsContent(
         }
     }
 
-    FolkSettingsSection(title = stringResource(R.string.settings_section_module_update)) {
-        FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+    SegmentedSection(title = stringResource(R.string.settings_section_module_update)) {
+        SegmentedColumn(flat = flat, highlightKey = highlightKey) {
             item(key = "module_disable_update") {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.Update,
                     title = disableModuleUpdateCheckTitle,
                     summary = disableModuleUpdateCheckSummary,
@@ -131,7 +113,7 @@ fun ModuleSettingsContent(
             }
 
             item(key = "module_batch_install") {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.Download,
                     title = apmBatchInstallFullProcessTitle,
                     summary = apmBatchInstallFullProcessSummary,
@@ -145,10 +127,10 @@ fun ModuleSettingsContent(
         }
     }
 
-    FolkSettingsSection(title = stringResource(R.string.settings_section_general_interface)) {
-        FolkSettingsGroup(flat = flat, highlightKey = highlightKey) {
+    SegmentedSection(title = stringResource(R.string.settings_section_general_interface)) {
+        SegmentedColumn(flat = flat, highlightKey = highlightKey) {
             item(key = "module_simple_list") {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.Dock,
                     title = simpleListBottomBarTitle,
                     summary = simpleListBottomBarSummary,
@@ -161,7 +143,7 @@ fun ModuleSettingsContent(
             }
 
             item(key = "module_spliced_card") {
-                FolkSwitchPreference(
+                SegmentedSwitchItem(
                     icon = Icons.Outlined.ViewAgenda,
                     title = splicedCardGroupTitle,
                     summary = splicedCardGroupSummary,

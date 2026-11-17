@@ -1,5 +1,7 @@
 package me.bmax.apatch.ui.screen.home
 
+import me.bmax.apatch.ui.theme.tokens.FolkColors
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import android.os.Build
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
@@ -16,16 +18,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.RadioButtonChecked
-import androidx.compose.material.icons.filled.RadioButtonUnchecked
+import androidx.compose.material.icons.outlined.RadioButtonChecked
+import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DeleteForever
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.CardDefaults
-import me.bmax.apatch.ui.theme.BackgroundConfig
-import androidx.compose.material3.Card
-import androidx.compose.material3.surfaceColorAtElevation
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -62,14 +61,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.folk.FolkButtonDefaults
+import me.bmax.apatch.ui.component.TonalCard
 import me.bmax.apatch.ui.component.folk.FolkScaffold
 import me.bmax.apatch.ui.component.WelcomeGuideDialog
 import me.bmax.apatch.ui.viewmodel.PatchesViewModel
 import me.bmax.apatch.util.migrateStockBootBackup
 import me.bmax.apatch.util.ui.APDialogBlurBehindUtils
 import me.bmax.apatch.util.ui.HomeBottomSpacer
-import me.bmax.apatch.ui.theme.tokens.FolkShape
 
 private enum class ApatchUninstallOption(
     @param:StringRes val titleRes: Int,
@@ -88,7 +86,7 @@ private enum class ApatchUninstallOption(
     ),
 }
 
-@Destination<RootGraph>(start = true)
+@Destination<RootGraph>(start = true, wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 @Composable
 fun HomeScreen(navigator: DestinationsNavigator) {
     var showPatchFloatAction by remember { mutableStateOf(true) }
@@ -175,11 +173,11 @@ fun HomeScreenV1(
     Column(
         modifier = Modifier
             .padding(innerPadding)
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = FolkDimens.Size16)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(FolkDimens.Size16)
     ) {
-        Spacer(Modifier.height(0.dp))
+        Spacer(Modifier.height(FolkDimens.Size0))
         KStatusCard(kpState, apState, navigator)
         if (kpState != APApplication.State.UNKNOWN_STATE && apState != APApplication.State.UNKNOWN_STATE && apState != APApplication.State.ANDROIDPATCH_INSTALLED) {
             AStatusCard(apState)
@@ -216,15 +214,15 @@ fun UninstallDialog(showDialog: MutableState<Boolean>, navigator: DestinationsNa
             },
             text = {
                 Column(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.padding(vertical = FolkDimens.Size8),
+                    verticalArrangement = Arrangement.spacedBy(FolkDimens.Size16),
                 ) {
                     options.forEach { option ->
                         val isSelected = selectedOption == option
                         val backgroundColor = if (isSelected) {
                             MaterialTheme.colorScheme.primaryContainer
                         } else {
-                            Color.Transparent
+                            FolkColors.Transparent
                         }
                         val subtitleColor = if (isSelected) {
                             MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
@@ -238,7 +236,7 @@ fun UninstallDialog(showDialog: MutableState<Boolean>, navigator: DestinationsNa
                                 .clip(MaterialTheme.shapes.medium)
                                 .background(backgroundColor)
                                 .clickable { selectedOption = option }
-                                .padding(vertical = 12.dp, horizontal = 8.dp),
+                                .padding(vertical = FolkDimens.Size12, horizontal = FolkDimens.Size8),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
@@ -246,8 +244,8 @@ fun UninstallDialog(showDialog: MutableState<Boolean>, navigator: DestinationsNa
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier
-                                    .padding(end = 16.dp)
-                                    .size(24.dp)
+                                    .padding(end = FolkDimens.Size16)
+                                    .size(FolkDimens.Size24)
                             )
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
@@ -262,9 +260,9 @@ fun UninstallDialog(showDialog: MutableState<Boolean>, navigator: DestinationsNa
                             }
                             Icon(
                                 imageVector = if (isSelected) {
-                                    Icons.Filled.RadioButtonChecked
+                                    Icons.Outlined.RadioButtonChecked
                                 } else {
-                                    Icons.Filled.RadioButtonUnchecked
+                                    Icons.Outlined.RadioButtonUnchecked
                                 },
                                 contentDescription = null,
                                 tint = if (isSelected) {
@@ -272,7 +270,7 @@ fun UninstallDialog(showDialog: MutableState<Boolean>, navigator: DestinationsNa
                                 } else {
                                     MaterialTheme.colorScheme.onSurfaceVariant
                                 },
-                                modifier = Modifier.size(24.dp)
+                                modifier = Modifier.size(FolkDimens.Size24)
                             )
                         }
                     }
@@ -302,7 +300,7 @@ fun UninstallDialog(showDialog: MutableState<Boolean>, navigator: DestinationsNa
                         }
                     },
                     enabled = selectedOption != null,
-                    colors = FolkButtonDefaults.filledColors()
+                    colors = ButtonDefaults.buttonColors()
                 ) {
                     Text(text = stringResource(android.R.string.ok))
                 }
@@ -313,7 +311,7 @@ fun UninstallDialog(showDialog: MutableState<Boolean>, navigator: DestinationsNa
                 }
             },
             shape = MaterialTheme.shapes.extraLarge,
-            tonalElevation = 4.dp,
+            tonalElevation = FolkDimens.Size4,
         )
     }
 }
@@ -338,27 +336,20 @@ fun getDeviceInfo(): String {
 fun LearnMoreCard() {
     val uriHandler = LocalUriHandler.current
 
-    Card(
-        shape = FolkShape.Corner20,
-        colors = CardDefaults.cardColors(containerColor = if (BackgroundConfig.isCustomBackgroundEnabled) {
-            MaterialTheme.colorScheme.surface
-        } else {
-            MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
-        })
-    ) {
+    TonalCard(flat = true) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
                     uriHandler.openUri("https://fp.mysqil.com/")
                 }
-                .padding(24.dp), verticalAlignment = Alignment.CenterVertically) {
+                .padding(FolkDimens.Size24), verticalAlignment = Alignment.CenterVertically) {
             Column {
                 Text(
                     text = stringResource(R.string.home_learn_apatch),
                     style = MaterialTheme.typography.titleSmall
                 )
-                Spacer(Modifier.height(4.dp))
+                Spacer(Modifier.height(FolkDimens.Size4))
                 Text(
                     text = stringResource(R.string.home_click_to_learn_apatch),
                     style = MaterialTheme.typography.bodyMedium

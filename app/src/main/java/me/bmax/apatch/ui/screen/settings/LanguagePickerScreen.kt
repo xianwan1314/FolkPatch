@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.settings
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,8 +17,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Translate
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,12 +43,13 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.folk.FolkScaffold
 import me.bmax.apatch.ui.component.folk.FolkTitleStyle
+import me.bmax.apatch.ui.component.folk.folkInsetColor
 import me.bmax.apatch.ui.component.splicedLazyColumnGroup
 import me.bmax.apatch.ui.theme.BackgroundConfig
 import me.bmax.apatch.util.ui.NavigationBarsSpacer
 import java.util.Locale
 
-@Destination<RootGraph>
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LanguagePickerScreen(navigator: DestinationsNavigator) {
@@ -64,14 +67,16 @@ fun LanguagePickerScreen(navigator: DestinationsNavigator) {
 
     FolkScaffold(
         title = stringResource(R.string.settings_app_language),
-        titleStyle = FolkTitleStyle.Inline,
+        titleStyle = FolkTitleStyle.Flexible,
         onBack = { navigator.popBackStack() },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.padding(paddingValues),
-            verticalArrangement = Arrangement.spacedBy(0.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.spacedBy(FolkDimens.Size0),
         ) {
-            item { Spacer(Modifier.height(12.dp)) }
+            item { Spacer(Modifier.height(FolkDimens.Size12)) }
 
             splicedLazyColumnGroup(
                 items = languageList,
@@ -100,27 +105,27 @@ fun LanguagePickerScreen(navigator: DestinationsNavigator) {
                                 )
                             }
                         }
-                        .padding(horizontal = 16.dp, vertical = 16.dp),
+                        .padding(horizontal = FolkDimens.Size16, vertical = FolkDimens.Size16),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (index == 0) {
                         Icon(
-                            imageVector = Icons.Filled.Translate,
+                            imageVector = Icons.Outlined.Translate,
                             contentDescription = null,
                             tint = if (isSelected) {
                                 MaterialTheme.colorScheme.primary
                             } else {
                                 MaterialTheme.colorScheme.onSurfaceVariant
                             },
-                            modifier = Modifier.size(24.dp),
+                            modifier = Modifier.size(FolkDimens.Size24),
                         )
                     } else {
                         Box(
                             modifier = Modifier
-                                .size(32.dp)
+                                .size(FolkDimens.Size32)
                                 .background(
                                     color = if (isSelected) MaterialTheme.colorScheme.primary
-                                    else MaterialTheme.colorScheme.surfaceContainerHigh,
+                                    else folkInsetColor(),
                                     shape = CircleShape,
                                 ),
                             contentAlignment = Alignment.Center,
@@ -134,7 +139,7 @@ fun LanguagePickerScreen(navigator: DestinationsNavigator) {
                             )
                         }
                     }
-                    Spacer(Modifier.width(16.dp))
+                    Spacer(Modifier.width(FolkDimens.Size16))
                     Text(
                         text = item,
                         style = MaterialTheme.typography.bodyLarge,
@@ -144,7 +149,7 @@ fun LanguagePickerScreen(navigator: DestinationsNavigator) {
                     )
                     if (isSelected) {
                         Icon(
-                            imageVector = Icons.Filled.Check,
+                            imageVector = Icons.Outlined.Check,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary,
                         )
@@ -152,7 +157,7 @@ fun LanguagePickerScreen(navigator: DestinationsNavigator) {
                 }
             }
 
-            item { Spacer(Modifier.height(16.dp)) }
+            item { Spacer(Modifier.height(FolkDimens.Size16)) }
             item { NavigationBarsSpacer() }
         }
     }

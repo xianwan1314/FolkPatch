@@ -6,22 +6,26 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -43,10 +47,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
 import me.bmax.apatch.ui.component.folk.folkDefaultAppBarColors
+import me.bmax.apatch.ui.component.folk.TopBarBackButton
 import me.bmax.apatch.core.ui.R
 import androidx.compose.ui.res.stringResource
 import me.bmax.apatch.ui.theme.tokens.FolkShape
+import me.bmax.apatch.ui.theme.tokens.FolkTheme
+import me.bmax.apatch.ui.theme.tokens.LocalFolkWallpaperTokens
 
 private const val TAG = "SearchBar"
 
@@ -56,14 +64,58 @@ fun SearchAppBar(
     title: @Composable () -> Unit,
     searchText: String,
     onSearchTextChange: (String) -> Unit,
-    onClearClick: () -> Unit,
+    onClearClick: () -> Unit = {},
+    searchPlaceholder: String = "",
+    actions: @Composable RowScope.() -> Unit = {},
     onBackClick: (() -> Unit)? = null,
     onConfirm: (() -> Unit)? = null,
     dropdownContent: @Composable (() -> Unit)? = null,
     leadingActions: @Composable (() -> Unit)? = null,
     trailingActions: @Composable (() -> Unit)? = null,
     startInSearchMode: Boolean = false,
+    navigationIcon: (@Composable () -> Unit)? = null,
+    snackbarHostState: SnackbarHostState? = null,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+    largeTitle: Boolean = false,
+    topSearch: Boolean = false,
+    collapsibleSearch: Boolean = false,
+    defaultContent: (@Composable BoxScope.(bottomPadding: Dp, closeSearch: () -> Unit) -> Unit)? = null,
+    searchContent: (@Composable BoxScope.(bottomPadding: Dp, closeSearch: () -> Unit) -> Unit)? = null,
 ) {
+    if (defaultContent != null || searchContent != null || largeTitle || topSearch ||
+        collapsibleSearch || scrollBehavior != null
+    ) {
+        AdaptiveSearchAppBar(
+            title = title,
+            searchText = searchText,
+            onSearchTextChange = onSearchTextChange,
+            onClearClick = onClearClick,
+            searchPlaceholder = searchPlaceholder,
+            actions = {
+                leadingActions?.invoke()
+                actions()
+                dropdownContent?.invoke()
+                trailingActions?.invoke()
+            },
+            navigationIcon = navigationIcon ?: onBackClick?.let { backClick ->
+                {
+                    TopBarBackButton(
+                        onClick = backClick,
+                        contentDescription = stringResource(R.string.core_action_back),
+                    )
+                }
+            },
+            snackbarHostState = snackbarHostState,
+            scrollBehavior = scrollBehavior,
+            largeTitle = largeTitle,
+            topSearch = topSearch || (!largeTitle && (defaultContent != null || searchContent != null)),
+            collapsibleSearch = collapsibleSearch,
+            defaultContent = defaultContent ?: { _, _ -> },
+            searchContent = searchContent ?: { _, _ -> },
+        )
+        return
+    }
+
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
     var onSearch by rememberSaveable { mutableStateOf(startInSearchMode) }
@@ -114,9 +166,11 @@ fun SearchAppBar(
                     enter = fadeIn(MaterialTheme.motionScheme.defaultEffectsSpec()),
                     exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec())
                 ) {
+                    val wallpaper = LocalFolkWallpaperTokens.current
+                    val searchFill = wallpaper?.raisedOverChrome() ?: FolkTheme.palette.groupedInset
                     val searchFieldColors = TextFieldDefaults.colors(
-                        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        focusedContainerColor = searchFill,
+                        unfocusedContainerColor = searchFill,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                     )
@@ -141,7 +195,7 @@ fun SearchAppBar(
                         shape = FolkShape.CornerFull,
                         colors = searchFieldColors,
                         leadingIcon = {
-                            Icon(Icons.Filled.Search, contentDescription = null)
+                            Icon(Icons.Outlined.Search, contentDescription = null)
                         },
                         placeholder = { Text(stringResource(R.string.core_action_search)) },
                         trailingIcon = {
@@ -151,7 +205,7 @@ fun SearchAppBar(
                                     keyboardController?.hide()
                                     onClearClick()
                                 },
-                                content = { Icon(Icons.Filled.Close, stringResource(R.string.core_action_clear)) }
+                                content = { Icon(Icons.Outlined.Close, stringResource(R.string.core_action_clear)) }
                             )
                         },
                         maxLines = 1,
@@ -171,9 +225,9 @@ fun SearchAppBar(
         },
         navigationIcon = {
             if (onBackClick != null) {
-                IconButton(
+                TopBarBackButton(
                     onClick = onBackClick,
-                    content = { Icon(Icons.AutoMirrored.Outlined.ArrowBack, stringResource(R.string.core_action_back)) }
+                    contentDescription = stringResource(R.string.core_action_back),
                 )
             }
         },
@@ -187,7 +241,7 @@ fun SearchAppBar(
                     leadingActions?.invoke()
                     IconButton(
                         onClick = { onSearch = true },
-                        content = { Icon(Icons.Filled.Search, stringResource(R.string.core_action_search)) }
+                        content = { Icon(Icons.Outlined.Search, stringResource(R.string.core_action_search)) }
                     )
                 }
             }

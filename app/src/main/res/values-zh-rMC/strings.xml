@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_layout_variant">布局变体</string>
+    <string name="settings_layout_variant_summary">在系统模块、超级用户和内核模块页面用 Material 3 Expressive 大标题与可折叠的行内搜索栏，或沿用紧凑顶栏。</string>
+    <string name="settings_layout_variant_traditional">传统</string>
+    <string name="settings_layout_variant_m3e">M3E</string>
+    <string name="apm_search_hint">搜索系统模组</string>
+    <string name="kpm_search_hint">搜索内核模组</string>
+    <string name="su_search_hint">搜索应用</string>
     <string name="settings_launcher_icon">桌面图标</string>
     <string name="launcher_icon_style_anime">动漫</string>
     <string name="launcher_icon_style_geometry">几何</string>
@@ -95,15 +102,6 @@
     <string name="settings_grid_working_card_hide_mode">藏起游戏模式</string>
     <string name="settings_grid_working_card_hide_mode_summary">把合成台面板上的模式标识藏起来</string>
 
-    <string name="settings_folkx_engine_title">FolkX 物理引擎</string>
-    <string name="settings_folkx_engine_summary">在切换维度页面时使用丝滑的物理弹簧动画</string>
-    <string name="settings_folkx_animation_type">动画类型</string>
-    <string name="settings_folkx_animation_speed">动画速度（TPS）</string>
-    <string name="settings_folkx_animation_linear">线性弹道</string>
-    <string name="settings_folkx_animation_spatial">空间弹道</string>
-    <string name="settings_folkx_animation_fade">渐隐渐显</string>
-    <string name="settings_folkx_animation_vertical">Y轴滑动</string>
-    <string name="settings_folkx_animation_diagonal">对角弹道</string>
 
     <string name="about_source_code"><![CDATA[<p>在 %1$s 查看源代码<p/>加入我们的 %2$s 频道<p/>加入我们的 %3$s 服务器群组]]></string>
     <string name="send_log">发送崩溃报告</string>
@@ -261,7 +259,6 @@
     <string name="su_multi_select_confirm_grant">授予 ROOT 给 %d 个应用？</string>
     <string name="su_multi_select_confirm_revoke">撤销 %d 个应用的 ROOT 权限？</string>
     <string name="su_multi_select_confirm_exclude">排除 %d 个应用？</string>
-    <string name="su_multi_select_enter">多选</string>
 
     <string name="apm">模组</string>
     <string name="apm_not_installed">红石系统还没装呢</string>
@@ -323,6 +320,24 @@
     <string name="settings_apm_install_confirm_summary">往背包里塞模组之前弹个确认框</string>
     <string name="settings_show_more_module_info">显示模组详细信息</string>
     <string name="settings_show_more_module_info_summary">在模组列表里显示模组ID和占用的箱子空间</string>
+    <string name="module_sort">排序方式</string>
+    <string name="module_sort_priority">排序优先级</string>
+    <string name="module_sort_group_metamodule">元模组</string>
+    <string name="module_sort_group_metamodule_summary">其他模组所依附的模组。</string>
+    <string name="module_sort_group_zygisk">Zygisk 模组</string>
+    <string name="module_sort_group_zygisk_summary">提供或加载 Zygisk 运行时。</string>
+    <string name="module_sort_group_lsposed">LSPosed 模组</string>
+    <string name="module_sort_group_lsposed_summary">通过 Xposed 框架挂载。</string>
+    <string name="module_sort_group_webui">带 Web UI 的模组</string>
+    <string name="module_sort_group_webui_summary">自带独立界面。</string>
+    <string name="module_sort_group_action">带操作的模组</string>
+    <string name="module_sort_group_action_summary">可按需运行脚本。</string>
+    <string name="module_sort_enabled_first">已启用优先</string>
+    <string name="module_sort_custom_order">自定义顺序</string>
+    <string name="module_sort_custom_order_summary">拖动模组调整其显示顺序。</string>
+    <string name="module_sort_reset_custom_order">重置自定义顺序</string>
+    <string name="module_sort_reset_custom_order_summary">恢复为上方优先级顺序。</string>
+    <string name="module_sort_drag_to_reorder">拖动以重新排序</string>
     <string name="settings_apm_stay_on_page">别自动返回</string>
     <string name="settings_apm_stay_on_page_summary">模组操作完之后留在当前页面，别自己跑回去</string>
     <string name="settings_enable_module_shortcut_add">启用快捷添加按钮</string>
@@ -895,8 +910,6 @@ KernelPatch 附魔需要 boot 方块作为材料。
     <string name="dashboard_card_background_saved">仪表盘壁纸保存成功</string>
     <string name="dashboard_card_background_error">仪表盘壁纸保存失败</string>
     <string name="dashboard_card_background_cleared">仪表盘壁纸已清除</string>
-    <string name="dashboard_card_background_restore">恢复默认壁纸</string>
-    <string name="dashboard_card_background_restored">已恢复默认壁纸</string>
     <string name="settings_dashboard_card_dual_dim">启用昼夜双暗度</string>
     <string name="settings_dashboard_card_dual_dim_desc">自动根据明暗主题调整仪表盘壁纸暗度</string>
     <string name="settings_dashboard_card_day_dim">白天模式仪表盘壁纸暗度</string>
@@ -1371,10 +1384,6 @@ KernelPatch 附魔需要 boot 方块作为材料。
     <string name="color_style_neutral">中性</string>
     <string name="color_style_fidelity">保真</string>
     <!-- Color Contrast -->
-    <string name="color_contrast_label">对比度（明暗）</string>
-    <string name="color_contrast_standard">普通</string>
-    <string name="color_contrast_medium">困难</string>
-    <string name="color_contrast_high">极限</string>
     <string name="settings_title_image_permission_required">需要存储权限才能选择标题贴图！</string>
     <string name="settings_background_permission_required">需要存储权限才能选择背景贴图！</string>
     <string name="settings_sound_effect_save_failed">音效保存到末影箱失败了！</string>

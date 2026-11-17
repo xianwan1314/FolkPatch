@@ -1,11 +1,12 @@
 package me.bmax.apatch.ui.screen.settings.general
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,8 +15,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
-import me.bmax.apatch.ui.component.folk.FolkSelectableRow
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
+import me.bmax.apatch.ui.component.SegmentedSelectableItem
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.R
 import me.bmax.apatch.util.*
@@ -43,7 +44,7 @@ fun AppTitleChooseDialog(showDialog: MutableState<Boolean>, onTitleChanged: (Str
         "magicpatch" to stringResource(R.string.app_title_magicpatch)
     )
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = { showDialog.value = false },
     ) {
         LazyColumn {
@@ -58,7 +59,7 @@ fun AppTitleChooseDialog(showDialog: MutableState<Boolean>, onTitleChanged: (Str
                     },
                     trailingContent = {
                         if (currentTitle == key) {
-                            Icon(Icons.Filled.Check, contentDescription = null)
+                            Icon(Icons.Outlined.Check, contentDescription = null)
                         }
                     }
                 )
@@ -75,13 +76,13 @@ fun CustomAppTitleDialog(showDialog: MutableState<Boolean>, snackBarHost: Snackb
         mutableStateOf(prefs.getString("custom_app_title", "FolkPatch") ?: "FolkPatch")
     }
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = { showDialog.value = false },
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(FolkDimens.Size16),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(FolkDimens.Size16)
         ) {
             Text(
                 text = stringResource(R.string.custom_app_title_dialog_title),
@@ -124,7 +125,7 @@ fun DesktopAppNameChooseDialog(showDialog: MutableState<Boolean>, onNameChanged:
     val prefs = APApplication.sharedPreferences
     val context = LocalContext.current
     val currentName = remember { prefs.getString("desktop_app_name", "FolkPatch") }
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = { showDialog.value = false },
     ) {
         LazyColumn {
@@ -141,7 +142,7 @@ fun DesktopAppNameChooseDialog(showDialog: MutableState<Boolean>, onNameChanged:
                     },
                     trailingContent = {
                         if (currentName == "FolkPatch" || currentName == null) {
-                            Icon(Icons.Filled.Check, contentDescription = null)
+                            Icon(Icons.Outlined.Check, contentDescription = null)
                         }
                     }
                 )
@@ -159,7 +160,7 @@ fun DesktopAppNameChooseDialog(showDialog: MutableState<Boolean>, onNameChanged:
                     },
                     trailingContent = {
                         if (currentName == "FPatch") {
-                            Icon(Icons.Filled.Check, contentDescription = null)
+                            Icon(Icons.Outlined.Check, contentDescription = null)
                         }
                     }
                 )
@@ -174,14 +175,14 @@ fun LauncherIconStyleDialog(showDialog: MutableState<Boolean>, onStyleChanged: (
     val prefs = APApplication.sharedPreferences
     val context = LocalContext.current
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = { showDialog.value = false },
     ) {
-        Column(modifier = Modifier.padding(24.dp)) {
+        Column(modifier = Modifier.padding(FolkDimens.Size24)) {
             Text(
                 text = stringResource(R.string.settings_launcher_icon),
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = FolkDimens.Size16)
             )
 
             val currentStyle = remember {
@@ -195,7 +196,7 @@ fun LauncherIconStyleDialog(showDialog: MutableState<Boolean>, onStyleChanged: (
             Surface(
                 shape = FolkShape.Corner12,
                 color = AlertDialogDefaults.containerColor,
-                tonalElevation = 2.dp
+                tonalElevation = FolkDimens.Size2
             ) {
                 Column {
                     listOf(
@@ -203,7 +204,7 @@ fun LauncherIconStyleDialog(showDialog: MutableState<Boolean>, onStyleChanged: (
                         LauncherIconUtils.ICON_STYLE_GEOMETRY to R.string.launcher_icon_style_geometry,
                         LauncherIconUtils.ICON_STYLE_APATCH to R.string.launcher_icon_style_apatch
                     ).forEach { (style, labelId) ->
-                        FolkSelectableRow(
+                        SegmentedSelectableItem(
                             title = stringResource(labelId),
                             selected = currentStyle == style,
                             onClick = {
@@ -219,66 +220,7 @@ fun LauncherIconStyleDialog(showDialog: MutableState<Boolean>, onStyleChanged: (
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 24.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-                TextButton(onClick = { showDialog.value = false }) {
-                    Text(stringResource(id = android.R.string.cancel))
-                }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun FolkXAnimationTypeDialog(showDialog: MutableState<Boolean>, onTypeChanged: (String) -> Unit = {}) {
-    val prefs = APApplication.sharedPreferences
-
-    FolkAlertDialog(
-        onDismissRequest = { showDialog.value = false },
-    ) {
-        Column(modifier = Modifier.padding(24.dp)) {
-            Text(
-                text = stringResource(R.string.settings_folkx_animation_type),
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            val currentType = remember { prefs.getString("folkx_animation_type", "linear") }
-
-            Surface(
-                shape = FolkShape.Corner12,
-                color = AlertDialogDefaults.containerColor,
-                tonalElevation = 2.dp
-            ) {
-                Column {
-                    listOf("linear", "spatial", "fade", "vertical", "diagonal").forEach { type ->
-                        val labelId = when (type) {
-                            "linear" -> R.string.settings_folkx_animation_linear
-                            "spatial" -> R.string.settings_folkx_animation_spatial
-                            "fade" -> R.string.settings_folkx_animation_fade
-                            "vertical" -> R.string.settings_folkx_animation_vertical
-                            "diagonal" -> R.string.settings_folkx_animation_diagonal
-                            else -> R.string.settings_folkx_animation_linear
-                        }
-                        FolkSelectableRow(
-                            title = stringResource(labelId),
-                            selected = currentType == type,
-                            onClick = {
-                                prefs.edit().putString("folkx_animation_type", type).apply()
-                                onTypeChanged(type)
-                                showDialog.value = false
-                            }
-                        )
-                    }
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp),
+                    .padding(top = FolkDimens.Size24),
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(onClick = { showDialog.value = false }) {
@@ -294,14 +236,14 @@ fun FolkXAnimationTypeDialog(showDialog: MutableState<Boolean>, onTypeChanged: (
 fun AppListLoadingSchemeDialog(showDialog: MutableState<Boolean>, onSchemeChanged: (String) -> Unit = {}) {
     val prefs = APApplication.sharedPreferences
 
-    FolkAlertDialog(
+    ExpressiveDialog(
         onDismissRequest = { showDialog.value = false },
     ) {
-        Column(modifier = Modifier.padding(24.dp)) {
+        Column(modifier = Modifier.padding(FolkDimens.Size24)) {
             Text(
                 text = stringResource(R.string.settings_app_list_loading_scheme),
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = FolkDimens.Size16)
             )
 
             val currentScheme = remember { prefs.getString("app_list_loading_scheme", "root_service") }
@@ -309,7 +251,7 @@ fun AppListLoadingSchemeDialog(showDialog: MutableState<Boolean>, onSchemeChange
             Surface(
                 shape = FolkShape.Corner12,
                 color = AlertDialogDefaults.containerColor,
-                tonalElevation = 2.dp
+                tonalElevation = FolkDimens.Size2
             ) {
                 Column {
                     val schemes = listOf(
@@ -318,7 +260,7 @@ fun AppListLoadingSchemeDialog(showDialog: MutableState<Boolean>, onSchemeChange
                     )
 
                     schemes.forEach { (scheme, labelId) ->
-                        FolkSelectableRow(
+                        SegmentedSelectableItem(
                             title = stringResource(labelId),
                             selected = currentScheme == scheme,
                             onClick = {
@@ -334,7 +276,7 @@ fun AppListLoadingSchemeDialog(showDialog: MutableState<Boolean>, onSchemeChange
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 24.dp),
+                    .padding(top = FolkDimens.Size24),
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(onClick = { showDialog.value = false }) {

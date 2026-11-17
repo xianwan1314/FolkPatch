@@ -72,6 +72,7 @@ import me.bmax.apatch.util.UpdateChecker
 import me.bmax.apatch.ui.component.DebugBuildRibbon
 import me.bmax.apatch.ui.component.UpdateDialog
 import me.bmax.apatch.ui.theme.ThemeManager
+import me.bmax.apatch.ui.theme.tokens.FolkTheme
 import me.bmax.apatch.ui.component.rememberConfirmDialog
 import me.bmax.apatch.ui.component.rememberLoadingDialog
 import me.bmax.apatch.ui.screen.settings.appearance.ThemeImportDialog
@@ -84,6 +85,10 @@ import me.bmax.apatch.ui.navigation.LocalIsFloatingNavMode
 import me.bmax.apatch.ui.navigation.ScrollState
 import me.bmax.apatch.ui.navigation.rememberScrollConnection
 import me.bmax.apatch.ui.navigation.createNavTransitions
+import me.bmax.apatch.ui.component.folk.LocalNavOriginState
+import me.bmax.apatch.ui.component.folk.rememberNavOriginState
+import me.bmax.apatch.ui.component.folk.trackNavPointer
+import me.bmax.apatch.ui.theme.tokens.LocalFolkWallpaperTokens
 import me.bmax.apatch.util.ui.navBarLiquefiable
 import me.bmax.apatch.util.ui.rememberNavBarGlassLiquidState
 import me.bmax.apatch.util.ui.isRealTimeBlurAvailable
@@ -94,7 +99,7 @@ fun MainActivityContent(activity: MainActivity) {
 val locked by remember { activity.isLocked }
 if (locked) {
     Box(
-        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+        modifier = Modifier.fillMaxSize().background(FolkTheme.palette.groupedBackground),
         contentAlignment = Alignment.Center
     ) {
         androidx.compose.material3.CircularProgressIndicator(
@@ -104,26 +109,16 @@ if (locked) {
     }
 } else {
 val prefs = APApplication.sharedPreferences
-var folkXEngineEnabled by remember {
-    mutableStateOf(prefs.getBoolean("folkx_engine_enabled", true))
-}
-var folkXAnimationType by remember {
-    mutableStateOf(prefs.getString("folkx_animation_type", "linear"))
-}
-var folkXAnimationSpeed by remember {
-    mutableStateOf(prefs.getFloat("folkx_animation_speed", 1.0f))
+var layoutVariant by remember {
+    mutableStateOf(LayoutVariant.fromValue(prefs.getString("layout_variant", LayoutVariant.M3E)))
 }
 
 DisposableEffect(Unit) {
     val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-        if (key == "folkx_engine_enabled") {
-            folkXEngineEnabled = sharedPreferences.getBoolean("folkx_engine_enabled", true)
-        }
-        if (key == "folkx_animation_type") {
-            folkXAnimationType = sharedPreferences.getString("folkx_animation_type", "linear")
-        }
-        if (key == "folkx_animation_speed") {
-            folkXAnimationSpeed = sharedPreferences.getFloat("folkx_animation_speed", 1.0f)
+        if (key == "layout_variant") {
+            layoutVariant = LayoutVariant.fromValue(
+                sharedPreferences.getString("layout_variant", LayoutVariant.M3E)
+            )
         }
     }
     prefs.registerOnSharedPreferenceChangeListener(listener)
@@ -134,6 +129,7 @@ DisposableEffect(Unit) {
 
 val navController = rememberNavController()
 val navigator = navController.rememberDestinationsNavigator()
+val navOriginState = rememberNavOriginState()
 val snackBarHostState = remember { SnackbarHostState() }
 val bottomBarRoutes = remember {
     BottomBarDestination.entries.map { it.direction.route }.toSet()
@@ -226,12 +222,13 @@ LaunchedEffect(Unit) {
     }
 }
 
-APatchThemeWithBackground(
-    navController = navController,
-    folkXEngineEnabled = folkXEngineEnabled,
-    folkXAnimationType = folkXAnimationType,
-    folkXAnimationSpeed = folkXAnimationSpeed
+CompositionLocalProvider(
+    LocalLayoutVariant provides layoutVariant,
+    LocalNavOriginState provides navOriginState,
 ) {
+    APatchThemeWithBackground(
+        navController = navController,
+    ) {
     
     val showUpdateDialog = remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -471,10 +468,19 @@ APatchThemeWithBackground(
             rememberNavBarGlassLiquidState()
         } else null
 
+        val wallpaperActive = LocalFolkWallpaperTokens.current != null
         val navTransitions = remember(
-            folkXEngineEnabled, folkXAnimationType, folkXAnimationSpeed, bottomBarRoutes, useNavigationRail
+            bottomBarRoutes,
+            useNavigationRail,
+            navOriginState,
+            wallpaperActive,
         ) {
-            createNavTransitions(folkXEngineEnabled, folkXAnimationType, folkXAnimationSpeed, bottomBarRoutes, useNavigationRail)
+            createNavTransitions(
+                bottomBarRoutes = bottomBarRoutes,
+                useNavigationRail = useNavigationRail,
+                navOriginState = navOriginState,
+                wallpaperActive = wallpaperActive,
+            )
         }
 
         val scrollConnection = rememberScrollConnection(
@@ -482,7 +488,7 @@ APatchThemeWithBackground(
             onUserScroll = { resetBottomBarAutoHide() }
         )
 
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize().trackNavPointer(navOriginState)) {
             val baseContentModifier = Modifier
                 .navBarLiquefiable(
                     if (shouldExposeContentToLiquid) floatingLiquidState else null
@@ -597,6 +603,7 @@ APatchThemeWithBackground(
                 )
             }
         }
+    }
     }
 }
         }

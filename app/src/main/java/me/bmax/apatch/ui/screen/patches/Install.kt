@@ -1,5 +1,6 @@
 package me.bmax.apatch.ui.screen.patches
 
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.ComponentActivity
@@ -10,9 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.automirrored.outlined.ArrowForward
+import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,6 +44,7 @@ import kotlinx.coroutines.withContext
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.KeyEventBlocker
 import me.bmax.apatch.ui.component.folk.FolkScaffold
+import me.bmax.apatch.ui.component.folk.FolkTitleStyle
 import me.bmax.apatch.ui.theme.tokens.FolkMotion
 import me.bmax.apatch.util.getSafeDownloadsDir
 import me.bmax.apatch.util.installModule
@@ -60,7 +62,7 @@ enum class MODULE_TYPE {
 }
 
 @Composable
-@Destination<RootGraph>
+@Destination<RootGraph>(wrappers = [me.bmax.apatch.ui.navigation.NavContainerTransformWrapper::class])
 fun InstallScreen(navigator: DestinationsNavigator, uri: Uri, type: MODULE_TYPE) {
     var text by rememberSaveable { mutableStateOf("") }
     val displayBuffer = remember { StringBuffer() }
@@ -144,6 +146,7 @@ fun InstallScreen(navigator: DestinationsNavigator, uri: Uri, type: MODULE_TYPE)
 
     FolkScaffold(
         title = stringResource(R.string.apm_install),
+        titleStyle = FolkTitleStyle.Flexible,
         onBack = dropUnlessResumed {
             if (isExternalInstall) {
                 activity?.finish()
@@ -166,7 +169,7 @@ fun InstallScreen(navigator: DestinationsNavigator, uri: Uri, type: MODULE_TYPE)
                 }
             }) {
                 Icon(
-                    imageVector = Icons.Filled.Save, contentDescription = stringResource(CoreR.string.core_action_save)
+                    imageVector = Icons.Outlined.Save, contentDescription = stringResource(CoreR.string.core_action_save)
                 )
             }
         },
@@ -183,7 +186,7 @@ fun InstallScreen(navigator: DestinationsNavigator, uri: Uri, type: MODULE_TYPE)
                                 navigator.navigate(InstallScreenDestination(nextUri, type))
                             }
                         },
-                        icon = { Icon(Icons.AutoMirrored.Filled.ArrowForward, nextText) },
+                        icon = { Icon(Icons.AutoMirrored.Outlined.ArrowForward, nextText) },
                         text = { Text(text = nextText) },
                         containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 1f),
                         contentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 1f),
@@ -198,7 +201,7 @@ fun InstallScreen(navigator: DestinationsNavigator, uri: Uri, type: MODULE_TYPE)
                                 }
                             }
                         },
-                        icon = { Icon(Icons.Filled.Refresh, reboot) },
+                        icon = { Icon(Icons.Outlined.Refresh, reboot) },
                         text = { Text(text = reboot) },
                         containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 1f),
                         contentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 1f),
@@ -217,7 +220,7 @@ fun InstallScreen(navigator: DestinationsNavigator, uri: Uri, type: MODULE_TYPE)
                 scrollState.animateScrollTo(scrollState.maxValue, animationSpec = FolkMotion.ScrollIntoView)
             }
             Text(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(FolkDimens.Size8),
                 text = text,
                 fontSize = MaterialTheme.typography.bodySmall.fontSize,
                 fontFamily = FontFamily.Monospace,

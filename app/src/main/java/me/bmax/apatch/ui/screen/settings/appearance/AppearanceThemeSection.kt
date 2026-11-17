@@ -1,8 +1,12 @@
 package me.bmax.apatch.ui.screen.settings.appearance
 
+import me.bmax.apatch.ui.component.folk.navOrigin
+import me.bmax.apatch.ui.component.folk.folkGroupColor
+import me.bmax.apatch.ui.theme.tokens.FolkColors
+import me.bmax.apatch.ui.theme.tokens.FolkDimens
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,18 +16,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import kotlinx.coroutines.launch
-import me.bmax.apatch.ui.component.folk.FolkAlertDialog
+import me.bmax.apatch.ui.component.folk.ExpressiveDialog
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.ExpressiveCard
+import me.bmax.apatch.ui.component.TonalCard
 import me.bmax.apatch.ui.component.LoadingDialogHandle
 import me.bmax.apatch.ui.component.rememberConfirmDialog
 import me.bmax.apatch.ui.theme.ThemeManager
-import me.bmax.apatch.ui.component.folk.FolkSettingsSectionGroup
-import me.bmax.apatch.ui.component.folk.FolkSliderPreference
-import me.bmax.apatch.ui.component.folk.FolkSwitchPreference
-import me.bmax.apatch.ui.component.folk.FolkValuePreference
-import androidx.compose.material.icons.outlined.*
+import me.bmax.apatch.ui.component.SegmentedColumn
+import me.bmax.apatch.ui.component.SegmentedSliderItem
+import me.bmax.apatch.ui.component.SegmentedSwitchItem
+import me.bmax.apatch.ui.component.SegmentedValueItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.RadioButton
 import androidx.compose.foundation.layout.Spacer
@@ -57,12 +60,13 @@ fun AppearanceThemeSection(
     val scope = rememberCoroutineScope()
     val prefs = APApplication.sharedPreferences
 
-    FolkSettingsSectionGroup(title = stringResource(R.string.settings_appearance_theme), flat = flat, highlightKey = highlightKey) {
+    SegmentedColumn(title = stringResource(R.string.settings_appearance_theme), flat = flat, highlightKey = highlightKey) {
         item(key = "appearance_theme_store") {
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.Store,
                 title = stringResource(id = R.string.theme_store_title),
                 summary = if (themeStoreMode == "compat") stringResource(R.string.theme_mode_compat_desc) else null,
+                modifier = Modifier.navOrigin(color = folkGroupColor()),
                 onClick = { onNavigateToThemeStore() },
             )
         }
@@ -73,7 +77,7 @@ fun AppearanceThemeSection(
                 else -> stringResource(R.string.theme_mode_builtin)
             }
             val showModeSwitchDialog = remember { mutableStateOf(false) }
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.Tune,
                 title = stringResource(R.string.settings_theme_mode),
                 summary = stringResource(R.string.theme_mode_current, modeName),
@@ -81,22 +85,22 @@ fun AppearanceThemeSection(
             )
 
             if (showModeSwitchDialog.value) {
-                FolkAlertDialog(
+                ExpressiveDialog(
                     onDismissRequest = { showModeSwitchDialog.value = false },
-                    width = 320.dp,
+                    width = FolkDimens.Size320,
                     blurBehind = false,
                 ) {
-                    Column(modifier = Modifier.padding(24.dp)) {
+                    Column(modifier = Modifier.padding(FolkDimens.Size24)) {
                         Text(
                             text = stringResource(R.string.theme_mode_switch_title),
                             style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier.padding(bottom = 8.dp)
+                            modifier = Modifier.padding(bottom = FolkDimens.Size8)
                         )
                         Text(
                             text = stringResource(R.string.theme_mode_switch_msg),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(bottom = 16.dp)
+                            modifier = Modifier.padding(bottom = FolkDimens.Size16)
                         )
 
                         val builtinLabel = stringResource(R.string.theme_mode_builtin_label)
@@ -109,7 +113,7 @@ fun AppearanceThemeSection(
                                 color = if (themeStoreMode == mode) {
                                     MaterialTheme.colorScheme.secondaryContainer
                                 } else {
-                                    Color.Transparent
+                                    FolkColors.Transparent
                                 },
                                 contentColor = if (themeStoreMode == mode) {
                                     MaterialTheme.colorScheme.onSecondaryContainer
@@ -137,7 +141,7 @@ fun AppearanceThemeSection(
                                         },
                                     ),
                             ) {
-                                Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                                Row(modifier = Modifier.padding(FolkDimens.Size12), verticalAlignment = Alignment.CenterVertically) {
                                     Column(modifier = Modifier.weight(1f)) {
                                         Text(
                                             label,
@@ -159,11 +163,11 @@ fun AppearanceThemeSection(
                                             }
                                         )
                                     }
-                                    Spacer(Modifier.width(12.dp))
+                                    Spacer(Modifier.width(FolkDimens.Size12))
                                     RadioButton(selected = themeStoreMode == mode, onClick = null)
                                 }
                             }
-                            Spacer(Modifier.height(8.dp))
+                            Spacer(Modifier.height(FolkDimens.Size8))
                         }
 
                         TextButton(
@@ -178,7 +182,7 @@ fun AppearanceThemeSection(
         }
 
         item(key = "appearance_save_theme") {
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.FileDownload,
                 title = stringResource(id = R.string.settings_save_theme),
                 onClick = { showExportDialog.value = true },
@@ -186,7 +190,7 @@ fun AppearanceThemeSection(
         }
 
         item(key = "appearance_import_theme") {
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.FileUpload,
                 title = stringResource(id = R.string.settings_import_theme),
                 onClick = { showFilePicker.value = true },
@@ -208,7 +212,7 @@ fun AppearanceThemeSection(
             )
             val resetThemeTitle = stringResource(id = R.string.settings_reset_theme)
             val resetThemeConfirm = context.getString(R.string.settings_reset_theme_confirm)
-            FolkValuePreference(
+            SegmentedValueItem(
                 icon = Icons.Outlined.RestartAlt,
                 title = resetThemeTitle,
                 onClick = {                    resetThemeDialog.showConfirm(

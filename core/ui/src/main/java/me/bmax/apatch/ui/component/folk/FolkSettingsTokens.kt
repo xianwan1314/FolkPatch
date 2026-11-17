@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.sp
 import me.bmax.apatch.ui.theme.tokens.FolkShape
 import me.bmax.apatch.ui.theme.tokens.FolkTheme
 import me.bmax.apatch.ui.theme.tokens.FolkType
+import me.bmax.apatch.ui.theme.tokens.LocalFolkWallpaperTokens
 
 /**
  * Measurements that give the FolkPatch settings its own rhythm.
@@ -83,6 +84,9 @@ object FolkSettingsDimens {
 
     val ItemVerticalPaddingWithSummary = 16.dp
 
+    /** Minimum touch height shared by every segmented settings row. */
+    val ItemMinHeight = 56.dp
+
     /** Leading icon size. The reference uses a standard 24dp icon box. */
     val IconSize = 24.dp
 
@@ -111,15 +115,28 @@ object FolkSettingsDimens {
  * each one deciding how far to lift a container off the page.
  */
 @Composable
-fun folkGroupColor(): Color = FolkTheme.palette.groupedSurface
+fun folkGroupColor(): Color =
+    LocalFolkWallpaperTokens.current?.group?.fill ?: FolkTheme.palette.groupedSurface
+
+@Composable
+fun folkInsetColor(): Color =
+    LocalFolkWallpaperTokens.current?.raised?.fill ?: FolkTheme.palette.groupedInset
+
+@Composable
+fun folkOverlayColor(): Color =
+    LocalFolkWallpaperTokens.current?.overlay?.fill ?: FolkTheme.palette.groupedInset
 
 @Composable
 fun folkSectionTitleColor(): Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.9f)
 
 @Composable
+fun folkSupportingColor(): Color =
+    LocalWallpaperSupportingColor.current ?: MaterialTheme.colorScheme.onSurfaceVariant
+
+@Composable
 fun folkIconColor(enabled: Boolean = true): Color =
-    if (enabled) MaterialTheme.colorScheme.onSurfaceVariant
-    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+    if (enabled) folkSupportingColor()
+    else folkSupportingColor().copy(alpha = 0.38f)
 
 /** Small, letter-spaced section label - brand voice, not a Material label. */
 @Composable
